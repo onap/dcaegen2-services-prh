@@ -17,15 +17,23 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+package org.onap.dcaegen2.services.prh.event.executor.consumer.config.dmaap;
 
-package org.onap.dcaegen2.services.prh;
+import org.immutables.value.Value;
+import org.onap.dcaegen2.services.prh.event.executor.mutual.config.DmaapConfig;
 
-import org.junit.jupiter.api.Test;
+/**
+ * @author Przemysław Wąsala <przemyslaw.wasala@nokia.com> on 3/23/18
+ * @project pnf-registration-handler
+ */
+@Value.Immutable(prehash = true)
+@Value.Style(stagedBuilder = true)
+public abstract class DmaapConsumerConfiguration extends DmaapConfig {
 
-class MainAppTest {
+    private static final long serialVersionUID = 1L;
 
-    @Test
-    void justAnExample() {
-        System.out.println("This test method should be run");
-    }
+    private String consumerId;
+    private String consumerGroup;
+    private Integer timeoutMS;
+    private Integer messageLimit;
 }

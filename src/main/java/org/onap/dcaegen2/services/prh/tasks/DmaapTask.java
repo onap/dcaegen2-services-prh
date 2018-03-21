@@ -17,15 +17,16 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+package org.onap.dcaegen2.services.prh.tasks;
 
-package org.onap.dcaegen2.services.prh;
+import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
 
-import org.junit.jupiter.api.Test;
+/**
+ * @author Przemysław Wąsala <przemyslaw.wasala@nokia.com> on 3/23/18
+ * @project pnf-registration-handler
+ */
+public interface DmaapTask {
 
-class MainAppTest {
+    void execute() throws AAINotFoundException;
 
-    @Test
-    void justAnExample() {
-        System.out.println("This test method should be run");
-    }
 }

@@ -17,15 +17,17 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+package org.onap.dcaegen2.services.prh.event.executor.publisher.config.dmaap;
 
-package org.onap.dcaegen2.services.prh;
+import org.onap.dcaegen2.services.prh.event.executor.mutual.config.DmaapConfig;
 
-import org.junit.jupiter.api.Test;
+/**
+ * @author Przemysław Wąsala <przemyslaw.wasala@nokia.com> on 3/23/18
+ * @project pnf-registration-handler
+ */
 
-class MainAppTest {
+public class DmaapProducerConfiguration extends DmaapConfig {
 
-    @Test
-    void justAnExample() {
-        System.out.println("This test method should be run");
-    }
+    private static final long serialVersionUID = 1L;
+
 }

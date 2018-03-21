@@ -17,15 +17,12 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+package org.onap.dcaegen2.services.prh.event.executor.mutual.config;
 
-package org.onap.dcaegen2.services.prh;
+/**
+ * @author Przemysław Wąsala <przemyslaw.wasala@nokia.com> on 3/23/18
+ * @project pnf-registration-handler
+ */
+public abstract class AAIConfig implements Config {
 
-import org.junit.jupiter.api.Test;
-
-class MainAppTest {
-
-    @Test
-    void justAnExample() {
-        System.out.println("This test method should be run");
-    }
 }

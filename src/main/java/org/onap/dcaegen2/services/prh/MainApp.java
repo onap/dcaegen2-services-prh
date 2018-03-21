@@ -17,15 +17,25 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-
 package org.onap.dcaegen2.services.prh;
 
-import org.junit.jupiter.api.Test;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
-class MainAppTest {
+/**
+ * @author Przemysław Wąsala <przemyslaw.wasala@nokia.com> on 3/23/18
+ * @project pnf-registration-handler
+ */
+@SpringBootApplication
+@Configuration
+@ComponentScan
+@EnableScheduling
+public class MainApp {
 
-    @Test
-    void justAnExample() {
-        System.out.println("This test method should be run");
+    public static void main(String[] args) {
+        SpringApplication.run(MainApp.class, args);
     }
 }

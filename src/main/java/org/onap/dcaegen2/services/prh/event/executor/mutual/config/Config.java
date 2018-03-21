@@ -17,15 +17,14 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+package org.onap.dcaegen2.services.prh.event.executor.mutual.config;
 
-package org.onap.dcaegen2.services.prh;
+import java.io.Serializable;
 
-import org.junit.jupiter.api.Test;
+/**
+ * @author Przemysław Wąsala <przemyslaw.wasala@nokia.com> on 3/23/18
+ * @project pnf-registration-handler
+ */
+interface Config extends Serializable {
 
-class MainAppTest {
-
-    @Test
-    void justAnExample() {
-        System.out.println("This test method should be run");
-    }
 }

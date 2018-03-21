@@ -17,15 +17,19 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+package org.onap.dcaegen2.services.prh.event.executor.mutual.config;
 
-package org.onap.dcaegen2.services.prh;
+/**
+ * @author Przemysław Wąsala <przemyslaw.wasala@nokia.com> on 3/23/18
+ * @project pnf-registration-handler
+ */
+public abstract class DmaapConfig implements Config {
 
-import org.junit.jupiter.api.Test;
-
-class MainAppTest {
-
-    @Test
-    void justAnExample() {
-        System.out.println("This test method should be run");
-    }
+    private String dmmaphostName;
+    private Integer dmmapportNumber;
+    private String dmmaptopicName;
+    private String dmmapprotocol;
+    private String dmmapuserName;
+    private String dmmapuserPassword;
+    private String dmmapcontentType;
 }

@@ -9,7 +9,7 @@
     <relativePath/>
   </parent>
   <groupId>org.onap.dcaegen2.services</groupId>
-  <artifactId>pnf-registration-handler</artifactId>
+  <artifactId>prh</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <name>pnf-registration-handler</name>
   <description>pnf-registration-handler</description>
@@ -59,11 +59,11 @@
       <artifactId>jetty-server</artifactId>
       <version>9.4.8.v20171121</version>
     </dependency>
-    <dependency>
+    <!--dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-servlet</artifactId>
       <version>8.1.15.v20140411</version>
-    </dependency>
+    </dependency-->
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-servlet</artifactId>
@@ -184,14 +184,14 @@
             </dependency>
           </dependencies>
         </plugin>
-        <plugin>
+        <!--plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
           <version>1.6.0</version>
           <configuration>
             <executable>${session.executionRootDirectory}/mvn-phase-script.sh</executable>
             <environmentVariables>
-              <!-- make mvn properties as env for our script -->
+              
               <MVN_PROJECT_GROUPID>${project.groupId}</MVN_PROJECT_GROUPID>
               <MVN_PROJECT_ARTIFACTID>${project.artifactId}</MVN_PROJECT_ARTIFACTID>
               <MVN_PROJECT_VERSION>${project.version}</MVN_PROJECT_VERSION>
@@ -207,7 +207,7 @@
               </MVN_DOCKERREGISTRY_RELEASE>
             </environmentVariables>
           </configuration>
-        </plugin>
+        </plugin-->
       </plugins>
     </pluginManagement>
     <plugins>
@@ -215,7 +215,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
       </plugin>
-      <plugin>
+      <!--plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <version>1.6.0</version>
@@ -247,7 +247,7 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
+      </plugin-->
     </plugins>
   </build>
   <reporting>

@@ -9,7 +9,7 @@
     <relativePath/>
   </parent>
   <groupId>org.onap.dcaegen2.services</groupId>
-  <artifactId>pnf-registration-handler</artifactId>
+  <artifactId>prh</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <name>pnf-registration-handler</name>
   <description>pnf-registration-handler</description>
@@ -58,11 +58,6 @@
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-server</artifactId>
       <version>9.4.8.v20171121</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-servlet</artifactId>
-      <version>8.1.15.v20140411</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
@@ -184,69 +179,12 @@
             </dependency>
           </dependencies>
         </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>exec-maven-plugin</artifactId>
-          <version>1.6.0</version>
-          <configuration>
-            <executable>${session.executionRootDirectory}/mvn-phase-script.sh</executable>
-            <environmentVariables>
-              <!-- make mvn properties as env for our script -->
-              <MVN_PROJECT_GROUPID>${project.groupId}</MVN_PROJECT_GROUPID>
-              <MVN_PROJECT_ARTIFACTID>${project.artifactId}</MVN_PROJECT_ARTIFACTID>
-              <MVN_PROJECT_VERSION>${project.version}</MVN_PROJECT_VERSION>
-              <MVN_NEXUSPROXY>${onap.nexus.url}</MVN_NEXUSPROXY>
-              <MVN_RAWREPO_BASEURL_UPLOAD>${onap.nexus.rawrepo.baseurl.upload}
-              </MVN_RAWREPO_BASEURL_UPLOAD>
-              <MVN_RAWREPO_BASEURL_DOWNLOAD>${onap.nexus.rawrepo.baseurl.download}
-              </MVN_RAWREPO_BASEURL_DOWNLOAD>
-              <MVN_RAWREPO_SERVERID>${onap.nexus.rawrepo.serverid}</MVN_RAWREPO_SERVERID>
-              <MVN_DOCKERREGISTRY_DAILY>${onap.nexus.dockerregistry.daily}
-              </MVN_DOCKERREGISTRY_DAILY>
-              <MVN_DOCKERREGISTRY_RELEASE>${onap.nexus.dockerregistry.release}
-              </MVN_DOCKERREGISTRY_RELEASE>
-            </environmentVariables>
-          </configuration>
-        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.6.0</version>
-        <executions>
-          <execution>
-            <id>deploy script</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <arguments>
-                <argument>__</argument>
-                <argument>deploy</argument>
-              </arguments>
-            </configuration>
-          </execution>
-          <execution>
-            <id>install script</id>
-            <phase>install</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <arguments>
-                <argument>__</argument>
-                <argument>install</argument>
-              </arguments>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>

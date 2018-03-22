@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_970b097d",
+        "filename": "pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2018-03-22T10:24:42Z",
+      "side": 1,
+      "message": "Instead of commenting out content just remove it.",
+      "revId": "8c61db5e5ba172fee5e0dd9bc02ab63c9bf8b424",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

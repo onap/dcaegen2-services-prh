@@ -13,8 +13,20 @@
   <version>1.0.0-SNAPSHOT</version>
   <name>pnf-registration-handler</name>
   <description>pnf-registration-handler</description>
+  <packaging>pom</packaging>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
     <!-- Java version-->
     <java.version>8</java.version>
     <compiler.plugin.version>3.7.0</compiler.plugin.version>
@@ -33,6 +45,7 @@
       content/sites/site/org/onap/dcaegen2/services/prh/${project.artifactId}/${project.version}
     </site.path>
   </properties>
+
   <pluginRepositories>
     <!-- Black Duck plugin dependencies -->
     <pluginRepository>
@@ -46,27 +59,24 @@
       <url>http://maven.restlet.com</url>
     </pluginRepository>
   </pluginRepositories>
+
   <repositories>
     <repository>
       <id>external-repository</id>
       <url>https://oss.sonatype.org/content/repositories</url>
     </repository>
   </repositories>
+
   <dependencies>
-    <!--Development tools dependencies-->
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
+      <groupId>org.immutables</groupId>
+      <artifactId>value</artifactId>
+      <version>2.5.6</version>
     </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-webflux</artifactId>
-    </dependency>
-    <dependency>
-    <groupId>org.immutables</groupId>
-    <artifactId>value</artifactId>
-    <version>2.5.6</version>
-  </dependency>
+
+    <!-- LOGGING dependencies> -->
+
+
     <!-- Testing tools dependencies -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -100,9 +110,21 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
   <build>
+
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-webdav-jackrabbit</artifactId>
+        <version>3.0.0</version>
+      </extension>
+    </extensions>
+
     <pluginManagement>
       <plugins>
+
+        <!-- COMPILER PLUGIN -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
@@ -114,34 +136,83 @@
             <showDeprecation>true</showDeprecation>
           </configuration>
         </plugin>
-        <!-- Package an Uber jar -->
+
+        <!-- MAVEN SOURCE PLUGIN -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-shade-plugin</artifactId>
-          <version>3.1.0</version>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>3.0.1</version>
+          <configuration>
+            <excludeResources>true</excludeResources>
+          </configuration>
           <executions>
             <execution>
-              <phase>package</phase>
+              <id>attach-sources</id>
+              <phase>verify</phase>
               <goals>
-                <goal>shade</goal>
+                <goal>jar-no-fork</goal>
               </goals>
-              <configuration>
-                <transformers>
-                  <transformer
-                    implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-                  <transformer
-                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                    <mainClass>org.onap.dcaegen2.services.prh.ServerPrhApp</mainClass>
-                  </transformer>
-                </transformers>
-              </configuration>
             </execution>
           </executions>
         </plugin>
+
+        <!-- MAVEN JAVADOC PLUGIN -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-site-plugin</artifactId>
-          <version>3.6</version>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>3.0.0</version>
+          <configuration>
+            <!-- minimize console output messages -->
+            <quiet>true</quiet>
+            <verbose>false</verbose>
+            <useStandardDocletOptions>false</useStandardDocletOptions>
+          </configuration>
+          <executions>
+            <execution>
+              <id>aggregate</id>
+              <phase>site</phase>
+              <goals>
+                <goal>aggregate</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>attach-javadoc</id>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- MAVEN BUNDLE PLUGIN -->
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <version>3.5.0</version>
+          <extensions>true</extensions>
+          <configuration>
+            <instructions>
+              <Embed-Dependency>*;inline=false;scope=compile</Embed-Dependency>
+              <Embed-Transitive>true</Embed-Transitive>
+              <Embed-Directory>lib</Embed-Directory>
+            </instructions>
+          </configuration>
+          <executions>
+            <execution>
+              <id>Bundling PRH Jar</id>
+              <phase>package</phase>
+              <goals>
+                <goal>bundle</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- MAVEN AUTO RUN PLUGIN -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <version>1.8</version>
         </plugin>
 
         <!--  maven-surefire-plugin which is used during the test phase of build lifecycle -->
@@ -149,6 +220,35 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.19.1</version>
+          <configuration>
+            <skipTests>false</skipTests>
+            <argLine>-Xmx2048m -Djava.awt.headless=true -XX:+UseConcMarkSweepGC
+              -XX:OnOutOfMemoryError="kill -9 %p" -XX:+HeapDumpOnOutOfMemoryError
+            </argLine>
+            <redirectTestOutputToFile>${surefire.redirectTestOutputToFile}
+            </redirectTestOutputToFile>
+            <parallel>methods</parallel>
+            <threadCount>8</threadCount>
+            <forkCount>8</forkCount>
+            <reuseForks>true</reuseForks>
+            <reportFormat>xml</reportFormat>
+            <trimStackTrace>false</trimStackTrace>
+            <systemPropertyVariables>
+              <java.io.tmpdir>${project.build.directory}</java.io.tmpdir>
+              <logback.configurationFile>
+                ${basedir}/src/test/resources/logback-test.xml
+              </logback.configurationFile>
+              <HADOOP_HOME>${project.build.directory}</HADOOP_HOME>
+            </systemPropertyVariables>
+            <includes>
+              <include>**/*Test.java</include>
+            </includes>
+            <excludes>
+              <exclude>**/*IT.java</exclude>
+            </excludes>
+            <!-- Sets the VM argument line used when unit tests are run. -->
+            <argLine>${surefireArgLine}</argLine>
+          </configuration>
           <dependencies>
             <dependency>
               <groupId>org.junit.platform</groupId>
@@ -157,6 +257,77 @@
             </dependency>
           </dependencies>
         </plugin>
+
+        <!-- FIND BUGS (STATIC CODE ANALYSIS) PLUGIN -->
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>findbugs-maven-plugin</artifactId>
+          <version>${findbugs.plugin.version}</version>
+          <configuration>
+            <effort>Max</effort>
+            <threshold>Low</threshold>
+            <xmlOutput>true</xmlOutput>
+            <!-- BUILD FAIL ON FINDBUGS ERRORS -->
+            <failOnError>true</failOnError>
+            <excludeFilterFile>${project.basedir}/findbugs-exclude.xml</excludeFilterFile>
+            <outputDirectory>${project.reporting.outputDirectory}/findbugs</outputDirectory>
+            <findbugsXmlOutputDirectory>${project.reporting.outputDirectory}/findbugs
+            </findbugsXmlOutputDirectory>
+          </configuration>
+          <executions>
+            <execution>
+              <id>analyze-compile</id>
+              <phase>compile</phase>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.0.2</version>
+          <configuration>
+            <archive>
+              <manifest>
+                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              </manifest>
+              <manifestEntries>
+                <Implementation-Build-Version>${project.version}</Implementation-Build-Version>
+              </manifestEntries>
+            </archive>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.6</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jxr-plugin</artifactId>
+          <version>2.5</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-project-info-reports-plugin</artifactId>
+          <version>2.9</version>
+          <configuration>
+            <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+            <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-report-plugin</artifactId>
+          <version>2.21.0</version>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -164,14 +335,58 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
       </plugin>
+
       <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+      </plugin>
+
     </plugins>
   </build>
+
   <reporting>
     <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jxr-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
@@ -191,17 +406,10 @@
     </plugins>
   </reporting>
 
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <!-- Import dependency management from Spring Boot -->
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-dependencies</artifactId>
-        <version>2.0.0.RELEASE</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+  <modules>
+    <module>prh-app-server</module>
+    <module>prh-aai-client</module>
+    <module>prh-dmaap-client</module>
+  </modules>
 </project>
 

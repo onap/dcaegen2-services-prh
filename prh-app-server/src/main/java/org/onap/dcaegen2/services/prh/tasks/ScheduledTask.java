@@ -34,24 +34,25 @@ import org.springframework.stereotype.Component;
 @Component
 public class ScheduledTask {
 
-    private static final int FIXED_DELAY = 1000;
+    private static final int SCHEDULING_DELAY = 1000;
     private static final Logger logger = LoggerFactory.getLogger(ScheduledTask.class);
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     private final DmaapTask dmaapConsumerTask;
 
     @Autowired
-    public ScheduledTask(DmaapConsumerTask dmaapConsumerTask) {
+    public ScheduledTask(DmaapTask dmaapConsumerTask) {
         this.dmaapConsumerTask = dmaapConsumerTask;
     }
 
 
-    @Scheduled(fixedDelay = FIXED_DELAY)
+    @Scheduled(fixedDelay = SCHEDULING_DELAY)
     public void scheduledTaskAskingDMaaPOfConsumeEvent() {
         logger.info("Task scheduledTaskAskingDMaaPOfConsumeEvent() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
         try {
             dmaapConsumerTask.execute();
+
         } catch (AAINotFoundException e) {
             logger.warn("Task scheduledTaskAskingDMaaPOfConsumeEvent()::AAINotFoundException :: Execution Time - {}:{}",
                 dateTimeFormatter.format(

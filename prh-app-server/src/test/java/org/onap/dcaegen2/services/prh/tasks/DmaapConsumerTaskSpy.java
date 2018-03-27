@@ -17,15 +17,23 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+package org.onap.dcaegen2.services.prh.tasks;
 
-package org.onap.dcaegen2.services.prh;
+import static org.mockito.Mockito.spy;
 
-import org.junit.jupiter.api.Test;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
-class MainAppTest {
+/**
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/27/18
+ */
+@Configuration
+public class DmaapConsumerTaskSpy {
 
-    @Test
-    void justAnExample() {
-        System.out.println("This test method should be run");
+    @Bean
+    @Primary
+    public DmaapConsumerTask registerSimpleDmaapConsumerTask() {
+        return spy(new DmaapConsumerTask());
     }
 }

@@ -27,15 +27,29 @@ import org.immutables.value.Value;
  */
 @Value.Immutable(prehash = true)
 @Value.Style(stagedBuilder = true)
-public abstract class AAIDmaapProducerConfiguration extends DmaapConfig {
+public abstract class AAIDmaapProducerConfiguration implements AAIConfig {
 
     private static final long serialVersionUID = 1L;
 
-    private String aaiHost;
-    private Integer aaiHostPortNumber;
-    private String aaiProtocol;
-    private String aaiUserName;
-    private String aaiUserPassword;
-    private URL aaiProxyURL;
-    private boolean aaiIgnoreSSLCertificateErrors;
+    @Value.Parameter
+    public abstract String aaiHost();
+
+    @Value.Parameter
+    public abstract Integer aaiHostPortNumber();
+
+    @Value.Parameter
+    public abstract String aaiProtocol();
+
+    @Value.Parameter
+    public abstract String aaiUserName();
+
+    @Value.Parameter
+    public abstract String aaiUserPassword();
+
+    @Value.Parameter
+    public abstract URL aaiProxyURL();
+
+    @Value.Parameter
+    public abstract boolean aaiIgnoreSSLCertificateErrors();
+
 }

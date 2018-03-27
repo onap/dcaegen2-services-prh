@@ -1,6 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ ============LICENSE_START=======================================================
+  ~ PROJECT
+  ~ ================================================================================
+  ~ Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+  ~ ================================================================================
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~ ============LICENSE_END=========================================================
+  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.onap.oparent</groupId>
@@ -27,15 +48,25 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <!-- Java version-->
+    <!-- JAVA VERSION-->
     <java.version>8</java.version>
     <compiler.plugin.version>3.7.0</compiler.plugin.version>
+
+
+    <!-- DEVELOPMENT SETTINGS -->
+    <immutable.version>2.5.6</immutable.version>
+
+    <!-- LOGGING SETTINGS -->
+    <slf4j.version>1.7.25</slf4j.version>
+    <logback.version>1.2.3</logback.version>
+
+    <!--TEST SETTINGS -->
+    <surefire.redirectTestOutputToFile>true</surefire.redirectTestOutputToFile>
     <junit.version>4.12</junit.version>
     <junit.jupiter.version>5.1.0</junit.jupiter.version>
     <junit.vintage.version>5.1.0</junit.vintage.version>
     <junit.platform.version>1.1.0</junit.platform.version>
-    <!--TEST SETTINGS -->
-    <surefire.redirectTestOutputToFile>true</surefire.redirectTestOutputToFile>
+
     <!--PLUGIN SETTINGS -->
     <dependency.locations.enabled>false</dependency.locations.enabled>
     <nexusproxy>https://nexus.onap.org</nexusproxy>
@@ -66,50 +97,6 @@
       <url>https://oss.sonatype.org/content/repositories</url>
     </repository>
   </repositories>
-
-  <dependencies>
-    <dependency>
-      <groupId>org.immutables</groupId>
-      <artifactId>value</artifactId>
-      <version>2.5.6</version>
-    </dependency>
-
-    <!-- LOGGING dependencies> -->
-
-
-    <!-- Testing tools dependencies -->
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>${junit.jupiter.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>${junit.jupiter.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.vintage</groupId>
-      <artifactId>junit-vintage-engine</artifactId>
-      <version>${junit.vintage.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <!-- Only required to run tests in an IDE that bundles an older version -->
-    <dependency>
-      <groupId>org.junit.platform</groupId>
-      <artifactId>junit-platform-launcher</artifactId>
-      <version>${junit.platform.version}</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
 
   <build>
 
@@ -206,13 +193,6 @@
               </goals>
             </execution>
           </executions>
-        </plugin>
-
-        <!-- MAVEN AUTO RUN PLUGIN -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-antrun-plugin</artifactId>
-          <version>1.8</version>
         </plugin>
 
         <!--  maven-surefire-plugin which is used during the test phase of build lifecycle -->
@@ -405,6 +385,99 @@
       </plugin>
     </plugins>
   </reporting>
+
+  <dependencyManagement>
+    <dependencies>
+
+      <!-- DEVELOPMENT TOOLS DEPENDENCIES -->
+      <dependency>
+        <groupId>org.immutables</groupId>
+        <artifactId>value</artifactId>
+        <version>${immutable.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <!-- LOGGING dependencies> -->
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-core</artifactId>
+        <version>${logback.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <!-- TESTING TOOLS DEPENDENCIES -->
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>${junit.jupiter.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>${junit.jupiter.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.vintage</groupId>
+        <artifactId>junit-vintage-engine</artifactId>
+        <version>${junit.vintage.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <version>5.0.4.RELEASE</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>2.16.0</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.testng</groupId>
+        <artifactId>testng</artifactId>
+        <version>6.14.2</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <version>2.0.0.RELEASE</version>
+        <scope>test</scope>
+      </dependency>
+
+
+      <!-- ONLY REQUIRED TO RUN TESTS IN AN IDE THAT BUNDLES AN OLDER VERSION -->
+      <dependency>
+        <groupId>org.junit.platform</groupId>
+        <artifactId>junit-platform-launcher</artifactId>
+        <version>${junit.platform.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
 
   <modules>
     <module>prh-app-server</module>

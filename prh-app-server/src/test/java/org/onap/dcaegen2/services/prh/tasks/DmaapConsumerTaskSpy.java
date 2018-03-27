@@ -17,13 +17,23 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.config;
+package org.onap.dcaegen2.services.prh.tasks;
 
-import java.io.Serializable;
+import static org.mockito.Mockito.spy;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 /**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/27/18
  */
-interface Config extends Serializable {
+@Configuration
+public class DmaapConsumerTaskSpy {
 
+    @Bean
+    @Primary
+    public DmaapConsumerTask registerSimpleDmaapConsumerTask() {
+        return spy(new DmaapConsumerTask());
+    }
 }

@@ -19,11 +19,35 @@
  */
 package org.onap.dcaegen2.services.config;
 
+import org.immutables.value.Value;
+
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
-public class DmaapProducerConfiguration extends DmaapConfig {
+@Value.Immutable(prehash = true)
+@Value.Style(stagedBuilder = true)
+public abstract class DmaapProducerConfiguration implements DmaapConfig {
 
     private static final long serialVersionUID = 1L;
 
+    @Value.Parameter
+    public abstract String dmmaphostName();
+
+    @Value.Parameter
+    public abstract Integer dmmapportNumber();
+
+    @Value.Parameter
+    public abstract String dmmaptopicName();
+
+    @Value.Parameter
+    public abstract String dmmapprotocol();
+
+    @Value.Parameter
+    public abstract String dmmapuserName();
+
+    @Value.Parameter
+    public abstract String dmmapuserPassword();
+
+    @Value.Parameter
+    public abstract String dmmapcontentType();
 }

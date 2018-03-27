@@ -26,12 +26,40 @@ import org.immutables.value.Value;
  */
 @Value.Immutable(prehash = true)
 @Value.Style(stagedBuilder = true)
-public abstract class DmaapConsumerConfiguration extends DmaapConfig {
+public abstract class DmaapConsumerConfiguration implements DmaapConfig {
 
     private static final long serialVersionUID = 1L;
 
-    private String consumerId;
-    private String consumerGroup;
-    private Integer timeoutMS;
-    private Integer messageLimit;
+    @Value.Parameter
+    public abstract String consumerId();
+
+    @Value.Parameter
+    public abstract String consumerGroup();
+
+    @Value.Parameter
+    public abstract Integer timeoutMS();
+
+    @Value.Parameter
+    public abstract Integer messageLimit();
+
+    @Value.Parameter
+    public abstract String dmmaphostName();
+
+    @Value.Parameter
+    public abstract Integer dmmapportNumber();
+
+    @Value.Parameter
+    public abstract String dmmaptopicName();
+
+    @Value.Parameter
+    public abstract String dmmapprotocol();
+
+    @Value.Parameter
+    public abstract String dmmapuserName();
+
+    @Value.Parameter
+    public abstract String dmmapuserPassword();
+
+    @Value.Parameter
+    public abstract String dmmapcontentType();
 }

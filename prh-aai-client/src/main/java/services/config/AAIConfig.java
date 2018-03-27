@@ -19,16 +19,11 @@
  */
 package services.config;
 
+import java.io.Serializable;
+
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
-public abstract class DmaapConfig implements Config {
+interface AAIConfig extends Serializable {
 
-    private String dmmaphostName;
-    private Integer dmmapportNumber;
-    private String dmmaptopicName;
-    private String dmmapprotocol;
-    private String dmmapuserName;
-    private String dmmapuserPassword;
-    private String dmmapcontentType;
 }

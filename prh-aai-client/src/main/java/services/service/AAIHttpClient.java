@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * PNF-REGISTRATION-HANDLER
+ * PROJECT
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
@@ -17,39 +17,12 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package services.config;
 
-import java.net.URL;
-import org.immutables.value.Value;
+package services.service;
 
-/**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
- */
-@Value.Immutable(prehash = true)
-@Value.Style(stagedBuilder = true)
-public abstract class AAIDmaapProducerConfiguration implements AAIConfig {
+import org.apache.http.impl.client.CloseableHttpClient;
 
-    private static final long serialVersionUID = 1L;
-
-    @Value.Parameter
-    public abstract String aaiHost();
-
-    @Value.Parameter
-    public abstract Integer aaiHostPortNumber();
-
-    @Value.Parameter
-    public abstract String aaiProtocol();
-
-    @Value.Parameter
-    public abstract String aaiUserName();
-
-    @Value.Parameter
-    public abstract String aaiUserPassword();
-
-    @Value.Parameter
-    public abstract URL aaiProxyURL();
-
-    @Value.Parameter
-    public abstract boolean aaiIgnoreSSLCertificateErrors();
-
+public interface AAIHttpClient {
+    CloseableHttpClient getAAIHttpClient();
 }
+

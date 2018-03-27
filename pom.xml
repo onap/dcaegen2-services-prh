@@ -401,7 +401,27 @@
         <artifactId>docker-maven-plugin</artifactId>
         <version>1.0.0</version>
       </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.4</version>
+        </dependency>
 
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>10.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>5.0.4.RELEASE</version>
+        </dependency>
 
       <!-- LOGGING dependencies> -->
       <dependency>
@@ -470,7 +490,6 @@
         <version>2.0.0.RELEASE</version>
         <scope>test</scope>
       </dependency>
-
 
       <!-- ONLY REQUIRED TO RUN TESTS IN AN IDE THAT BUNDLES AN OLDER VERSION -->
       <dependency>

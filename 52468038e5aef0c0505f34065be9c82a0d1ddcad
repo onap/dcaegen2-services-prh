@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "5a93c517_44912099",
+        "filename": "prh-aai-client/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-03-28T08:02:28Z",
+      "side": 1,
+      "message": "If you want to include some dependencies, you will introduce it in prh pom.xml and after that you have to include it in this pom without version information.",
+      "revId": "52468038e5aef0c0505f34065be9c82a0d1ddcad",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_a49b44c8",
         "filename": "prh-aai-client/pom.xml",
         "patchSetId": 1

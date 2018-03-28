@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_a49b44c8",
+        "filename": "prh-aai-client/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-03-28T07:58:01Z",
+      "side": 1,
+      "message": "@Piotr we don\u0027t need this framework, because GG is opportunity to SpringBoot.",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 17
+      },
+      "revId": "52468038e5aef0c0505f34065be9c82a0d1ddcad",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_64a53c03",
+        "filename": "prh-aai-client/src/main/java/services/config/AAIHttpClientConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-03-28T07:58:01Z",
+      "side": 1,
+      "message": "Against this implementation merge AAIHttpClientConfig and AAIHttpClientConfigFactory to one class by using Immutables(https://immutables.github.io/)",
+      "revId": "52468038e5aef0c0505f34065be9c82a0d1ddcad",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_84a888dc",
+        "filename": "prh-aai-client/src/main/java/services/config/AAIHttpClientConfigBuilder.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-03-28T07:58:01Z",
+      "side": 1,
+      "message": "Against this implementation merge AAIHttpClientConfig and AAIHttpClientConfigFactory to one class by using Immutables(https://immutables.github.io/)",
+      "revId": "52468038e5aef0c0505f34065be9c82a0d1ddcad",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_e4b86c2c",
+        "filename": "prh-aai-client/src/main/java/services/service/AAIHttpClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-03-28T07:58:01Z",
+      "side": 1,
+      "message": "We don\u0027t need this. You have to use SpringBoot - this issue was mentioned in context of pom.xml",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 49
+      },
+      "revId": "52468038e5aef0c0505f34065be9c82a0d1ddcad",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

@@ -22,8 +22,6 @@ package org.onap.dcaegen2.services.prh.tasks;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 
-import java.time.Duration;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -56,7 +54,7 @@ public class ScheduledXmlContextITest extends AbstractTestNGSpringContextTests {
 
 
     @Test
-    public void testScheduling() throws InterruptedException {
+    public void testScheduling() {
         final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
         executorService.scheduleWithFixedDelay(this::verifyDmaapConsumerTask, 0, WAIT_FOR_SCHEDULING, TimeUnit.SECONDS);
     }

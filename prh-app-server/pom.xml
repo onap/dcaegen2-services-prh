@@ -31,7 +31,11 @@
   <artifactId>prh-app-server</artifactId>
   <groupId>org.onap.dcaegen2.services.prh</groupId>
   <packaging>jar</packaging>
-
+  <properties>
+    <maven.build.timestamp.format>yyyyMMdd'T'HHmmss</maven.build.timestamp.format>
+    <onap.nexus.dockerregistry.daily>${env.MVN_DOCKERREGISTRY_DAILY}
+    </onap.nexus.dockerregistry.daily>
+  </properties>
   <build>
     <plugins>
       <plugin>
@@ -53,6 +57,31 @@
           <mainClass>org.onap.dcaegen2.services.prh.MainApp</mainClass>
         </configuration>
       </plugin>
+      <!-- This plugin may go away in favor of a custom Dockerfile provided by Carsten and co. -->
+      <plugin>
+        <groupId>com.spotify</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>1.0.0</version>
+        <configuration>
+          <imageName>
+            ${onap.nexus.dockerregistry.daily}/onap/${project.groupId}.${project.artifactId}
+          </imageName>
+          <dockerDirectory>docker</dockerDirectory>
+          <resources>
+            <resource>
+              <targetPath>/</targetPath>
+              <directory>${project.build.directory}</directory>
+              <include>${project.build.finalName}.jar</include>
+            </resource>
+          </resources>
+          <imageTags>
+            <imageTag>${project.version}-${maven.build.timestamp}</imageTag>
+            <imageTag>latest</imageTag>
+          </imageTags>
+          <serverId>${onap.nexus.dockerregistry.daily}</serverId>
+        </configuration>
+      </plugin>
+
     </plugins>
   </build>
   <dependencies>
@@ -65,6 +94,10 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-webflux</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.spotify</groupId>
+      <artifactId>docker-maven-plugin</artifactId>
     </dependency>
 
     <!-- LOGGING DEPENDENCIES-->

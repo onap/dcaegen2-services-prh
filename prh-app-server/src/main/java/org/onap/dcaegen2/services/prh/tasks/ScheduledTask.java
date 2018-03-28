@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * PROJECT
+ * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
@@ -52,11 +52,11 @@ public class ScheduledTask {
             LocalDateTime.now()));
         try {
             dmaapConsumerTask.execute();
-
-        } catch (AAINotFoundException | RuntimeException e) {
-            logger.warn("Task scheduledTaskAskingDMaaPOfConsumeEvent()::AAINotFoundException :: Execution Time - {}:{}",
-                dateTimeFormatter.format(
-                    LocalDateTime.now()), e.getMessage());
+        } catch (AAINotFoundException e) {
+            logger
+                .error("Task scheduledTaskAskingDMaaPOfConsumeEvent()::AAINotFoundException :: Execution Time - {}:{}",
+                    dateTimeFormatter.format(
+                        LocalDateTime.now()), e.getMessage());
         }
     }
 

@@ -17,16 +17,44 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.tasks;
-
-import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
+package org.onap.dcaegen2.services.config;
 
 /**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/28/18
  */
-@FunctionalInterface
-public interface DmaapTask {
+public interface DmaapCustomConfig extends DmaapConfig {
 
-    void execute() throws AAINotFoundException;
+    String dmmaphostName();
 
+    Integer dmmapportNumber();
+
+    String dmmaptopicName();
+
+    String dmmapprotocol();
+
+    String dmmapuserName();
+
+    String dmmapuserPassword();
+
+    String dmmapcontentType();
+
+
+    interface Builder<T extends DmaapCustomConfig, B extends Builder<T, B>> {
+
+        B dmmaphostName(String dmmaphostName);
+
+        B dmmapportNumber(Integer dmmapportNumber);
+
+        B dmmaptopicName(String dmmaptopicName);
+
+        B dmmapprotocol(String dmmapprotocol);
+
+        B dmmapuserName(String dmmapuserName);
+
+        B dmmapuserPassword(String dmmapuserPassword);
+
+        B dmmapcontentType(String dmmapcontentType);
+
+        T build();
+    }
 }

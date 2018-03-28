@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * PROJECT
+ * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
@@ -25,41 +25,35 @@ import org.immutables.value.Value;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
 @Value.Immutable(prehash = true)
-@Value.Style(stagedBuilder = true)
-public abstract class DmaapConsumerConfiguration implements DmaapConfig {
+@Value.Style(visibility = Value.Style.ImplementationVisibility.PACKAGE)
+public abstract class DmaapConsumerConfiguration implements DmaapCustomConfig {
 
     private static final long serialVersionUID = 1L;
 
-    @Value.Parameter
-    public abstract String consumerId();
 
-    @Value.Parameter
-    public abstract String consumerGroup();
+    abstract String consumerId();
 
-    @Value.Parameter
-    public abstract Integer timeoutMS();
+    abstract String consumerGroup();
 
-    @Value.Parameter
-    public abstract Integer messageLimit();
+    abstract Integer timeoutMS();
 
-    @Value.Parameter
-    public abstract String dmmaphostName();
+    abstract Integer messageLimit();
 
-    @Value.Parameter
-    public abstract Integer dmmapportNumber();
 
-    @Value.Parameter
-    public abstract String dmmaptopicName();
+    public interface Builder extends
+        DmaapCustomConfig.Builder<DmaapConsumerConfiguration, DmaapConsumerConfiguration.Builder> {
 
-    @Value.Parameter
-    public abstract String dmmapprotocol();
+        Builder consumerId(String consumerId);
 
-    @Value.Parameter
-    public abstract String dmmapuserName();
+        Builder consumerGroup(String consumerGroup);
 
-    @Value.Parameter
-    public abstract String dmmapuserPassword();
+        Builder timeoutMS(Integer timeoutMS);
 
-    @Value.Parameter
-    public abstract String dmmapcontentType();
+        Builder messageLimit(Integer messageLimit);
+    }
+
+    public static DmaapConsumerConfiguration.Builder builder() {
+        return ImmutableDmaapConsumerConfiguration.builder();
+    }
+
 }

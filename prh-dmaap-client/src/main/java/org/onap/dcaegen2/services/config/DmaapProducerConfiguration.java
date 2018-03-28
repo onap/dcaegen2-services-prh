@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * PROJECT
+ * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
@@ -25,29 +25,16 @@ import org.immutables.value.Value;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
 @Value.Immutable(prehash = true)
-@Value.Style(stagedBuilder = true)
-public abstract class DmaapProducerConfiguration implements DmaapConfig {
+@Value.Style(visibility = Value.Style.ImplementationVisibility.PACKAGE)
+public abstract class DmaapProducerConfiguration implements DmaapCustomConfig {
 
     private static final long serialVersionUID = 1L;
 
-    @Value.Parameter
-    public abstract String dmmaphostName();
+    public interface Builder extends
+        DmaapCustomConfig.Builder<DmaapProducerConfiguration, DmaapProducerConfiguration.Builder> {
+    }
 
-    @Value.Parameter
-    public abstract Integer dmmapportNumber();
-
-    @Value.Parameter
-    public abstract String dmmaptopicName();
-
-    @Value.Parameter
-    public abstract String dmmapprotocol();
-
-    @Value.Parameter
-    public abstract String dmmapuserName();
-
-    @Value.Parameter
-    public abstract String dmmapuserPassword();
-
-    @Value.Parameter
-    public abstract String dmmapcontentType();
+    public static Builder builder() {
+        return ImmutableDmaapProducerConfiguration.builder();
+    }
 }

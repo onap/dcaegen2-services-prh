@@ -22,6 +22,11 @@ package org.onap.dcaegen2.services.prh.tasks;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 
+import java.time.Duration;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -44,7 +49,7 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 @ContextConfiguration(locations = {"classpath:scheduled-context.xml"})
 public class ScheduledXmlContextITest extends AbstractTestNGSpringContextTests {
 
-    private static final int WAIT_FOR_SCHEDULING = 1000;
+    private static final int WAIT_FOR_SCHEDULING = 1;
 
     @Autowired
     private DmaapConsumerTask dmaapConsumerTaskSpy;
@@ -52,9 +57,15 @@ public class ScheduledXmlContextITest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void testScheduling() throws InterruptedException {
-        Thread.sleep(WAIT_FOR_SCHEDULING);
+        final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+        executorService.scheduleWithFixedDelay(this::verifyDmaapConsumerTask, 0, WAIT_FOR_SCHEDULING, TimeUnit.SECONDS);
+    }
+
+    private void verifyDmaapConsumerTask() {
         verify(dmaapConsumerTaskSpy, atLeast(2)).execute();
     }
+
+
 }
 
 

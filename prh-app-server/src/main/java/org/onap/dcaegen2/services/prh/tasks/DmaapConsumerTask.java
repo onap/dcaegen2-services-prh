@@ -36,24 +36,11 @@ public class DmaapConsumerTask implements DmaapTask {
 
     @Override
     public void execute() {
-        logger.info("Start task DmaapConsumerTask::execute() :: Execution Time - {}", dateTimeFormatter.format(
+        logger.debug("Start task DmaapConsumerTask::execute() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
         //TODO: ADD implementation for executing request to consume topic from dmaap
-        //DmappConsumerRunner dmappConsumerRunner = consumer.play()
-        //if(dmappConsumerRunner != null){
-          //AAIProcess aaiProcess = new AAiPRocess(dmappConsumerRunner)
-        /*
-        try{
-        aaiProcess.Execute()
-        }
-        catch(Exception e(){
-            Log
-            return
-        }
-        DmaapConsumerPost post;
-        */
-        //}
-        logger.info("End task DmaapConsumerTask::execute() :: Execution Time - {}",
+
+        logger.debug("End task DmaapConsumerTask::execute() :: Execution Time - {}",
             dateTimeFormatter.format(LocalDateTime.now()));
     }
 }

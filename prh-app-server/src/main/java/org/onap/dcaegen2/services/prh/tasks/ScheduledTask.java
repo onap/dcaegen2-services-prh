@@ -48,7 +48,7 @@ public class ScheduledTask {
 
     @Scheduled(fixedDelay = SCHEDULING_DELAY)
     public void scheduledTaskAskingDMaaPOfConsumeEvent() {
-        logger.info("Task scheduledTaskAskingDMaaPOfConsumeEvent() :: Execution Time - {}", dateTimeFormatter.format(
+        logger.debug("Task scheduledTaskAskingDMaaPOfConsumeEvent() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
         try {
             dmaapConsumerTask.execute();

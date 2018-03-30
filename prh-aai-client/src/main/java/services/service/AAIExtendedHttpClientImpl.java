@@ -19,7 +19,7 @@
  */
 package services.service;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ResponseHandler;
@@ -71,7 +71,7 @@ public class AAIExtendedHttpClientImpl implements AAIExtendedHttpClient {
             getRequest.addHeader(headersEntry.getKey(), headersEntry.getValue());
         }
 
-        Optional<String> extendedDetails = Optional.absent();
+        Optional<String> extendedDetails = Optional.empty();
 
         try {
             extendedDetails = closeableHttpClient.execute(getRequest, aaiResponseHandler());
@@ -108,7 +108,7 @@ public class AAIExtendedHttpClientImpl implements AAIExtendedHttpClient {
         return extendedURI;
     }
 
-    private static String createCustomQuery(@Nonnull final Map<String, String> queryParams) {
+    private String createCustomQuery(@Nonnull final Map<String, String> queryParams) {
         final StringBuilder queryStringBuilder = new StringBuilder("");
         final Iterator<Map.Entry<String, String>> queryParamIterator = queryParams.entrySet().iterator();
         while (queryParamIterator.hasNext()) {
@@ -123,7 +123,7 @@ public class AAIExtendedHttpClientImpl implements AAIExtendedHttpClient {
         return queryStringBuilder.toString();
     }
 
-    public static ResponseHandler<Optional<String>> aaiResponseHandler() {
+    private ResponseHandler<Optional<String>> aaiResponseHandler() {
         return httpResponse ->  {
             final int responseCode = httpResponse.getStatusLine().getStatusCode();
             final HttpEntity responseEntity = httpResponse.getEntity();
@@ -134,7 +134,7 @@ public class AAIExtendedHttpClientImpl implements AAIExtendedHttpClient {
             } else {
                 String aaiResponse = responseEntity != null ? EntityUtils.toString(responseEntity) : "";
                 //ToDo loging
-                return Optional.absent();
+                return Optional.empty();
             }
         };
     }

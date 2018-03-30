@@ -1,0 +1,141 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_852b8fea",
+        "filename": "prh-aai-client/src/test/java/services/service/AAIHttpClientImplTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-03-30T19:16:40Z",
+      "side": 1,
+      "message": "provide the name of the project in license header",
+      "revId": "3c0e94db9f12d95951526d2026f857dfaae58727",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_a52ecbf8",
+        "filename": "prh-aai-client/src/test/java/services/service/utils/HTTPConfigurationForUnitTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-03-30T19:16:40Z",
+      "side": 1,
+      "message": "provide the name of project in license header",
+      "range": {
+        "startLine": 3,
+        "startChar": 3,
+        "endLine": 3,
+        "endChar": 10
+      },
+      "revId": "3c0e94db9f12d95951526d2026f857dfaae58727",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_a507ab80",
+        "filename": "prh-aai-client/src/test/java/services/service/utils/HttpUtilsTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-03-30T19:16:40Z",
+      "side": 1,
+      "message": "Provide the name of the project in license header",
+      "revId": "3c0e94db9f12d95951526d2026f857dfaae58727",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_6501a369",
+        "filename": "prh-aai-client/src/test/java/services/service/utils/HttpUtilsTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-03-30T19:16:40Z",
+      "side": 1,
+      "message": "useless",
+      "revId": "3c0e94db9f12d95951526d2026f857dfaae58727",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_8504ef7e",
+        "filename": "prh-aai-client/src/test/java/services/service/utils/HttpUtilsTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-03-30T19:16:40Z",
+      "side": 1,
+      "message": "Against this you have to use http statuses from org.apache.http.HttpStatus interface. So this constant variable is useless",
+      "revId": "3c0e94db9f12d95951526d2026f857dfaae58727",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_25f39ba0",
+        "filename": "prh-aai-client/src/test/java/services/service/utils/HttpUtilsTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-03-30T19:16:40Z",
+      "side": 1,
+      "message": "useless",
+      "range": {
+        "startLine": 37,
+        "startChar": 54,
+        "endLine": 37,
+        "endChar": 75
+      },
+      "revId": "3c0e94db9f12d95951526d2026f857dfaae58727",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c5f19796",
+        "filename": "prh-aai-client/src/test/java/services/service/utils/HttpUtilsTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-03-30T19:16:40Z",
+      "side": 1,
+      "message": "useless",
+      "range": {
+        "startLine": 42,
+        "startChar": 55,
+        "endLine": 42,
+        "endChar": 70
+      },
+      "revId": "3c0e94db9f12d95951526d2026f857dfaae58727",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

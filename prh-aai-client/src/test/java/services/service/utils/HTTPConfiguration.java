@@ -18,10 +18,45 @@
  * ============LICENSE_END=========================================================
  */
 
-package services.service;
+package services.service.utils;
 
-import java.util.Map;
+import services.config.AAIHttpClientConfiguration;
 
-public interface AAIExtendedHttpClient {
-    String getExtendedDetails(String aaiAPIPath, Map<String, String> queryParams, Map<String, String> headers);
+public class HTTPConfiguration extends AAIHttpClientConfiguration {
+
+    private static final String AAI_HOST_NAME = "1.2.3.4";
+    private static final Integer AAI_HOST_PORT_NUMBER = 1234;
+    private static final String AAI_HOST_PROTOCOL = "https";
+    private static final String AAI_USER_NAME = "PRH";
+    private static final String AAI_USER_PASS = "PRH";
+
+    @Override
+    public String aaiHost() {
+        return AAI_HOST_NAME;
+    }
+
+    @Override
+    public Integer aaiHostPortNumber() {
+        return AAI_HOST_PORT_NUMBER;
+    }
+
+    @Override
+    public String aaiProtocol() {
+        return AAI_HOST_PROTOCOL;
+    }
+
+    @Override
+    public String aaiUserName() {
+        return AAI_USER_NAME;
+    }
+
+    @Override
+    public String aaiUserPassword() {
+        return AAI_USER_PASS;
+    }
+
+    @Override
+    public boolean aaiIgnoreSSLCertificateErrors() {
+        return true;
+    }
 }

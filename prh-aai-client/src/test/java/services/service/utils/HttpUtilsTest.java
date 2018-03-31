@@ -18,10 +18,25 @@
  * ============LICENSE_END=========================================================
  */
 
-package services.service;
+package services.service.utils;
 
-import java.util.Map;
+import org.apache.http.HttpStatus;
+import org.junit.Test;
+import services.utils.HttpUtils;
 
-public interface AAIExtendedHttpClient {
-    String getExtendedDetails(String aaiAPIPath, Map<String, String> queryParams, Map<String, String> headers);
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
+
+
+public class HttpUtilsTest {
+
+    @Test
+    public void isSuccessfulResponseCode_shouldReturnTrue() {
+        assertTrue(HttpUtils.isSuccessfulResponseCode(HttpUtils.SC_ACCEPTED));
+    }
+
+    @Test
+    public void isSuccessfulResponseCode_shouldReturnFalse() {
+        assertFalse(HttpUtils.isSuccessfulResponseCode(HttpStatus.SC_BAD_GATEWAY));
+    }
 }

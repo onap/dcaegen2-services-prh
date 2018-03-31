@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * PROJECT
+ * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
@@ -19,16 +19,12 @@
  */
 package services.utils;
 
-public class HttpUtils {
+import org.apache.http.HttpStatus;
+
+public class HttpUtils implements HttpStatus {
 
     private HttpUtils() {}
 
-    public static final Integer HTTP_OK_RESPONSE_CODE = 200;
-    public static final Integer HTTP_ACCEPTED_RESPONSE_CODE = 200;
-    public static final Integer HTTP_NONAUTHORATIVE_INFORMATION_RESPONSE_CODE = 203;
-    public static final Integer HTTP_NO_CONTENT_RESPONSE_CODE = 204;
-    public static final Integer HTTP_RESET_CONTENT_RESPONSE_CODE = 205;
-    public static final Integer HTTP_PARTIAL_CONTENT_RESPONSE_CODE = 206;
     public static final String JSON_APPLICATION_TYPE = "application/json";
 
     public static boolean isSuccessfulResponseCode(Integer statusCode) {

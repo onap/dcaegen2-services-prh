@@ -20,8 +20,37 @@
 
 package services.service;
 
-import java.util.Map;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import services.config.AAIHttpClientConfiguration;
+import services.service.utils.HTTPConfiguration;
 
-public interface AAIExtendedHttpClient {
-    String getExtendedDetails(String aaiAPIPath, Map<String, String> queryParams, Map<String, String> headers);
+import static org.junit.Assert.assertNotNull;
+
+
+public class AAIHttpClientImplTest {
+
+    private AAIHttpClientImpl aaiHttpClientImpl;
+    private AAIHttpClientConfiguration aaiHttpClientConfiguration;
+
+
+    @Before
+    public void setup() {
+        aaiHttpClientConfiguration = new HTTPConfiguration();
+        aaiHttpClientImpl  = new AAIHttpClientImpl(aaiHttpClientConfiguration);
+    }
+
+    @After
+    public void teaDown() {
+        aaiHttpClientImpl = null;
+    }
+
+    @Test
+    public void getAAIHttpClientObject_shouldNotBeNull() {
+        aaiHttpClientImpl.getAAIHttpClient();
+        assertNotNull(aaiHttpClientImpl.getAAIHttpClient());
+    }
+
 }
+

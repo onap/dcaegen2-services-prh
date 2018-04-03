@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package services.service;
+package org.onap.dcaegen2.services.service;
 
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
@@ -31,11 +31,10 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.TrustStrategy;
+import org.onap.dcaegen2.services.config.AAIHttpClientConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import services.config.AAIHttpClientConfiguration;
-
 
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -62,12 +61,13 @@ public class AAIHttpClientImpl implements AAIHttpClient {
 
         if (aaiIgnoreSSLCertificateErrors) {
             try {
-                SSLContextBuilder sslContextBuilder = new SSLContextBuilder();
-                sslContextBuilder.loadTrustMaterial(null, acceptingTrustStrategy);
-                httpClientBuilder.setSSLContext(sslContextBuilder.build());
+                logger.info("Setting SSL Context for AAI HTTP Client");
+                httpClientBuilder.setSSLContext(new SSLContextBuilder()
+                        .loadTrustMaterial(null, acceptingTrustStrategy)
+                        .build());
 
             } catch (NoSuchAlgorithmException | KeyStoreException |  KeyManagementException e )  {
-                logger.error("Exception while setting SSL Context for AAI HTTP Client.");
+                logger.error("Exception while setting SSL Context for AAI HTTP Client: {}", e);
             }
 
             httpClientBuilder.setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE);

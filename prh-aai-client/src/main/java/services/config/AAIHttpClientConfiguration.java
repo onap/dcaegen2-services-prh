@@ -21,13 +21,14 @@
 package services.config;
 
 
+import java.io.Serializable;
 import org.immutables.value.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 @Value.Immutable(prehash = true)
 @Value.Style(stagedBuilder = true)
-public abstract class AAIHttpClientConfiguration implements AAIConfig {
+public abstract class AAIHttpClientConfiguration implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -47,6 +48,6 @@ public abstract class AAIHttpClientConfiguration implements AAIConfig {
     public abstract String aaiUserPassword();
 
     @Value.Parameter
-    public abstract boolean aaiIgnoreSSLCertificateErrors();
+    public abstract Boolean aaiIgnoreSSLCertificateErrors();
 
 }

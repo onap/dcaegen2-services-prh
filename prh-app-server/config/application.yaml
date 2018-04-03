@@ -1,0 +1,30 @@
+server:
+  port: 8100
+app:
+  AAIHttpClientConfiguration:
+    aaiHost: "localhost"
+    aaiHostPortNumber: 8080
+    aaiProtocol: "http"
+    aaiUserName: "admin"
+    aaiUserPassword: "admin"
+    aaiIgnoreSSLCertificateErrors: true
+#  dmaap-consumer-configuration:
+#    dmmaphost-name: "localhost"
+#    dmmapport-number: 2222
+#    dmmaptopic-name: "temp"
+#    dmmapprotocol: "http"
+#    dmmapuserName: "admin"
+#    dmmapuserPassword: "admin"
+#    dmmapcontentType: "application/json"
+#    consumerId: "1"
+#    consumerGroup: "other"
+#    timeoutMS: 1000
+#    message-limit: 1000
+#  dmaap-producer-configuration:
+#    dmmaphostName: "localhost"
+#    dmmapportNumber: 2223
+#    dmmaptopicName: "temp"
+#    dmmapprotocol: "http"
+#    dmmapuserName: "admin"
+#    dmmapuserPassword: "admin"
+#    dmmapcontentType: "application/json"

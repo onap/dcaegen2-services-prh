@@ -17,26 +17,17 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-
-package services.service.utils;
+package org.onap.dcaegen2.services.utils;
 
 import org.apache.http.HttpStatus;
-import org.junit.Test;
-import services.utils.HttpUtils;
 
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertTrue;
+public final class HttpUtils implements HttpStatus {
 
+    public static final String JSON_APPLICATION_TYPE = "application/json";
 
-public class HttpUtilsTest {
+    private HttpUtils() {}
 
-    @Test
-    public void isSuccessfulResponseCode_shouldReturnTrue() {
-        assertTrue(HttpUtils.isSuccessfulResponseCode(HttpUtils.SC_ACCEPTED));
-    }
-
-    @Test
-    public void isSuccessfulResponseCode_shouldReturnFalse() {
-        assertFalse(HttpUtils.isSuccessfulResponseCode(HttpStatus.SC_BAD_GATEWAY));
+    public static boolean isSuccessfulResponseCode(Integer statusCode) {
+        return statusCode >= 200 && statusCode < 300;
     }
 }

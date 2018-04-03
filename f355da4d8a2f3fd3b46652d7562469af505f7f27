@@ -1,0 +1,204 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_6538c33d",
+        "filename": "prh-aai-client/src/main/java/services/service/AAIExtendedHttpClient.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-03T05:43:01Z",
+      "side": 1,
+      "message": "provide the name of project in license header :D",
+      "revId": "f355da4d8a2f3fd3b46652d7562469af505f7f27",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_053f7f26",
+        "filename": "prh-aai-client/src/main/java/services/service/AAIExtendedHttpClientImpl.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-03T05:43:01Z",
+      "side": 1,
+      "message": "provide the name of project in license header ;)",
+      "range": {
+        "startLine": 3,
+        "startChar": 3,
+        "endLine": 3,
+        "endChar": 10
+      },
+      "revId": "f355da4d8a2f3fd3b46652d7562469af505f7f27",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c548b7ce",
+        "filename": "prh-aai-client/src/main/java/services/service/AAIExtendedHttpClientImpl.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-03T05:43:01Z",
+      "side": 1,
+      "message": "u have to use logger from sl4j. Why don\u0027t \u0027u use them?",
+      "revId": "f355da4d8a2f3fd3b46652d7562469af505f7f27",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_e54373ad",
+        "filename": "prh-aai-client/src/main/java/services/service/AAIExtendedHttpClientImpl.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-03T05:43:01Z",
+      "side": 1,
+      "message": "the same as above of logging",
+      "revId": "f355da4d8a2f3fd3b46652d7562469af505f7f27",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_8512afb2",
+        "filename": "prh-aai-client/src/main/java/services/service/AAIExtendedHttpClientImpl.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-03T05:43:01Z",
+      "side": 1,
+      "message": "separate implementation of this feature? SOLID !\n\nThe good feature of this will be extracting utils module which have to this feature. Hight probability of usage this in dmaap module also :). Let\u0027s start discussion",
+      "revId": "f355da4d8a2f3fd3b46652d7562469af505f7f27",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_650f6389",
+        "filename": "prh-aai-client/src/main/java/services/service/AAIExtendedHttpClientImpl.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-03T05:43:01Z",
+      "side": 1,
+      "message": "For this function and above firstly separate implemetation SOLID. After that we will start discussion about refactoring this common modules",
+      "revId": "f355da4d8a2f3fd3b46652d7562469af505f7f27",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_25215bfc",
+        "filename": "prh-aai-client/src/main/java/services/service/AAIHttpClient.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-03T05:43:01Z",
+      "side": 1,
+      "message": "provide the name of the project in license header",
+      "range": {
+        "startLine": 3,
+        "startChar": 3,
+        "endLine": 3,
+        "endChar": 10
+      },
+      "revId": "f355da4d8a2f3fd3b46652d7562469af505f7f27",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c51f57b6",
+        "filename": "prh-aai-client/src/main/java/services/service/AAIHttpClientImpl.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-03T05:43:01Z",
+      "side": 1,
+      "message": "provide the name of project in license header",
+      "range": {
+        "startLine": 3,
+        "startChar": 3,
+        "endLine": 3,
+        "endChar": 10
+      },
+      "revId": "f355da4d8a2f3fd3b46652d7562469af505f7f27",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_85794ffe",
+        "filename": "prh-aai-client/src/main/java/services/service/AAIHttpClientImpl.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-03T05:43:01Z",
+      "side": 1,
+      "message": "extract method",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 9
+      },
+      "revId": "f355da4d8a2f3fd3b46652d7562469af505f7f27",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_25687b20",
+        "filename": "prh-aai-client/src/main/java/services/utils/HttpUtils.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-03T05:43:01Z",
+      "side": 1,
+      "message": "useless",
+      "range": {
+        "startLine": 26,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 73
+      },
+      "revId": "f355da4d8a2f3fd3b46652d7562469af505f7f27",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

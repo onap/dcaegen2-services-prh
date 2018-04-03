@@ -30,11 +30,13 @@ public abstract class DmaapProducerConfiguration implements DmaapCustomConfig {
 
     private static final long serialVersionUID = 1L;
 
-    public interface Builder extends
+    interface Builder extends
         DmaapCustomConfig.Builder<DmaapProducerConfiguration, DmaapProducerConfiguration.Builder> {
     }
 
-    public static Builder builder() {
+    public static DmaapProducerConfiguration.Builder builder() {
         return ImmutableDmaapProducerConfiguration.builder();
     }
+
+
 }

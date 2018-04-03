@@ -38,7 +38,6 @@ public class DmaapConsumerTask implements DmaapTask {
     public void execute() {
         logger.debug("Start task DmaapConsumerTask::execute() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
-        //TODO: ADD implementation for executing request to consume topic from dmaap
 
         logger.debug("End task DmaapConsumerTask::execute() :: Execution Time - {}",
             dateTimeFormatter.format(LocalDateTime.now()));

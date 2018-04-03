@@ -56,7 +56,7 @@ public class ScheduledTask {
             logger
                 .error("Task scheduledTaskAskingDMaaPOfConsumeEvent()::AAINotFoundException :: Execution Time - {}:{}",
                     dateTimeFormatter.format(
-                        LocalDateTime.now()), e.getMessage());
+                        LocalDateTime.now()), e);
         }
     }
 

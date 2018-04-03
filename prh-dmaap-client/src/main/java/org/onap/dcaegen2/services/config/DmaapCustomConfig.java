@@ -19,10 +19,12 @@
  */
 package org.onap.dcaegen2.services.config;
 
+import java.io.Serializable;
+
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/28/18
  */
-public interface DmaapCustomConfig extends DmaapConfig {
+public interface DmaapCustomConfig extends Serializable {
 
     String dmmaphostName();
 

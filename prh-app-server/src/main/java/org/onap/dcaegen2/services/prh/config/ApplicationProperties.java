@@ -17,13 +17,11 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package services.config;
-
-import java.io.Serializable;
+package org.onap.dcaegen2.services.prh.config;
 
 /**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/3/18
  */
-interface AAIConfig extends Serializable {
+public class ApplicationProperties {
 
 }

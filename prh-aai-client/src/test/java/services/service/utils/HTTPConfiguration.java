@@ -56,7 +56,7 @@ public class HTTPConfiguration extends AAIHttpClientConfiguration {
     }
 
     @Override
-    public boolean aaiIgnoreSSLCertificateErrors() {
+    public Boolean aaiIgnoreSSLCertificateErrors() {
         return true;
     }
 }

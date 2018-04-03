@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_dcfded3c",
+        "filename": "prh-app-server/config/application.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 2831
+      },
+      "writtenOn": "2018-04-03T12:57:15Z",
+      "side": 1,
+      "message": "???",
+      "range": {
+        "startLine": 4,
+        "startChar": 11,
+        "endLine": 4,
+        "endChar": 31
+      },
+      "revId": "5cd4696d16d3b68738440f5dfcadbcf2e4b98203",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_fc9f8901",
+        "filename": "prh-app-server/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 2831
+      },
+      "writtenOn": "2018-04-03T12:57:15Z",
+      "side": 1,
+      "message": "use ``openjdk:8-jre-alpine`` as base image",
+      "range": {
+        "startLine": 75,
+        "startChar": 21,
+        "endLine": 75,
+        "endChar": 44
+      },
+      "revId": "5cd4696d16d3b68738440f5dfcadbcf2e4b98203",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

@@ -33,8 +33,6 @@
   <packaging>jar</packaging>
   <properties>
     <maven.build.timestamp.format>yyyyMMdd'T'HHmmss</maven.build.timestamp.format>
-    <onap.nexus.dockerregistry.daily>${env.MVN_DOCKERREGISTRY_DAILY}
-    </onap.nexus.dockerregistry.daily>
   </properties>
   <build>
     <plugins>
@@ -62,18 +60,30 @@
         <groupId>com.spotify</groupId>
         <artifactId>docker-maven-plugin</artifactId>
         <version>1.0.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>build</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
         <configuration>
           <imageName>
             ${onap.nexus.dockerregistry.daily}/onap/${project.groupId}.${project.artifactId}
           </imageName>
-          <dockerDirectory>docker</dockerDirectory>
+          <baseImage>openjdk:8-jre-alpine</baseImage>
+          <entryPoint>["java", "-jar", "/opt/${project.build.finalName}.jar"]</entryPoint>
           <resources>
             <resource>
-              <targetPath>/</targetPath>
+              <targetPath>/opt</targetPath>
               <directory>${project.build.directory}</directory>
               <include>${project.build.finalName}.jar</include>
             </resource>
           </resources>
+          <exposes>
+            <expose>8100</expose>
+          </exposes>
           <imageTags>
             <imageTag>${project.version}-${maven.build.timestamp}</imageTag>
             <imageTag>latest</imageTag>
@@ -81,6 +91,18 @@
           <serverId>${onap.nexus.dockerregistry.daily}</serverId>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.7</version>
+        <extensions>true</extensions>
+        <configuration>
+          <serverId>ecomp-staging</serverId>
+          <nexusUrl>${nexusproxy}</nexusUrl>
+          <stagingProfileId>176c31dfe190a</stagingProfileId>
+        </configuration>
+      </plugin>
+
 
     </plugins>
   </build>
@@ -158,6 +180,16 @@
     <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.onap.dcaegen2.services.prh</groupId>
+      <artifactId>prh-aai-client</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.onap.dcaegen2.services.prh</groupId>
+      <artifactId>prh-dmaap-client</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
     </dependency>
 
   </dependencies>

@@ -17,11 +17,32 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+package org.onap.dcaegen2.services.service;
 
-package services.service;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.onap.dcaegen2.services.config.AAIHttpClientConfiguration;
 
-import java.util.Map;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
 
-public interface AAIExtendedHttpClient {
-    String getExtendedDetails(String aaiAPIPath, Map<String, String> queryParams, Map<String, String> headers);
+
+public class AAIHttpClientImplTest {
+
+    private AAIHttpClientImpl aaiHttpClientImpl;
+    private AAIHttpClientConfiguration aaiHttpClientConfiguration;
+
+
+    @BeforeEach
+    public void setup() {
+        aaiHttpClientConfiguration = mock(AAIHttpClientConfiguration.class);
+        aaiHttpClientImpl  = new AAIHttpClientImpl(aaiHttpClientConfiguration);
+    }
+
+    @Test
+    public void getAAIHttpClientObject_shouldNotBeNull() {
+        aaiHttpClientImpl.getAAIHttpClient();
+        assertNotNull(aaiHttpClientImpl.getAAIHttpClient());
+    }
 }
+

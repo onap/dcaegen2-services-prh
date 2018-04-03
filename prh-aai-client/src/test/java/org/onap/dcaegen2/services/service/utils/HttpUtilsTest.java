@@ -18,11 +18,25 @@
  * ============LICENSE_END=========================================================
  */
 
-package services.service;
+package org.onap.dcaegen2.services.service.utils;
 
-import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.HttpStatus;
+import org.junit.Test;
+import org.onap.dcaegen2.services.utils.HttpUtils;
 
-public interface AAIHttpClient {
-    CloseableHttpClient getAAIHttpClient();
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
+
+
+public class HttpUtilsTest {
+
+    @Test
+    public void isSuccessfulResponseCode_shouldReturnTrue() {
+        assertTrue(HttpUtils.isSuccessfulResponseCode(HttpUtils.SC_ACCEPTED));
+    }
+
+    @Test
+    public void isSuccessfulResponseCode_shouldReturnFalse() {
+        assertFalse(HttpUtils.isSuccessfulResponseCode(HttpStatus.SC_BAD_GATEWAY));
+    }
 }
-

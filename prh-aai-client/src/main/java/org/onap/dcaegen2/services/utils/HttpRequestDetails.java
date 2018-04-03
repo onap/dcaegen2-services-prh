@@ -17,46 +17,40 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+package org.onap.dcaegen2.services.utils;
 
-package services.service.utils;
+import java.util.Map;
 
-import services.config.AAIHttpClientConfiguration;
 
-public class HTTPConfiguration extends AAIHttpClientConfiguration {
+public class HttpRequestDetails {
 
-    private static final String AAI_HOST_NAME = "1.2.3.4";
-    private static final Integer AAI_HOST_PORT_NUMBER = 1234;
-    private static final String AAI_HOST_PROTOCOL = "https";
-    private static final String AAI_USER_NAME = "PRH";
-    private static final String AAI_USER_PASS = "PRH";
+    private final String aaiAPIPath;
+    private final Map<String,String> queryParameters;
+    private final Map<String,String> headers;
+    private RequestVerbs requestVerb;
 
-    @Override
-    public String aaiHost() {
-        return AAI_HOST_NAME;
+    public HttpRequestDetails(final String aaiAPIPath, final Map<String, String> queryParams,
+                              final Map<String, String> headers, RequestVerbs requestVerb) {
+
+        this.aaiAPIPath = aaiAPIPath;
+        this.queryParameters = queryParams;
+        this.headers = headers;
+        this.requestVerb = requestVerb;
     }
 
-    @Override
-    public Integer aaiHostPortNumber() {
-        return AAI_HOST_PORT_NUMBER;
+    public String getAaiAPIPath() {
+        return aaiAPIPath;
     }
 
-    @Override
-    public String aaiProtocol() {
-        return AAI_HOST_PROTOCOL;
+    public Map<String, String> getHeaders() {
+        return headers;
     }
 
-    @Override
-    public String aaiUserName() {
-        return AAI_USER_NAME;
+    public Map<String, String> getQueryParameters() {
+        return queryParameters;
     }
 
-    @Override
-    public String aaiUserPassword() {
-        return AAI_USER_PASS;
-    }
-
-    @Override
-    public Boolean aaiIgnoreSSLCertificateErrors() {
-        return true;
+    public RequestVerbs getHttpVerb() {
+        return requestVerb;
     }
 }

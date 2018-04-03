@@ -18,39 +18,12 @@
  * ============LICENSE_END=========================================================
  */
 
-package services.service;
+package org.onap.dcaegen2.services.service;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import services.config.AAIHttpClientConfiguration;
-import services.service.utils.HTTPConfiguration;
-
-import static org.junit.Assert.assertNotNull;
+import org.onap.dcaegen2.services.utils.HttpRequestDetails;
 
 
-public class AAIHttpClientImplTest {
-
-    private AAIHttpClientImpl aaiHttpClientImpl;
-    private AAIHttpClientConfiguration aaiHttpClientConfiguration;
-
-
-    @Before
-    public void setup() {
-        aaiHttpClientConfiguration = new HTTPConfiguration();
-        aaiHttpClientImpl  = new AAIHttpClientImpl(aaiHttpClientConfiguration);
-    }
-
-    @After
-    public void teaDown() {
-        aaiHttpClientImpl = null;
-    }
-
-    @Test
-    public void getAAIHttpClientObject_shouldNotBeNull() {
-        aaiHttpClientImpl.getAAIHttpClient();
-        assertNotNull(aaiHttpClientImpl.getAAIHttpClient());
-    }
-
+@FunctionalInterface
+public interface AAIExtendedHttpClient {
+    String getHttpResponse(HttpRequestDetails httpRequestDetails);
 }
-

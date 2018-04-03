@@ -18,45 +18,25 @@
  * ============LICENSE_END=========================================================
  */
 
-package services.service.utils;
+package org.onap.dcaegen2.services.service.utils;
 
-import services.config.AAIHttpClientConfiguration;
+import org.apache.http.HttpStatus;
+import org.junit.Test;
+import org.onap.dcaegen2.services.utils.HttpUtils;
 
-public class HTTPConfiguration extends AAIHttpClientConfiguration {
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
 
-    private static final String AAI_HOST_NAME = "1.2.3.4";
-    private static final Integer AAI_HOST_PORT_NUMBER = 1234;
-    private static final String AAI_HOST_PROTOCOL = "https";
-    private static final String AAI_USER_NAME = "PRH";
-    private static final String AAI_USER_PASS = "PRH";
 
-    @Override
-    public String aaiHost() {
-        return AAI_HOST_NAME;
+public class HttpUtilsTest {
+
+    @Test
+    public void isSuccessfulResponseCode_shouldReturnTrue() {
+        assertTrue(HttpUtils.isSuccessfulResponseCode(HttpUtils.SC_ACCEPTED));
     }
 
-    @Override
-    public Integer aaiHostPortNumber() {
-        return AAI_HOST_PORT_NUMBER;
-    }
-
-    @Override
-    public String aaiProtocol() {
-        return AAI_HOST_PROTOCOL;
-    }
-
-    @Override
-    public String aaiUserName() {
-        return AAI_USER_NAME;
-    }
-
-    @Override
-    public String aaiUserPassword() {
-        return AAI_USER_PASS;
-    }
-
-    @Override
-    public Boolean aaiIgnoreSSLCertificateErrors() {
-        return true;
+    @Test
+    public void isSuccessfulResponseCode_shouldReturnFalse() {
+        assertFalse(HttpUtils.isSuccessfulResponseCode(HttpStatus.SC_BAD_GATEWAY));
     }
 }

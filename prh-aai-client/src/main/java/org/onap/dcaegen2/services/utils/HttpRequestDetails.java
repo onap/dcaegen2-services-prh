@@ -17,12 +17,40 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+package org.onap.dcaegen2.services.utils;
 
-package services.service;
+import java.util.Map;
 
-import org.apache.http.impl.client.CloseableHttpClient;
 
-public interface AAIHttpClient {
-    CloseableHttpClient getAAIHttpClient();
+public class HttpRequestDetails {
+
+    private final String aaiAPIPath;
+    private final Map<String,String> queryParameters;
+    private final Map<String,String> headers;
+    private final RequestVerbs requestVerb;
+
+    public HttpRequestDetails(final String aaiAPIPath, final Map<String, String> queryParams,
+                              final Map<String, String> headers, RequestVerbs requestVerb) {
+
+        this.aaiAPIPath = aaiAPIPath;
+        this.queryParameters = queryParams;
+        this.headers = headers;
+        this.requestVerb = requestVerb;
+    }
+
+    public String getAaiAPIPath() {
+        return aaiAPIPath;
+    }
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    public Map<String, String> getQueryParameters() {
+        return queryParameters;
+    }
+
+    public RequestVerbs getHttpVerb() {
+        return requestVerb;
+    }
 }
-

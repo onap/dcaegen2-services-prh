@@ -17,16 +17,14 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+package org.onap.dcaegen2.services.service;
 
-package services.service;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import services.config.AAIHttpClientConfiguration;
-import services.service.utils.HTTPConfiguration;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.onap.dcaegen2.services.config.AAIHttpClientConfiguration;
 
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
 
 
 public class AAIHttpClientImplTest {
@@ -35,15 +33,10 @@ public class AAIHttpClientImplTest {
     private AAIHttpClientConfiguration aaiHttpClientConfiguration;
 
 
-    @Before
+    @BeforeEach
     public void setup() {
-        aaiHttpClientConfiguration = new HTTPConfiguration();
+        aaiHttpClientConfiguration = mock(AAIHttpClientConfiguration.class);
         aaiHttpClientImpl  = new AAIHttpClientImpl(aaiHttpClientConfiguration);
-    }
-
-    @After
-    public void teaDown() {
-        aaiHttpClientImpl = null;
     }
 
     @Test
@@ -51,6 +44,5 @@ public class AAIHttpClientImplTest {
         aaiHttpClientImpl.getAAIHttpClient();
         assertNotNull(aaiHttpClientImpl.getAAIHttpClient());
     }
-
 }
 

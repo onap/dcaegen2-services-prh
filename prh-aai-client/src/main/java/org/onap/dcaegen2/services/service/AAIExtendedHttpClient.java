@@ -17,11 +17,14 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+package org.onap.dcaegen2.services.service;
 
-package services.service;
+import org.onap.dcaegen2.services.utils.HttpRequestDetails;
 
-import java.util.Map;
+import java.util.Optional;
 
+
+@FunctionalInterface
 public interface AAIExtendedHttpClient {
-    String getExtendedDetails(String aaiAPIPath, Map<String, String> queryParams, Map<String, String> headers);
+    Optional<String> getHttpResponse(HttpRequestDetails httpRequestDetails);
 }

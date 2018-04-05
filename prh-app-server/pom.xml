@@ -32,7 +32,7 @@
   <groupId>org.onap.dcaegen2.services.prh</groupId>
   <packaging>jar</packaging>
   <properties>
-    <maven.build.timestamp.format>yyyyMMdd'T'HHmmss</maven.build.timestamp.format>
+    <maven.build.timestamp.format>yyyyMMdd'T'HHmmss'Z'</maven.build.timestamp.format>
     <project.fatJar.finalName>prh-app-server</project.fatJar.finalName>
   </properties>
   <build>

@@ -25,15 +25,14 @@ import static org.mockito.Mockito.verify;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.onap.dcaegen2.services.prh.IT.junit5.mockito.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 
 /**
@@ -42,25 +41,23 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 
 @Configuration
 @ComponentScan
-@RunWith(SpringRunner.class)
-@ExtendWith(MockitoExtension.class)
+@ExtendWith({MockitoExtension.class, SpringExtension.class})
 @ContextConfiguration(locations = {"classpath:scheduled-context.xml"})
-public class ScheduledXmlContextITest extends AbstractTestNGSpringContextTests {
+class ScheduledXmlContextITest extends AbstractTestNGSpringContextTests {
 
     private static final int WAIT_FOR_SCHEDULING = 1;
 
     @Autowired
-    private DmaapConsumerTask dmaapConsumerTaskSpy;
-
+    private ScheduledTask scheduledTask;
 
     @Test
-    public void testScheduling() {
+    void testScheduling() {
         final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
         executorService.scheduleWithFixedDelay(this::verifyDmaapConsumerTask, 0, WAIT_FOR_SCHEDULING, TimeUnit.SECONDS);
     }
 
     private void verifyDmaapConsumerTask() {
-        verify(dmaapConsumerTaskSpy, atLeast(2)).execute();
+        verify(scheduledTask, atLeast(2)).scheduledTaskAskingDMaaPOfConsumeEvent();
     }
 
 

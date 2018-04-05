@@ -31,14 +31,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class DmaapConsumerTask implements DmaapTask {
 
+
     private static final Logger logger = LoggerFactory.getLogger(DmaapConsumerTask.class);
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     @Override
     public void execute() {
+
         logger.debug("Start task DmaapConsumerTask::execute() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
-
         logger.debug("End task DmaapConsumerTask::execute() :: Execution Time - {}",
             dateTimeFormatter.format(LocalDateTime.now()));
     }

@@ -25,6 +25,7 @@ import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +35,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class ScheduledTask {
 
-    private static final int SCHEDULING_DELAY = 1000;
     private static final Logger logger = LoggerFactory.getLogger(ScheduledTask.class);
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
@@ -45,8 +45,6 @@ public class ScheduledTask {
         this.dmaapConsumerTask = dmaapConsumerTask;
     }
 
-
-    @Scheduled(fixedDelay = SCHEDULING_DELAY)
     public void scheduledTaskAskingDMaaPOfConsumeEvent() {
         logger.debug("Task scheduledTaskAskingDMaaPOfConsumeEvent() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
@@ -54,7 +52,7 @@ public class ScheduledTask {
             dmaapConsumerTask.execute();
         } catch (AAINotFoundException e) {
             logger
-                .error("Task scheduledTaskAskingDMaaPOfConsumeEvent()::AAINotFoundException :: Execution Time - {}:{}",
+                .warn("Task scheduledTaskAskingDMaaPOfConsumeEvent()::AAINotFoundException :: Execution Time - {}:{}",
                     dateTimeFormatter.format(
                         LocalDateTime.now()), e);
         }

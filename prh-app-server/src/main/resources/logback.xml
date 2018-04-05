@@ -1,23 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-  <property name="LOG_PATH" value="logs"/>
-  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder>
-      <pattern>%d{yyyy-MM-dd HH:mm:ss} | %-5p | [%thread] %logger{5}:%L - %msg%n</pattern>
-    </encoder>
-  </appender>
+  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+  <property name="LOG_FILE"
+    value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/}spring.log}"/>
 
-  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-    <file>${LOG_PATH}/logFile.log</file>
-    <append>true</append>
-    <encoder>
-      <pattern>%d{yyyy-MM-dd HH:mm:ss} | %-5p | [%thread] %logger{5}:%L - %msg%n</pattern>
-    </encoder>
-  </appender>
+  <springProfile name="dev">
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+    <appender name="ROLLING-FILE"
+      class="ch.qos.logback.core.rolling.RollingFileAppender">
+      <encoder>
+        <pattern>${FILE_LOG_PATTERN}</pattern>
+      </encoder>
+      <file>${LOG_FILE}</file>
+      <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.log</fileNamePattern>
+      </rollingPolicy>
+    </appender>
+    <root level="ERROR">
+      <appender-ref ref="CONSOLE"/>
+      <appender-ref ref="ROLLING-FILE"/>
+    </root>
+  </springProfile>
 
-  <logger name="org.onap.dcaegen2.services.prh" level="TRACE"/>
-  <root level="DEBUG">
-    <appender-ref ref="STDOUT"/>
-    <appender-ref ref="FILE"/>
-  </root>
+  <springProfile name="prod">
+    <appender name="ROLLING-FILE"
+      class="ch.qos.logback.core.rolling.RollingFileAppender">
+      <encoder>
+        <pattern>${FILE_LOG_PATTERN}</pattern>
+      </encoder>
+      <file>${LOG_FILE}</file>
+      <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+        <timeBasedFileNamingAndTriggeringPolicy
+          class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+          <maxFileSize>10MB</maxFileSize>
+        </timeBasedFileNamingAndTriggeringPolicy>
+      </rollingPolicy>
+    </appender>
+
+    <root level="ERROR">
+      <appender-ref ref="ROLLING-FILE"/>
+    </root>
+  </springProfile>
 </configuration>

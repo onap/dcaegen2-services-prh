@@ -21,9 +21,12 @@ package org.onap.dcaegen2.services.prh;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
@@ -33,7 +36,14 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @ComponentScan
 @EnableScheduling
 public class MainApp {
+
     public static void main(String[] args) {
         SpringApplication.run(MainApp.class, args);
+    }
+
+
+    @Bean
+    TaskScheduler taskScheduler() {
+        return new ConcurrentTaskScheduler();
     }
 }

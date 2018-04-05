@@ -1,13 +1,32 @@
+spring:
+  profiles:
+    active: prod
 server:
   port: 8100
+logging:
+  level:
+    ROOT: ERROR
+    org.springframework: ERROR
+    org.springframework.data: ERROR
+    org.onap.dcaegen2.services.prh: INFO
+  file: opt/log/application.log
 app:
-  AAIHttpClientConfiguration:
-    aaiHost: "localhost"
-    aaiHostPortNumber: 8080
-    aaiProtocol: "http"
-    aaiUserName: "admin"
-    aaiUserPassword: "admin"
-    aaiIgnoreSSLCertificateErrors: true
+  configs:
+    aaiHttpClientConfiguration:
+      aaiHost: "dns.aai.host"
+      aaiHostPortNumber: 8080
+      aaiProtocol: "https"
+      aaiUserName: "admin"
+      aaiUserPassword: "admin"
+      aaiIgnoreSSLCertificateErrors: true
+#app:
+#  AAIHttpClientConfiguration:
+#    aaiHost: "localhost"
+#    aaiHostPortNumber: 8080
+#    aaiProtocol: "http"
+#    aaiUserName: "admin"
+#    aaiUserPassword: "admin"
+#    aaiIgnoreSSLCertificateErrors: true
 #  dmaap-consumer-configuration:
 #    dmmaphost-name: "localhost"
 #    dmmapport-number: 2222

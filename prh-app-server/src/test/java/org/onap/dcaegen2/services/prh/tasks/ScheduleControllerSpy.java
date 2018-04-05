@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -17,11 +17,28 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.config;
+package org.onap.dcaegen2.services.prh.tasks;
+
+import static org.mockito.Mockito.spy;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 /**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/3/18
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/5/18
  */
-public class ApplicationProperties {
+@Configuration
+public class ScheduleControllerSpy {
+
+    @Autowired
+    private DmaapConsumerTask dmaapConsumerTaskSpy;
+
+    @Bean
+    @Primary
+    public ScheduledTask registerSimpleDmaapConsumerTask() {
+        return spy(new ScheduledTask(dmaapConsumerTaskSpy));
+    }
 
 }

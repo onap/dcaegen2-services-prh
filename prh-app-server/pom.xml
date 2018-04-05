@@ -104,8 +104,6 @@
           <stagingProfileId>176c31dfe190a</stagingProfileId>
         </configuration>
       </plugin>
-
-
     </plugins>
   </build>
   <dependencies>

@@ -1,0 +1,222 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_5b58fa55",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/service/AAIExtendedHttpClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-05T05:55:45Z",
+      "side": 1,
+      "message": "Connect definition with declaration",
+      "range": {
+        "startLine": 74,
+        "startChar": 8,
+        "endLine": 74,
+        "endChar": 19
+      },
+      "revId": "dc317632dee0f75d57417be0ff9dde85d1eea9cb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_db3baae9",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/service/AAIExtendedHttpClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-05T05:55:45Z",
+      "side": 1,
+      "message": "It can be simplified",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 87,
+        "endChar": 9
+      },
+      "revId": "dc317632dee0f75d57417be0ff9dde85d1eea9cb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_3b4e4e97",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/service/AAIExtendedHttpClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-05T05:55:45Z",
+      "side": 1,
+      "message": "Do you think that this kind of log level error have to be defined in this catch?",
+      "revId": "dc317632dee0f75d57417be0ff9dde85d1eea9cb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_5b2f9aa1",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/service/AAIExtendedHttpClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-05T05:55:45Z",
+      "side": 1,
+      "message": "Optional.ofNullable",
+      "range": {
+        "startLine": 99,
+        "startChar": 0,
+        "endLine": 103,
+        "endChar": 9
+      },
+      "revId": "dc317632dee0f75d57417be0ff9dde85d1eea9cb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_1b191288",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/service/AAIExtendedHttpClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-05T05:55:45Z",
+      "side": 1,
+      "message": "connect definition with declaration",
+      "range": {
+        "startLine": 111,
+        "startChar": 8,
+        "endLine": 111,
+        "endChar": 18
+      },
+      "revId": "dc317632dee0f75d57417be0ff9dde85d1eea9cb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_7b2a9691",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/service/AAIExtendedHttpClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-05T05:55:45Z",
+      "side": 1,
+      "message": "Maybe other log level ?",
+      "revId": "dc317632dee0f75d57417be0ff9dde85d1eea9cb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_db12ca61",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/service/AAIExtendedHttpClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-05T05:55:45Z",
+      "side": 1,
+      "message": "other log level, this is not a bug",
+      "range": {
+        "startLine": 152,
+        "startChar": 16,
+        "endLine": 152,
+        "endChar": 79
+      },
+      "revId": "dc317632dee0f75d57417be0ff9dde85d1eea9cb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_9b0c4244",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/service/AAIHttpClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-05T05:55:45Z",
+      "side": 1,
+      "message": "it can be simplified",
+      "range": {
+        "startLine": 65,
+        "startChar": 16,
+        "endLine": 67,
+        "endChar": 75
+      },
+      "revId": "dc317632dee0f75d57417be0ff9dde85d1eea9cb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_fb154649",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/service/AAIHttpClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-05T05:55:45Z",
+      "side": 1,
+      "message": "other log level",
+      "range": {
+        "startLine": 70,
+        "startChar": 16,
+        "endLine": 70,
+        "endChar": 95
+      },
+      "revId": "dc317632dee0f75d57417be0ff9dde85d1eea9cb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_bb07be1c",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/utils/HttpRequestDetails.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-05T05:55:45Z",
+      "side": 1,
+      "message": "why not final",
+      "range": {
+        "startLine": 30,
+        "startChar": 3,
+        "endLine": 30,
+        "endChar": 37
+      },
+      "revId": "dc317632dee0f75d57417be0ff9dde85d1eea9cb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

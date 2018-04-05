@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_0c8796d8",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/utils/HttpRequestDetails.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-05T19:44:48Z",
+      "side": 1,
+      "message": "This whole class is Immutable because lack of setter method. You could refactor it as we did with aai dmaap configs",
+      "range": {
+        "startLine": 25,
+        "startChar": 13,
+        "endLine": 25,
+        "endChar": 31
+      },
+      "revId": "a7eca2c258d556fa7e8a077724c5ba6b7cc52ccb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_6c773a03",
+        "filename": "prh-aai-client/src/test/java/org/onap/dcaegen2/services/service/AAIExtendedHttpClientImplTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-05T19:44:48Z",
+      "side": 1,
+      "message": "This annotation means that init method will be fired before each test method. It will be better to use @BeforeAll which means that init method should be fired once per all test methods.",
+      "range": {
+        "startLine": 52,
+        "startChar": 5,
+        "endLine": 52,
+        "endChar": 15
+      },
+      "revId": "a7eca2c258d556fa7e8a077724c5ba6b7cc52ccb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_8c72c60f",
+        "filename": "prh-aai-client/src/test/java/org/onap/dcaegen2/services/service/AAIExtendedHttpClientImplTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-05T19:44:48Z",
+      "side": 1,
+      "message": "The same as BeforeEach comment",
+      "range": {
+        "startLine": 77,
+        "startChar": 5,
+        "endLine": 77,
+        "endChar": 14
+      },
+      "revId": "a7eca2c258d556fa7e8a077724c5ba6b7cc52ccb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_2c613239",
+        "filename": "prh-aai-client/src/test/java/org/onap/dcaegen2/services/service/AAIHttpClientImplTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-05T19:44:48Z",
+      "side": 1,
+      "message": "@BeforeAll",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 15
+      },
+      "revId": "a7eca2c258d556fa7e8a077724c5ba6b7cc52ccb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_4c64be48",
+        "filename": "prh-aai-client/src/test/java/org/onap/dcaegen2/services/service/utils/HttpRequestDetailsTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-05T19:44:48Z",
+      "side": 1,
+      "message": "@BeforeAll",
+      "range": {
+        "startLine": 40,
+        "startChar": 5,
+        "endLine": 40,
+        "endChar": 15
+      },
+      "revId": "a7eca2c258d556fa7e8a077724c5ba6b7cc52ccb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

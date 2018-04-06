@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_c72189fd",
+        "filename": "prh-app-server/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 51
+      },
+      "writtenOn": "2018-04-06T02:05:31Z",
+      "side": 1,
+      "message": "Jess, this is where the image is tagged.  The first one is based on CIMAN132.  Please note the Z at the end.  So we have the timestamp as yyyyMMdd\u0027T\u0027HHmmss, adding the trailing Z here.",
+      "revId": "04923e77fa25f701695f8f8d99643883ee4fe451",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

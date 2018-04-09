@@ -17,46 +17,29 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+package org.onap.dcaegen2.services.utils;
 
-package services.service.utils;
 
-import services.config.AAIHttpClientConfiguration;
+import org.immutables.value.Value;
 
-public class HTTPConfiguration extends AAIHttpClientConfiguration {
+import java.io.Serializable;
+import java.util.Map;
 
-    private static final String AAI_HOST_NAME = "1.2.3.4";
-    private static final Integer AAI_HOST_PORT_NUMBER = 1234;
-    private static final String AAI_HOST_PROTOCOL = "https";
-    private static final String AAI_USER_NAME = "PRH";
-    private static final String AAI_USER_PASS = "PRH";
+@Value.Immutable(prehash = true)
+@Value.Style(stagedBuilder = true)
+public abstract class HttpRequestDetails implements Serializable {
 
-    @Override
-    public String aaiHost() {
-        return AAI_HOST_NAME;
-    }
+    private static final long serialVersionUID = 1L;
 
-    @Override
-    public Integer aaiHostPortNumber() {
-        return AAI_HOST_PORT_NUMBER;
-    }
+    @Value.Parameter
+    public abstract String aaiAPIPath();
 
-    @Override
-    public String aaiProtocol() {
-        return AAI_HOST_PROTOCOL;
-    }
+    @Value.Parameter
+    public abstract Map<String,String> queryParameters();
 
-    @Override
-    public String aaiUserName() {
-        return AAI_USER_NAME;
-    }
+    @Value.Parameter
+    public abstract Map<String,String> headers();
 
-    @Override
-    public String aaiUserPassword() {
-        return AAI_USER_PASS;
-    }
-
-    @Override
-    public Boolean aaiIgnoreSSLCertificateErrors() {
-        return true;
-    }
+    @Value.Parameter
+    public abstract RequestVerbs requestVerb();
 }

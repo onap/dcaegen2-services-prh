@@ -17,17 +17,13 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package services.utils;
 
-import org.apache.http.HttpStatus;
+package org.onap.dcaegen2.services.service;
 
-public class HttpUtils implements HttpStatus {
+import org.apache.http.impl.client.CloseableHttpClient;
 
-    private HttpUtils() {}
-
-    public static final String JSON_APPLICATION_TYPE = "application/json";
-
-    public static boolean isSuccessfulResponseCode(Integer statusCode) {
-        return statusCode >= 200 && statusCode < 300;
-    }
+@FunctionalInterface
+public interface AAIHttpClient {
+    CloseableHttpClient getAAIHttpClient();
 }
+

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_0cc3faed",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/service/AAIExtendedHttpClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-12T11:49:23Z",
+      "side": 1,
+      "message": "This is very confusing",
+      "range": {
+        "startLine": 157,
+        "startChar": 18,
+        "endLine": 158,
+        "endChar": 60
+      },
+      "revId": "0e0aa08c5a92447176ace35021d6205832adf466",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

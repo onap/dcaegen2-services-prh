@@ -52,7 +52,7 @@ public class ScheduledTask {
             dmaapConsumerTask.execute();
         } catch (AAINotFoundException e) {
             logger
-                .warn("Task scheduledTaskAskingDMaaPOfConsumeEvent()::AAINotFoundException :: Execution Time - {}:{}",
+                .error("Task scheduledTaskAskingDMaaPOfConsumeEvent()::AAINotFoundException :: Execution Time - {}:{}",
                     dateTimeFormatter.format(
                         LocalDateTime.now()), e);
         }

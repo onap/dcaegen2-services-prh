@@ -40,7 +40,7 @@
   </properties>
 
   <dependencies>
-    
+
     <!-- DEVELOPMENT DEPENDENCIES -->
     <dependency>
       <groupId>org.immutables</groupId>
@@ -61,13 +61,17 @@
       <artifactId>spring-context</artifactId>
       <version>3.0.2.RELEASE</version>
     </dependency>
-      <dependency>
-          <groupId>com.google.guava</groupId>
-          <artifactId>guava</artifactId>
-      </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jdk8</artifactId>
     </dependency>
 
     <!-- LOGGING DEPENDENCIES-->

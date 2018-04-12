@@ -17,9 +17,10 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.tasks;
+package org.onap.dcaegen2.services.prh.IT;
 
 import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import java.util.concurrent.Executors;
@@ -28,7 +29,10 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.dcaegen2.services.prh.IT.junit5.mockito.MockitoExtension;
+import org.onap.dcaegen2.services.prh.configuration.PrhAppConfig;
+import org.onap.dcaegen2.services.prh.tasks.ScheduledTask;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
@@ -61,6 +65,14 @@ class ScheduledXmlContextITest extends AbstractTestNGSpringContextTests {
     }
 
 
+}
+
+@Configuration
+class ServiceMockProvider {
+    @Bean
+    public PrhAppConfig getPrhAppConfig() {
+        return mock(PrhAppConfig.class);
+    }
 }
 
 

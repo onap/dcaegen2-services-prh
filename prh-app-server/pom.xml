@@ -62,12 +62,12 @@
         <artifactId>docker-maven-plugin</artifactId>
         <version>1.0.0</version>
         <executions>
-          <execution>
-            <goals>
-              <goal>build</goal>
-            </goals>
-            <phase>package</phase>
-          </execution>
+        <execution>
+        <goals>
+        <goal>build</goal>
+        </goals>
+        <phase>package</phase>
+        </execution>
         </executions>
         <configuration>
           <skipDockerBuild>false</skipDockerBuild>
@@ -121,6 +121,10 @@
     <dependency>
       <groupId>com.spotify</groupId>
       <artifactId>docker-maven-plugin</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jdk8</artifactId>
     </dependency>
 
     <!-- LOGGING DEPENDENCIES-->

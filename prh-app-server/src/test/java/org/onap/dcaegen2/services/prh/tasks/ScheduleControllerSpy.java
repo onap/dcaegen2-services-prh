@@ -40,5 +40,4 @@ public class ScheduleControllerSpy {
     public ScheduledTask registerSimpleDmaapConsumerTask() {
         return spy(new ScheduledTask(dmaapConsumerTaskSpy));
     }
-
 }

@@ -20,42 +20,50 @@
 package org.onap.dcaegen2.services.config;
 
 import java.io.Serializable;
+import org.immutables.value.Value;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/28/18
  */
 public interface DmaapCustomConfig extends Serializable {
 
-    String dmmaphostName();
+    @Value.Parameter
+    String dmmapHostName();
 
-    Integer dmmapportNumber();
+    @Value.Parameter
+    Integer dmmapPortNumber();
 
-    String dmmaptopicName();
+    @Value.Parameter
+    String dmmapTopicName();
 
-    String dmmapprotocol();
+    @Value.Parameter
+    String dmmapProtocol();
 
-    String dmmapuserName();
+    @Value.Parameter
+    String dmmapUserName();
 
-    String dmmapuserPassword();
+    @Value.Parameter
+    String dmmapUserPassword();
 
-    String dmmapcontentType();
+    @Value.Parameter
+    String dmmapContentType();
 
 
     interface Builder<T extends DmaapCustomConfig, B extends Builder<T, B>> {
 
-        B dmmaphostName(String dmmaphostName);
+        B dmmapHostName(String dmmapHostName);
 
-        B dmmapportNumber(Integer dmmapportNumber);
+        B dmmapPortNumber(Integer dmmapPortNumber);
 
-        B dmmaptopicName(String dmmaptopicName);
+        B dmmapTopicName(String dmmapTopicName);
 
-        B dmmapprotocol(String dmmapprotocol);
+        B dmmapProtocol(String dmmapProtocol);
 
-        B dmmapuserName(String dmmapuserName);
+        B dmmapUserName(String dmmapUserName);
 
-        B dmmapuserPassword(String dmmapuserPassword);
+        B dmmapUserPassword(String dmmapUserPassword);
 
-        B dmmapcontentType(String dmmapcontentType);
+        B dmmapContentType(String dmmapContentType);
 
         T build();
     }

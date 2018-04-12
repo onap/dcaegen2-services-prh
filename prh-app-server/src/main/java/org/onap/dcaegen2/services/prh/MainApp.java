@@ -41,7 +41,6 @@ public class MainApp {
         SpringApplication.run(MainApp.class, args);
     }
 
-
     @Bean
     TaskScheduler taskScheduler() {
         return new ConcurrentTaskScheduler();

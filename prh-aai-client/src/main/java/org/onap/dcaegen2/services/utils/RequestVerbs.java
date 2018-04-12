@@ -22,7 +22,8 @@ package org.onap.dcaegen2.services.utils;
 
 public enum RequestVerbs {
     GET,
-    PUT;
+    PUT,
+    PATCH;
 
     private RequestVerbs() {};
 }

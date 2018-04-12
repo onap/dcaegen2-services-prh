@@ -23,9 +23,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.onap.dcaegen2.services.config.AAIHttpClientConfiguration;
@@ -38,6 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
@@ -151,6 +154,9 @@ public class AAIExtendedHttpClientImpl implements AAIExtendedHttpClient {
             return new HttpGet(extendedURI);
         } else if (isExtendedURINotNull(extendedURI) && (httpRequestDetails.requestVerb().equals(RequestVerbs.PUT))) {
             return new HttpPut(extendedURI);
+        } else if (isExtendedURINotNull(extendedURI) &&
+                isPatchRequestValid(httpRequestDetails.requestVerb(),httpRequestDetails.jsonBody())) {
+            return createHttpPatch(extendedURI, httpRequestDetails.jsonBody());
         } else {
             return null;
         }
@@ -158,5 +164,32 @@ public class AAIExtendedHttpClientImpl implements AAIExtendedHttpClient {
 
     private Boolean isExtendedURINotNull(URI extendedURI) {
         return extendedURI != null ? true : false;
+    }
+
+    private Optional<StringEntity> createStringEntity(Optional<String> jsonBody) {
+        return Optional.of(parseJson(jsonBody).get());
+    }
+
+    private HttpPatch createHttpPatch(URI extendedURI, Optional<String> jsonBody) {
+        HttpPatch httpPatch = new HttpPatch(extendedURI);
+        Optional<StringEntity> stringEntity = createStringEntity(jsonBody);
+        httpPatch.setEntity(stringEntity.get());
+        return httpPatch;
+    }
+
+    private Optional<StringEntity> parseJson(Optional<String> jsonBody) {
+        Optional<StringEntity> stringEntity = Optional.empty();
+
+        try {
+            stringEntity = Optional.of(new StringEntity(jsonBody.get()));
+        } catch (UnsupportedEncodingException e) {
+            logger.error("Exception while parsing JSON: {}", e);
+        }
+
+        return stringEntity;
+    }
+
+    private Boolean isPatchRequestValid(RequestVerbs requestVerb, Optional<String> jsonBody) {
+        return requestVerb == RequestVerbs.PATCH && jsonBody.isPresent();
     }
 }

@@ -31,8 +31,11 @@ import java.util.Map;
 import java.util.Optional;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.immutables.value.internal.$processor$.meta.$GsonMirrors;
+import org.junit.Ignore;
 import org.junit.jupiter.api.*;
 import org.onap.dcaegen2.services.config.AAIHttpClientConfiguration;
 import org.onap.dcaegen2.services.utils.HttpRequestDetails;
@@ -45,19 +48,21 @@ public class AAIExtendedHttpClientImplTest {
     private static CloseableHttpClient closeableHttpClientMock = mock(CloseableHttpClient.class);
     private static HttpRequestDetails httpRequestDetailsMock = mock(HttpRequestDetails.class);
     private static Optional<String> expectedResult = Optional.empty();
+    private static final String JSON_MESSAGE = "{ \"ipaddress-v4-oam\": \"11.22.33.44\" }";
+    private static final String PNF_ID = "NOKQTFCOC540002E";
 
     @BeforeAll
     public static void init() throws NoSuchFieldException, IllegalAccessException {
 
         Map<String, String> queryParams = new HashMap<>();
-        queryParams.put("ipaddress-v4-oam", "11.22.33.44");
+        queryParams.put("pnf-id", PNF_ID);
 
-        Map<String, String> AAI_HEADERS = new HashMap<>();
-        AAI_HEADERS.put("X-FromAppId", "prh");
-        AAI_HEADERS.put("X-TransactionId", "vv-temp");
-        AAI_HEADERS.put("Accept", "application/json");
-        AAI_HEADERS.put("Real-Time", "true");
-        AAI_HEADERS.put("Content-Type", "application/json");
+        Map<String, String> aaiHeaders = new HashMap<>();
+        aaiHeaders.put("X-FromAppId", "prh");
+        aaiHeaders.put("X-TransactionId", "vv-temp");
+        aaiHeaders.put("Accept", "application/json");
+        aaiHeaders.put("Real-Time", "true");
+        aaiHeaders.put("Content-Type", "application/json");
 
         when(aaiHttpClientConfigurationMock.aaiHost()).thenReturn("54.45.33.2");
         when(aaiHttpClientConfigurationMock.aaiProtocol()).thenReturn("https");
@@ -65,9 +70,10 @@ public class AAIExtendedHttpClientImplTest {
         when(aaiHttpClientConfigurationMock.aaiUserName()).thenReturn("PRH");
         when(aaiHttpClientConfigurationMock.aaiUserPassword()).thenReturn("PRH");
 
-        when(httpRequestDetailsMock.aaiAPIPath()).thenReturn("/aai/v11/network/pnfs/pnf/NOKQTFCOC540002E");
-        when(httpRequestDetailsMock.headers()).thenReturn(AAI_HEADERS);
+        when(httpRequestDetailsMock.aaiAPIPath()).thenReturn("/aai/v11/network/pnfs/pnf");
+        when(httpRequestDetailsMock.headers()).thenReturn(aaiHeaders);
         when(httpRequestDetailsMock.queryParameters()).thenReturn(queryParams);
+        when(httpRequestDetailsMock.jsonBody()).thenReturn(Optional.of(JSON_MESSAGE));
 
         testedObject = new AAIExtendedHttpClientImpl(aaiHttpClientConfigurationMock);
         setField();
@@ -83,13 +89,13 @@ public class AAIExtendedHttpClientImplTest {
     }
 
     @Test
-    public void getHttpResponseGet_success() throws IOException {
-        when(httpRequestDetailsMock.requestVerb()).thenReturn(RequestVerbs.GET);
+    public void getHttpResponsePatch_success() throws IOException {
+        when(httpRequestDetailsMock.requestVerb()).thenReturn(RequestVerbs.PATCH);
 
-        expectedResult = Optional.of("getExtendedDetailsOK");
+        expectedResult = Optional.of(JSON_MESSAGE);
 
-        when(closeableHttpClientMock.execute(any(HttpGet.class), any(ResponseHandler.class))).
-                thenReturn(expectedResult);
+        when(closeableHttpClientMock.execute(any(HttpPatch.class), any(ResponseHandler.class)))
+                .thenReturn(expectedResult);
         Optional<String> actualResult = testedObject.getHttpResponse(httpRequestDetailsMock);
 
         Assertions.assertEquals(expectedResult.get(), actualResult.get());

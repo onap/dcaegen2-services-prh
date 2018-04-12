@@ -28,17 +28,20 @@ import org.onap.dcaegen2.services.utils.HttpRequestDetails;
 import org.onap.dcaegen2.services.utils.ImmutableHttpRequestDetails;
 import org.onap.dcaegen2.services.utils.RequestVerbs;
 
+import java.util.Optional;
+
 
 public class HttpRequestDetailsTest {
 
     private static HttpRequestDetails testObject;
 
     private static final String AAI_PATH = "aaiPathTest";
-    private static final RequestVerbs HTTP_VERB = RequestVerbs.GET;
+    private static final RequestVerbs HTTP_VERB = RequestVerbs.PATCH;
     private static final String QUERY_KEY1 = "queryKey1";
     private static final String QUERY_VALUE1 = "queryValue1";
     private static final String HEADERS_KEY1 = "headersKey1";
     private static final String HEADERS_VALUE1 = "headersValue1";
+    private static final String JSON_MESSAGE = "{\"dare_to\": \"dream_big\"}";
 
     @BeforeAll
     public static void init() {
@@ -47,6 +50,7 @@ public class HttpRequestDetailsTest {
                 .requestVerb(HTTP_VERB)
                 .putQueryParameters(QUERY_KEY1,QUERY_VALUE1)
                 .putHeaders(HEADERS_KEY1,HEADERS_VALUE1)
+                .jsonBody(JSON_MESSAGE)
                 .build();
     }
 
@@ -55,6 +59,7 @@ public class HttpRequestDetailsTest {
         Assertions.assertEquals(AAI_PATH, testObject.aaiAPIPath());
         Assertions.assertEquals(HEADERS_VALUE1, testObject.headers().get(HEADERS_KEY1));
         Assertions.assertEquals(QUERY_VALUE1, testObject.queryParameters().get(QUERY_KEY1));
-        Assertions.assertEquals(RequestVerbs.GET, testObject.requestVerb());
+        Assertions.assertEquals(RequestVerbs.PATCH, testObject.requestVerb());
+        Assertions.assertEquals(Optional.of(JSON_MESSAGE), testObject.jsonBody());
     }
 }

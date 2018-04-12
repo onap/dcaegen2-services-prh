@@ -44,7 +44,6 @@ public class AAIHttpClientImplTest {
         when(aaiHttpClientConfigurationMock.aaiUserPassword()).thenReturn("PNF");
         when(aaiHttpClientConfigurationMock.aaiIgnoreSSLCertificateErrors()).thenReturn(true);
 
-
         testedObject  = new AAIHttpClientImpl(aaiHttpClientConfigurationMock);
     }
 

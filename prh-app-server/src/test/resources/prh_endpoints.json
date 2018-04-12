@@ -1,0 +1,38 @@
+{
+  "configs": {
+    "aai": {
+      "aaiHttpClientConfiguration": {
+        "aaiHost": "",
+        "aaiHostPortNumber": 8080,
+        "aaiIgnoreSSLCertificateErrors": true,
+        "aaiProtocol": "https",
+        "aaiUserName": "admin",
+        "aaiUserPassword": "admin"
+      }
+    },
+    "dmaap": {
+      "dmaapConsumerConfiguration": {
+        "consumerGroup": "other",
+        "consumerId": "1",
+        "dmmapContentType": "application/json",
+        "dmmapHostName": "localhost",
+        "dmmapPortNumber": 2222,
+        "dmmapProtocol": "http",
+        "dmmapTopicName": "temp",
+        "dmmapUserName": "admin",
+        "dmmapUserPassword": "admin",
+        "messageLimit": 1000,
+        "timeoutMS": 1000
+      },
+      "dmaapProducerConfiguration": {
+        "dmmapContentType": "application/json",
+        "dmmapHostName": "localhost",
+        "dmmapPortNumber": 2223,
+        "dmmapProtocol": "http",
+        "dmmapTopicName": "temp",
+        "dmmapUserName": "admin",
+        "dmmapUserPassword": "admin"
+      }
+    }
+  }
+}

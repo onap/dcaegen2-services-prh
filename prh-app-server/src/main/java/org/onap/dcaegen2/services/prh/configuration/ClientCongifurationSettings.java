@@ -1,6 +1,6 @@
-/*
+/*-
  * ============LICENSE_START=======================================================
- * PROJECT
+ * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
@@ -17,28 +17,24 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.tasks;
+package org.onap.dcaegen2.services.prh.configuration;
 
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
-
-import org.junit.runners.Parameterized.UseParametersRunnerFactory;
-import org.onap.dcaegen2.services.prh.configuration.AppConfig;
-import org.onap.dcaegen2.services.prh.configuration.PrhAppConfig;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.Optional;
 
 /**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/27/18
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/9/18
  */
-@Configuration
-public class DmaapConsumerTaskSpy {
+public class ClientCongifurationSettings {
 
-    @Bean
-    @Primary
-    public DmaapConsumerTask registerSimpleDmaapConsumerTask() {
-        return spy(new DmaapConsumerTask());
+    private ClientCongifurationSettings()
+    {
+    }
+
+    public static <T> Optional<T> parseObject(ObjectMapper objectMapper, JsonParser jsonParser, Class<T> type)
+        throws IOException {
+        return Optional.of(objectMapper.readValue(jsonParser, type));
     }
 }

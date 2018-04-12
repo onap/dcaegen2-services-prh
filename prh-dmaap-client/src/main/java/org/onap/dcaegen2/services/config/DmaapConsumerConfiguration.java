@@ -19,24 +19,31 @@
  */
 package org.onap.dcaegen2.services.config;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
+@Component
 @Value.Immutable(prehash = true)
-@Value.Style(visibility = Value.Style.ImplementationVisibility.PACKAGE)
+@Value.Style(builder = "new")
+@JsonDeserialize(builder = ImmutableDmaapConsumerConfiguration.Builder.class)
 public abstract class DmaapConsumerConfiguration implements DmaapCustomConfig {
 
     private static final long serialVersionUID = 1L;
 
-
+    @Value.Parameter
     abstract String consumerId();
 
+    @Value.Parameter
     abstract String consumerGroup();
 
+    @Value.Parameter
     abstract Integer timeoutMS();
 
+    @Value.Parameter
     abstract Integer messageLimit();
 
 

@@ -36,21 +36,21 @@ public class AAIHttpClientConfigurationTest {
 
     @BeforeAll
     public static void init() {
-        client = ImmutableAAIHttpClientConfiguration.builder()
-                .aaiHost(AAI_HOST)
-                .aaiHostPortNumber(PORT)
-                .aaiProtocol(PROTOCOL)
-                .aaiUserName(USER_NAME_PASSWORD)
-                .aaiUserPassword(USER_NAME_PASSWORD)
-                .aaiIgnoreSSLCertificateErrors(true)
-                .build();
+        client = new ImmutableAAIHttpClientConfiguration.Builder()
+            .aaiHost(AAI_HOST)
+            .aaiHostPortNumber(PORT)
+            .aaiProtocol(PROTOCOL)
+            .aaiUserName(USER_NAME_PASSWORD)
+            .aaiUserPassword(USER_NAME_PASSWORD)
+            .aaiIgnoreSSLCertificateErrors(true)
+            .build();
     }
 
     @Test
     public void testGetters_success() {
-        Assertions.assertEquals(AAI_HOST,client.aaiHost());
+        Assertions.assertEquals(AAI_HOST, client.aaiHost());
         Assertions.assertEquals(PORT, client.aaiHostPortNumber());
-        Assertions.assertEquals(PROTOCOL,client.aaiProtocol());
+        Assertions.assertEquals(PROTOCOL, client.aaiProtocol());
         Assertions.assertEquals(USER_NAME_PASSWORD, client.aaiUserName());
         Assertions.assertEquals(USER_NAME_PASSWORD, client.aaiUserPassword());
         Assertions.assertEquals(true, client.aaiIgnoreSSLCertificateErrors());

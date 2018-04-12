@@ -21,8 +21,10 @@ package org.onap.dcaegen2.services.prh.tasks;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -35,11 +37,22 @@ public class DmaapConsumerTask implements DmaapTask {
     private static final Logger logger = LoggerFactory.getLogger(DmaapConsumerTask.class);
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
+    @Autowired
+    public AppConfig prhAppConfig;
+
     @Override
     public void execute() {
 
         logger.debug("Start task DmaapConsumerTask::execute() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
+//        try {
+//            AAIHttpClientConfiguration aaiHttpClientConfiguration = prhAppConfig.getAAIHttpClientConfiguration();
+//            DmaapConsumerConfiguration dmaapConsumerConfiguration = prhAppConfig.getDmaapConsumerConfiguration();
+//            DmaapProducerConfiguration dmaapProducerConfiguration = prhAppConfig.getDmaapProducerConfiguration();
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         logger.debug("End task DmaapConsumerTask::execute() :: Execution Time - {}",
             dateTimeFormatter.format(LocalDateTime.now()));
     }

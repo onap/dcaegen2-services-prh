@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_bb9c7a0f",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AAIPublisherTaskImpl.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 2683
+      },
+      "writtenOn": "2018-04-13T13:16:06Z",
+      "side": 1,
+      "message": "Maybe Spring will handle private field injection, too?. Or even better - you can use constructor injection whioch is more test-friendly.",
+      "revId": "92f9c348d3e51f4032e858c6ae443b70a74e8699",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_7b8a72c0",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/DmaapConsumerTaskImpl.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 2683
+      },
+      "writtenOn": "2018-04-13T13:16:06Z",
+      "side": 1,
+      "message": "public field injection",
+      "revId": "92f9c348d3e51f4032e858c6ae443b70a74e8699",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_9b873eb5",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/DmaapPublisherTaskImpl.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 2683
+      },
+      "writtenOn": "2018-04-13T13:16:06Z",
+      "side": 1,
+      "message": "Shouldn\u0027t we set this to something meaningful?",
+      "revId": "92f9c348d3e51f4032e858c6ae443b70a74e8699",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_dbb86677",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/ScheduledTasks.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 2683
+      },
+      "writtenOn": "2018-04-13T13:16:06Z",
+      "side": 1,
+      "message": "Maybe keep these tasks as a List\u003cTask\u003e so you can call execute on them in a loop. For injection to work you might create a named bean factory for providing List\u003cTask\u003e and inject it here by name.",
+      "revId": "92f9c348d3e51f4032e858c6ae443b70a74e8699",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_fb644223",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/DmaapPublisherTaskSpy.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 2683
+      },
+      "writtenOn": "2018-04-13T13:16:06Z",
+      "side": 1,
+      "message": "project name",
+      "revId": "92f9c348d3e51f4032e858c6ae443b70a74e8699",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

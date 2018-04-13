@@ -28,10 +28,10 @@ import org.onap.dcaegen2.services.config.DmaapProducerConfiguration;
  */
 public interface AppConfig {
 
-    DmaapConsumerConfiguration getDmaapConsumerConfiguration() throws Exception;
+    DmaapConsumerConfiguration getDmaapConsumerConfiguration();
 
-    AAIHttpClientConfiguration getAAIHttpClientConfiguration() throws Exception;
+    AAIHttpClientConfiguration getAAIHttpClientConfiguration();
 
-    DmaapProducerConfiguration getDmaapProducerConfiguration() throws Exception;
+    DmaapProducerConfiguration getDmaapProducerConfiguration();
 
 }

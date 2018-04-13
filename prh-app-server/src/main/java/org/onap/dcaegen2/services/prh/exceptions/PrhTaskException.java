@@ -17,35 +17,14 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.tasks;
-
-import static org.mockito.Mockito.spy;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+package org.onap.dcaegen2.services.prh.exceptions;
 
 /**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/5/18
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
-@Configuration
-public class ScheduleControllerSpy {
+public class PrhTaskException extends Exception {
 
-
-    @Autowired
-    private DmaapConsumerTask dmaapConsumerTaskImplSpy;
-
-    @Autowired
-    private DmaapPublisherTask dmaapPublisherTaskImplSpy;
-
-    @Autowired
-    private AAIPublisherTask aaiPublisherTaskImplSpy;
-
-    @Bean
-    @Primary
-    public ScheduledTasks registerSimpleScheduledTask() {
-        return spy(new ScheduledTasks(dmaapConsumerTaskImplSpy, dmaapPublisherTaskImplSpy, aaiPublisherTaskImplSpy));
+    public PrhTaskException(String message) {
+        super(message);
     }
 }

@@ -20,12 +20,7 @@
 package org.onap.dcaegen2.services.prh.tasks;
 
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
 
-import org.junit.runners.Parameterized.UseParametersRunnerFactory;
-import org.onap.dcaegen2.services.prh.configuration.AppConfig;
-import org.onap.dcaegen2.services.prh.configuration.PrhAppConfig;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -38,7 +33,7 @@ public class DmaapConsumerTaskSpy {
 
     @Bean
     @Primary
-    public DmaapConsumerTask registerSimpleDmaapConsumerTask() {
-        return spy(new DmaapConsumerTask());
+    public DmaapConsumerTaskImpl registerSimpleDmaapConsumerTask() {
+        return spy(new DmaapConsumerTaskImpl());
     }
 }

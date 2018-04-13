@@ -20,7 +20,7 @@
 package org.onap.dcaegen2.services.prh.controllers;
 
 import java.util.concurrent.ScheduledFuture;
-import org.onap.dcaegen2.services.prh.tasks.ScheduledTask;
+import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,12 +40,12 @@ public class ScheduleController {
     private static final int SCHEDULING_DELAY = 20000;
 
     private final TaskScheduler taskScheduler;
-    private final ScheduledTask scheduledTask;
+    private final ScheduledTasks scheduledTask;
 
     private ScheduledFuture<?> scheduledFuture;
 
     @Autowired
-    public ScheduleController(TaskScheduler taskScheduler, ScheduledTask scheduledTask) {
+    public ScheduleController(TaskScheduler taskScheduler, ScheduledTasks scheduledTask) {
         this.taskScheduler = taskScheduler;
         this.scheduledTask = scheduledTask;
     }
@@ -54,7 +54,7 @@ public class ScheduleController {
     @RequestMapping(value = "preferences", method = RequestMethod.PUT)
     public ResponseEntity<Void> startTask() {
         scheduledFuture = taskScheduler
-            .scheduleWithFixedDelay(scheduledTask::scheduledTaskAskingDMaaPOfConsumeEvent, SCHEDULING_DELAY);
+            .scheduleWithFixedDelay(scheduledTask::scheduleMainPrhEventTask, SCHEDULING_DELAY);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

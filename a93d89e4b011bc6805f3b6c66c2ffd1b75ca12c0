@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_db85c6cf",
+        "filename": "prh-app-server/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 51
+      },
+      "writtenOn": "2018-04-13T12:31:45Z",
+      "side": 1,
+      "message": "You do not need to specify the execution block.  This is handled by a Jenkins job.",
+      "revId": "a93d89e4b011bc6805f3b6c66c2ffd1b75ca12c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

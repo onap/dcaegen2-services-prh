@@ -62,12 +62,20 @@
         <artifactId>docker-maven-plugin</artifactId>
         <version>1.0.0</version>
         <executions>
-        <execution>
-        <goals>
-        <goal>build</goal>
-        </goals>
-        <phase>package</phase>
-        </execution>
+          <execution>
+            <id>build-image</id>
+            <phase>package</phase>
+            <goals>
+              <goal>build</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>push-image</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>push</goal>
+            </goals>
+          </execution>
         </executions>
         <configuration>
           <skipDockerBuild>false</skipDockerBuild>

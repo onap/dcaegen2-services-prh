@@ -21,7 +21,7 @@ package org.onap.dcaegen2.services.prh.tasks;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
+import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,29 +31,31 @@ import org.springframework.stereotype.Component;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
 @Component
-public class ScheduledTask {
+public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
 
-    private static final Logger logger = LoggerFactory.getLogger(ScheduledTask.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(DmaapConsumerTaskImpl.class);
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    private final DmaapTask dmaapConsumerTask;
-
     @Autowired
-    public ScheduledTask(DmaapTask dmaapConsumerTask) {
-        this.dmaapConsumerTask = dmaapConsumerTask;
-    }
+    public AppConfig prhAppConfig;
 
-    public void scheduledTaskAskingDMaaPOfConsumeEvent() {
-        logger.debug("Task scheduledTaskAskingDMaaPOfConsumeEvent() :: Execution Time - {}", dateTimeFormatter.format(
+    @Override
+    public void execute() {
+        logger.debug("Start task DmaapConsumerTask::execute() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
-        try {
-            dmaapConsumerTask.execute();
-        } catch (AAINotFoundException e) {
-            logger
-                .error("Task scheduledTaskAskingDMaaPOfConsumeEvent()::AAINotFoundException :: Execution Time - {}:{}",
-                    dateTimeFormatter.format(
-                        LocalDateTime.now()), e);
-        }
+
+        logger.debug("End task DmaapConsumerTask::execute() :: Execution Time - {}",
+            dateTimeFormatter.format(LocalDateTime.now()));
     }
 
+    @Override
+    protected void consume() {
+        logger.debug("Start task DmaapConsumerTask::consume() :: Execution Time - {}", dateTimeFormatter.format(
+            LocalDateTime.now()));
+
+        logger.debug("End task DmaapConsumerTask::consume() :: Execution Time - {}",
+            dateTimeFormatter.format(LocalDateTime.now()));
+
+    }
 }

@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.dcaegen2.services.prh.IT.junit5.mockito.MockitoExtension;
 import org.onap.dcaegen2.services.prh.configuration.PrhAppConfig;
-import org.onap.dcaegen2.services.prh.tasks.ScheduledTask;
+import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -52,7 +52,7 @@ class ScheduledXmlContextITest extends AbstractTestNGSpringContextTests {
     private static final int WAIT_FOR_SCHEDULING = 1;
 
     @Autowired
-    private ScheduledTask scheduledTask;
+    private ScheduledTasks scheduledTask;
 
     @Test
     void testScheduling() {
@@ -61,14 +61,13 @@ class ScheduledXmlContextITest extends AbstractTestNGSpringContextTests {
     }
 
     private void verifyDmaapConsumerTask() {
-        verify(scheduledTask, atLeast(2)).scheduledTaskAskingDMaaPOfConsumeEvent();
+        verify(scheduledTask, atLeast(2)).scheduleMainPrhEventTask();
     }
-
-
 }
 
 @Configuration
 class ServiceMockProvider {
+
     @Bean
     public PrhAppConfig getPrhAppConfig() {
         return mock(PrhAppConfig.class);

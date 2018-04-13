@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -19,14 +19,14 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
+import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 
 /**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
+
 @FunctionalInterface
-public interface DmaapTask {
+public interface Task {
 
-    void execute() throws AAINotFoundException;
-
+    void execute() throws PrhTaskException;
 }

@@ -1,4 +1,4 @@
-/*
+/*-
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -19,33 +19,13 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
-import static org.mockito.Mockito.spy;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 
 /**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/5/18
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
-@Configuration
-public class ScheduleControllerSpy {
+public abstract class DmaapPublisherTask implements Task {
 
+    protected abstract void publish() throws DmaapNotFoundException;
 
-    @Autowired
-    private DmaapConsumerTask dmaapConsumerTaskImplSpy;
-
-    @Autowired
-    private DmaapPublisherTask dmaapPublisherTaskImplSpy;
-
-    @Autowired
-    private AAIPublisherTask aaiPublisherTaskImplSpy;
-
-    @Bean
-    @Primary
-    public ScheduledTasks registerSimpleScheduledTask() {
-        return spy(new ScheduledTasks(dmaapConsumerTaskImplSpy, dmaapPublisherTaskImplSpy, aaiPublisherTaskImplSpy));
-    }
 }

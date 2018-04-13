@@ -34,6 +34,9 @@
   <properties>
     <maven.build.timestamp.format>yyyyMMdd'T'HHmmss</maven.build.timestamp.format>
     <project.fatJar.finalName>prh-app-server</project.fatJar.finalName>
+    <nexusproxy>https://nexus.onap.org</nexusproxy>
+    <snapshots.path>content/repositories/snapshots/</snapshots.path>
+    <releases.path>content/repositories/releases/</releases.path>
   </properties>
   <build>
     <plugins>
@@ -60,14 +63,21 @@
       <plugin>
         <groupId>com.spotify</groupId>
         <artifactId>docker-maven-plugin</artifactId>
-        <version>1.0.0</version>
         <executions>
-        <execution>
-        <goals>
-        <goal>build</goal>
-        </goals>
-        <phase>package</phase>
-        </execution>
+          <execution>
+            <id>build-image</id>
+            <phase>package</phase>
+            <goals>
+              <goal>build</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>push-image</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>push</goal>
+            </goals>
+          </execution>
         </executions>
         <configuration>
           <skipDockerBuild>false</skipDockerBuild>
@@ -204,7 +214,7 @@
         <!-- IMPORT DEPENDENCY MANAGEMENT FROM SPRING BOOT -->
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
-        <version>2.0.0.RELEASE</version>
+        <version>2.0.1.RELEASE</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>

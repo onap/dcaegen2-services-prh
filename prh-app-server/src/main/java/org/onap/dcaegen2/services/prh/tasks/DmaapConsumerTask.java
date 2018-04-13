@@ -1,6 +1,6 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
- * PNF-REGISTRATION-HANDLER
+ * PROJECT
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
@@ -19,34 +19,12 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import org.onap.dcaegen2.services.prh.configuration.AppConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 
 /**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
-@Component
-public class DmaapConsumerTask implements DmaapTask {
+public abstract class DmaapConsumerTask implements Task {
 
-
-    private static final Logger logger = LoggerFactory.getLogger(DmaapConsumerTask.class);
-    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-
-    @Autowired
-    public AppConfig prhAppConfig;
-
-    @Override
-    public void execute() {
-
-        logger.debug("Start task DmaapConsumerTask::execute() :: Execution Time - {}", dateTimeFormatter.format(
-            LocalDateTime.now()));
-
-        logger.debug("End task DmaapConsumerTask::execute() :: Execution Time - {}",
-            dateTimeFormatter.format(LocalDateTime.now()));
-    }
+    protected abstract void consume() throws DmaapNotFoundException;
 }

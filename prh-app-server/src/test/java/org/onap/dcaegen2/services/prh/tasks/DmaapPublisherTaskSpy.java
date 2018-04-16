@@ -19,8 +19,13 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
+import org.onap.dcaegen2.services.config.DmaapConsumerConfiguration;
+import org.onap.dcaegen2.services.config.DmaapProducerConfiguration;
+import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -34,7 +39,9 @@ public class DmaapPublisherTaskSpy {
 
     @Bean
     @Primary
-    public DmaapPublisherTaskImpl registerSimpleDmaapPublisherTask() {
-        return spy(new DmaapPublisherTaskImpl());
+    public Task registerSimpleDmaapPublisherTask() {
+        AppConfig appConfig = mock(AppConfig.class);
+        when(appConfig.getDmaapProducerConfiguration()).thenReturn(mock(DmaapProducerConfiguration.class));
+        return spy(new DmaapProducerTaskImpl(appConfig));
     }
 }

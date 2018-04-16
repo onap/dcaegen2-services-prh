@@ -36,31 +36,35 @@ public class ScheduledTasks {
     private static final Logger logger = LoggerFactory.getLogger(ScheduledTasks.class);
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    private final DmaapConsumerTask dmaapConsumerTask;
-    private final DmaapPublisherTask dmaapPublisherTask;
-    private final AAIPublisherTask aaiPublisherTask;
+    private final Task dmaapConsumerTask;
+    private final Task dmaapProducerTask;
+    private final Task aaiPublisherTask;
 
     @Autowired
-    public ScheduledTasks(DmaapConsumerTask dmaapConsumerTask, DmaapPublisherTask dmaapPublisherTask,
+    public ScheduledTasks(DmaapConsumerTask dmaapConsumerTask, DmaapProducerTask dmaapProducerTask,
         AAIPublisherTask aaiPublisherTask) {
         this.dmaapConsumerTask = dmaapConsumerTask;
-        this.dmaapPublisherTask = dmaapPublisherTask;
+        this.dmaapProducerTask = dmaapProducerTask;
         this.aaiPublisherTask = aaiPublisherTask;
     }
 
     public void scheduleMainPrhEventTask() {
         logger.debug("Task scheduledTaskAskingDMaaPOfConsumeEvent() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
+        setTaskExecutionFlow();
         try {
-            dmaapConsumerTask.execute();
-            dmaapPublisherTask.execute();
-            aaiPublisherTask.execute();
+            dmaapConsumerTask.receiveRequest(null);
         } catch (PrhTaskException e) {
             logger
                 .error("Task scheduledTaskAskingDMaaPOfConsumeEvent()::PrhTaskException :: Execution Time - {}:{}",
                     dateTimeFormatter.format(
                         LocalDateTime.now()), e);
         }
+    }
+
+    private void setTaskExecutionFlow() {
+        dmaapConsumerTask.setNext(aaiPublisherTask);
+        aaiPublisherTask.setNext(dmaapProducerTask);
     }
 
 }

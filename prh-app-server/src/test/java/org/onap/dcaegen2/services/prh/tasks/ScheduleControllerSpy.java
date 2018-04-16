@@ -38,7 +38,7 @@ public class ScheduleControllerSpy {
     private DmaapConsumerTask dmaapConsumerTaskImplSpy;
 
     @Autowired
-    private DmaapPublisherTask dmaapPublisherTaskImplSpy;
+    private DmaapProducerTask dmaapPublisherTaskImplSpy;
 
     @Autowired
     private AAIPublisherTask aaiPublisherTaskImplSpy;

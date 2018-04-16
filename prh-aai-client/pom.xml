@@ -54,12 +54,9 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
     </dependency>
-
-    <!-- VERSION SET DUE TO THE FAILING BUILD-->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-      <version>3.0.2.RELEASE</version>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>

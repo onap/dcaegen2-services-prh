@@ -61,7 +61,7 @@ class ScheduledXmlContextITest extends AbstractTestNGSpringContextTests {
     }
 
     private void verifyDmaapConsumerTask() {
-        verify(scheduledTask, atLeast(2)).scheduleMainPrhEventTask();
+        verify(scheduledTask, atLeast(1)).scheduleMainPrhEventTask();
     }
 }
 

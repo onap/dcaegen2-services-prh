@@ -37,10 +37,10 @@ import java.util.Optional;
 import javax.validation.constraints.NotEmpty;
 import org.onap.dcaegen2.services.config.AAIHttpClientConfiguration;
 import org.onap.dcaegen2.services.config.DmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.config.DmaapProducerConfiguration;
+import org.onap.dcaegen2.services.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.config.ImmutableAAIHttpClientConfiguration;
 import org.onap.dcaegen2.services.config.ImmutableDmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.config.ImmutableDmaapProducerConfiguration;
+import org.onap.dcaegen2.services.config.ImmutableDmaapPublisherConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -65,11 +65,11 @@ public class PrhAppConfig implements AppConfig {
     private static final Logger logger = LoggerFactory.getLogger(PrhAppConfig.class);
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    private ImmutableAAIHttpClientConfiguration immutableAAIHttpClientConfiguration;
+    private AAIHttpClientConfiguration aaiHttpClientConfiguration;
 
-    private ImmutableDmaapConsumerConfiguration immutableDmaapConsumerConfiguration;
+    private DmaapConsumerConfiguration dmaapConsumerConfiguration;
 
-    private ImmutableDmaapProducerConfiguration immutableDmaapProducerConfiguration;
+    private DmaapPublisherConfiguration dmaapPublisherConfiguration;
 
     @NotEmpty
     private String filepath;
@@ -81,16 +81,16 @@ public class PrhAppConfig implements AppConfig {
         try (InputStream inputStream = getInputStream(filepath)) {
             ObjectNode root = (ObjectNode) jsonObjectMapper.readTree(inputStream);
             jsonNode = Optional.ofNullable(root.get(CONFIG).get(AAI).get(AAI_CONFIG)).orElse(NullNode.getInstance());
-            immutableAAIHttpClientConfiguration = jsonObjectMapper
+            aaiHttpClientConfiguration = jsonObjectMapper
                 .treeToValue(jsonNode, ImmutableAAIHttpClientConfiguration.class);
             jsonNode = Optional.ofNullable(root.get(CONFIG).get(DMAAP).get(DMAAP_CONSUMER))
                 .orElse(NullNode.getInstance());
-            immutableDmaapConsumerConfiguration = jsonObjectMapper
+            dmaapConsumerConfiguration = jsonObjectMapper
                 .treeToValue(jsonNode, ImmutableDmaapConsumerConfiguration.class);
             jsonNode = Optional.ofNullable(root.get(CONFIG).get(DMAAP).get(DMAAP_PRODUCER))
                 .orElse(NullNode.getInstance());
-            immutableDmaapProducerConfiguration = jsonObjectMapper
-                .treeToValue(jsonNode, ImmutableDmaapProducerConfiguration.class);
+            dmaapPublisherConfiguration = jsonObjectMapper
+                .treeToValue(jsonNode, ImmutableDmaapPublisherConfiguration.class);
         } catch (FileNotFoundException e) {
             logger
                 .error(
@@ -132,16 +132,16 @@ public class PrhAppConfig implements AppConfig {
 
     @Override
     public DmaapConsumerConfiguration getDmaapConsumerConfiguration() {
-        return immutableDmaapConsumerConfiguration;
+        return dmaapConsumerConfiguration;
     }
 
     @Override
     public AAIHttpClientConfiguration getAAIHttpClientConfiguration() {
-        return immutableAAIHttpClientConfiguration;
+        return aaiHttpClientConfiguration;
     }
 
     @Override
-    public DmaapProducerConfiguration getDmaapProducerConfiguration() {
-        return immutableDmaapProducerConfiguration;
+    public DmaapPublisherConfiguration getDmaapPublisherConfiguration() {
+        return dmaapPublisherConfiguration;
     }
 }

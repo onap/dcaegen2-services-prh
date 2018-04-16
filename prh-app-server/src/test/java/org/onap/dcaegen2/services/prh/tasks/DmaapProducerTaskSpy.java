@@ -1,6 +1,6 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
- * PNF-REGISTRATION-HANDLER
+ * PROJECT
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
@@ -17,31 +17,30 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.config;
+package org.onap.dcaegen2.services.prh.tasks;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.immutables.value.Value;
-import org.springframework.stereotype.Component;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
+
+import org.onap.dcaegen2.services.config.DmaapPublisherConfiguration;
+import org.onap.dcaegen2.services.prh.configuration.AppConfig;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 /**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
-@Component
-@Value.Immutable(prehash = true)
-@Value.Style(builder = "new")
-@JsonDeserialize(builder = ImmutableDmaapProducerConfiguration.Builder.class)
-public abstract class DmaapProducerConfiguration implements DmaapCustomConfig {
+@Configuration
+public class DmaapProducerTaskSpy {
 
-    private static final long serialVersionUID = 1L;
 
-    interface Builder extends
-        DmaapCustomConfig.Builder<DmaapProducerConfiguration, DmaapProducerConfiguration.Builder> {
-
+    @Bean
+    @Primary
+    public Task registerSimpleDmaapPublisherTask() {
+        AppConfig appConfig = mock(AppConfig.class);
+        when(appConfig.getDmaapPublisherConfiguration()).thenReturn(mock(DmaapPublisherConfiguration.class));
+        return spy(new DmaapPublisherTaskImpl(appConfig));
     }
-
-    public static DmaapProducerConfiguration.Builder builder() {
-        return ImmutableDmaapProducerConfiguration.builder();
-    }
-
-
 }

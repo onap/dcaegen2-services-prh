@@ -21,31 +21,28 @@ package org.onap.dcaegen2.services.prh.tasks;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import org.onap.dcaegen2.services.config.DmaapProducerConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
 @Component
-public class DmaapPublisherTaskImpl extends DmaapPublisherTask {
+public class DmaapProducerTaskImpl extends DmaapProducerTask<DmaapProducerConfiguration> {
 
     private static final Logger logger = LoggerFactory.getLogger(ScheduledTasks.class);
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
+    private final AppConfig prhAppConfig;
+
     @Autowired
-    public AppConfig prhAppConfig;
-
-    @Override
-    public void execute() {
-        logger.debug("Start task DmaapPublisherTask::consume() :: Execution Time - {}", dateTimeFormatter.format(
-            LocalDateTime.now()));
-
-        logger.debug("End task DmaapPublisherTask::consume() :: Execution Time - {}",
-            dateTimeFormatter.format(LocalDateTime.now()));
+    public DmaapProducerTaskImpl(AppConfig prhAppConfig) {
+        this.prhAppConfig = prhAppConfig;
     }
 
     @Override
@@ -55,5 +52,20 @@ public class DmaapPublisherTaskImpl extends DmaapPublisherTask {
 
         logger.debug("End task DmaapPublisherTask::publish() :: Execution Time - {}",
             dateTimeFormatter.format(LocalDateTime.now()));
+    }
+
+    @Override
+    public ResponseEntity execute(Object object) {
+        logger.debug("Start task DmaapPublisherTask::consume() :: Execution Time - {}", dateTimeFormatter.format(
+            LocalDateTime.now()));
+        publish();
+        logger.debug("End task DmaapPublisherTask::consume() :: Execution Time - {}",
+            dateTimeFormatter.format(LocalDateTime.now()));
+        return null;
+    }
+
+    @Override
+    protected DmaapProducerConfiguration resolveConfiguration() {
+        return prhAppConfig.getDmaapProducerConfiguration();
     }
 }

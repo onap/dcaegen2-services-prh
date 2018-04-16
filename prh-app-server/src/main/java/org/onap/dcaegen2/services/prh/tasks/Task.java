@@ -20,13 +20,29 @@
 package org.onap.dcaegen2.services.prh.tasks;
 
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
 
-@FunctionalInterface
-public interface Task {
 
-    void execute() throws PrhTaskException;
+public abstract class Task {
+
+    private Task taskProcess;
+
+    public void setNext(Task task) {
+        this.taskProcess = task;
+    }
+
+    public void receiveRequest(Object body) throws PrhTaskException {
+        if (taskProcess != null) {
+            taskProcess.receiveRequest(execute(body));
+        }
+    }
+
+    abstract ResponseEntity execute(Object object) throws PrhTaskException;
+
+
 }

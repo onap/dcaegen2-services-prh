@@ -1,0 +1,8 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Piotr Jaszczyk <piotr.jaszczyk@nokia.com>
+Code-Review+2: Lusheng Ji <lji@research.att.com>
+Submitted-by: Lusheng Ji <lji@research.att.com>
+Submitted-at: Mon, 16 Apr 2018 13:26:10 +0000
+Reviewed-on: https://gerrit.onap.org/r/42957
+Project: dcaegen2/services/prh
+Branch: refs/heads/master

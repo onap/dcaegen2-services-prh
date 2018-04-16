@@ -37,10 +37,10 @@ import java.util.Optional;
 import javax.validation.constraints.NotEmpty;
 import org.onap.dcaegen2.services.config.AAIHttpClientConfiguration;
 import org.onap.dcaegen2.services.config.DmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.config.DmaapProducerConfiguration;
+import org.onap.dcaegen2.services.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.config.ImmutableAAIHttpClientConfiguration;
 import org.onap.dcaegen2.services.config.ImmutableDmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.config.ImmutableDmaapProducerConfiguration;
+import org.onap.dcaegen2.services.config.ImmutableDmaapPublisherConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -69,7 +69,7 @@ public class PrhAppConfig implements AppConfig {
 
     private ImmutableDmaapConsumerConfiguration immutableDmaapConsumerConfiguration;
 
-    private ImmutableDmaapProducerConfiguration immutableDmaapProducerConfiguration;
+    private ImmutableDmaapPublisherConfiguration immutableDmaapPublisherConfiguration;
 
     @NotEmpty
     private String filepath;
@@ -89,8 +89,8 @@ public class PrhAppConfig implements AppConfig {
                 .treeToValue(jsonNode, ImmutableDmaapConsumerConfiguration.class);
             jsonNode = Optional.ofNullable(root.get(CONFIG).get(DMAAP).get(DMAAP_PRODUCER))
                 .orElse(NullNode.getInstance());
-            immutableDmaapProducerConfiguration = jsonObjectMapper
-                .treeToValue(jsonNode, ImmutableDmaapProducerConfiguration.class);
+            immutableDmaapPublisherConfiguration = jsonObjectMapper
+                .treeToValue(jsonNode, ImmutableDmaapPublisherConfiguration.class);
         } catch (FileNotFoundException e) {
             logger
                 .error(
@@ -141,7 +141,7 @@ public class PrhAppConfig implements AppConfig {
     }
 
     @Override
-    public DmaapProducerConfiguration getDmaapProducerConfiguration() {
-        return immutableDmaapProducerConfiguration;
+    public DmaapPublisherConfiguration getDmaapPublisherConfiguration() {
+        return immutableDmaapPublisherConfiguration;
     }
 }

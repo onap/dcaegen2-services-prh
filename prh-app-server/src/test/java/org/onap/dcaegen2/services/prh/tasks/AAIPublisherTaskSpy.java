@@ -19,8 +19,12 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
+import org.onap.dcaegen2.services.config.AAIHttpClientConfiguration;
+import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -34,6 +38,8 @@ public class AAIPublisherTaskSpy {
     @Bean
     @Primary
     public AAIPublisherTask registerSimpleAAIPublisherTask() {
-        return spy(new AAIPublisherTaskImpl());
+        AppConfig appConfig = mock(AppConfig.class);
+        when(appConfig.getAAIHttpClientConfiguration()).thenReturn(mock(AAIHttpClientConfiguration.class));
+        return spy(new AAIPublisherTaskImpl(appConfig));
     }
 }

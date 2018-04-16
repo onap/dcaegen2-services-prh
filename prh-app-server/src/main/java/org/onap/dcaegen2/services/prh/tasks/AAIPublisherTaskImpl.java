@@ -21,40 +21,58 @@ package org.onap.dcaegen2.services.prh.tasks;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import org.onap.dcaegen2.services.config.AAIHttpClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
+import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
 @Component
-public class AAIPublisherTaskImpl extends AAIPublisherTask {
+public class AAIPublisherTaskImpl extends AAIPublisherTask<AAIHttpClientConfiguration> {
 
     private static final Logger logger = LoggerFactory.getLogger(ScheduledTasks.class);
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
+    private final AppConfig prhAppConfig;
+
     @Autowired
-    public AppConfig prhAppConfig;
+    public AAIPublisherTaskImpl(AppConfig prhAppConfig) {
+        this.prhAppConfig = prhAppConfig;
 
-    @Override
-    protected void publish() {
-        logger.debug("Start task DmaapConsumerTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
-            LocalDateTime.now()));
-
-        logger.debug("End task DmaapConsumerTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
-            LocalDateTime.now()));
     }
 
     @Override
-    public void execute() {
+    protected void publish() throws AAINotFoundException {
+        try {
+            logger.debug("Start task DmaapConsumerTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
+                LocalDateTime.now()));
+            logger.debug("End task DmaapConsumerTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
+                LocalDateTime.now()));
+        }
+        catch (Exception e){
+            throw new AAINotFoundException("DUpa");
+        }
+    }
+
+    @Override
+    public ResponseEntity execute(Object object) throws AAINotFoundException {
         logger.debug("Start task AAIPublisherTaskImpl::execute() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
-
+        publish();
         logger.debug("End task AAIPublisherTaskImpl::execute() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
-
+        return null;
     }
+
+    @Override
+    protected AAIHttpClientConfiguration resolveConfiguration() {
+        return prhAppConfig.getAAIHttpClientConfiguration();
+    }
+
 }

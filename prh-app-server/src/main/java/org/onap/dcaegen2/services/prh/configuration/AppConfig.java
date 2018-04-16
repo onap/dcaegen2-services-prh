@@ -21,7 +21,7 @@ package org.onap.dcaegen2.services.prh.configuration;
 
 import org.onap.dcaegen2.services.config.AAIHttpClientConfiguration;
 import org.onap.dcaegen2.services.config.DmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.config.DmaapProducerConfiguration;
+import org.onap.dcaegen2.services.config.DmaapPublisherConfiguration;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/9/18
@@ -32,6 +32,6 @@ public interface AppConfig {
 
     AAIHttpClientConfiguration getAAIHttpClientConfiguration();
 
-    DmaapProducerConfiguration getDmaapProducerConfiguration();
+    DmaapPublisherConfiguration getDmaapPublisherConfiguration();
 
 }

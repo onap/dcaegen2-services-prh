@@ -21,32 +21,29 @@ package org.onap.dcaegen2.services.prh.tasks;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import org.onap.dcaegen2.services.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
 @Component
-public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
+public class DmaapConsumerTaskImpl extends DmaapConsumerTask<DmaapConsumerConfiguration> {
 
 
     private static final Logger logger = LoggerFactory.getLogger(DmaapConsumerTaskImpl.class);
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
+    private final AppConfig prhAppConfig;
+
     @Autowired
-    public AppConfig prhAppConfig;
-
-    @Override
-    public void execute() {
-        logger.debug("Start task DmaapConsumerTask::execute() :: Execution Time - {}", dateTimeFormatter.format(
-            LocalDateTime.now()));
-
-        logger.debug("End task DmaapConsumerTask::execute() :: Execution Time - {}",
-            dateTimeFormatter.format(LocalDateTime.now()));
+    public DmaapConsumerTaskImpl(AppConfig prhAppConfig) {
+        this.prhAppConfig = prhAppConfig;
     }
 
     @Override
@@ -57,5 +54,20 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
         logger.debug("End task DmaapConsumerTask::consume() :: Execution Time - {}",
             dateTimeFormatter.format(LocalDateTime.now()));
 
+    }
+
+    @Override
+    public ResponseEntity execute(Object object) {
+        logger.debug("Start task DmaapConsumerTask::execute() :: Execution Time - {}", dateTimeFormatter.format(
+            LocalDateTime.now()));
+        consume();
+        logger.debug("End task DmaapConsumerTask::execute() :: Execution Time - {}",
+            dateTimeFormatter.format(LocalDateTime.now()));
+        return null;
+    }
+
+    @Override
+    protected DmaapConsumerConfiguration resolveConfiguration() {
+        return prhAppConfig.getDmaapConsumerConfiguration();
     }
 }

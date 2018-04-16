@@ -1,6 +1,6 @@
-/*
+/*-
  * ============LICENSE_START=======================================================
- * PROJECT
+ * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
@@ -17,24 +17,31 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.tasks;
+package org.onap.dcaegen2.services.config;
 
-import static org.mockito.Mockito.spy;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.immutables.value.Value;
+import org.springframework.stereotype.Component;
 
 /**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
-@Configuration
-public class DmaapPublisherTaskSpy {
+@Component
+@Value.Immutable(prehash = true)
+@Value.Style(builder = "new")
+@JsonDeserialize(builder = ImmutableDmaapPublisherConfiguration.Builder.class)
+public abstract class DmaapPublisherConfiguration implements DmaapCustomConfig {
 
+    private static final long serialVersionUID = 1L;
 
-    @Bean
-    @Primary
-    public DmaapPublisherTaskImpl registerSimpleDmaapPublisherTask() {
-        return spy(new DmaapPublisherTaskImpl());
+    interface Builder extends
+        DmaapCustomConfig.Builder<DmaapPublisherConfiguration, DmaapPublisherConfiguration.Builder> {
+
     }
+
+    public static DmaapPublisherConfiguration.Builder builder() {
+        return ImmutableDmaapPublisherConfiguration.builder();
+    }
+
+
 }

@@ -1,4 +1,4 @@
-/*
+/*-
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -17,21 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.configuration;
+package org.onap.dcaegen2.services.service;
 
-import org.onap.dcaegen2.services.config.AAIClientConfiguration;
-import org.onap.dcaegen2.services.config.DmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.config.DmaapPublisherConfiguration;
-
-/**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/9/18
- */
-public interface AppConfig {
-
-    DmaapConsumerConfiguration getDmaapConsumerConfiguration();
-
-    AAIClientConfiguration getAAIClientConfiguration();
-
-    DmaapPublisherConfiguration getDmaapPublisherConfiguration();
-
+public interface ExtendedHttpClient {
 }

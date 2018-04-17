@@ -18,12 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.service;
+package org.onap.dcaegen2.services.service.utils;
 
-import org.apache.http.impl.client.CloseableHttpClient;
-
-@FunctionalInterface
-public interface AAIHttpClient {
-    CloseableHttpClient getAAIHttpClient();
+public class AAIClientConfigurationForTests {
 }
-

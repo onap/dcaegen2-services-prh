@@ -17,39 +17,9 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.config;
 
+package org.onap.dcaegen2.services.service;
 
-import java.io.Serializable;
-import org.immutables.gson.Gson;
-import org.immutables.value.Value;
-import org.springframework.stereotype.Component;
-
-
-@Component
-@Value.Immutable(prehash = true)
-@Value.Style(builder = "new")
-@Gson.TypeAdapters
-public abstract class AAIHttpClientConfiguration implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    @Value.Parameter
-    public abstract String aaiHost();
-
-    @Value.Parameter
-    public abstract Integer aaiHostPortNumber();
-
-    @Value.Parameter
-    public abstract String aaiProtocol();
-
-    @Value.Parameter
-    public abstract String aaiUserName();
-
-    @Value.Parameter
-    public abstract String aaiUserPassword();
-
-    @Value.Parameter
-    public abstract Boolean aaiIgnoreSSLCertificateErrors();
-
+public interface HttpClient {
 }
+

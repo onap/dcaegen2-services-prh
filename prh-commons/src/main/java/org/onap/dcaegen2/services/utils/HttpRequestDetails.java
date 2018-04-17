@@ -17,26 +17,33 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-
-package org.onap.dcaegen2.services.service.utils;
-
-import org.apache.http.HttpStatus;
-import org.junit.Test;
-import org.onap.dcaegen2.services.utils.HttpUtils;
-
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertTrue;
+package org.onap.dcaegen2.services.utils;
 
 
-public class HttpUtilsTest {
+import org.immutables.value.Value;
 
-    @Test
-    public void isSuccessfulResponseCode_shouldReturnTrue() {
-        assertTrue(HttpUtils.isSuccessfulResponseCode(HttpUtils.SC_ACCEPTED));
-    }
+import java.io.Serializable;
+import java.util.Map;
+import java.util.Optional;
 
-    @Test
-    public void isSuccessfulResponseCode_shouldReturnFalse() {
-        assertFalse(HttpUtils.isSuccessfulResponseCode(HttpStatus.SC_BAD_GATEWAY));
-    }
+@Value.Immutable(prehash = true)
+@Value.Style(builder = "new")
+public abstract class HttpRequestDetails implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Value.Parameter
+    public abstract String aaiAPIPath();
+
+    @Value.Parameter
+    public abstract Optional<String> jsonBody();
+
+    @Value.Parameter
+    public abstract Map<String,String> queryParameters();
+
+    @Value.Parameter
+    public abstract Map<String,String> headers();
+
+    @Value.Parameter
+    public abstract RequestVerbs requestVerb();
 }

@@ -30,13 +30,12 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.onap.dcaegen2.services.config.AAIHttpClientConfiguration;
+import org.onap.dcaegen2.services.config.*;
 import org.onap.dcaegen2.services.utils.HttpRequestDetails;
 import org.onap.dcaegen2.services.utils.HttpUtils;
 import org.onap.dcaegen2.services.utils.RequestVerbs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -47,43 +46,27 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 
-public class AAIExtendedHttpClientImpl implements AAIExtendedHttpClient {
 
-    Logger logger = LoggerFactory.getLogger(AAIExtendedHttpClientImpl.class);
+public class ExtendedHttpClientImpl implements ExtendedHttpClient {
 
-    private final CloseableHttpClient closeableHttpClient;
-    private final String aaiHost;
-    private final String aaiProtocol;
-    private final Integer aaiHostPortNumber;
+    private static Logger logger = LoggerFactory.getLogger(ExtendedHttpClientImpl.class);
 
-    @Autowired
-    public AAIExtendedHttpClientImpl (AAIHttpClientConfiguration aaiHttpClientConfiguration) {
-        final AAIHttpClient aaiHttpClient = new AAIHttpClientImpl(aaiHttpClientConfiguration);
-        closeableHttpClient = aaiHttpClient.getAAIHttpClient();
-        aaiHost = aaiHttpClientConfiguration.aaiHost();
-        aaiProtocol = aaiHttpClientConfiguration.aaiProtocol();
-        aaiHostPortNumber = aaiHttpClientConfiguration.aaiHostPortNumber();
-    }
+    private ExtendedHttpClientImpl() {};
 
-    @Override
-    public Optional<String> getHttpResponse(HttpRequestDetails httpRequestDetails) {
+    //@Override
+    public static <T,S> Optional<String> getHttpResponse(
+            T clientConfig, S httpRequestDetails) {
 
         Optional<String> extendedDetails = Optional.empty();
+        CloseableHttpClient closeableHttpClient = HttpClientImpl.getHttpClient(clientConfig);
+        Optional<HttpRequestBase> request = createRequest(clientConfig, httpRequestDetails);
 
-        final URI extendedURI = createAAIExtendedURI(httpRequestDetails.aaiAPIPath(),
-                httpRequestDetails.queryParameters());
-        final HttpRequestBase request = createHttpRequest(extendedURI, httpRequestDetails);
-
-        if (request == null) {
-            return Optional.empty();
-        }
-
-        for (Map.Entry<String, String> headersEntry : httpRequestDetails.headers().entrySet()) {
-            request.addHeader(headersEntry.getKey(), headersEntry.getValue());
+        if (!request.isPresent()) {
+            return null;
         }
 
         try {
-            extendedDetails = closeableHttpClient.execute(request, aaiResponseHandler());
+            extendedDetails = closeableHttpClient.execute(request.get(), aaiResponseHandler());
         } catch (IOException e) {
             logger.error("Exception while executing HTTP request: {}", e);
         }
@@ -95,12 +78,12 @@ public class AAIExtendedHttpClientImpl implements AAIExtendedHttpClient {
         }
     }
 
-    private URI createAAIExtendedURI(final String path, Map<String, String> queryParams) {
+
+    private static URI createExtendedURI(final String path, Map<String, String> queryParams, String protocol,
+                                            String host, Integer port) {
         URI extendedURI = null;
 
-        final URIBuilder uriBuilder = new URIBuilder().setScheme(this.aaiProtocol).setHost(this.aaiHost)
-                .setPort(this.aaiHostPortNumber)
-                .setPath(path);
+        final URIBuilder uriBuilder = new URIBuilder().setScheme(protocol).setHost(host).setPort(port).setPath(path);
         final String customQuery = createCustomQuery(queryParams);
 
         if (StringUtils.isNoneBlank(customQuery)) {
@@ -117,7 +100,7 @@ public class AAIExtendedHttpClientImpl implements AAIExtendedHttpClient {
         return extendedURI;
     }
 
-    private String createCustomQuery(@Nonnull final Map<String, String> queryParams) {
+    private static String createCustomQuery(@Nonnull final Map<String, String> queryParams) {
         final StringBuilder queryStringBuilder = new StringBuilder("");
         final Iterator<Map.Entry<String, String>> queryParamIterator = queryParams.entrySet().iterator();
 
@@ -132,7 +115,7 @@ public class AAIExtendedHttpClientImpl implements AAIExtendedHttpClient {
         return queryStringBuilder.toString();
     }
 
-    private ResponseHandler<Optional<String>> aaiResponseHandler() {
+    private static ResponseHandler<Optional<String>> aaiResponseHandler() {
         return httpResponse ->  {
             final int responseCode = httpResponse.getStatusLine().getStatusCode();
             final HttpEntity responseEntity = httpResponse.getEntity();
@@ -149,7 +132,7 @@ public class AAIExtendedHttpClientImpl implements AAIExtendedHttpClient {
         };
     }
 
-    private HttpRequestBase createHttpRequest(URI extendedURI, HttpRequestDetails httpRequestDetails) {
+    private static HttpRequestBase createHttpRequest(URI extendedURI, HttpRequestDetails httpRequestDetails) {
         if (isExtendedURINotNull(extendedURI) && (httpRequestDetails.requestVerb().equals(RequestVerbs.GET))) {
             return new HttpGet(extendedURI);
         } else if (isExtendedURINotNull(extendedURI) && (httpRequestDetails.requestVerb().equals(RequestVerbs.PUT))) {
@@ -162,22 +145,22 @@ public class AAIExtendedHttpClientImpl implements AAIExtendedHttpClient {
         }
     }
 
-    private Boolean isExtendedURINotNull(URI extendedURI) {
+    private static Boolean isExtendedURINotNull(URI extendedURI) {
         return extendedURI != null ? true : false;
     }
 
-    private Optional<StringEntity> createStringEntity(Optional<String> jsonBody) {
+    private static Optional<StringEntity> createStringEntity(Optional<String> jsonBody) {
         return Optional.of(parseJson(jsonBody).get());
     }
 
-    private HttpPatch createHttpPatch(URI extendedURI, Optional<String> jsonBody) {
+    private static HttpPatch createHttpPatch(URI extendedURI, Optional<String> jsonBody) {
         HttpPatch httpPatch = new HttpPatch(extendedURI);
         Optional<StringEntity> stringEntity = createStringEntity(jsonBody);
         httpPatch.setEntity(stringEntity.get());
         return httpPatch;
     }
 
-    private Optional<StringEntity> parseJson(Optional<String> jsonBody) {
+    private static Optional<StringEntity> parseJson(Optional<String> jsonBody) {
         Optional<StringEntity> stringEntity = Optional.empty();
 
         try {
@@ -189,7 +172,52 @@ public class AAIExtendedHttpClientImpl implements AAIExtendedHttpClient {
         return stringEntity;
     }
 
-    private Boolean isPatchRequestValid(RequestVerbs requestVerb, Optional<String> jsonBody) {
+    private static Boolean isPatchRequestValid(RequestVerbs requestVerb, Optional<String> jsonBody) {
         return requestVerb == RequestVerbs.PATCH && jsonBody.isPresent();
+    }
+
+    private static <T,S> Optional<HttpRequestBase> createRequest (T t, S s) {
+
+        if (t instanceof AAIClientConfiguration && s instanceof HttpRequestDetails) {
+
+            AAIClientConfiguration aaiClientConfig = (AAIClientConfiguration) t;
+            HttpRequestDetails httpRequestDetails = (HttpRequestDetails) s;
+
+            final URI extendedURI = createExtendedURI(httpRequestDetails.aaiAPIPath(),
+                    httpRequestDetails.queryParameters(), aaiClientConfig.aaiProtocol(), aaiClientConfig.aaiHost(),
+                    aaiClientConfig.aaiHostPortNumber());
+            HttpRequestBase request = createHttpRequest(extendedURI, httpRequestDetails);
+
+            if (request == null) {
+                return Optional.empty();
+            }
+
+            for (Map.Entry<String, String> headersEntry : httpRequestDetails.headers().entrySet()) {
+                request.addHeader(headersEntry.getKey(), headersEntry.getValue());
+            }
+
+            return Optional.of(request);
+
+        } else if (t instanceof DmaapPublisherConfiguration ) {
+
+            DmaapPublisherConfiguration dmaapPublisher = (DmaapPublisherConfiguration) t;
+
+            //ToDo http request class for dmaap publisher
+
+            return Optional.empty();
+
+
+        } else if (t instanceof DmaapConsumerConfiguration) {
+
+            DmaapConsumerConfiguration dmaapConsumer = (DmaapConsumerConfiguration) t;
+
+            //ToDo request class for dmaap consumer probably not needed
+
+            return Optional.empty();
+
+
+        } else {
+            return Optional.empty();
+        }
     }
 }

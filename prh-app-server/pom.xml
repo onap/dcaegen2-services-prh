@@ -63,6 +63,13 @@
       <plugin>
         <groupId>com.spotify</groupId>
         <artifactId>docker-maven-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>com.github.jnr</groupId>
+            <artifactId>jnr-unixsocket</artifactId>
+            <version>0.13</version>
+          </dependency>
+        </dependencies>
         <configuration>
           <skipDockerBuild>false</skipDockerBuild>
           <imageName>

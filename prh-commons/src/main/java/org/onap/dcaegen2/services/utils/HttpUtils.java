@@ -19,31 +19,11 @@
  */
 package org.onap.dcaegen2.services.utils;
 
+public final class HttpUtils {
 
-import org.immutables.value.Value;
+    private HttpUtils() {}
 
-import java.io.Serializable;
-import java.util.Map;
-import java.util.Optional;
-
-@Value.Immutable(prehash = true)
-@Value.Style(stagedBuilder = true)
-public abstract class HttpRequestDetails implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    @Value.Parameter
-    public abstract String aaiAPIPath();
-
-    @Value.Parameter
-    public abstract Optional<String> jsonBody();
-
-    @Value.Parameter
-    public abstract Map<String,String> queryParameters();
-
-    @Value.Parameter
-    public abstract Map<String,String> headers();
-
-    @Value.Parameter
-    public abstract RequestVerbs requestVerb();
+    public static boolean isSuccessfulResponseCode(Integer statusCode) {
+        return statusCode >= 200 && statusCode < 300;
+    }
 }

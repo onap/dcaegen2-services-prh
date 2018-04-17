@@ -19,9 +19,7 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import org.onap.dcaegen2.services.config.AAIHttpClientConfiguration;
+import org.onap.dcaegen2.services.config.AAIClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
 import org.slf4j.Logger;
@@ -30,11 +28,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
 @Component
-public class AAIPublisherTaskImpl extends AAIPublisherTask<AAIHttpClientConfiguration> {
+public class AAIPublisherTaskImpl extends AAIPublisherTask<AAIClientConfiguration> {
 
     private static final Logger logger = LoggerFactory.getLogger(ScheduledTasks.class);
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -67,8 +68,8 @@ public class AAIPublisherTaskImpl extends AAIPublisherTask<AAIHttpClientConfigur
     }
 
     @Override
-    protected AAIHttpClientConfiguration resolveConfiguration() {
-        return prhAppConfig.getAAIHttpClientConfiguration();
+    protected AAIClientConfiguration resolveConfiguration() {
+        return prhAppConfig.getAAIClientConfiguration();
     }
 
 }

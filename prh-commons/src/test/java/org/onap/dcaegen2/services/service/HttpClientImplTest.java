@@ -1,4 +1,4 @@
-/*
+/*-
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -17,21 +17,32 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.configuration;
+package org.onap.dcaegen2.services.service;
 
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.onap.dcaegen2.services.config.AAIClientConfiguration;
-import org.onap.dcaegen2.services.config.DmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.config.DmaapPublisherConfiguration;
 
-/**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/9/18
- */
-public interface AppConfig {
 
-    DmaapConsumerConfiguration getDmaapConsumerConfiguration();
+public class HttpClientImplTest {
 
-    AAIClientConfiguration getAAIClientConfiguration();
+    @Mock
+    private static AAIClientConfiguration aaiClientConfigurationMock;
 
-    DmaapPublisherConfiguration getDmaapPublisherConfiguration();
 
+    @Test
+    @Disabled
+    public void getHttpClientObjectAai_shouldNotBeNull() {
+        Mockito.when(aaiClientConfigurationMock.aaiHost()).thenReturn("54.45.33.2");
+        Mockito.when(aaiClientConfigurationMock.aaiProtocol()).thenReturn("https");
+        Mockito.when(aaiClientConfigurationMock.aaiHostPortNumber()).thenReturn(1234);
+        Mockito.when(aaiClientConfigurationMock.aaiUserName()).thenReturn("PNF");
+        Mockito.when(aaiClientConfigurationMock.aaiUserPassword()).thenReturn("PNF");
+        Mockito.when(aaiClientConfigurationMock.aaiIgnoreSSLCertificateErrors()).thenReturn(true);
+        Assertions.assertNotNull(HttpClientImpl.getHttpClient(aaiClientConfigurationMock));
+    }
 }
+

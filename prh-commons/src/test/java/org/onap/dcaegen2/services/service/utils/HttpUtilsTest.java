@@ -17,14 +17,26 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.service;
 
-import org.onap.dcaegen2.services.utils.HttpRequestDetails;
+package org.onap.dcaegen2.services.service.utils;
 
-import java.util.Optional;
+import org.apache.http.HttpStatus;
+import org.junit.Test;
+import org.onap.dcaegen2.services.utils.HttpUtils;
+
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
 
 
-@FunctionalInterface
-public interface AAIExtendedHttpClient {
-    Optional<String> getHttpResponse(HttpRequestDetails httpRequestDetails);
+public class HttpUtilsTest {
+
+    @Test
+    public void isSuccessfulResponseCode_shouldReturnTrue() {
+        assertTrue(HttpUtils.isSuccessfulResponseCode(HttpStatus.SC_ACCEPTED));
+    }
+
+    @Test
+    public void isSuccessfulResponseCode_shouldReturnFalse() {
+        assertFalse(HttpUtils.isSuccessfulResponseCode(HttpStatus.SC_BAD_GATEWAY));
+    }
 }

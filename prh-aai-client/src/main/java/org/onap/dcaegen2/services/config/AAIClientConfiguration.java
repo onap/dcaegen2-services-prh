@@ -17,17 +17,39 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.utils;
+package org.onap.dcaegen2.services.config;
 
-import org.apache.http.HttpStatus;
 
-public final class HttpUtils implements HttpStatus {
+import java.io.Serializable;
+import org.immutables.gson.Gson;
+import org.immutables.value.Value;
+import org.springframework.stereotype.Component;
 
-    public static final String JSON_APPLICATION_TYPE = "application/json";
 
-    private HttpUtils() {}
+@Component
+@Value.Immutable(prehash = true)
+@Value.Style(builder = "new")
+@Gson.TypeAdapters
+public abstract class AAIClientConfiguration implements Serializable {
 
-    public static boolean isSuccessfulResponseCode(Integer statusCode) {
-        return statusCode >= 200 && statusCode < 300;
-    }
+    private static final long serialVersionUID = 1L;
+
+    @Value.Parameter
+    public abstract String aaiHost();
+
+    @Value.Parameter
+    public abstract Integer aaiHostPortNumber();
+
+    @Value.Parameter
+    public abstract String aaiProtocol();
+
+    @Value.Parameter
+    public abstract String aaiUserName();
+
+    @Value.Parameter
+    public abstract String aaiUserPassword();
+
+    @Value.Parameter
+    public abstract Boolean aaiIgnoreSSLCertificateErrors();
+
 }

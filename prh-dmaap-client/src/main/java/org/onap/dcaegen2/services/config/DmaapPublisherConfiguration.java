@@ -19,7 +19,7 @@
  */
 package org.onap.dcaegen2.services.config;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Value.Immutable(prehash = true)
 @Value.Style(builder = "new")
-@JsonDeserialize(builder = ImmutableDmaapPublisherConfiguration.Builder.class)
+@Gson.TypeAdapters
 public abstract class DmaapPublisherConfiguration implements DmaapCustomConfig {
 
     private static final long serialVersionUID = 1L;
@@ -42,6 +42,4 @@ public abstract class DmaapPublisherConfiguration implements DmaapCustomConfig {
     public static DmaapPublisherConfiguration.Builder builder() {
         return ImmutableDmaapPublisherConfiguration.builder();
     }
-
-
 }

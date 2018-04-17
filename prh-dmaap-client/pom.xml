@@ -45,8 +45,8 @@
       <artifactId>value</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.fasterxml.jackson.datatype</groupId>
-      <artifactId>jackson-datatype-jdk8</artifactId>
+      <groupId>org.immutables</groupId>
+      <artifactId>gson</artifactId>
     </dependency>
 
     <!-- LOGGING DEPENDENCIES -->

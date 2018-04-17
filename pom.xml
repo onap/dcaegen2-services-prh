@@ -405,6 +405,11 @@
         <scope>provided</scope>
       </dependency>
       <dependency>
+        <groupId>org.immutables</groupId>
+        <artifactId>gson</artifactId>
+        <version>${immutable.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.spotify</groupId>
         <artifactId>docker-maven-plugin</artifactId>
         <version>${docker.maven.version}</version>
@@ -423,11 +428,6 @@
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-utils</artifactId>
         <version>3.1.0</version>
-      </dependency>
-      <dependency>
-        <groupId>com.github.jnr</groupId>
-        <artifactId>jnr-posix</artifactId>
-        <version>3.0.44</version>
       </dependency>
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
@@ -453,11 +453,6 @@
         <groupId>org.springframework</groupId>
         <artifactId>spring-context</artifactId>
         <version>5.0.5.RELEASE</version>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.datatype</groupId>
-        <artifactId>jackson-datatype-jdk8</artifactId>
-        <version>2.9.5</version>
       </dependency>
       <dependency>
         <groupId>org.apache.tomcat.embed</groupId>

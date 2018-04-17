@@ -20,16 +20,16 @@
 package org.onap.dcaegen2.services.config;
 
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.immutables.value.Value;
 import java.io.Serializable;
+import org.immutables.gson.Gson;
+import org.immutables.value.Value;
 import org.springframework.stereotype.Component;
 
 
 @Component
 @Value.Immutable(prehash = true)
 @Value.Style(builder = "new")
-@JsonDeserialize(builder = ImmutableAAIHttpClientConfiguration.Builder.class)
+@Gson.TypeAdapters
 public abstract class AAIHttpClientConfiguration implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -19,28 +19,29 @@
  */
 package org.onap.dcaegen2.services.prh.configuration;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.NullNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import static org.apache.tomcat.util.file.ConfigFileLoader.getInputStream;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.TypeAdapterFactory;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
+import java.util.ServiceLoader;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import org.onap.dcaegen2.services.config.AAIHttpClientConfiguration;
 import org.onap.dcaegen2.services.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.config.DmaapPublisherConfiguration;
-import org.onap.dcaegen2.services.config.ImmutableAAIHttpClientConfiguration;
-import org.onap.dcaegen2.services.config.ImmutableDmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.config.ImmutableDmaapPublisherConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -76,37 +77,31 @@ public class PrhAppConfig implements AppConfig {
 
     public void initFileStreamReader() {
 
-        ObjectMapper jsonObjectMapper = new ObjectMapper().registerModule(new Jdk8Module());
-        JsonNode jsonNode;
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        ServiceLoader.load(TypeAdapterFactory.class).forEach(gsonBuilder::registerTypeAdapterFactory);
+        JsonParser parser = new JsonParser();
+        JsonObject jsonObject;
         try (InputStream inputStream = getInputStream(filepath)) {
-            ObjectNode root = (ObjectNode) jsonObjectMapper.readTree(inputStream);
-            jsonNode = Optional.ofNullable(root.get(CONFIG).get(AAI).get(AAI_CONFIG)).orElse(NullNode.getInstance());
-            aaiHttpClientConfiguration = jsonObjectMapper
-                .treeToValue(jsonNode, ImmutableAAIHttpClientConfiguration.class);
-            jsonNode = Optional.ofNullable(root.get(CONFIG).get(DMAAP).get(DMAAP_CONSUMER))
-                .orElse(NullNode.getInstance());
-            dmaapConsumerConfiguration = jsonObjectMapper
-                .treeToValue(jsonNode, ImmutableDmaapConsumerConfiguration.class);
-            jsonNode = Optional.ofNullable(root.get(CONFIG).get(DMAAP).get(DMAAP_PRODUCER))
-                .orElse(NullNode.getInstance());
-            dmaapPublisherConfiguration = jsonObjectMapper
-                .treeToValue(jsonNode, ImmutableDmaapPublisherConfiguration.class);
+            JsonElement rootElement = parser.parse(new InputStreamReader(inputStream));
+            if (rootElement.isJsonObject()) {
+                jsonObject = rootElement.getAsJsonObject();
+                aaiHttpClientConfiguration = deserializeType(gsonBuilder,
+                    jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(AAI).getAsJsonObject(AAI_CONFIG),
+                    AAIHttpClientConfiguration.class);
+
+                dmaapConsumerConfiguration = deserializeType(gsonBuilder,
+                    jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(DMAAP).getAsJsonObject(DMAAP_CONSUMER),
+                    DmaapConsumerConfiguration.class);
+
+                dmaapPublisherConfiguration = deserializeType(gsonBuilder,
+                    jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(DMAAP).getAsJsonObject(DMAAP_PRODUCER),
+                    DmaapPublisherConfiguration.class);
+            }
+
         } catch (FileNotFoundException e) {
             logger
                 .error(
                     "Configuration PrhAppConfig initFileStreamReader()::FileNotFoundException :: Execution Time - {}:{}",
-                    dateTimeFormatter.format(
-                        LocalDateTime.now()), e);
-        } catch (JsonParseException e) {
-            logger
-                .error(
-                    "Configuration PrhAppConfig initFileStreamReader()::JsonParseException :: Execution Time - {}:{}",
-                    dateTimeFormatter.format(
-                        LocalDateTime.now()), e);
-        } catch (JsonMappingException e) {
-            logger
-                .error(
-                    "Configuration PrhAppConfig initFileStreamReader()::JsonMappingException :: Execution Time - {}:{}",
                     dateTimeFormatter.format(
                         LocalDateTime.now()), e);
         } catch (IOException e) {
@@ -115,10 +110,21 @@ public class PrhAppConfig implements AppConfig {
                     "Configuration PrhAppConfig initFileStreamReader()::IOException :: Execution Time - {}:{}",
                     dateTimeFormatter.format(
                         LocalDateTime.now()), e);
+        } catch (JsonSyntaxException e) {
+            logger
+                .error(
+                    "Configuration PrhAppConfig initFileStreamReader()::JsonSyntaxException :: Execution Time - {}:{}",
+                    dateTimeFormatter.format(
+                        LocalDateTime.now()), e);
         }
     }
 
-    InputStream getInputStream(String filepath) throws FileNotFoundException {
+    private <T> T deserializeType(@NotNull GsonBuilder gsonBuilder, @NotNull JsonObject jsonObject,
+        @NotNull Class<T> type) {
+        return gsonBuilder.create().fromJson(jsonObject, type);
+    }
+
+    InputStream getInputStream(@NotNull String filepath) throws FileNotFoundException {
         return new BufferedInputStream(new FileInputStream(filepath));
     }
 

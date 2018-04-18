@@ -51,6 +51,7 @@ public class AAIPublisherTaskImpl extends AAIPublisherTask<AAIHttpClientConfigur
     protected void publish() throws AAINotFoundException {
         logger.debug("Start task DmaapConsumerTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
+        prhAppConfig.getAAIHttpClientConfiguration();
         logger.debug("End task DmaapConsumerTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
 

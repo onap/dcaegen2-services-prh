@@ -19,6 +19,13 @@
  */
 package org.onap.dcaegen2.services.service;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ResponseHandler;
@@ -37,15 +44,7 @@ import org.onap.dcaegen2.services.utils.RequestVerbs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Optional;
+import org.springframework.lang.NonNull;
 
 public class AAIExtendedHttpClientImpl implements AAIExtendedHttpClient {
 
@@ -117,7 +116,7 @@ public class AAIExtendedHttpClientImpl implements AAIExtendedHttpClient {
         return extendedURI;
     }
 
-    private String createCustomQuery(@Nonnull final Map<String, String> queryParams) {
+    private String createCustomQuery(@NonNull final Map<String, String> queryParams) {
         final StringBuilder queryStringBuilder = new StringBuilder("");
         final Iterator<Map.Entry<String, String>> queryParamIterator = queryParams.entrySet().iterator();
 

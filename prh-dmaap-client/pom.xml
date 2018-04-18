@@ -48,6 +48,11 @@
       <groupId>org.immutables</groupId>
       <artifactId>gson</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+    </dependency>
+
 
     <!-- LOGGING DEPENDENCIES -->
     <dependency>

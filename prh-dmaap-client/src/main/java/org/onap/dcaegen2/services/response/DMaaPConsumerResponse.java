@@ -17,29 +17,16 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.config;
+package org.onap.dcaegen2.services.response;
 
-import org.immutables.gson.Gson;
-import org.immutables.value.Value;
-import org.springframework.stereotype.Component;
+import java.util.List;
 
 /**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/17/18
  */
-@Component
-@Value.Immutable(prehash = true)
-@Value.Style(builder = "new")
-@Gson.TypeAdapters
-public abstract class DmaapPublisherConfiguration implements DmaapCustomConfig {
+public interface DMaaPConsumerResponse extends DMaaPResponse {
 
-    private static final long serialVersionUID = 1L;
 
-    interface Builder extends
-        DmaapCustomConfig.Builder<DmaapPublisherConfiguration, DmaapPublisherConfiguration.Builder> {
+    List<String> getFetchedMessages();
 
-    }
-
-    public static DmaapPublisherConfiguration.Builder builder() {
-        return ImmutableDmaapPublisherConfiguration.builder();
-    }
 }

@@ -1,8 +1,13 @@
 spring:
   profiles:
-    active: prod
+    active: dev
 server:
-  port: 8100
+  port: 8433
+  ssl:
+    keyStoreType: PKCS12
+    key-store-password: password
+    key-store: config/keystroke
+    keyAlias: tomcat
 logging:
   level:
     ROOT: ERROR
@@ -12,3 +17,5 @@ logging:
   file: opt/log/application.log
 app:
   filepath: config/prh_endpoints.json
+security:
+  require-ssl: true

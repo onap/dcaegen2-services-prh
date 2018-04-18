@@ -1,0 +1,412 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_eeb31098",
+        "filename": "prh-commons/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-18T09:33:08Z",
+      "side": 1,
+      "message": "resolve this from dependencyManagement pom by deleting this line",
+      "range": {
+        "startLine": 51,
+        "startChar": 12,
+        "endLine": 51,
+        "endChar": 44
+      },
+      "revId": "468488233a7257f9728c32480ecb84dcfa0435fd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_0eb99c78",
+        "filename": "prh-commons/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-18T09:33:08Z",
+      "side": 1,
+      "message": "do you need this ?",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 21
+      },
+      "revId": "468488233a7257f9728c32480ecb84dcfa0435fd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_aeb18890",
+        "filename": "prh-commons/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-18T09:33:08Z",
+      "side": 1,
+      "message": "do you need this?",
+      "range": {
+        "startLine": 57,
+        "startChar": 8,
+        "endLine": 60,
+        "endChar": 21
+      },
+      "revId": "468488233a7257f9728c32480ecb84dcfa0435fd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_ceae542e",
+        "filename": "prh-commons/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-18T09:33:08Z",
+      "side": 1,
+      "message": "delete this line for resolving mockito library",
+      "range": {
+        "startLine": 100,
+        "startChar": 12,
+        "endLine": 100,
+        "endChar": 37
+      },
+      "revId": "468488233a7257f9728c32480ecb84dcfa0435fd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_6e55c01c",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/service/ExtendedHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-18T09:33:08Z",
+      "side": 1,
+      "message": "delete",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 1
+      },
+      "revId": "468488233a7257f9728c32480ecb84dcfa0435fd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_8e528c33",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/service/ExtendedHttpClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-18T09:33:08Z",
+      "side": 1,
+      "message": "delete",
+      "range": {
+        "startLine": 50,
+        "startChar": 47,
+        "endLine": 50,
+        "endChar": 65
+      },
+      "revId": "468488233a7257f9728c32480ecb84dcfa0435fd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_ce23b4bb",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/service/ExtendedHttpClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-18T09:33:08Z",
+      "side": 1,
+      "message": "Tip1.1 : Delete this if statement",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 9
+      },
+      "revId": "468488233a7257f9728c32480ecb84dcfa0435fd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_2e1a587d",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/service/ExtendedHttpClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-18T09:33:08Z",
+      "side": 1,
+      "message": "Tip1.2 : return nullable below logger instruction or add new catch clause exception",
+      "revId": "468488233a7257f9728c32480ecb84dcfa0435fd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_4e1fa46c",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/service/ExtendedHttpClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-18T09:33:08Z",
+      "side": 1,
+      "message": "inline",
+      "range": {
+        "startLine": 125,
+        "startChar": 0,
+        "endLine": 126,
+        "endChar": 48
+      },
+      "revId": "468488233a7257f9728c32480ecb84dcfa0435fd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_ee0f9037",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/service/ExtendedHttpClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-18T09:33:08Z",
+      "side": 1,
+      "message": "inline",
+      "range": {
+        "startLine": 128,
+        "startChar": 15,
+        "endLine": 129,
+        "endChar": 79
+      },
+      "revId": "468488233a7257f9728c32480ecb84dcfa0435fd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_0e151c48",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/service/ExtendedHttpClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-18T09:33:08Z",
+      "side": 1,
+      "message": "delete and simplify as soon as possible",
+      "range": {
+        "startLine": 148,
+        "startChar": 0,
+        "endLine": 150,
+        "endChar": 5
+      },
+      "revId": "468488233a7257f9728c32480ecb84dcfa0435fd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_ae0d0840",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/service/ExtendedHttpClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-18T09:33:08Z",
+      "side": 1,
+      "message": "refactor this using lambda expression (simplify)",
+      "range": {
+        "startLine": 191,
+        "startChar": 0,
+        "endLine": 197,
+        "endChar": 13
+      },
+      "revId": "468488233a7257f9728c32480ecb84dcfa0435fd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_4e3804ef",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/service/HttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-18T09:33:08Z",
+      "side": 1,
+      "message": "delete",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 1
+      },
+      "revId": "468488233a7257f9728c32480ecb84dcfa0435fd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_8e004c03",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/service/HttpClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-18T09:33:08Z",
+      "side": 1,
+      "message": "extract method",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 13
+      },
+      "revId": "468488233a7257f9728c32480ecb84dcfa0435fd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_2901f204",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/service/HttpClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-18T09:33:08Z",
+      "side": 1,
+      "message": "inline with HttpCLientBuilder definition and declaration",
+      "range": {
+        "startLine": 83,
+        "startChar": 0,
+        "endLine": 86,
+        "endChar": 45
+      },
+      "revId": "468488233a7257f9728c32480ecb84dcfa0435fd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_ce0ad425",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/service/HttpClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-18T09:33:08Z",
+      "side": 1,
+      "message": "all dmaap http clients inherit from DmaapCustomConfig so all child object will be instance of DmaapCustomConfig. Extract for each DmaapConfiguration (producer and consumer) simply flow",
+      "range": {
+        "startLine": 88,
+        "startChar": 0,
+        "endLine": 105,
+        "endChar": 45
+      },
+      "revId": "468488233a7257f9728c32480ecb84dcfa0435fd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_4906be1e",
+        "filename": "prh-commons/src/test/java/org/onap/dcaegen2/services/service/utils/AAIClientConfigurationForTests.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-18T09:33:08Z",
+      "side": 1,
+      "message": "delete?",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 1
+      },
+      "revId": "468488233a7257f9728c32480ecb84dcfa0435fd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_e906aa1b",
+        "filename": "prh-commons/src/test/java/org/onap/dcaegen2/services/service/utils/HttpRequestDetailsForTests.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-18T09:33:08Z",
+      "side": 1,
+      "message": "delete",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 1
+      },
+      "revId": "468488233a7257f9728c32480ecb84dcfa0435fd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

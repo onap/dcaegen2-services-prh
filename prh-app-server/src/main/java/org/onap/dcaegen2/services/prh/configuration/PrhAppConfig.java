@@ -19,9 +19,6 @@
  */
 package org.onap.dcaegen2.services.prh.configuration;
 
-import static org.apache.tomcat.util.file.ConfigFileLoader.getInputStream;
-
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

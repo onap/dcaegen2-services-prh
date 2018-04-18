@@ -2,7 +2,13 @@ spring:
   profiles:
     active: prod
 server:
-  port: 8100
+  port: 8433
+  ssl:
+    key-store-type: PKCS12
+    key-store-password: nokiapnf
+    key-store: classpath:keystore.jks
+    key-password: nokiapnf
+    keyAlias: tomcat-localhost
 logging:
   level:
     ROOT: ERROR

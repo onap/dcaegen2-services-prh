@@ -109,8 +109,8 @@
       <artifactId>spring-boot-starter-web</artifactId>
       <exclusions>
         <exclusion>
-          <artifactId>jackson-databind</artifactId>
-          <groupId>com.fasterxml.jackson.core</groupId>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-json</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -119,14 +119,20 @@
       <artifactId>spring-boot-starter-webflux</artifactId>
       <exclusions>
         <exclusion>
-          <artifactId>jackson-databind</artifactId>
-          <groupId>com.fasterxml.jackson.core</groupId>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-json</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
     <dependency>
       <groupId>com.spotify</groupId>
       <artifactId>docker-maven-plugin</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-databind</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.bouncycastle</groupId>
@@ -227,12 +233,6 @@
         <version>2.0.1.RELEASE</version>
         <type>pom</type>
         <scope>import</scope>
-        <exclusions>
-          <exclusion>
-            <artifactId>jackson-databind</artifactId>
-            <groupId>com.fasterxml.jackson.core</groupId>
-          </exclusion>
-        </exclusions>
       </dependency>
     </dependencies>
   </dependencyManagement>

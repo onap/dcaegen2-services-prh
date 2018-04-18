@@ -19,24 +19,35 @@
  */
 package org.onap.dcaegen2.services.prh.controllers;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
+import org.onap.dcaegen2.services.prh.configuration.PrhAppConfig;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/5/18
  */
-@Controller
+@RestController
 @Component
 public class ScheduleController {
 
+    private static final Logger logger = LoggerFactory.getLogger(PrhAppConfig.class);
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     private static final int SCHEDULING_DELAY = 20000;
 
     private final TaskScheduler taskScheduler;
@@ -50,18 +61,71 @@ public class ScheduleController {
         this.scheduledTask = scheduledTask;
     }
 
+    @RequestMapping(value = "start", method = RequestMethod.GET)
+    public Mono<ResponseEntity<String>> startTasks() {
+        logger.debug("Starting scheduling worker request on on thread={} , time={} ", Thread.currentThread().getName(),
+            dateTimeFormatter.format(
+                LocalDateTime.now()));
+        ExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        Future<Void> future = executor.submit(() -> {
+            scheduledTask.scheduleMainPrhEventTask();
+            return null;
+        });
+        scheduledFuture = taskScheduler.scheduleAtFixedRate((Runnable) future, SCHEDULING_DELAY);
 
-    @RequestMapping(value = "preferences", method = RequestMethod.PUT)
-    public ResponseEntity<Void> startTask() {
-        scheduledFuture = taskScheduler
-            .scheduleWithFixedDelay(scheduledTask::scheduleMainPrhEventTask, SCHEDULING_DELAY);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return Mono.just(new ResponseEntity<>(HttpStatus.CREATED)).map(resp -> {
+            logger.debug("Sending success response on starting task execution thread={} , time={} ",
+                Thread.currentThread().getName(),
+                dateTimeFormatter.format(
+                    LocalDateTime.now()));
+            return ResponseEntity.status(resp.getStatusCode()).body("PRH Service has already been started!");
+        });
+
+//        return (Mono) Mono.just(scheduledFuture)
+//            .doOnSuccess(q -> Mono.just(new ResponseEntity<>(HttpStatus.CREATED)).map(resp -> {
+//                logger.debug("Sending success response on starting task execution thread={} , time={} ",
+//                    Thread.currentThread().getName(),
+//                    dateTimeFormatter.format(
+//                        LocalDateTime.now()));
+//                return ResponseEntity.status(resp.getStatusCode()).body("PRH Service has already been started!");
+//            }).doOnError(p -> Mono.just(new ResponseEntity<>(HttpStatus.NOT_FOUND)).map(resp -> {
+//                logger.debug("Sending error response on starting task execution thread={} , time={} ",
+//                    Thread.currentThread().getName(),
+//                    dateTimeFormatter.format(
+//                        LocalDateTime.now()));
+//                return ResponseEntity.status(resp.getStatusCode()).body("PRH Service has not been started!");
+//            })));
+
     }
 
-    @RequestMapping("stopPrh")
-    public ResponseEntity<Void> stopTask() {
+    @RequestMapping(value = "stopPrh", method = RequestMethod.GET)
+    public Mono<ResponseEntity<String>> stopTask() {
+        logger.debug("Stopping scheduling worker request on on thread={} , time={} ",
+            Thread.currentThread().getName(),
+            dateTimeFormatter.format(
+                LocalDateTime.now()));
         scheduledFuture.cancel(false);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 
+        return Mono.just(new ResponseEntity<>(HttpStatus.CREATED)).map(resp -> {
+            logger.debug("Sending success response on stopping task execution thread={} , time={} ",
+                Thread.currentThread().getName(),
+                dateTimeFormatter.format(
+                    LocalDateTime.now()));
+            return ResponseEntity.status(resp.getStatusCode()).body("PRH Service has already been stopped!");
+        });
+//        return (Mono) Mono.just(scheduledFuture)
+//            .doOnSuccess(q -> Mono.just(new ResponseEntity<>(HttpStatus.ACCEPTED)).map(resp -> {
+//                logger.debug("Sending success response on stopping task execution thread={} , time={} ",
+//                    Thread.currentThread().getName(),
+//                    dateTimeFormatter.format(
+//                        LocalDateTime.now()));
+//                return ResponseEntity.status(resp.getStatusCode()).body("PRH Service has already been started!");
+//            }).doOnError(p -> Mono.just(new ResponseEntity<>(HttpStatus.NOT_FOUND)).map(resp -> {
+//                logger.debug("Sending error response on stopping task execution thread={} , time={} ",
+//                    Thread.currentThread().getName(),
+//                    dateTimeFormatter.format(
+//                        LocalDateTime.now()));
+//                return ResponseEntity.status(resp.getStatusCode()).body("PRH Service has not been started!");
+//            })));
+    }
 }

@@ -48,7 +48,7 @@ public class ScheduledTasks {
         this.aaiPublisherTask = aaiPublisherTask;
     }
 
-    public void scheduleMainPrhEventTask() {
+    public Void scheduleMainPrhEventTask() throws PrhTaskException {
         logger.debug("Task scheduledTaskAskingDMaaPOfConsumeEvent() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
         setTaskExecutionFlow();
@@ -59,7 +59,9 @@ public class ScheduledTasks {
                 .error("Task scheduledTaskAskingDMaaPOfConsumeEvent()::PrhTaskException :: Execution Time - {}:{}",
                     dateTimeFormatter.format(
                         LocalDateTime.now()), e);
+            throw e;
         }
+        return null;
     }
 
     private void setTaskExecutionFlow() {

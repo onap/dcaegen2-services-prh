@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_f1f8d47d",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/service/ExtendedHttpClientImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-18T16:55:22Z",
+      "side": 1,
+      "message": "It will be nice if you divide this class for each functionality. First rule of SOLID principle. I think that this class is too complex now",
+      "range": {
+        "startLine": 50,
+        "startChar": 13,
+        "endLine": 50,
+        "endChar": 35
+      },
+      "revId": "fcdbbacab06e4a0646ab5376b26d540453cb4115",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_b1eeccb3",
+        "filename": "prh-commons/src/test/java/org/onap/dcaegen2/services/service/ExtendedHttpClientImplTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-18T16:55:22Z",
+      "side": 1,
+      "message": "delete comments",
+      "range": {
+        "startLine": 83,
+        "startChar": 0,
+        "endLine": 83,
+        "endChar": 37
+      },
+      "revId": "fcdbbacab06e4a0646ab5376b26d540453cb4115",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_9131505c",
+        "filename": "prh-commons/src/test/java/org/onap/dcaegen2/services/service/utils/AAIClientConfigurationForTests.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-18T16:55:22Z",
+      "side": 1,
+      "message": "do u need this class for tests ?",
+      "range": {
+        "startLine": 23,
+        "startChar": 13,
+        "endLine": 23,
+        "endChar": 43
+      },
+      "revId": "fcdbbacab06e4a0646ab5376b26d540453cb4115",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_3132bc5e",
+        "filename": "prh-commons/src/test/java/org/onap/dcaegen2/services/service/utils/HttpRequestDetailsForTests.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-18T16:55:22Z",
+      "side": 1,
+      "message": "do you need this empty class for tests?",
+      "range": {
+        "startLine": 23,
+        "startChar": 13,
+        "endLine": 23,
+        "endChar": 39
+      },
+      "revId": "fcdbbacab06e4a0646ab5376b26d540453cb4115",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_5137484d",
+        "filename": "prh-commons/src/test/java/org/onap/dcaegen2/services/service/utils/HttpRequestDetailsTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-18T16:55:22Z",
+      "side": 1,
+      "message": "You don\u0027t use this attribute",
+      "range": {
+        "startLine": 25,
+        "startChar": 29,
+        "endLine": 25,
+        "endChar": 37
+      },
+      "revId": "fcdbbacab06e4a0646ab5376b26d540453cb4115",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

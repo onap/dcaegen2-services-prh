@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_1a523567",
+        "filename": "pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 413,
+      "author": {
+        "id": 2683
+      },
+      "writtenOn": "2018-04-19T12:30:57Z",
+      "side": 1,
+      "message": "Good choice. One comment: for now it\u0027s ok, but you may consider using Release Trains as recommended by Reactor developers.",
+      "revId": "d54d5f0f9739c6173c923606696f199793db2ba5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_da47eda1",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/controllers/HeartbeatController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 2683
+      },
+      "writtenOn": "2018-04-19T12:30:57Z",
+      "side": 1,
+      "message": "I believe it will be more readable:\n\nreturn Mono.defer(() -\u003e {\n    log.debug...\n    return Mono.just(new ResponseEntity\u003c\u003e(\"I\u0027m living\", HttpStatus.OK));\n});\n\nor even:\n\nreturn Mono.just(new ResponseEntity\u003c\u003e(\"I\u0027m living\", HttpStatus.OK))\n    .doOnNext(this::logSendingHeartbeat);",
+      "revId": "d54d5f0f9739c6173c923606696f199793db2ba5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_1a8795b6",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/controllers/ScheduleController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 2683
+      },
+      "writtenOn": "2018-04-19T12:30:57Z",
+      "side": 1,
+      "message": "It\u0027s risky to modify spring component (singleton) state on every request. Please review if it is still thread-safe.\n\nI know you expect \"start\" to be called once but it\u0027s an API. What if someone calls it few times by accident?",
+      "revId": "d54d5f0f9739c6173c923606696f199793db2ba5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_9a6965fb",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/controllers/ScheduleController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 2683
+      },
+      "writtenOn": "2018-04-19T12:30:57Z",
+      "side": 1,
+      "message": "The whole point of non-blocking api (here by means of Mono \u0026 Flux) is to do most of the work inside the Mono/Flux operators. Maybe refactor this a little bit so the methods starts with Mono. It will also make this method less overwhelming ;)\n\nreturn Mono.fromRunnable(this::schedulePrhTask)\n  .then(Mono.fromSupplier(this::createSuccessfulResponse));",
+      "revId": "d54d5f0f9739c6173c923606696f199793db2ba5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_da7a8db9",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/ScheduledTasks.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 2683
+      },
+      "writtenOn": "2018-04-19T12:30:57Z",
+      "side": 1,
+      "message": "Revert this change",
+      "revId": "d54d5f0f9739c6173c923606696f199793db2ba5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

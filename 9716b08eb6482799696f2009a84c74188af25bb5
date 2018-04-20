@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_e6ded0d9",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/controllers/ScheduleController.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 2683
+      },
+      "writtenOn": "2018-04-20T08:49:06Z",
+      "side": 1,
+      "message": "Extract helper method for debug logging (this code is repeated few times in this class). Also add if(logger.isDebugEnabled()) to avoid formatting date etc when loglevel is higher.",
+      "revId": "9716b08eb6482799696f2009a84c74188af25bb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_a6f4485b",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/controllers/ScheduleController.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 2683
+      },
+      "writtenOn": "2018-04-20T08:49:06Z",
+      "side": 1,
+      "message": "Consider splitting \"response logic\" and \"business logic\" to separate methods, eg:\n\n@GetMapping(...)\npublic void startTask() {\n    return Mono.fromSupplier(this::tryToStartTask)\n            .map(this::createStartTaskResponse);\n}\n\nprivate synchronized boolean tryToStartTask() {\n    if (isempty) { start...; return true;}\n    else return false;\n}\n\nprivate ResponseEntity\u003cString\u003e createStartTaskResponse(boolean wasScheduled) {\n    if (wasScheduled) return ok;\n    else return epicFail;\n}",
+      "revId": "9716b08eb6482799696f2009a84c74188af25bb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_86efcc86",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/controllers/ScheduleController.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 2683
+      },
+      "writtenOn": "2018-04-20T08:49:06Z",
+      "side": 1,
+      "message": "Remove \"already\" - it suggests that something went wrong.",
+      "revId": "9716b08eb6482799696f2009a84c74188af25bb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

@@ -65,24 +65,13 @@ public class AAIExtendedHttpClientImpl implements AAIExtendedHttpClient {
     }
 
     @Override
-    public Optional<String> getHttpResponse(HttpRequestDetails httpRequestDetails) {
+    public Optional<String> getHttpResponse(HttpRequestDetails requestDetails) {
 
         Optional<String> extendedDetails = Optional.empty();
-
-        final URI extendedURI = createAAIExtendedURI(httpRequestDetails.aaiAPIPath(),
-                httpRequestDetails.queryParameters());
-        final HttpRequestBase request = createHttpRequest(extendedURI, httpRequestDetails);
-
-        if (request == null) {
-            return Optional.empty();
-        }
-
-        for (Map.Entry<String, String> headersEntry : httpRequestDetails.headers().entrySet()) {
-            request.addHeader(headersEntry.getKey(), headersEntry.getValue());
-        }
+        Optional<HttpRequestBase> request = createRequest(requestDetails);
 
         try {
-            extendedDetails = closeableHttpClient.execute(request, aaiResponseHandler());
+            extendedDetails = closeableHttpClient.execute(request.get(), aaiResponseHandler());
         } catch (IOException e) {
             logger.error("Exception while executing HTTP request: {}", e);
         }
@@ -190,5 +179,13 @@ public class AAIExtendedHttpClientImpl implements AAIExtendedHttpClient {
 
     private Boolean isPatchRequestValid(RequestVerbs requestVerb, Optional<String> jsonBody) {
         return requestVerb == RequestVerbs.PATCH && jsonBody.isPresent();
+    }
+
+    private Optional<HttpRequestBase> createRequest(HttpRequestDetails requestDetails) {
+
+        final URI extendedURI = createAAIExtendedURI(requestDetails.aaiAPIPath(), requestDetails.queryParameters());
+        HttpRequestBase request = createHttpRequest(extendedURI, requestDetails);
+        requestDetails.headers().forEach(request::addHeader);
+        return Optional.of(request);
     }
 }

@@ -35,16 +35,16 @@ public abstract class DmaapConsumerConfiguration implements DmaapCustomConfig {
     private static final long serialVersionUID = 1L;
 
     @Value.Parameter
-    abstract String consumerId();
+    public abstract String consumerId();
 
     @Value.Parameter
-    abstract String consumerGroup();
+    public abstract String consumerGroup();
 
     @Value.Parameter
-    abstract Integer timeoutMS();
+    public abstract Integer timeoutMS();
 
     @Value.Parameter
-    abstract Integer messageLimit();
+    public abstract Integer messageLimit();
 
 
     public interface Builder extends

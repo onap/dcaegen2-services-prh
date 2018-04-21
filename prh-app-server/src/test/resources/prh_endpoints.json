@@ -14,24 +14,24 @@
       "dmaapConsumerConfiguration": {
         "consumerGroup": "other",
         "consumerId": "1",
-        "dmmapContentType": "application/json",
-        "dmmapHostName": "localhost",
-        "dmmapPortNumber": 2222,
-        "dmmapProtocol": "http",
-        "dmmapTopicName": "temp",
-        "dmmapUserName": "admin",
-        "dmmapUserPassword": "admin",
+        "dmaapContentType": "application/json",
+        "dmaapHostName": "localhost",
+        "dmaapPortNumber": 2222,
+        "dmaapProtocol": "http",
+        "dmaapTopicName": "temp",
+        "dmaapUserName": "admin",
+        "dmaapUserPassword": "admin",
         "messageLimit": 1000,
         "timeoutMS": 1000
       },
       "dmaapProducerConfiguration": {
-        "dmmapContentType": "application/json",
-        "dmmapHostName": "localhost",
-        "dmmapPortNumber": 2223,
-        "dmmapProtocol": "http",
-        "dmmapTopicName": "temp",
-        "dmmapUserName": "admin",
-        "dmmapUserPassword": "admin"
+        "dmaapContentType": "application/json",
+        "dmaapHostName": "localhost",
+        "dmaapPortNumber": 2223,
+        "dmaapProtocol": "http",
+        "dmaapTopicName": "temp",
+        "dmaapUserName": "admin",
+        "dmaapUserPassword": "admin"
       }
     }
   }

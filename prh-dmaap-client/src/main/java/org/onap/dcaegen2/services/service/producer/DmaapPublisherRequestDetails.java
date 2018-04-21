@@ -17,54 +17,22 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.config;
 
-import java.io.Serializable;
+package org.onap.dcaegen2.services.service.producer;
+
 import org.immutables.value.Value;
 
-/**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/28/18
- */
-public interface DmaapCustomConfig extends Serializable {
+import java.util.Optional;
+
+@Value.Immutable(prehash = true)
+@Value.Style(builder = "new")
+public abstract class DmaapPublisherRequestDetails {
+
+    private static final long serialVersionUID = 1L;
 
     @Value.Parameter
-    String dmaapHostName();
+    public abstract String dmaapAPIPath();
 
     @Value.Parameter
-    Integer dmaapPortNumber();
-
-    @Value.Parameter
-    String dmaapTopicName();
-
-    @Value.Parameter
-    String dmaapProtocol();
-
-    @Value.Parameter
-    String dmaapUserName();
-
-    @Value.Parameter
-    String dmaapUserPassword();
-
-    @Value.Parameter
-    String dmaapContentType();
-
-
-    interface Builder<T extends DmaapCustomConfig, B extends Builder<T, B>> {
-
-        B dmaapHostName(String dmaapHostName);
-
-        B dmaapPortNumber(Integer dmaapPortNumber);
-
-        B dmaapTopicName(String dmaapTopicName);
-
-        B dmaapProtocol(String dmaapProtocol);
-
-        B dmaapUserName(String dmaapUserName);
-
-        B dmaapUserPassword(String dmaapUserPassword);
-
-        B dmaapContentType(String dmaapContentType);
-
-        T build();
-    }
+    public abstract Optional<String> jsonBody();
 }

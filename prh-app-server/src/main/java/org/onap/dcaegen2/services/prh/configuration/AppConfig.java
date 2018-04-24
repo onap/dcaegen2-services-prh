@@ -34,4 +34,6 @@ public interface AppConfig {
 
     DmaapPublisherConfiguration getDmaapPublisherConfiguration();
 
+    void initFileStreamReader();
+
 }

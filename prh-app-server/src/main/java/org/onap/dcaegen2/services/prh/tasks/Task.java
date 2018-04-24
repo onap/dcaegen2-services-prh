@@ -36,7 +36,8 @@ public abstract class Task {
     }
 
     public void receiveRequest(Object body) throws PrhTaskException {
-        Object responseEntity = execute(body);
+
+        ResponseEntity responseEntity = execute(body);
         if (taskProcess != null) {
             taskProcess.receiveRequest(responseEntity);
         }
@@ -44,5 +45,5 @@ public abstract class Task {
 
     abstract ResponseEntity execute(Object object) throws PrhTaskException;
 
-
+    abstract void initConfigs();
 }

@@ -233,6 +233,16 @@
       <version>${project.parent.version}</version>
     </dependency>
 
+    <!--REQUIRED TO GENERATE DOCUMENTATION -->
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger-ui</artifactId>
+    </dependency>
+
   </dependencies>
   <dependencyManagement>
     <dependencies>

@@ -24,6 +24,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.onap.dcaegen2.services.prh.configuration.PrhAppConfig;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
 import org.slf4j.Logger;
@@ -43,6 +46,7 @@ import reactor.core.publisher.Mono;
  */
 @RestController
 @Component
+@Api(value = "ScheduleController", description = "Schedule Controller")
 public class ScheduleController {
 
     private static final Logger logger = LoggerFactory.getLogger(PrhAppConfig.class);
@@ -61,17 +65,20 @@ public class ScheduleController {
     }
 
     @RequestMapping(value = "start", method = RequestMethod.GET)
+    @ApiOperation(value = "Start scheduling worker request")
     public Mono<ResponseEntity<String>> startTasks() {
-        logDebug("Starting scheduling worker request on on thread={} , time={} ");
+        logDebug("Starting scheduling worker request on thread={} , time={} ");
         return Mono.fromSupplier(this::tryToStartTask).map(this::createStartTaskResponse);
     }
 
     @RequestMapping(value = "stopPrh", method = RequestMethod.GET)
+    @ApiOperation(value = "Stop scheduling worker request")
     public Mono<ResponseEntity<String>> stopTask() {
-        logDebug("Stopping scheduling worker request on on thread={} , time={} ");
+        logDebug("Stopping scheduling worker request on thread={} , time={} ");
         return getResponseFromCancellationOfTasks();
     }
 
+    @ApiOperation(value = "Get response on stopping task execution")
     private synchronized Mono<ResponseEntity<String>> getResponseFromCancellationOfTasks() {
         scheduledFutureList.forEach(x -> x.cancel(false));
         scheduledFutureList.clear();
@@ -81,6 +88,7 @@ public class ScheduleController {
         });
     }
 
+    @ApiOperation(value = "Start task if possible")
     private synchronized boolean tryToStartTask() {
         if (scheduledFutureList.isEmpty()) {
             scheduledFutureList.add(taskScheduler
@@ -92,6 +100,7 @@ public class ScheduleController {
 
     }
 
+    @ApiOperation(value = "Sends success or error response on starting task execution")
     private ResponseEntity<String> createStartTaskResponse(boolean wasScheduled) {
         if (wasScheduled) {
             logDebug("Sending success response on starting task execution thread={} , time={} ");

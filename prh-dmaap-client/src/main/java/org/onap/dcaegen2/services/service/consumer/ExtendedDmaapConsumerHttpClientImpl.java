@@ -50,7 +50,7 @@ public class ExtendedDmaapConsumerHttpClientImpl {
     private final String dmaapContentType;
 
 
-    public ExtendedDmaapConsumerHttpClientImpl(DmaapConsumerConfiguration configuration) {
+    ExtendedDmaapConsumerHttpClientImpl(DmaapConsumerConfiguration configuration) {
         this.closeableHttpClient = new DmaapHttpClientImpl(configuration).getHttpClient();
         this.dmaapHostName = configuration.dmaapHostName();
         this.dmaapProtocol = configuration.dmaapProtocol();
@@ -72,11 +72,7 @@ public class ExtendedDmaapConsumerHttpClientImpl {
             logger.error("Exception while executing HTTP request: {}", e);
         }
 
-        if (extendedDetails.isPresent()) {
-            return extendedDetails;
-        } else {
-            return Optional.empty();
-        }
+        return extendedDetails;
     }
 
     private static HttpRequestBase createHttpRequest(URI extendedURI) {
@@ -97,7 +93,7 @@ public class ExtendedDmaapConsumerHttpClientImpl {
         final URI extendedURI = createDmaapConsumerExtendedURI();
 
         if ("application/json".equals(dmaapContentType)) {
-            request = Optional.of(createHttpRequest(extendedURI));
+            request = Optional.ofNullable(createHttpRequest(extendedURI));
             request.get().addHeader("Content-type", dmaapContentType);
         }
 
@@ -118,8 +114,8 @@ public class ExtendedDmaapConsumerHttpClientImpl {
                 .setPath(createRequestPath());
 
         try {
-            logger.info("Building extended URI");
             extendedURI = uriBuilder.build();
+            logger.info("Building extended URI: {}", extendedURI);
         } catch (URISyntaxException e) {
             logger.error("Exception while building extended URI: {}", e);
         }

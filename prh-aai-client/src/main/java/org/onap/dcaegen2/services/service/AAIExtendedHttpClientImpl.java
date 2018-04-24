@@ -19,13 +19,6 @@
  */
 package org.onap.dcaegen2.services.service;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ResponseHandler;
@@ -43,8 +36,15 @@ import org.onap.dcaegen2.services.utils.HttpUtils;
 import org.onap.dcaegen2.services.utils.RequestVerbs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Optional;
 
 public class AAIExtendedHttpClientImpl implements AAIExtendedHttpClient {
 
@@ -55,7 +55,7 @@ public class AAIExtendedHttpClientImpl implements AAIExtendedHttpClient {
     private final String aaiProtocol;
     private final Integer aaiHostPortNumber;
 
-    @Autowired
+
     public AAIExtendedHttpClientImpl (AAIHttpClientConfiguration aaiHttpClientConfiguration) {
         final AAIHttpClient aaiHttpClient = new AAIHttpClientImpl(aaiHttpClientConfiguration);
         closeableHttpClient = aaiHttpClient.getAAIHttpClient();
@@ -76,14 +76,11 @@ public class AAIExtendedHttpClientImpl implements AAIExtendedHttpClient {
             logger.error("Exception while executing HTTP request: {}", e);
         }
 
-        if (extendedDetails.isPresent()) {
-            return extendedDetails;
-        } else {
-            return Optional.empty();
-        }
+        return extendedDetails;
     }
 
     private URI createAAIExtendedURI(final String path, Map<String, String> queryParams) {
+
         URI extendedURI = null;
 
         final URIBuilder uriBuilder = new URIBuilder().setScheme(this.aaiProtocol).setHost(this.aaiHost)
@@ -96,8 +93,8 @@ public class AAIExtendedHttpClientImpl implements AAIExtendedHttpClient {
         }
 
         try {
-            logger.info("Building extended URI");
             extendedURI = uriBuilder.build();
+            logger.info("Building extended URI: {}", extendedURI);
         } catch (URISyntaxException e) {
             logger.error("Exception while building extended URI: {}", e);
         }
@@ -151,7 +148,7 @@ public class AAIExtendedHttpClientImpl implements AAIExtendedHttpClient {
     }
 
     private Boolean isExtendedURINotNull(URI extendedURI) {
-        return extendedURI != null ? true : false;
+        return extendedURI != null;
     }
 
     private Optional<StringEntity> createStringEntity(Optional<String> jsonBody) {

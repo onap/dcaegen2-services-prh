@@ -67,5 +67,4 @@ public class DmaapHttpClientImpl {
 
         return httpClientBuilder.build();
     }
-
 }

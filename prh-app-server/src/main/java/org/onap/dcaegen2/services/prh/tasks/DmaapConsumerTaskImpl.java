@@ -70,4 +70,9 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask<DmaapConsumerConfig
     protected DmaapConsumerConfiguration resolveConfiguration() {
         return prhAppConfig.getDmaapConsumerConfiguration();
     }
+
+    @Override
+    protected void initConfigs() {
+        prhAppConfig.initFileStreamReader();
+    }
 }

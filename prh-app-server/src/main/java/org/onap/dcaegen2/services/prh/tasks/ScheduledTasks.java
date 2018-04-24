@@ -21,6 +21,7 @@ package org.onap.dcaegen2.services.prh.tasks;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import org.onap.dcaegen2.services.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,7 @@ public class ScheduledTasks {
             LocalDateTime.now()));
         setTaskExecutionFlow();
         try {
+            dmaapConsumerTask.initConfigs();
             dmaapConsumerTask.receiveRequest(null);
         } catch (PrhTaskException e) {
             logger

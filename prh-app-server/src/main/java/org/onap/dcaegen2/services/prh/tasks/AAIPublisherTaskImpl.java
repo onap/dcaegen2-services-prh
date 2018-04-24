@@ -68,6 +68,10 @@ public class AAIPublisherTaskImpl extends AAIPublisherTask<AAIHttpClientConfigur
     }
 
     @Override
+    void initConfigs() {
+    }
+
+    @Override
     protected AAIHttpClientConfiguration resolveConfiguration() {
         return prhAppConfig.getAAIHttpClientConfiguration();
     }

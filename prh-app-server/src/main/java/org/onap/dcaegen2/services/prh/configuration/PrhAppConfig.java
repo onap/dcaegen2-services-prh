@@ -72,6 +72,7 @@ public class PrhAppConfig implements AppConfig {
     @NotEmpty
     private String filepath;
 
+    @Override
     public void initFileStreamReader() {
 
         GsonBuilder gsonBuilder = new GsonBuilder();

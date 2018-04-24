@@ -65,6 +65,11 @@ public class DmaapPublisherTaskImpl extends DmaapPublisherTask<DmaapPublisherCon
     }
 
     @Override
+    void initConfigs() {
+        
+    }
+
+    @Override
     protected DmaapPublisherConfiguration resolveConfiguration() {
         return prhAppConfig.getDmaapPublisherConfiguration();
     }

@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_028dde7b",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/SwaggerConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-24T12:53:59Z",
+      "side": 1,
+      "message": "change to @Profile(\"prod\")",
+      "revId": "85617bce97ec118f729cd4122842dc4e0602ea43",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_42976690",
+        "filename": "swagger.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-24T12:53:59Z",
+      "side": 1,
+      "message": "Is it possible to include http and https protocol in swagger documentation?",
+      "revId": "85617bce97ec118f729cd4122842dc4e0602ea43",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

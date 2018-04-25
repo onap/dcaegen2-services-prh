@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import org.onap.dcaegen2.services.config.AAIHttpClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
+import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,7 @@ public class AAIPublisherTaskImpl extends AAIPublisherTask<AAIHttpClientConfigur
     private static final Logger logger = LoggerFactory.getLogger(ScheduledTasks.class);
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    private final AppConfig prhAppConfig;
+    private final Config prhAppConfig;
 
     @Autowired
     public AAIPublisherTaskImpl(AppConfig prhAppConfig) {

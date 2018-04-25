@@ -47,13 +47,15 @@ class PrhAppConfigTest {
     private static final String jsonString = "{\"configs\":{\"aai\":{\"aaiHttpClientConfiguration\":{\"aaiHost\":\"\",\"aaiHostPortNumber\":8080,\"aaiIgnoreSSLCertificateErrors\":true,\"aaiProtocol\":\"https\",\"aaiUserName\":\"admin\",\"aaiUserPassword\":\"admin\"}},\"dmaap\":{\"dmaapConsumerConfiguration\":{\"consumerGroup\":\"other\",\"consumerId\":\"1\",\"dmaapContentType\":\"application/json\",\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2222,\"dmaapProtocol\":\"http\",\"dmaapTopicName\":\"temp\",\"dmaapUserName\":\"admin\",\"dmaapUserPassword\":\"admin\",\"messageLimit\":1000,\"timeoutMS\":1000},\"dmaapProducerConfiguration\":{\"dmaapContentType\":\"application/json\",\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2223,\"dmaapProtocol\":\"http\",\"dmaapTopicName\":\"temp\",\"dmaapUserName\":\"admin\",\"dmaapUserPassword\":\"admin\"}}}}";
     private static final String incorrectJsonString = "{\"configs\":{\"aai\":{\"aaiHttpClientConfiguration\":{\"aaiHost\":\"\",\"aaiHostPortNumber\":8080,\"aaiIgnoreSSLCertificateErrors\":true,\"aaiProtocol\":\"https\",\"aaiUserName\":\"admin\",\"aaiUserPassword\":\"admin\"}},\"dmaap\":{\"dmaapConsumerConfiguration\":{\"consumerGroup\":\"other\",\"consumerId\":\"1\",\"dmaapContentType\":\"application/json\",\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2222,\"dmaapProtocol\":\"http\",\"dmaapTopicName\":\"temp\",\"dmaapUserName\":\"admin\",\"dmaapUserPassword\":\"admin\",\"messageLimit\":1000,\"timeoutMS\":1000},\"dmaapProducerConfiguration\":{\"dmaapContentType\":\"application/json\",\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2223,\"dmaapProtocol\":\"http\",\"dmaaptopicName\":\"temp\",\"dmaapuserName\":\"admin\",\"dmaapuserPassword\":\"admin\"}}}}";
     private static PrhAppConfig prhAppConfig;
+    private static AppConfig appConfig;
 
     private static String filePath = Objects
         .requireNonNull(PrhAppConfigTest.class.getClassLoader().getResource(PRH_ENDPOINTS)).getFile();
 
     @BeforeEach
     public void setUp() {
-        prhAppConfig = spy(new PrhAppConfig());
+        prhAppConfig = spy(PrhAppConfig.class);
+        appConfig = spy(new AppConfig());
     }
 
     @Test
@@ -84,6 +86,9 @@ class PrhAppConfigTest {
         prhAppConfig.setFilepath(filePath);
         doReturn(inputStream).when(prhAppConfig).getInputStream(any());
         prhAppConfig.initFileStreamReader();
+        appConfig.dmaapConsumerConfiguration = prhAppConfig.getDmaapConsumerConfiguration();
+        appConfig.dmaapPublisherConfiguration = prhAppConfig.getDmaapPublisherConfiguration();
+        appConfig.aaiHttpClientConfiguration = prhAppConfig.getAAIHttpClientConfiguration();
         //
         // Then
         //
@@ -92,6 +97,13 @@ class PrhAppConfigTest {
         Assertions.assertNotNull(prhAppConfig.getAAIHttpClientConfiguration());
         Assertions.assertNotNull(prhAppConfig.getDmaapConsumerConfiguration());
         Assertions.assertNotNull(prhAppConfig.getDmaapPublisherConfiguration());
+        Assertions
+            .assertEquals(appConfig.getDmaapPublisherConfiguration(), prhAppConfig.getDmaapPublisherConfiguration());
+        Assertions
+            .assertEquals(appConfig.getDmaapConsumerConfiguration(), prhAppConfig.getDmaapConsumerConfiguration());
+        Assertions
+            .assertEquals(appConfig.getAAIHttpClientConfiguration(), prhAppConfig.getAAIHttpClientConfiguration());
+
     }
 
     @Test
@@ -129,6 +141,7 @@ class PrhAppConfigTest {
         prhAppConfig.setFilepath(filePath);
         doReturn(inputStream).when(prhAppConfig).getInputStream(any());
         prhAppConfig.initFileStreamReader();
+
         //
         // Then
         //
@@ -137,6 +150,7 @@ class PrhAppConfigTest {
         Assertions.assertNotNull(prhAppConfig.getAAIHttpClientConfiguration());
         Assertions.assertNotNull(prhAppConfig.getDmaapConsumerConfiguration());
         Assertions.assertNull(prhAppConfig.getDmaapPublisherConfiguration());
+
 
     }
 }

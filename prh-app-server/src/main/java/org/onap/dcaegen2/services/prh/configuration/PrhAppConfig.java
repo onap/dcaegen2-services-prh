@@ -51,7 +51,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableConfigurationProperties
 @ConfigurationProperties("app")
-public class PrhAppConfig implements AppConfig {
+public abstract class PrhAppConfig implements Config {
 
     private static final String CONFIG = "configs";
     private static final String AAI = "aai";
@@ -63,14 +63,30 @@ public class PrhAppConfig implements AppConfig {
     private static final Logger logger = LoggerFactory.getLogger(PrhAppConfig.class);
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    private AAIHttpClientConfiguration aaiHttpClientConfiguration;
+    AAIHttpClientConfiguration aaiHttpClientConfiguration;
 
-    private DmaapConsumerConfiguration dmaapConsumerConfiguration;
+    DmaapConsumerConfiguration dmaapConsumerConfiguration;
 
-    private DmaapPublisherConfiguration dmaapPublisherConfiguration;
+    DmaapPublisherConfiguration dmaapPublisherConfiguration;
 
     @NotEmpty
     private String filepath;
+
+
+    @Override
+    public DmaapConsumerConfiguration getDmaapConsumerConfiguration() {
+        return dmaapConsumerConfiguration;
+    }
+
+    @Override
+    public AAIHttpClientConfiguration getAAIHttpClientConfiguration() {
+        return aaiHttpClientConfiguration;
+    }
+
+    @Override
+    public DmaapPublisherConfiguration getDmaapPublisherConfiguration() {
+        return dmaapPublisherConfiguration;
+    }
 
     @Override
     public void initFileStreamReader() {
@@ -95,7 +111,6 @@ public class PrhAppConfig implements AppConfig {
                     jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(DMAAP).getAsJsonObject(DMAAP_PRODUCER),
                     DmaapPublisherConfiguration.class);
             }
-
         } catch (FileNotFoundException e) {
             logger
                 .error(
@@ -134,18 +149,4 @@ public class PrhAppConfig implements AppConfig {
         this.filepath = filepath;
     }
 
-    @Override
-    public DmaapConsumerConfiguration getDmaapConsumerConfiguration() {
-        return dmaapConsumerConfiguration;
-    }
-
-    @Override
-    public AAIHttpClientConfiguration getAAIHttpClientConfiguration() {
-        return aaiHttpClientConfiguration;
-    }
-
-    @Override
-    public DmaapPublisherConfiguration getDmaapPublisherConfiguration() {
-        return dmaapPublisherConfiguration;
-    }
 }

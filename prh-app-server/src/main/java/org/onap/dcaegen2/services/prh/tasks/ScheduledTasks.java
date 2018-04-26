@@ -39,14 +39,16 @@ public class ScheduledTasks {
 
     private final Task dmaapConsumerTask;
     private final Task dmaapProducerTask;
-    private final Task aaiPublisherTask;
+    private final Task aaiProducerTask;
+    private final Task aaiConsumerTask;
 
     @Autowired
     public ScheduledTasks(DmaapConsumerTask dmaapConsumerTask, DmaapPublisherTask dmaapPublisherTask,
-        AAIPublisherTask aaiPublisherTask) {
+        AAIProducerTask aaiPublisherTask, AAIConsumerTask aaiConsumerTask) {
         this.dmaapConsumerTask = dmaapConsumerTask;
         this.dmaapProducerTask = dmaapPublisherTask;
-        this.aaiPublisherTask = aaiPublisherTask;
+        this.aaiProducerTask = aaiPublisherTask;
+        this.aaiConsumerTask = aaiConsumerTask;
     }
 
     public void scheduleMainPrhEventTask() {
@@ -65,8 +67,10 @@ public class ScheduledTasks {
     }
 
     private void setTaskExecutionFlow() {
-        dmaapConsumerTask.setNext(aaiPublisherTask);
-        aaiPublisherTask.setNext(dmaapProducerTask);
+        dmaapConsumerTask.setNext(aaiProducerTask);
+        aaiProducerTask.setNext(dmaapProducerTask);
+        aaiConsumerTask.setNext(aaiConsumerTask);
+        dmaapProducerTask.setNext(dmaapConsumerTask);
     }
 
 }

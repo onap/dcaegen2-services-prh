@@ -40,11 +40,14 @@ public class ScheduleControllerSpy {
     private DmaapPublisherTask dmaapPublisherTaskImplSpy;
 
     @Autowired
-    private AAIPublisherTask aaiPublisherTaskImplSpy;
+    private AAIProducerTask aaiPublisherTaskImplSpy;
+
+    @Autowired
+    private AAIConsumerTask aaiConsumerTaskImplSpy;
 
     @Bean
     @Primary
     public ScheduledTasks registerSimpleScheduledTask() {
-        return spy(new ScheduledTasks(dmaapConsumerTaskImplSpy, dmaapPublisherTaskImplSpy, aaiPublisherTaskImplSpy));
+        return spy(new ScheduledTasks(dmaapConsumerTaskImplSpy, dmaapPublisherTaskImplSpy, aaiPublisherTaskImplSpy, aaiConsumerTaskImplSpy));
     }
 }

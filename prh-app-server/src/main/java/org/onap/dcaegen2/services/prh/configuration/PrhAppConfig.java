@@ -19,24 +19,8 @@
  */
 package org.onap.dcaegen2.services.prh.configuration;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.TypeAdapterFactory;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ServiceLoader;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import org.onap.dcaegen2.services.config.AAIHttpClientConfiguration;
+import com.google.gson.*;
+import org.onap.dcaegen2.services.config.AAIClientConfiguration;
 import org.onap.dcaegen2.services.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.config.DmaapPublisherConfiguration;
 import org.slf4j.Logger;
@@ -44,6 +28,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ServiceLoader;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/9/18
@@ -63,7 +54,7 @@ public abstract class PrhAppConfig implements Config {
     private static final Logger logger = LoggerFactory.getLogger(PrhAppConfig.class);
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    AAIHttpClientConfiguration aaiHttpClientConfiguration;
+    AAIClientConfiguration aaiClientConfiguration;
 
     DmaapConsumerConfiguration dmaapConsumerConfiguration;
 
@@ -79,8 +70,8 @@ public abstract class PrhAppConfig implements Config {
     }
 
     @Override
-    public AAIHttpClientConfiguration getAAIHttpClientConfiguration() {
-        return aaiHttpClientConfiguration;
+    public AAIClientConfiguration getAAIClientConfiguration() {
+        return aaiClientConfiguration;
     }
 
     @Override
@@ -99,41 +90,41 @@ public abstract class PrhAppConfig implements Config {
             JsonElement rootElement = parser.parse(new InputStreamReader(inputStream));
             if (rootElement.isJsonObject()) {
                 jsonObject = rootElement.getAsJsonObject();
-                aaiHttpClientConfiguration = deserializeType(gsonBuilder,
-                    jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(AAI).getAsJsonObject(AAI_CONFIG),
-                    AAIHttpClientConfiguration.class);
+                aaiClientConfiguration = deserializeType(gsonBuilder,
+                        jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(AAI).getAsJsonObject(AAI_CONFIG),
+                        AAIClientConfiguration.class);
 
                 dmaapConsumerConfiguration = deserializeType(gsonBuilder,
-                    jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(DMAAP).getAsJsonObject(DMAAP_CONSUMER),
-                    DmaapConsumerConfiguration.class);
+                        jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(DMAAP).getAsJsonObject(DMAAP_CONSUMER),
+                        DmaapConsumerConfiguration.class);
 
                 dmaapPublisherConfiguration = deserializeType(gsonBuilder,
-                    jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(DMAAP).getAsJsonObject(DMAAP_PRODUCER),
-                    DmaapPublisherConfiguration.class);
+                        jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(DMAAP).getAsJsonObject(DMAAP_PRODUCER),
+                        DmaapPublisherConfiguration.class);
             }
         } catch (FileNotFoundException e) {
             logger
-                .error(
-                    "Configuration PrhAppConfig initFileStreamReader()::FileNotFoundException :: Execution Time - {}:{}",
-                    dateTimeFormatter.format(
-                        LocalDateTime.now()), e);
+                    .error(
+                            "Configuration PrhAppConfig initFileStreamReader()::FileNotFoundException :: Execution Time - {}:{}",
+                            dateTimeFormatter.format(
+                                    LocalDateTime.now()), e);
         } catch (IOException e) {
             logger
-                .error(
-                    "Configuration PrhAppConfig initFileStreamReader()::IOException :: Execution Time - {}:{}",
-                    dateTimeFormatter.format(
-                        LocalDateTime.now()), e);
+                    .error(
+                            "Configuration PrhAppConfig initFileStreamReader()::IOException :: Execution Time - {}:{}",
+                            dateTimeFormatter.format(
+                                    LocalDateTime.now()), e);
         } catch (JsonSyntaxException e) {
             logger
-                .error(
-                    "Configuration PrhAppConfig initFileStreamReader()::JsonSyntaxException :: Execution Time - {}:{}",
-                    dateTimeFormatter.format(
-                        LocalDateTime.now()), e);
+                    .error(
+                            "Configuration PrhAppConfig initFileStreamReader()::JsonSyntaxException :: Execution Time - {}:{}",
+                            dateTimeFormatter.format(
+                                    LocalDateTime.now()), e);
         }
     }
 
     private <T> T deserializeType(@NotNull GsonBuilder gsonBuilder, @NotNull JsonObject jsonObject,
-        @NotNull Class<T> type) {
+                                  @NotNull Class<T> type) {
         return gsonBuilder.create().fromJson(jsonObject, type);
     }
 

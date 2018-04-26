@@ -232,6 +232,11 @@
       <artifactId>prh-dmaap-client</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
+      <dependency>
+          <groupId>org.onap.dcaegen2.services.prh</groupId>
+          <artifactId>prh-aai-client</artifactId>
+          <version>1.0.0-SNAPSHOT</version>
+      </dependency>
 
   </dependencies>
   <dependencyManagement>

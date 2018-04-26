@@ -23,19 +23,15 @@ import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.dcaegen2.services.prh.IT.junit5.mockito.MockitoExtension;
 import org.onap.dcaegen2.services.prh.configuration.PrhAppConfig;
-import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
+import org.onap.dcaegen2.services.utils.HttpRequestDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -76,6 +72,11 @@ class ServiceMockProvider {
     @Bean
     public PrhAppConfig getPrhAppConfig() {
         return mock(PrhAppConfig.class);
+    }
+
+    @Bean
+    public HttpRequestDetails getRequestDetails() {
+        return mock(HttpRequestDetails.class);
     }
 }
 

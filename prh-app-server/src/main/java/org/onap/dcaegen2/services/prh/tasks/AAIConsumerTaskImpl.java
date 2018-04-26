@@ -1,4 +1,4 @@
-/*
+/*-
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -17,54 +17,64 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.prh.tasks;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import org.onap.dcaegen2.services.config.AAIHttpClientConfiguration;
+import org.onap.dcaegen2.services.config.AAIClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
+import org.onap.dcaegen2.services.service.AAIProducerClient;
+import org.onap.dcaegen2.services.utils.HttpRequestDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-/**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
- */
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
+
 @Component
-public class AAIPublisherTaskImpl extends AAIPublisherTask<AAIHttpClientConfiguration> {
+public class AAIConsumerTaskImpl extends AAIConsumerTask<AAIClientConfiguration> {
 
     private static final Logger logger = LoggerFactory.getLogger(ScheduledTasks.class);
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     private final Config prhAppConfig;
+    private final HttpRequestDetails requestDetails;
+    private AAIProducerClient producerClient;
+    public Optional<String> response;
 
     @Autowired
-    public AAIPublisherTaskImpl(AppConfig prhAppConfig) {
+    public AAIConsumerTaskImpl(AppConfig prhAppConfig, HttpRequestDetails requestDetails) {
         this.prhAppConfig = prhAppConfig;
-
+        this.requestDetails = requestDetails;
     }
 
     @Override
-    protected void publish() throws AAINotFoundException {
-        logger.debug("Start task DmaapConsumerTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
-            LocalDateTime.now()));
-        prhAppConfig.getAAIHttpClientConfiguration();
-        logger.debug("End task DmaapConsumerTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
-            LocalDateTime.now()));
+    protected void consume() throws AAINotFoundException {
+        logger.debug("Start task AAIConsumerTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
+                LocalDateTime.now()));
+
+
+        producerClient = new AAIProducerClient(prhAppConfig.getAAIClientConfiguration());
+
+        response = producerClient.getHttpResponse(requestDetails);
+
+        logger.debug("End task AAIConsumerTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
+                LocalDateTime.now()));
 
     }
 
     @Override
     public ResponseEntity execute(Object object) throws AAINotFoundException {
-        logger.debug("Start task AAIPublisherTaskImpl::execute() :: Execution Time - {}", dateTimeFormatter.format(
-            LocalDateTime.now()));
-        publish();
+        logger.debug("Start task AAIProducerTaskImpl::execute() :: Execution Time - {}", dateTimeFormatter.format(
+                LocalDateTime.now()));
+        consume();
         logger.debug("End task AAIPublisherTaskImpl::execute() :: Execution Time - {}", dateTimeFormatter.format(
-            LocalDateTime.now()));
+                LocalDateTime.now()));
         return null;
     }
 
@@ -73,8 +83,7 @@ public class AAIPublisherTaskImpl extends AAIPublisherTask<AAIHttpClientConfigur
     }
 
     @Override
-    protected AAIHttpClientConfiguration resolveConfiguration() {
-        return prhAppConfig.getAAIHttpClientConfiguration();
+    protected AAIClientConfiguration resolveConfiguration() {
+        return prhAppConfig.getAAIClientConfiguration();
     }
-
 }

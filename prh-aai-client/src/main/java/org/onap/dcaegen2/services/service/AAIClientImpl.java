@@ -31,7 +31,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.TrustStrategy;
-import org.onap.dcaegen2.services.config.AAIHttpClientConfiguration;
+import org.onap.dcaegen2.services.config.AAIClientConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,14 +40,14 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 
-public class AAIHttpClientImpl implements AAIHttpClient {
+public class AAIClientImpl implements AAIClient {
 
-    Logger logger = LoggerFactory.getLogger(AAIHttpClientImpl.class);
+    Logger logger = LoggerFactory.getLogger(AAIClientImpl.class);
 
-    private AAIHttpClientConfiguration aaiHttpClientConfig;
+    private AAIClientConfiguration aaiHttpClientConfig;
 
     @Autowired
-    public AAIHttpClientImpl(AAIHttpClientConfiguration aaiHttpClientConfiguration) {
+    public AAIClientImpl(AAIClientConfiguration aaiHttpClientConfiguration) {
         this.aaiHttpClientConfig = aaiHttpClientConfiguration;
     }
 

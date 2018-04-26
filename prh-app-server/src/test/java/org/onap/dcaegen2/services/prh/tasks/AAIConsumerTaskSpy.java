@@ -1,6 +1,6 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
- * PNF-REGISTRATION-HANDLER
+ * PROJECT
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
@@ -17,13 +17,28 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+package org.onap.dcaegen2.services.prh.tasks;
 
-package org.onap.dcaegen2.services.service;
+import org.onap.dcaegen2.services.config.AAIClientConfiguration;
 
-import org.apache.http.impl.client.CloseableHttpClient;
+import org.onap.dcaegen2.services.prh.configuration.AppConfig;
+import org.onap.dcaegen2.services.utils.HttpRequestDetails;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
-@FunctionalInterface
-public interface AAIHttpClient {
-    CloseableHttpClient getAAIHttpClient();
+import static org.mockito.Mockito.*;
+
+
+@Configuration
+public class AAIConsumerTaskSpy {
+
+    @Bean
+    @Primary
+    public AAIConsumerTask registerSimpleAAIPublisherTask() {
+        AppConfig appConfig = mock(AppConfig.class);
+        HttpRequestDetails requestDetails = mock(HttpRequestDetails.class);
+        when(appConfig.getAAIClientConfiguration()).thenReturn(mock(AAIClientConfiguration.class));
+        return spy(new AAIConsumerTaskImpl(appConfig, requestDetails));
+    }
 }
-

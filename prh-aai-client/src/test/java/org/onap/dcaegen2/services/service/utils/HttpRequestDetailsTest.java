@@ -36,19 +36,16 @@ public class HttpRequestDetailsTest {
     private static HttpRequestDetails testObject;
 
     private static final String AAI_PATH = "aaiPathTest";
-    private static final RequestVerbs HTTP_VERB = RequestVerbs.PATCH;
-    private static final String QUERY_KEY1 = "queryKey1";
-    private static final String QUERY_VALUE1 = "queryValue1";
     private static final String HEADERS_KEY1 = "headersKey1";
     private static final String HEADERS_VALUE1 = "headersValue1";
     private static final String JSON_MESSAGE = "{\"dare_to\": \"dream_big\"}";
+    private static final String PNF_NAME = "pnf-nokia-5454885485";
 
     @BeforeAll
     public static void init() {
         testObject = ImmutableHttpRequestDetails.builder()
                 .aaiAPIPath(AAI_PATH)
-                .requestVerb(HTTP_VERB)
-                .putQueryParameters(QUERY_KEY1,QUERY_VALUE1)
+                .pnfName(PNF_NAME)
                 .putHeaders(HEADERS_KEY1,HEADERS_VALUE1)
                 .jsonBody(JSON_MESSAGE)
                 .build();
@@ -58,8 +55,7 @@ public class HttpRequestDetailsTest {
     public void testGetters_success() {
         Assertions.assertEquals(AAI_PATH, testObject.aaiAPIPath());
         Assertions.assertEquals(HEADERS_VALUE1, testObject.headers().get(HEADERS_KEY1));
-        Assertions.assertEquals(QUERY_VALUE1, testObject.queryParameters().get(QUERY_KEY1));
-        Assertions.assertEquals(RequestVerbs.PATCH, testObject.requestVerb());
+        Assertions.assertEquals(PNF_NAME, testObject.pnfName());
         Assertions.assertEquals(Optional.of(JSON_MESSAGE), testObject.jsonBody());
     }
 }

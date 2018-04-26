@@ -18,12 +18,13 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.service;
+package org.onap.dcaegen2.services.prh.tasks;
 
-import org.apache.http.impl.client.CloseableHttpClient;
+import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
 
-@FunctionalInterface
-public interface AAIHttpClient {
-    CloseableHttpClient getAAIHttpClient();
+public abstract class AAIConsumerTask<T> extends Task {
+
+    protected abstract void consume() throws AAINotFoundException;
+
+    protected abstract T resolveConfiguration();
 }
-

@@ -19,7 +19,7 @@
  */
 package org.onap.dcaegen2.services.prh.configuration;
 
-import org.onap.dcaegen2.services.config.AAIHttpClientConfiguration;
+import org.onap.dcaegen2.services.config.AAIClientConfiguration;
 import org.onap.dcaegen2.services.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.config.DmaapPublisherConfiguration;
 
@@ -30,7 +30,7 @@ public interface Config {
 
     DmaapConsumerConfiguration getDmaapConsumerConfiguration();
 
-    AAIHttpClientConfiguration getAAIHttpClientConfiguration();
+    AAIClientConfiguration getAAIClientConfiguration();
 
     DmaapPublisherConfiguration getDmaapPublisherConfiguration();
 

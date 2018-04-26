@@ -1,6 +1,6 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
- * PNF-REGISTRATION-HANDLER
+ * PROJECT
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
@@ -17,30 +17,25 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.utils;
+package org.onap.dcaegen2.services.prh.tasks;
+
+import org.onap.dcaegen2.services.config.AAIClientConfiguration;
+import org.onap.dcaegen2.services.prh.configuration.AppConfig;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+
+import static org.mockito.Mockito.*;
 
 
-import org.immutables.value.Value;
+@Configuration
+public class AAIConsumerTaskSpy {
 
-import java.io.Serializable;
-import java.util.Map;
-import java.util.Optional;
-
-@Value.Immutable(prehash = true)
-@Value.Style(stagedBuilder = true)
-public abstract class HttpRequestDetails implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    @Value.Parameter
-    public abstract String aaiAPIPath();
-
-    @Value.Parameter
-    public abstract Optional<String> jsonBody();
-
-    @Value.Parameter
-    public abstract String pnfName();
-
-    @Value.Parameter
-    public abstract Map<String,String> headers();
+    @Bean
+    @Primary
+    public AAIConsumerTask registerSimpleAAIPublisherTask() {
+        AppConfig appConfig = mock(AppConfig.class);
+        when(appConfig.getAAIClientConfiguration()).thenReturn(mock(AAIClientConfiguration.class));
+        return spy(new AAIConsumerTaskImpl(appConfig));
+    }
 }

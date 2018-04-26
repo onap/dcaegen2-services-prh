@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -17,30 +17,16 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.utils;
+package org.onap.dcaegen2.services.prh.tasks;
 
+import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
 
-import org.immutables.value.Value;
+/**
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
+ */
+public abstract class AAIProducerTask<T> extends Task {
 
-import java.io.Serializable;
-import java.util.Map;
-import java.util.Optional;
+    protected abstract void publish() throws AAINotFoundException;
 
-@Value.Immutable(prehash = true)
-@Value.Style(stagedBuilder = true)
-public abstract class HttpRequestDetails implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    @Value.Parameter
-    public abstract String aaiAPIPath();
-
-    @Value.Parameter
-    public abstract Optional<String> jsonBody();
-
-    @Value.Parameter
-    public abstract String pnfName();
-
-    @Value.Parameter
-    public abstract Map<String,String> headers();
+    protected abstract T resolveConfiguration();
 }

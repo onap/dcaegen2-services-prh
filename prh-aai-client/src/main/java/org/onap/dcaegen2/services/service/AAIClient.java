@@ -1,4 +1,4 @@
-/*
+/*-
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -17,16 +17,13 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
+package org.onap.dcaegen2.services.service;
 
-/**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
- */
-public abstract class AAIPublisherTask<T> extends Task {
+import org.apache.http.impl.client.CloseableHttpClient;
 
-    protected abstract void publish() throws AAINotFoundException;
-
-    protected abstract T resolveConfiguration();
+@FunctionalInterface
+public interface AAIClient {
+    CloseableHttpClient getAAIHttpClient();
 }
+

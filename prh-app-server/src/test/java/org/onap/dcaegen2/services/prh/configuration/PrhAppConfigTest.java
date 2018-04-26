@@ -88,13 +88,13 @@ class PrhAppConfigTest {
         prhAppConfig.initFileStreamReader();
         appConfig.dmaapConsumerConfiguration = prhAppConfig.getDmaapConsumerConfiguration();
         appConfig.dmaapPublisherConfiguration = prhAppConfig.getDmaapPublisherConfiguration();
-        appConfig.aaiHttpClientConfiguration = prhAppConfig.getAAIHttpClientConfiguration();
+        appConfig.aaiClientConfiguration = prhAppConfig.getAAIClientConfiguration();
         //
         // Then
         //
         verify(prhAppConfig, times(1)).setFilepath(anyString());
         verify(prhAppConfig, times(1)).initFileStreamReader();
-        Assertions.assertNotNull(prhAppConfig.getAAIHttpClientConfiguration());
+        Assertions.assertNotNull(prhAppConfig.getAAIClientConfiguration());
         Assertions.assertNotNull(prhAppConfig.getDmaapConsumerConfiguration());
         Assertions.assertNotNull(prhAppConfig.getDmaapPublisherConfiguration());
         Assertions
@@ -102,7 +102,7 @@ class PrhAppConfigTest {
         Assertions
             .assertEquals(appConfig.getDmaapConsumerConfiguration(), prhAppConfig.getDmaapConsumerConfiguration());
         Assertions
-            .assertEquals(appConfig.getAAIHttpClientConfiguration(), prhAppConfig.getAAIHttpClientConfiguration());
+            .assertEquals(appConfig.getAAIClientConfiguration(), prhAppConfig.getAAIClientConfiguration());
 
     }
 
@@ -122,7 +122,7 @@ class PrhAppConfigTest {
         //
         verify(prhAppConfig, times(1)).setFilepath(anyString());
         verify(prhAppConfig, times(1)).initFileStreamReader();
-        Assertions.assertNull(prhAppConfig.getAAIHttpClientConfiguration());
+        Assertions.assertNull(prhAppConfig.getAAIClientConfiguration());
         Assertions.assertNull(prhAppConfig.getDmaapConsumerConfiguration());
         Assertions.assertNull(prhAppConfig.getDmaapPublisherConfiguration());
 
@@ -147,7 +147,7 @@ class PrhAppConfigTest {
         //
         verify(prhAppConfig, times(1)).setFilepath(anyString());
         verify(prhAppConfig, times(1)).initFileStreamReader();
-        Assertions.assertNotNull(prhAppConfig.getAAIHttpClientConfiguration());
+        Assertions.assertNotNull(prhAppConfig.getAAIClientConfiguration());
         Assertions.assertNotNull(prhAppConfig.getDmaapConsumerConfiguration());
         Assertions.assertNull(prhAppConfig.getDmaapPublisherConfiguration());
 

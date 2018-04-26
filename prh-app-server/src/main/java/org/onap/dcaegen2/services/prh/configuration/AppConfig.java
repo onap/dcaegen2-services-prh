@@ -19,16 +19,12 @@
  */
 package org.onap.dcaegen2.services.prh.configuration;
 
-import java.util.Optional;
-import org.onap.dcaegen2.services.config.AAIHttpClientConfiguration;
-import org.onap.dcaegen2.services.config.DmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.config.DmaapPublisherConfiguration;
-import org.onap.dcaegen2.services.config.ImmutableAAIHttpClientConfiguration;
-import org.onap.dcaegen2.services.config.ImmutableDmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.config.ImmutableDmaapPublisherConfiguration;
+import org.onap.dcaegen2.services.config.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/9/18
@@ -38,26 +34,26 @@ import org.springframework.stereotype.Component;
 @Configuration
 public class AppConfig extends PrhAppConfig {
 
-    @Value("${dmaap.dmaapConsumerConfiguration.dmmapHostName:}")
-    public String consumerDmmapHostName;
+    @Value("${dmaap.dmaapConsumerConfiguration.dmaapHostName:}")
+    public String consumerDmaapHostName;
 
-    @Value("${dmaap.dmaapConsumerConfiguration.dmmapPortNumber:}")
-    public Integer consumerDmmapPortNumber;
+    @Value("${dmaap.dmaapConsumerConfiguration.dmaapPortNumber:}")
+    public Integer consumerDmaapPortNumber;
 
-    @Value("${dmaap.dmaapConsumerConfiguration.dmmapTopicName:}")
-    public String consumerDmmapTopicName;
+    @Value("${dmaap.dmaapConsumerConfiguration.dmaapTopicName:}")
+    public String consumerDmaapTopicName;
 
-    @Value("${dmaap.dmaapConsumerConfiguration.dmmapProtocol:}")
-    public String consumerDmmapProtocol;
+    @Value("${dmaap.dmaapConsumerConfiguration.dmaapProtocol:}")
+    public String consumerDmaapProtocol;
 
-    @Value("${dmaap.dmaapConsumerConfiguration.dmmapUserName:}")
-    public String consumerDmmapUserName;
+    @Value("${dmaap.dmaapConsumerConfiguration.dmaapUserName:}")
+    public String consumerDmaapUserName;
 
-    @Value("${dmaap.dmaapConsumerConfiguration.dmmapUserPassword:}")
-    public String consumerDmmapUserPassword;
+    @Value("${dmaap.dmaapConsumerConfiguration.dmaapUserPassword:}")
+    public String consumerDmaapUserPassword;
 
-    @Value("${dmaap.dmaapConsumerConfiguration.dmmapContentType:}")
-    public String consumerDmmapContentType;
+    @Value("${dmaap.dmaapConsumerConfiguration.dmaapContentType:}")
+    public String consumerDmaapContentType;
 
     @Value("${dmaap.dmaapConsumerConfiguration.consumerId:}")
     public String consumerId;
@@ -71,26 +67,26 @@ public class AppConfig extends PrhAppConfig {
     @Value("${dmaap.dmaapConsumerConfiguration.message-limit:}")
     public Integer consumerMessageLimit;
 
-    @Value("${dmaap.dmaapProducerConfiguration.dmmapHostName:}")
-    public String producerDmmapHostName;
+    @Value("${dmaap.dmaapProducerConfiguration.dmaapHostName:}")
+    public String producerDmaapHostName;
 
-    @Value("${dmaap.dmaapProducerConfiguration.dmmapPortNumber:}")
-    public Integer producerDmmapPortNumber;
+    @Value("${dmaap.dmaapProducerConfiguration.dmaapPortNumber:}")
+    public Integer producerDmaapPortNumber;
 
-    @Value("${dmaap.dmaapProducerConfiguration.dmmapTopicName:}")
-    public String producerDmmapTopicName;
+    @Value("${dmaap.dmaapProducerConfiguration.dmaapTopicName:}")
+    public String producerDmaapTopicName;
 
-    @Value("${dmaap.dmaapProducerConfiguration.dmmapProtocol:}")
-    public String producerDmmapProtocol;
+    @Value("${dmaap.dmaapProducerConfiguration.dmaapProtocol:}")
+    public String producerDmaapProtocol;
 
-    @Value("${dmaap.dmaapProducerConfiguration.dmmapUserName:}")
-    public String producerDmmapUserName;
+    @Value("${dmaap.dmaapProducerConfiguration.dmaapUserName:}")
+    public String producerDmaapUserName;
 
-    @Value("${dmaap.dmaapProducerConfiguration.dmmapUserPassword:}")
-    public String producerDmmapUserPassword;
+    @Value("${dmaap.dmaapProducerConfiguration.dmaapUserPassword:}")
+    public String producerDmaapUserPassword;
 
-    @Value("${dmaap.dmaapProducerConfiguration.dmmapContentType:}")
-    public String producerDmmapContentType;
+    @Value("${dmaap.dmaapProducerConfiguration.dmaapContentType:}")
+    public String producerDmaapContentType;
 
     @Value("${aai.aaiHttpClientConfiguration.aaiHost:}")
     public String aaiHost;
@@ -113,63 +109,63 @@ public class AppConfig extends PrhAppConfig {
     @Override
     public DmaapConsumerConfiguration getDmaapConsumerConfiguration() {
         return new ImmutableDmaapConsumerConfiguration.Builder()
-            .dmaapUserPassword(
-                Optional.ofNullable(consumerDmmapUserPassword).orElse(dmaapConsumerConfiguration.dmaapUserPassword()))
-            .dmaapUserName(
-                Optional.ofNullable(consumerDmmapUserName).orElse(dmaapConsumerConfiguration.dmaapUserName()))
-            .dmaapHostName(
-                Optional.ofNullable(consumerDmmapHostName).orElse(dmaapConsumerConfiguration.dmaapHostName()))
-            .dmaapPortNumber(
-                Optional.ofNullable(consumerDmmapPortNumber).orElse(dmaapConsumerConfiguration.dmaapPortNumber()))
-            .dmaapProtocol(
-                Optional.ofNullable(consumerDmmapProtocol).orElse(dmaapConsumerConfiguration.dmaapProtocol()))
-            .dmaapContentType(
-                Optional.ofNullable(consumerDmmapContentType).orElse(dmaapConsumerConfiguration.dmaapContentType()))
-            .dmaapTopicName(
-                Optional.ofNullable(consumerDmmapTopicName).orElse(dmaapConsumerConfiguration.dmaapTopicName()))
-            .messageLimit(
-                Optional.ofNullable(consumerMessageLimit).orElse(dmaapConsumerConfiguration.messageLimit()))
-            .timeoutMS(Optional.ofNullable(consumerTimeoutMS).orElse(dmaapConsumerConfiguration.timeoutMS()))
-            .consumerGroup(Optional.ofNullable(consumerGroup).orElse(dmaapConsumerConfiguration.consumerGroup()))
-            .consumerId(Optional.ofNullable(consumerId).orElse(dmaapConsumerConfiguration.consumerId()))
-            .build();
+                .dmaapUserPassword(
+                        Optional.ofNullable(consumerDmaapUserPassword).orElse(dmaapConsumerConfiguration.dmaapUserPassword()))
+                .dmaapUserName(
+                        Optional.ofNullable(consumerDmaapUserName).orElse(dmaapConsumerConfiguration.dmaapUserName()))
+                .dmaapHostName(
+                        Optional.ofNullable(consumerDmaapHostName).orElse(dmaapConsumerConfiguration.dmaapHostName()))
+                .dmaapPortNumber(
+                        Optional.ofNullable(consumerDmaapPortNumber).orElse(dmaapConsumerConfiguration.dmaapPortNumber()))
+                .dmaapProtocol(
+                        Optional.ofNullable(consumerDmaapProtocol).orElse(dmaapConsumerConfiguration.dmaapProtocol()))
+                .dmaapContentType(
+                        Optional.ofNullable(consumerDmaapContentType).orElse(dmaapConsumerConfiguration.dmaapContentType()))
+                .dmaapTopicName(
+                        Optional.ofNullable(consumerDmaapTopicName).orElse(dmaapConsumerConfiguration.dmaapTopicName()))
+                .messageLimit(
+                        Optional.ofNullable(consumerMessageLimit).orElse(dmaapConsumerConfiguration.messageLimit()))
+                .timeoutMS(Optional.ofNullable(consumerTimeoutMS).orElse(dmaapConsumerConfiguration.timeoutMS()))
+                .consumerGroup(Optional.ofNullable(consumerGroup).orElse(dmaapConsumerConfiguration.consumerGroup()))
+                .consumerId(Optional.ofNullable(consumerId).orElse(dmaapConsumerConfiguration.consumerId()))
+                .build();
     }
 
     @Override
-    public AAIHttpClientConfiguration getAAIHttpClientConfiguration() {
-        return new ImmutableAAIHttpClientConfiguration.Builder()
-            .aaiHost(Optional.ofNullable(aaiHost).orElse(aaiHttpClientConfiguration.aaiHost()))
-            .aaiHostPortNumber(
-                Optional.ofNullable(aaiHostPortNumber).orElse(aaiHttpClientConfiguration.aaiHostPortNumber()))
-            .aaiIgnoreSSLCertificateErrors(
-                Optional.ofNullable(aaiIgnoreSSLCertificateErrors)
-                    .orElse(aaiHttpClientConfiguration.aaiIgnoreSSLCertificateErrors()))
-            .aaiProtocol(Optional.ofNullable(aaiProtocol).orElse(aaiHttpClientConfiguration.aaiProtocol()))
-            .aaiUserName(
-                Optional.ofNullable(aaiUserName).orElse(aaiHttpClientConfiguration.aaiUserName()))
-            .aaiUserPassword(Optional.ofNullable(
-                aaiUserPassword).orElse(aaiHttpClientConfiguration.aaiUserPassword()))
-            .build();
+    public AAIClientConfiguration getAAIClientConfiguration() {
+        return new ImmutableAAIClientConfiguration.Builder()
+                .aaiHost(Optional.ofNullable(aaiHost).orElse(aaiClientConfiguration.aaiHost()))
+                .aaiHostPortNumber(
+                        Optional.ofNullable(aaiHostPortNumber).orElse(aaiClientConfiguration.aaiHostPortNumber()))
+                .aaiIgnoreSSLCertificateErrors(
+                        Optional.ofNullable(aaiIgnoreSSLCertificateErrors)
+                                .orElse(aaiClientConfiguration.aaiIgnoreSSLCertificateErrors()))
+                .aaiProtocol(Optional.ofNullable(aaiProtocol).orElse(aaiClientConfiguration.aaiProtocol()))
+                .aaiUserName(
+                        Optional.ofNullable(aaiUserName).orElse(aaiClientConfiguration.aaiUserName()))
+                .aaiUserPassword(Optional.ofNullable(
+                        aaiUserPassword).orElse(aaiClientConfiguration.aaiUserPassword()))
+                .build();
     }
 
     @Override
     public DmaapPublisherConfiguration getDmaapPublisherConfiguration() {
         return new ImmutableDmaapPublisherConfiguration.Builder()
-            .dmaapContentType(
-                Optional.ofNullable(producerDmmapContentType).orElse(dmaapPublisherConfiguration.dmaapContentType()))
-            .dmaapHostName(
-                Optional.ofNullable(producerDmmapHostName).orElse(dmaapPublisherConfiguration.dmaapHostName()))
-            .dmaapPortNumber(
-                Optional.ofNullable(producerDmmapPortNumber).orElse(dmaapPublisherConfiguration.dmaapPortNumber()))
-            .dmaapProtocol(
-                Optional.ofNullable(producerDmmapProtocol).orElse(dmaapPublisherConfiguration.dmaapProtocol()))
-            .dmaapTopicName(
-                Optional.ofNullable(producerDmmapTopicName).orElse(dmaapPublisherConfiguration.dmaapTopicName()))
-            .dmaapUserName(
-                Optional.ofNullable(producerDmmapUserName).orElse(dmaapPublisherConfiguration.dmaapUserName()))
-            .dmaapUserPassword(
-                Optional.ofNullable(producerDmmapUserPassword).orElse(dmaapPublisherConfiguration.dmaapUserPassword()))
-            .build();
+                .dmaapContentType(
+                        Optional.ofNullable(producerDmaapContentType).orElse(dmaapPublisherConfiguration.dmaapContentType()))
+                .dmaapHostName(
+                        Optional.ofNullable(producerDmaapHostName).orElse(dmaapPublisherConfiguration.dmaapHostName()))
+                .dmaapPortNumber(
+                        Optional.ofNullable(producerDmaapPortNumber).orElse(dmaapPublisherConfiguration.dmaapPortNumber()))
+                .dmaapProtocol(
+                        Optional.ofNullable(producerDmaapProtocol).orElse(dmaapPublisherConfiguration.dmaapProtocol()))
+                .dmaapTopicName(
+                        Optional.ofNullable(producerDmaapTopicName).orElse(dmaapPublisherConfiguration.dmaapTopicName()))
+                .dmaapUserName(
+                        Optional.ofNullable(producerDmaapUserName).orElse(dmaapPublisherConfiguration.dmaapUserName()))
+                .dmaapUserPassword(
+                        Optional.ofNullable(producerDmaapUserPassword).orElse(dmaapPublisherConfiguration.dmaapUserPassword()))
+                .build();
     }
 
 }

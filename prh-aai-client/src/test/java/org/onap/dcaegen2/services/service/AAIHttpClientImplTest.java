@@ -21,7 +21,7 @@ package org.onap.dcaegen2.services.service;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.onap.dcaegen2.services.config.AAIHttpClientConfiguration;
+import org.onap.dcaegen2.services.config.AAIClientConfiguration;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
@@ -30,13 +30,13 @@ import static org.mockito.Mockito.when;
 
 public class AAIHttpClientImplTest {
 
-    private static AAIHttpClientImpl testedObject;
-    private static AAIHttpClientConfiguration aaiHttpClientConfigurationMock;
+    private static AAIClientImpl testedObject;
+    private static AAIClientConfiguration aaiHttpClientConfigurationMock;
 
 
     @BeforeAll
     public static void setup() {
-        aaiHttpClientConfigurationMock = mock(AAIHttpClientConfiguration.class);
+        aaiHttpClientConfigurationMock = mock(AAIClientConfiguration.class);
         when(aaiHttpClientConfigurationMock.aaiHost()).thenReturn("54.45.33.2");
         when(aaiHttpClientConfigurationMock.aaiProtocol()).thenReturn("https");
         when(aaiHttpClientConfigurationMock.aaiHostPortNumber()).thenReturn(1234);
@@ -44,7 +44,7 @@ public class AAIHttpClientImplTest {
         when(aaiHttpClientConfigurationMock.aaiUserPassword()).thenReturn("PNF");
         when(aaiHttpClientConfigurationMock.aaiIgnoreSSLCertificateErrors()).thenReturn(true);
 
-        testedObject  = new AAIHttpClientImpl(aaiHttpClientConfigurationMock);
+        testedObject  = new AAIClientImpl(aaiHttpClientConfigurationMock);
     }
 
     @Test

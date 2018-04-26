@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.config;
 
 
@@ -30,7 +31,7 @@ import org.springframework.stereotype.Component;
 @Value.Immutable(prehash = true)
 @Value.Style(builder = "new")
 @Gson.TypeAdapters
-public abstract class AAIHttpClientConfiguration implements Serializable {
+public abstract class AAIClientConfiguration implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

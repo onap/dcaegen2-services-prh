@@ -22,6 +22,144 @@
       "revId": "0fbb7004189b274e0dd79d9e11ed917ac05a8a56",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_2d931e5c",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AAIConsumerTaskImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-27T10:08:08Z",
+      "side": 1,
+      "message": "don\u0027t use hardcodes, the better option will be add parameter to AAIconfiguration and get them from config.json as default parameter or from cloudify",
+      "range": {
+        "startLine": 49,
+        "startChar": 4,
+        "endLine": 49,
+        "endChar": 107
+      },
+      "revId": "0fbb7004189b274e0dd79d9e11ed917ac05a8a56",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_cd9b9a71",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AAIConsumerTaskImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-27T10:08:08Z",
+      "side": 1,
+      "message": "mistake?",
+      "range": {
+        "startLine": 70,
+        "startChar": 57,
+        "endLine": 70,
+        "endChar": 60
+      },
+      "revId": "0fbb7004189b274e0dd79d9e11ed917ac05a8a56",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_ed6f765e",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AAIConsumerTaskImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-27T10:08:08Z",
+      "side": 1,
+      "message": "this parameters have to be resolved from AAI configuratin. The same situation as pnfNAme",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 25
+      },
+      "revId": "0fbb7004189b274e0dd79d9e11ed917ac05a8a56",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_2da1de93",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AAIProducerTaskImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-27T10:08:08Z",
+      "side": 1,
+      "message": "cloudify or config.json",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 107
+      },
+      "revId": "0fbb7004189b274e0dd79d9e11ed917ac05a8a56",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_adbc0ebc",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AAIProducerTaskImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-27T10:08:08Z",
+      "side": 1,
+      "message": "configurable parameters!",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 25
+      },
+      "revId": "0fbb7004189b274e0dd79d9e11ed917ac05a8a56",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_2dc8fe53",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/AAIPublisherTaskSpy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-04-27T10:08:08Z",
+      "side": 1,
+      "message": "if you can rename this from Publisher to producer (name convention)",
+      "range": {
+        "startLine": 34,
+        "startChar": 13,
+        "endLine": 34,
+        "endChar": 32
+      },
+      "revId": "0fbb7004189b274e0dd79d9e11ed917ac05a8a56",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_120d233e",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/PrhAppConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2018-04-27T07:21:35Z",
+      "side": 1,
+      "message": "This could be changed in future to:\ncatch (FNFE e1 | IOE e2 | JSE e3){\n\n\nlogger.error(Configuration PrhAppConfig initFileStreamReader()::Exception :: Execution Time - {}:{}\",\n                            dateTimeFormatter.format(\n                                    LocalDateTime.now()), e);\n\n}",
+      "range": {
+        "startLine": 105,
+        "startChar": 11,
+        "endLine": 124,
+        "endChar": 5
+      },
+      "revId": "0fbb7004189b274e0dd79d9e11ed917ac05a8a56",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

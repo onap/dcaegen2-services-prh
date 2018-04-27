@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_f228b798",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2018-04-27T07:01:49Z",
+      "side": 1,
+      "message": "Adding dependencies to plugins may lead to OOM exceptions",
+      "range": {
+        "startLine": 315,
+        "startChar": 10,
+        "endLine": 321,
+        "endChar": 25
+      },
+      "revId": "ea26baea32195be5878f46e860cf55e9146d6d2b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_9219338a",
+        "filename": "prh-app-server/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2018-04-27T07:01:49Z",
+      "side": 1,
+      "message": "Why same entry taken from plugins management?",
+      "range": {
+        "startLine": 66,
+        "startChar": 8,
+        "endLine": 72,
+        "endChar": 23
+      },
+      "revId": "ea26baea32195be5878f46e860cf55e9146d6d2b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

@@ -47,6 +47,8 @@ public class ExtendedDmaapProducerHttpClientImplTest {
 
     private static Optional<String> expectedResult = Optional.empty();
     private static final String JSON_MESSAGE = "{ \"ipaddress-v4-oam\": \"11.22.33.44\" }";
+    private static final String RESPONSE_SUCCESS = "200";
+    private static final String RESPONSE_FAILURE = "404";
 
     @BeforeAll
     public static void init() throws NoSuchFieldException, IllegalAccessException {
@@ -70,7 +72,7 @@ public class ExtendedDmaapProducerHttpClientImplTest {
 
     @Test
     public void getHttpResponsePost_success() throws IOException {
-        expectedResult = Optional.of(JSON_MESSAGE);
+        expectedResult = Optional.of(RESPONSE_SUCCESS);
 
         when(closeableHttpClientMock.execute(any(HttpPost.class), any(ResponseHandler.class)))
                 .thenReturn(expectedResult);
@@ -81,8 +83,8 @@ public class ExtendedDmaapProducerHttpClientImplTest {
     }
 
     @Test
-    public void getExtendedDetails_returnsNull() throws IOException {
-        expectedResult = Optional.of(JSON_MESSAGE);
+    public void getExtendedDetails_returnsFailure() throws IOException {
+        expectedResult = Optional.of(RESPONSE_FAILURE);
         when(closeableHttpClientMock.execute(any(HttpPost.class), any(ResponseHandler.class))).
                 thenReturn(Optional.empty());
         Optional<String>  actualResult = objectUnderTest.getHttpProducerResponse(requestDetailsMock);

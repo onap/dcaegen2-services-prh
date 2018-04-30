@@ -20,13 +20,16 @@
 
 package org.onap.dcaegen2.services.service.consumer;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.onap.dcaegen2.services.config.DmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.service.CommonMethods;
 import org.onap.dcaegen2.services.service.DmaapHttpClientImpl;
+import org.onap.dcaegen2.services.service.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +70,7 @@ public class ExtendedDmaapConsumerHttpClientImpl {
         Optional<HttpRequestBase> request = createRequest();
 
         try {
-            extendedDetails = closeableHttpClient.execute(request.get(), CommonMethods.dmaapResponseHandler());
+            extendedDetails = closeableHttpClient.execute(request.get(), dmaapConsumerResponseHandler());
         } catch (IOException | NullPointerException e) {
             logger.error("Exception while executing HTTP request: {}", e);
         }
@@ -121,6 +124,24 @@ public class ExtendedDmaapConsumerHttpClientImpl {
         }
 
         return extendedURI;
+    }
+
+    private ResponseHandler<Optional<String>> dmaapConsumerResponseHandler() {
+        return httpResponse ->  {
+            final int responseCode = httpResponse.getStatusLine().getStatusCode();
+            logger.info("Status code of operation: {}", responseCode);
+            final HttpEntity responseEntity = httpResponse.getEntity();
+
+            if (HttpUtils.isSuccessfulResponseCode(responseCode) ) {
+                logger.info("HTTP response successful.");
+                final String dmaapResponse = EntityUtils.toString(responseEntity);
+                return Optional.of(dmaapResponse);
+            } else {
+                String dmaapResponse = responseEntity != null ? EntityUtils.toString(responseEntity) : "";
+                logger.error("HTTP response not successful : {}", dmaapResponse);
+                return Optional.of("" + responseCode);
+            }
+        };
     }
 }
 

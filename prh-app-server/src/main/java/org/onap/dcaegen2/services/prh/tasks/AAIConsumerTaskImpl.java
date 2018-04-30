@@ -45,7 +45,7 @@ public class AAIConsumerTaskImpl extends AAIConsumerTask<AAIClientConfiguration>
     private final Config prhAppConfig;
     private final HttpRequestDetails requestDetails;
     private AAIProducerClient producerClient;
-    public Optional<String> response;
+    Optional<String> response;
 
     @Autowired
     public AAIConsumerTaskImpl(AppConfig prhAppConfig, HttpRequestDetails requestDetails) {

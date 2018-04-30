@@ -47,9 +47,7 @@ public class AAIProducerTaskImpl extends AAIProducerTask<AAIClientConfiguration>
     private final Config prhAppConfig;
     private AAIProducerClient producerClient;
     private HttpRequestDetails requestDetails;
-    private String jsonBody = "{\"ipaddress-v4-oam\":\"11.22.33.155\"}";
-    private String pnfName = "example-pnf-name-val-40510"; // pnf name received from dmaap required for URI
-    public Optional<String> response;
+    Optional<String> response;
 
     @Autowired
     public AAIProducerTaskImpl(AppConfig prhAppConfig, HttpRequestDetails requestDetails) {

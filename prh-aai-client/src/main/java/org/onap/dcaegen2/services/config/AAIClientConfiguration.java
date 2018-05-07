@@ -22,6 +22,8 @@ package org.onap.dcaegen2.services.config;
 
 
 import java.io.Serializable;
+import java.util.Map;
+
 import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 import org.springframework.stereotype.Component;
@@ -52,5 +54,14 @@ public abstract class AAIClientConfiguration implements Serializable {
 
     @Value.Parameter
     public abstract Boolean aaiIgnoreSSLCertificateErrors();
+
+    @Value.Parameter
+    public abstract String aaiBasePath();
+
+    @Value.Parameter
+    public abstract String aaiPnfPath();
+
+    @Value.Parameter
+    public abstract Map<String,String> aaiHeaders();
 
 }

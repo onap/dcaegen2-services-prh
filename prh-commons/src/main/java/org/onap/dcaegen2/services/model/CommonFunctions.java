@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -18,19 +18,19 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.service.producer;
+package org.onap.dcaegen2.services.model;
 
-import org.immutables.value.Value;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-import java.util.Optional;
+public class CommonFunctions {
+    private static GsonBuilder gsonBuilder = new GsonBuilder();
+    private static Gson gson = gsonBuilder.create();
 
-@Value.Immutable(prehash = true)
-@Value.Style(builder = "new")
-public abstract class DmaapPublisherRequestDetails {
 
-    @Value.Parameter
-    public abstract String dmaapAPIPath();
+    private CommonFunctions() {}
 
-    @Value.Parameter
-    public abstract String jsonBody();
+    public static String createJsonBody(ConsumerDmaapModel consumerDmaapModel) {
+        return gson.toJson(consumerDmaapModel);
+    }
 }

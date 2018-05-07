@@ -23,8 +23,6 @@ import org.apache.http.HttpStatus;
 
 public final class HttpUtils implements HttpStatus {
 
-    public static final String JSON_APPLICATION_TYPE = "application/json";
-
     private HttpUtils() {}
 
     public static boolean isSuccessfulResponseCode(Integer statusCode) {

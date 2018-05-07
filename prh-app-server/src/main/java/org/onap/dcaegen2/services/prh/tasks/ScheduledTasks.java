@@ -25,9 +25,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
@@ -39,15 +36,13 @@ public class ScheduledTasks {
     private final Task dmaapConsumerTask;
     private final Task dmaapProducerTask;
     private final Task aaiProducerTask;
-    private final Task aaiConsumerTask;
 
     @Autowired
     public ScheduledTasks(DmaapConsumerTask dmaapConsumerTask, DmaapPublisherTask dmaapPublisherTask,
-        AAIProducerTask aaiPublisherTask, AAIConsumerTask aaiConsumerTask) {
+        AAIProducerTask aaiPublisherTask) {
         this.dmaapConsumerTask = dmaapConsumerTask;
         this.dmaapProducerTask = dmaapPublisherTask;
         this.aaiProducerTask = aaiPublisherTask;
-        this.aaiConsumerTask = aaiConsumerTask;
     }
 
     public void scheduleMainPrhEventTask() {
@@ -64,8 +59,6 @@ public class ScheduledTasks {
 
     private void setTaskExecutionFlow() {
         dmaapConsumerTask.setNext(aaiProducerTask);
-        aaiProducerTask.setNext(aaiConsumerTask);
-        aaiConsumerTask.setNext(dmaapProducerTask);
+        aaiProducerTask.setNext(dmaapProducerTask);
     }
-
 }

@@ -1,4 +1,4 @@
-/*
+/*-
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -17,27 +17,28 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.model;
 
-import com.google.gson.annotations.SerializedName;
-import org.immutables.gson.Gson;
-import org.immutables.value.Value;
+package org.onap.dcaegen2.services.model;
 
-/**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/8/18
- */
+import org.onap.dcaegen2.services.model.ConsumerDmaapModel;
 
-@Value.Immutable
-@Gson.TypeAdapters
-public interface ConsumerDmaapModel {
+public class ConsumerDmaapModelForUnitTest implements ConsumerDmaapModel {
 
-    @SerializedName("pnf-name")
-    String getPnfName();
+    private String pnfName = "NOKnhfsadhff";
+    private String ipv4 = "11.22.33.155";
+    private String ipv6 = "2001:0db8:85a3:0000:0000:8a2e:0370:7334";
 
-    @SerializedName("ipaddress-v4-oam")
-    String getIpv4();
 
-    @SerializedName("ipaddress-v6-oam")
-    String getIpv6();
+    public String getPnfName() {
+        return pnfName;
+    }
+
+    public String getIpv4() {
+        return ipv4;
+    }
+
+    public String getIpv6() {
+        return ipv6;
+    }
 
 }

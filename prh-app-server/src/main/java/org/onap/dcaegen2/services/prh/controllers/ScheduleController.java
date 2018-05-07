@@ -21,10 +21,6 @@ package org.onap.dcaegen2.services.prh.controllers;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ScheduledFuture;
-import org.onap.dcaegen2.services.prh.configuration.PrhAppConfig;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +34,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ScheduledFuture;
+
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/5/18
  */
@@ -46,7 +46,7 @@ import reactor.core.publisher.Mono;
 @Api(value = "ScheduleController", description = "Schedule Controller")
 public class ScheduleController {
 
-    private static final Logger logger = LoggerFactory.getLogger(PrhAppConfig.class);
+    private static final Logger logger = LoggerFactory.getLogger(ScheduleController.class);
     private static final int SCHEDULING_DELAY = 20000;
     private static volatile List<ScheduledFuture> scheduledFutureList = new ArrayList<>();
 

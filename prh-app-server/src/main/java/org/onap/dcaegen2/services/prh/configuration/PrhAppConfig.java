@@ -32,8 +32,6 @@ import org.springframework.context.annotation.Configuration;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ServiceLoader;
 
 /**
@@ -47,7 +45,7 @@ public abstract class PrhAppConfig implements Config {
     private static final String CONFIG = "configs";
     private static final String AAI = "aai";
     private static final String DMAAP = "dmaap";
-    private static final String AAI_CONFIG = "aaiHttpClientConfiguration";
+    private static final String AAI_CONFIG = "aaiClientConfiguration";
     private static final String DMAAP_PRODUCER = "dmaapProducerConfiguration";
     private static final String DMAAP_CONSUMER = "dmaapConsumerConfiguration";
 

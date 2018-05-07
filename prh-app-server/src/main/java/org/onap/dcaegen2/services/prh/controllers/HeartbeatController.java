@@ -19,6 +19,10 @@
  */
 package org.onap.dcaegen2.services.prh.controllers;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -36,12 +40,21 @@ import reactor.core.publisher.Mono;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/19/18
  */
 @RestController
+@Api(value = "HeartbeatController", description = "Check liveness of PRH service")
 public class HeartbeatController {
 
     private static final Logger logger = LoggerFactory.getLogger(PrhAppConfig.class);
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     @RequestMapping(value = "heartbeat", method = RequestMethod.GET)
+    @ApiOperation(value = "Returns liveness of PRH service")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "PRH sevice is living"),
+        @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+        @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+        @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+    )
     public Mono<ResponseEntity<String>> heartbeat() {
         logger.debug("Receiving request on on thread={} , time={} ", Thread.currentThread().getName(),
             dateTimeFormatter.format(

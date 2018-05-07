@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_f5eba510",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/SwaggerConfig.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-07T10:39:15Z",
+      "side": 1,
+      "message": "WEBJARS_PATH \u003d RESOURCES_PATH + \"webjars/\";",
+      "range": {
+        "startLine": 46,
+        "startChar": 44,
+        "endLine": 46,
+        "endChar": 84
+      },
+      "revId": "c5da41bbeaab4273d8d103ac97276aed325a4ff0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

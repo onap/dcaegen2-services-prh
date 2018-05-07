@@ -21,14 +21,12 @@ package org.onap.dcaegen2.services.prh.tasks;
 
 import com.google.gson.Gson;
 import org.onap.dcaegen2.services.config.DmaapPublisherConfiguration;
+import org.onap.dcaegen2.services.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.service.producer.DmaapPublisherRequestDetails;
 import org.onap.dcaegen2.services.service.producer.ExtendedDmaapProducerHttpClientImpl;
-import org.onap.dcaegen2.services.service.producer.ImmutableDmaapPublisherRequestDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +38,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class DmaapPublisherTaskImpl extends
-    DmaapPublisherTask<DmaapPublisherConfiguration, ConsumerDmaapModel> {
+        DmaapPublisherTask<DmaapPublisherConfiguration, ConsumerDmaapModel> {
 
-    private static final Logger logger = LoggerFactory.getLogger(ScheduledTasks.class);
+    private static final Logger logger = LoggerFactory.getLogger(DmaapPublisherTaskImpl.class);
     private static final Gson gson = new Gson();
     private final Config prhAppConfig;
 
@@ -55,13 +53,11 @@ public class DmaapPublisherTaskImpl extends
     protected String publish(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException {
         logger.trace("Method %M called with arg {}", consumerDmaapModel);
         ExtendedDmaapProducerHttpClientImpl dmaapProducerHttpClient = new ExtendedDmaapProducerHttpClientImpl(
-            resolveConfiguration());
-        DmaapPublisherRequestDetails dmaapPublisherRequestDetails = new ImmutableDmaapPublisherRequestDetails.Builder()
-            .dmaapAPIPath("events").jsonBody(gson.toJson(consumerDmaapModel)).build();
-        return dmaapProducerHttpClient.getHttpProducerResponse(dmaapPublisherRequestDetails)
-            .filter(x -> !x.isEmpty() && x.equals(String.valueOf(HttpStatus.OK.value())))
-            .orElseThrow(() -> new DmaapNotFoundException("Incorrect response from Dmmap"));
+                resolveConfiguration());
 
+        return dmaapProducerHttpClient.getHttpProducerResponse(consumerDmaapModel)
+                .filter(x -> !x.isEmpty() && x.equals(String.valueOf(HttpStatus.OK.value())))
+                .orElseThrow(() -> new DmaapNotFoundException("Incorrect response from Dmaap"));
     }
 
     @Override

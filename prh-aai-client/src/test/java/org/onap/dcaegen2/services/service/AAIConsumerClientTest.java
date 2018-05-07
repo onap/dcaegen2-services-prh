@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.config.AAIClientConfiguration;
-import org.onap.dcaegen2.services.utils.HttpRequestDetails;
+import org.onap.dcaegen2.services.model.ConsumerDmaapModel;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -44,8 +44,9 @@ public class AAIConsumerClientTest {
     private static AAIConsumerClient testedObject;
     private static AAIClientConfiguration aaiHttpClientConfigurationMock = mock(AAIClientConfiguration.class);
     private static CloseableHttpClient closeableHttpClientMock = mock(CloseableHttpClient.class);
-    private static HttpRequestDetails httpRequestDetailsMock = mock(HttpRequestDetails.class);
     private static final String JSON_MESSAGE = "{ \"pnf-id\": \"example-pnf-id-val-22343\", \"regional-resource-zone\":null, \"ipaddress-v4-oam\": \"11.22.33.44\" }";
+    private static ConsumerDmaapModel consumerDmaapModelMock =  mock(ConsumerDmaapModel.class);
+    private static final String PNF_NAME = "nokia-pnf-nhfsadhff";
 
     @BeforeAll
     public static void setup() throws NoSuchFieldException, IllegalAccessException {
@@ -54,7 +55,7 @@ public class AAIConsumerClientTest {
         aaiHeaders.put("X-FromAppId", "prh");
         aaiHeaders.put("X-TransactionId", "9999");
         aaiHeaders.put("Accept", "application/json");
-        aaiHeaders.put("authentication", "Basic QUFJOkFBSQ==");
+        aaiHeaders.put("Authorization", "Basic QUFJOkFBSQ==");
         aaiHeaders.put("Real-Time", "true");
         aaiHeaders.put("Content-Type", "application/json");
 
@@ -63,11 +64,11 @@ public class AAIConsumerClientTest {
         when(aaiHttpClientConfigurationMock.aaiHostPortNumber()).thenReturn(1234);
         when(aaiHttpClientConfigurationMock.aaiUserName()).thenReturn("PRH");
         when(aaiHttpClientConfigurationMock.aaiUserPassword()).thenReturn("PRH");
+        when(aaiHttpClientConfigurationMock.aaiBasePath()).thenReturn("/aai/v11");
+        when(aaiHttpClientConfigurationMock.aaiPnfPath()).thenReturn("/network/pnfs/pnf");
+        when(aaiHttpClientConfigurationMock.aaiHeaders()).thenReturn(aaiHeaders);
 
-        when(httpRequestDetailsMock.aaiAPIPath()).thenReturn("/aai/v11/network/pnfs/pnf");
-        when(httpRequestDetailsMock.headers()).thenReturn(aaiHeaders);
-        when(httpRequestDetailsMock.pnfName()).thenReturn("pnf-nokia-45fsfcx");
-        when(httpRequestDetailsMock.jsonBody()).thenReturn(Optional.of(JSON_MESSAGE));
+        when(consumerDmaapModelMock.getPnfName()).thenReturn(PNF_NAME);
 
         testedObject = new AAIConsumerClient(aaiHttpClientConfigurationMock);
         setField();
@@ -79,7 +80,7 @@ public class AAIConsumerClientTest {
 
         when(closeableHttpClientMock.execute(any(HttpGet.class), any(ResponseHandler.class))).
                 thenReturn(Optional.of(JSON_MESSAGE));
-        Optional<String>  actualResult = testedObject.getHttpResponse(httpRequestDetailsMock);
+        Optional<String>  actualResult = testedObject.getHttpResponse(consumerDmaapModelMock);
         Assertions.assertEquals(Optional.of(JSON_MESSAGE),actualResult);
     }
 

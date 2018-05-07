@@ -19,12 +19,13 @@
  */
 package org.onap.dcaegen2.services.service;
 
-import org.onap.dcaegen2.services.utils.HttpRequestDetails;
+import org.onap.dcaegen2.services.model.ConsumerDmaapModel;
 
+import java.io.IOException;
 import java.util.Optional;
 
 
 @FunctionalInterface
 public interface AAIExtendedHttpClient {
-    Optional<String> getHttpResponse(HttpRequestDetails httpRequestDetails);
+    Optional<Integer> getHttpResponse(ConsumerDmaapModel consumerDmaapModel) throws IOException;
 }

@@ -182,6 +182,12 @@
       <groupId>org.immutables</groupId>
       <artifactId>gson</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.onap.dcaegen2.services.commons</groupId>
+      <artifactId>commons</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+
 
     <!-- LOGGING DEPENDENCIES-->
     <dependency>
@@ -267,6 +273,7 @@
       <artifactId>prh-aai-client</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
+
 
   </dependencies>
   <dependencyManagement>

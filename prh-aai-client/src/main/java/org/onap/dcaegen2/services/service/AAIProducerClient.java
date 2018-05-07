@@ -30,7 +30,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.onap.dcaegen2.services.config.AAIClientConfiguration;
-import org.onap.dcaegen2.services.utils.HttpRequestDetails;
+import org.onap.dcaegen2.services.model.CommonFunctions;
+import org.onap.dcaegen2.services.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.utils.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 public class AAIProducerClient implements AAIExtendedHttpClient {
@@ -48,71 +51,69 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
     private final String aaiHost;
     private final String aaiProtocol;
     private final Integer aaiHostPortNumber;
+    private final String aaiPath;
+    private final Map<String,String> aaiHeaders;
 
 
     public AAIProducerClient(AAIClientConfiguration aaiHttpClientConfiguration) {
-        final AAIClient aaiHttpClient = new AAIClientImpl(aaiHttpClientConfiguration);
-        closeableHttpClient = aaiHttpClient.getAAIHttpClient();
+        closeableHttpClient = new AAIClientImpl(aaiHttpClientConfiguration).getAAIHttpClient();
         aaiHost = aaiHttpClientConfiguration.aaiHost();
         aaiProtocol = aaiHttpClientConfiguration.aaiProtocol();
         aaiHostPortNumber = aaiHttpClientConfiguration.aaiHostPortNumber();
+        aaiPath = aaiHttpClientConfiguration.aaiBasePath() + aaiHttpClientConfiguration.aaiPnfPath();
+        aaiHeaders = aaiHttpClientConfiguration.aaiHeaders();
     }
+
 
     @Override
-    public Optional<String> getHttpResponse(HttpRequestDetails requestDetails) {
-
-        Optional<String> extendedDetails = Optional.empty();
-        Optional<HttpRequestBase> request = createRequest(requestDetails);
-
+    public Optional<Integer> getHttpResponse(ConsumerDmaapModel consumerDmaapModel) throws IOException {
+        Optional<HttpRequestBase> request = createRequest(consumerDmaapModel);
         try {
-            extendedDetails = closeableHttpClient.execute(request.get(), aaiResponseHandler());
+            return closeableHttpClient.execute(request.get(), aaiResponseHandler());
         } catch (IOException e) {
-            logger.error("Exception while executing HTTP request: {}", e);
+            logger.warn("Exception while executing http client: ", e);
+            throw new IOException();
         }
-
-        return extendedDetails;
     }
 
-    private URI createAAIExtendedURI(final String path, final String pnfName) {
-
+    private URI createAAIExtendedURI(final String pnfName) {
         URI extendedURI = null;
-
         final URIBuilder uriBuilder = new URIBuilder()
                 .setScheme(aaiProtocol)
                 .setHost(aaiHost)
                 .setPort(aaiHostPortNumber)
-                .setPath(path + "/" + pnfName);
-
+                .setPath(aaiPath + "/" + pnfName);
         try {
             extendedURI = uriBuilder.build();
-            logger.info("Building extended URI: {}", extendedURI);
+            logger.trace("Building extended URI: {}", extendedURI);
         } catch (URISyntaxException e) {
-            logger.error("Exception while building extended URI: {}", e);
+            logger.warn("Exception while building extended URI: ", e);
         }
-
         return extendedURI;
     }
 
-    private ResponseHandler<Optional<String>> aaiResponseHandler() {
+    private ResponseHandler<Optional<Integer>> aaiResponseHandler() {
         return (HttpResponse httpResponse) ->  {
-            final int responseCode = httpResponse.getStatusLine().getStatusCode();
-            logger.info("Status code of operation: {}", responseCode);
+            final Integer responseCode = httpResponse.getStatusLine().getStatusCode();
+            logger.trace("Status code of operation: {}", responseCode);
             final HttpEntity responseEntity = httpResponse.getEntity();
 
             if (HttpUtils.isSuccessfulResponseCode(responseCode)) {
-                logger.info("HTTP response successful.");
-                return Optional.of("" + responseCode);
+                logger.trace("HTTP response successful.");
+                return Optional.of(responseCode);
             } else {
                 String aaiResponse = responseEntity != null ? EntityUtils.toString(responseEntity) : "";
-                logger.error("HTTP response not successful : {}", aaiResponse);
-                return Optional.of("" + responseCode);
+                logger.warn("HTTP response not successful : {}", aaiResponse);
+                return Optional.of(responseCode);
             }
         };
     }
 
-    private HttpRequestBase createHttpRequest(URI extendedURI, HttpRequestDetails httpRequestDetails) {
-        if (isExtendedURINotNull(extendedURI) && httpRequestDetails.jsonBody().isPresent()) {
-            return createHttpPatch(extendedURI, httpRequestDetails.jsonBody());
+    private HttpRequestBase createHttpRequest(URI extendedURI, ConsumerDmaapModel consumerDmaapModel) {
+        String jsonBody = CommonFunctions.createJsonBody(consumerDmaapModel);
+
+        if (isExtendedURINotNull(extendedURI) && jsonBody != null && !"".equals(jsonBody)) {
+            return createHttpPatch(extendedURI, Optional.ofNullable(CommonFunctions.createJsonBody(consumerDmaapModel)));
         } else {
             return null;
         }
@@ -121,6 +122,7 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
     private Boolean isExtendedURINotNull(URI extendedURI) {
         return extendedURI != null;
     }
+
 
     private Optional<StringEntity> createStringEntity(Optional<String> jsonBody) {
         return Optional.of(parseJson(jsonBody).get());
@@ -135,21 +137,19 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
 
     private Optional<StringEntity> parseJson(Optional<String> jsonBody) {
         Optional<StringEntity> stringEntity = Optional.empty();
-
         try {
             stringEntity = Optional.of(new StringEntity(jsonBody.get()));
         } catch (UnsupportedEncodingException e) {
-            logger.error("Exception while parsing JSON: {}", e);
+            logger.warn("Exception while parsing JSON: ", e);
         }
-
         return stringEntity;
     }
 
-    private Optional<HttpRequestBase> createRequest(HttpRequestDetails requestDetails) {
-
-        final URI extendedURI = createAAIExtendedURI(requestDetails.aaiAPIPath(), requestDetails.pnfName());
-        HttpRequestBase request = createHttpRequest(extendedURI, requestDetails);
-        requestDetails.headers().forEach(request::addHeader);
+    private Optional<HttpRequestBase> createRequest(ConsumerDmaapModel consumerDmaapModel) {
+        final URI extendedURI = createAAIExtendedURI(consumerDmaapModel.getPnfName());
+        HttpRequestBase request = createHttpRequest(extendedURI, consumerDmaapModel);
+        aaiHeaders.forEach(Objects.requireNonNull(request)::addHeader);
+        Objects.requireNonNull(request).addHeader("Content-Type", "application/merge-patch+json");
         return Optional.of(request);
     }
 }

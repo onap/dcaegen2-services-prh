@@ -27,6 +27,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.config.DmaapPublisherConfiguration;
+import org.onap.dcaegen2.services.model.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.model.ConsumerDmaapModelForUnitTest;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -43,10 +45,9 @@ public class ExtendedDmaapProducerHttpClientImplTest {
 
     private static DmaapPublisherConfiguration configurationMock = mock(DmaapPublisherConfiguration.class);
     private static CloseableHttpClient closeableHttpClientMock = mock(CloseableHttpClient.class);
-    private static DmaapPublisherRequestDetails requestDetailsMock = mock(DmaapPublisherRequestDetails.class);
+    private static ConsumerDmaapModel consumerDmaapModel = new ConsumerDmaapModelForUnitTest();
 
     private static Optional<String> expectedResult = Optional.empty();
-    private static final String JSON_MESSAGE = "{ \"ipaddress-v4-oam\": \"11.22.33.44\" }";
     private static final String RESPONSE_SUCCESS = "200";
     private static final String RESPONSE_FAILURE = "404";
 
@@ -61,9 +62,6 @@ public class ExtendedDmaapProducerHttpClientImplTest {
         when(configurationMock.dmaapContentType()).thenReturn("application/json");
         when(configurationMock.dmaapTopicName()).thenReturn("pnfReady");
 
-        when(requestDetailsMock.dmaapAPIPath()).thenReturn("events");
-        when(requestDetailsMock.jsonBody()).thenReturn(JSON_MESSAGE);
-
         objectUnderTest = new ExtendedDmaapProducerHttpClientImpl(configurationMock);
 
         setField();
@@ -77,7 +75,7 @@ public class ExtendedDmaapProducerHttpClientImplTest {
         when(closeableHttpClientMock.execute(any(HttpPost.class), any(ResponseHandler.class)))
             .thenReturn(expectedResult);
 
-        Optional<String> actualResult = objectUnderTest.getHttpProducerResponse(requestDetailsMock);
+        Optional<String> actualResult = objectUnderTest.getHttpProducerResponse(consumerDmaapModel);
 
         Assertions.assertEquals(expectedResult.get(), actualResult.get());
     }
@@ -87,7 +85,7 @@ public class ExtendedDmaapProducerHttpClientImplTest {
         expectedResult = Optional.of(RESPONSE_FAILURE);
         when(closeableHttpClientMock.execute(any(HttpPost.class), any(ResponseHandler.class)))
             .thenReturn(Optional.empty());
-        Optional<String> actualResult = objectUnderTest.getHttpProducerResponse(requestDetailsMock);
+        Optional<String> actualResult = objectUnderTest.getHttpProducerResponse(consumerDmaapModel);
         Assertions.assertEquals(Optional.empty(), actualResult);
     }
 

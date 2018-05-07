@@ -31,7 +31,9 @@
         "aaiProtocol": "https",
         "aaiUserName": "admin",
         "aaiUserPassword": "admin",
-        "aaiIgnoreSSLCertificateErrors": true
+        "aaiIgnoreSSLCertificateErrors": true,
+        "aaiBasePath": "/aai/v11",
+        "aaiPnfPath": "/network/pnfs/pnf"
       }
     }
   }

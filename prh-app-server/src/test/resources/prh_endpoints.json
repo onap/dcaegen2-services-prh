@@ -8,6 +8,8 @@
         "aaiProtocol": "https",
         "aaiUserName": "admin",
         "aaiUserPassword": "admin"
+        "aaiBasePath": "/aai/v11",
+        "aaiPnfPath": "/network/pnfs/pnf"
       }
     },
     "dmaap": {

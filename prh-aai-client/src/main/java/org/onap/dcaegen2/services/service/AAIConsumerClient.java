@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Objects;
 import java.util.Optional;
 
 public class AAIConsumerClient implements AAIExtendedHttpClient {
@@ -46,14 +47,15 @@ public class AAIConsumerClient implements AAIExtendedHttpClient {
     private final String aaiHost;
     private final String aaiProtocol;
     private final Integer aaiHostPortNumber;
+    private final String path;
 
 
     public AAIConsumerClient(AAIClientConfiguration aaiHttpClientConfiguration) {
-        final AAIClient aaiClient = new AAIClientImpl(aaiHttpClientConfiguration);
-        closeableHttpClient = aaiClient.getAAIHttpClient();
+        closeableHttpClient = new AAIClientImpl(aaiHttpClientConfiguration).getAAIHttpClient();
         aaiHost = aaiHttpClientConfiguration.aaiHost();
         aaiProtocol = aaiHttpClientConfiguration.aaiProtocol();
         aaiHostPortNumber = aaiHttpClientConfiguration.aaiHostPortNumber();
+        path = aaiHttpClientConfiguration.aaiBasePath() + aaiHttpClientConfiguration.aaiPnfPath();
     }
 
     @Override
@@ -72,7 +74,7 @@ public class AAIConsumerClient implements AAIExtendedHttpClient {
     }
 
 
-    private URI createAAIExtendedURI(final String path, String pnfName) {
+    private URI createAAIExtendedURI(String pnfName) {
 
         URI extendedURI = null;
 
@@ -125,9 +127,9 @@ public class AAIConsumerClient implements AAIExtendedHttpClient {
 
     private Optional<HttpRequestBase> createRequest(HttpRequestDetails requestDetails) {
 
-        final URI extendedURI = createAAIExtendedURI(requestDetails.aaiAPIPath(), requestDetails.pnfName());
+        final URI extendedURI = createAAIExtendedURI(requestDetails.pnfName());
         HttpRequestBase request = createHttpRequest(extendedURI);
-        requestDetails.headers().forEach(request::addHeader);
+        requestDetails.headers().forEach(Objects.requireNonNull(request)::addHeader);
         return Optional.of(request);
     }
 }

@@ -53,4 +53,10 @@ public abstract class AAIClientConfiguration implements Serializable {
     @Value.Parameter
     public abstract Boolean aaiIgnoreSSLCertificateErrors();
 
+    @Value.Parameter
+    public abstract String aaiBasePath();
+
+    @Value.Parameter
+    public abstract String aaiPnfPath();
+
 }

@@ -106,6 +106,12 @@ public class AppConfig extends PrhAppConfig {
     @Value("${aai.aaiHttpClientConfiguration.aaiIgnoreSSLCertificateErrors:}")
     public Boolean aaiIgnoreSSLCertificateErrors;
 
+    @Value("${aai.aaiHttpClientConfiguration.aaiBasePath:}")
+    public String aaiBasePath;
+
+    @Value("${aai.aaiHttpClientConfiguration.aaiPnfPath:}")
+    public String aaiPnfPath;
+
     @Override
     public DmaapConsumerConfiguration getDmaapConsumerConfiguration() {
         return new ImmutableDmaapConsumerConfiguration.Builder()
@@ -141,10 +147,10 @@ public class AppConfig extends PrhAppConfig {
                         Optional.ofNullable(aaiIgnoreSSLCertificateErrors)
                                 .orElse(aaiClientConfiguration.aaiIgnoreSSLCertificateErrors()))
                 .aaiProtocol(Optional.ofNullable(aaiProtocol).orElse(aaiClientConfiguration.aaiProtocol()))
-                .aaiUserName(
-                        Optional.ofNullable(aaiUserName).orElse(aaiClientConfiguration.aaiUserName()))
-                .aaiUserPassword(Optional.ofNullable(
-                        aaiUserPassword).orElse(aaiClientConfiguration.aaiUserPassword()))
+                .aaiUserName(Optional.ofNullable(aaiUserName).orElse(aaiClientConfiguration.aaiUserName()))
+                .aaiUserPassword(Optional.ofNullable(aaiUserPassword).orElse(aaiClientConfiguration.aaiUserPassword()))
+                .aaiBasePath(Optional.ofNullable(aaiBasePath).orElse(aaiClientConfiguration.aaiBasePath()))
+                .aaiPnfPath(Optional.ofNullable(aaiPnfPath).orElse(aaiClientConfiguration.aaiPnfPath()))
                 .build();
     }
 

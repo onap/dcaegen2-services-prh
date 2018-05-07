@@ -63,8 +63,9 @@ public class AAIConsumerClientTest {
         when(aaiHttpClientConfigurationMock.aaiHostPortNumber()).thenReturn(1234);
         when(aaiHttpClientConfigurationMock.aaiUserName()).thenReturn("PRH");
         when(aaiHttpClientConfigurationMock.aaiUserPassword()).thenReturn("PRH");
+        when(aaiHttpClientConfigurationMock.aaiBasePath()).thenReturn("/aai/v11");
+        when(aaiHttpClientConfigurationMock.aaiPnfPath()).thenReturn("/network/pnfs/pnf");
 
-        when(httpRequestDetailsMock.aaiAPIPath()).thenReturn("/aai/v11/network/pnfs/pnf");
         when(httpRequestDetailsMock.headers()).thenReturn(aaiHeaders);
         when(httpRequestDetailsMock.pnfName()).thenReturn("pnf-nokia-45fsfcx");
         when(httpRequestDetailsMock.jsonBody()).thenReturn(Optional.of(JSON_MESSAGE));

@@ -48,14 +48,15 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
     private final String aaiHost;
     private final String aaiProtocol;
     private final Integer aaiHostPortNumber;
+    private final String path;
 
 
     public AAIProducerClient(AAIClientConfiguration aaiHttpClientConfiguration) {
-        final AAIClient aaiHttpClient = new AAIClientImpl(aaiHttpClientConfiguration);
-        closeableHttpClient = aaiHttpClient.getAAIHttpClient();
+        closeableHttpClient = new AAIClientImpl(aaiHttpClientConfiguration).getAAIHttpClient();
         aaiHost = aaiHttpClientConfiguration.aaiHost();
         aaiProtocol = aaiHttpClientConfiguration.aaiProtocol();
         aaiHostPortNumber = aaiHttpClientConfiguration.aaiHostPortNumber();
+        path = aaiHttpClientConfiguration.aaiBasePath() + aaiHttpClientConfiguration.aaiPnfPath();
     }
 
     @Override
@@ -73,7 +74,7 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
         return extendedDetails;
     }
 
-    private URI createAAIExtendedURI(final String path, final String pnfName) {
+    private URI createAAIExtendedURI(final String pnfName) {
 
         URI extendedURI = null;
 
@@ -147,7 +148,7 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
 
     private Optional<HttpRequestBase> createRequest(HttpRequestDetails requestDetails) {
 
-        final URI extendedURI = createAAIExtendedURI(requestDetails.aaiAPIPath(), requestDetails.pnfName());
+        final URI extendedURI = createAAIExtendedURI(requestDetails.pnfName());
         HttpRequestBase request = createHttpRequest(extendedURI, requestDetails);
         requestDetails.headers().forEach(request::addHeader);
         return Optional.of(request);

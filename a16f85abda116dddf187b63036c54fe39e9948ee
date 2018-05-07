@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_7227abca",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/SwaggerConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-07T09:49:15Z",
+      "side": 1,
+      "message": "extract constant class variable",
+      "range": {
+        "startLine": 46,
+        "startChar": 50,
+        "endLine": 46,
+        "endChar": 82
+      },
+      "revId": "a16f85abda116dddf187b63036c54fe39e9948ee",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_322da3a8",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/SwaggerConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-07T09:49:15Z",
+      "side": 1,
+      "message": "extract constant class variable",
+      "range": {
+        "startLine": 53,
+        "startChar": 15,
+        "endLine": 53,
+        "endChar": 31
+      },
+      "revId": "a16f85abda116dddf187b63036c54fe39e9948ee",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_52286f96",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/SwaggerConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-07T09:49:15Z",
+      "side": 1,
+      "message": "the same as above",
+      "range": {
+        "startLine": 54,
+        "startChar": 21,
+        "endLine": 54,
+        "endChar": 76
+      },
+      "revId": "a16f85abda116dddf187b63036c54fe39e9948ee",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_f21adb7b",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/SwaggerConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-07T09:49:15Z",
+      "side": 1,
+      "message": "the same as above",
+      "range": {
+        "startLine": 55,
+        "startChar": 17,
+        "endLine": 55,
+        "endChar": 22
+      },
+      "revId": "a16f85abda116dddf187b63036c54fe39e9948ee",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_b210d359",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/SwaggerConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-07T09:49:15Z",
+      "side": 1,
+      "message": "the same as above",
+      "range": {
+        "startLine": 61,
+        "startChar": 32,
+        "endLine": 61,
+        "endChar": 49
+      },
+      "revId": "a16f85abda116dddf187b63036c54fe39e9948ee",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_b5075d17",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/SwaggerConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-07T09:49:15Z",
+      "side": 1,
+      "message": "the same as above",
+      "range": {
+        "startLine": 62,
+        "startChar": 30,
+        "endLine": 62,
+        "endChar": 62
+      },
+      "revId": "a16f85abda116dddf187b63036c54fe39e9948ee",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_d50a291f",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/SwaggerConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-07T09:49:15Z",
+      "side": 1,
+      "message": "the same as above",
+      "range": {
+        "startLine": 64,
+        "startChar": 32,
+        "endLine": 64,
+        "endChar": 45
+      },
+      "revId": "a16f85abda116dddf187b63036c54fe39e9948ee",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_7515553e",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/SwaggerConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-07T09:49:15Z",
+      "side": 1,
+      "message": "the same as above",
+      "range": {
+        "startLine": 65,
+        "startChar": 30,
+        "endLine": 65,
+        "endChar": 70
+      },
+      "revId": "a16f85abda116dddf187b63036c54fe39e9948ee",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

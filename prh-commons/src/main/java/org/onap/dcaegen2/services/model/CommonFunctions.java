@@ -17,27 +17,19 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.model;
 
-import com.google.gson.annotations.SerializedName;
-import org.immutables.gson.Gson;
-import org.immutables.value.Value;
+package org.onap.dcaegen2.services.model;
 
-/**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/8/18
- */
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-@Value.Immutable
-@Gson.TypeAdapters
-public interface ConsumerDmaapModel {
+public class CommonFunctions {
 
-    @SerializedName("pnf-name")
-    String getPnfName();
+    private CommonFunctions() {}
 
-    @SerializedName("ipaddress-v4-oam")
-    String getIpv4();
-
-    @SerializedName("ipaddress-v6-oam")
-    String getIpv6();
-
+    public static String createJsonBody(ConsumerDmaapModel consumerDmaapModel) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+        return gson.toJson(consumerDmaapModel);
+    }
 }

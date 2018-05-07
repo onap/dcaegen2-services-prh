@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -17,30 +17,27 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.utils;
+package org.onap.dcaegen2.services.model;
 
-
+import com.google.gson.annotations.SerializedName;
+import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 
-import java.io.Serializable;
-import java.util.Map;
-import java.util.Optional;
+/**
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/8/18
+ */
 
-@Value.Immutable(prehash = true)
-@Value.Style(stagedBuilder = true)
-public abstract class HttpRequestDetails implements Serializable {
+@Value.Immutable
+@Gson.TypeAdapters
+public interface ConsumerDmaapModel {
 
-    private static final long serialVersionUID = 1L;
+    @SerializedName("pnf-name")
+    public String getPnfName();
 
-    @Value.Parameter
-    public abstract String aaiAPIPath();
+    @SerializedName("ipaddress-v4-oam")
+    public String getIpv4();
 
-    @Value.Parameter
-    public abstract Optional<String> jsonBody();
+    @SerializedName("ipaddress-v6-oam")
+    public String getIpv6();
 
-    @Value.Parameter
-    public abstract String pnfName();
-
-    @Value.Parameter
-    public abstract Map<String,String> headers();
 }

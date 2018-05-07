@@ -29,6 +29,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.onap.dcaegen2.services.config.DmaapPublisherConfiguration;
+import org.onap.dcaegen2.services.model.CommonFunctions;
+import org.onap.dcaegen2.services.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.service.DmaapHttpClientImpl;
 import org.onap.dcaegen2.services.service.HttpUtils;
 import org.slf4j.Logger;
@@ -61,17 +63,14 @@ public class ExtendedDmaapProducerHttpClientImpl {
         this.dmaapContentType = configuration.dmaapContentType();
     }
 
-    public Optional<String> getHttpProducerResponse(DmaapPublisherRequestDetails requestDetails) {
-
+    public Optional<String> getHttpProducerResponse(ConsumerDmaapModel consumerDmaapModel) {
         Optional<String> extendedDetails = Optional.empty();
-        Optional<HttpRequestBase> request = createRequest(requestDetails);
-
+        Optional<HttpRequestBase> request = createRequest(consumerDmaapModel);
         try {
             extendedDetails = closeableHttpClient.execute(request.get(), dmaapProducerResponseHandler());
         } catch (IOException | NullPointerException e) {
             logger.warn("Exception while executing HTTP request: ", e);
         }
-
         return extendedDetails;
     }
     
@@ -81,51 +80,45 @@ public class ExtendedDmaapProducerHttpClientImpl {
 
     private Optional<StringEntity> parseJson(Optional<String> jsonBody) {
         Optional<StringEntity> stringEntity = Optional.empty();
-
         try {
             stringEntity = Optional.of(new StringEntity(jsonBody.get()));
         } catch (UnsupportedEncodingException e) {
             logger.warn("Exception while parsing JSON: ", e);
         }
-
         return stringEntity;
     }
 
-    private Optional<HttpRequestBase> createRequest(DmaapPublisherRequestDetails requestDetails) {
-
+    private Optional<HttpRequestBase> createRequest(ConsumerDmaapModel consumerDmaapModel) {
         Optional<HttpRequestBase> request = Optional.empty();
-        final URI extendedURI = createDmaapPublisherExtendedURI(requestDetails);
+        final URI extendedURI = createDmaapPublisherExtendedURI();
 
         if ("application/json".equals(dmaapContentType)) {
-            request = Optional.ofNullable(createRequest(extendedURI, requestDetails));
+            request = Optional.ofNullable(createRequest(extendedURI, consumerDmaapModel));
             request.get().addHeader("Content-type", dmaapContentType);
         }
 
         return request;
     }
 
-    private URI createDmaapPublisherExtendedURI(DmaapPublisherRequestDetails requestDetails) {
+    private URI createDmaapPublisherExtendedURI() {
         URI extendedURI = null;
-
         final URIBuilder uriBuilder = new URIBuilder()
             .setScheme(dmaapProtocol)
             .setHost(dmaapHostName)
             .setPort(dmaapPortNumber)
-            .setPath(requestDetails.dmaapAPIPath() + "/" + dmaapTopicName);
-
+            .setPath(dmaapTopicName);
         try {
             extendedURI = uriBuilder.build();
             logger.trace("Building extended URI: {}", extendedURI);
         } catch (URISyntaxException e) {
             logger.warn("Exception while building extended URI: ", e);
         }
-
         return extendedURI;
     }
 
-    private HttpRequestBase createRequest(URI extendedURI, DmaapPublisherRequestDetails requestDetails) {
+    private HttpRequestBase createRequest(URI extendedURI, ConsumerDmaapModel consumerDmaapModel) {
         if (extendedURI != null) {
-            return createHttpPost(extendedURI, Optional.ofNullable(requestDetails.jsonBody()));
+            return createHttpPost(extendedURI, Optional.ofNullable(CommonFunctions.createJsonBody(consumerDmaapModel)));
         } else {
             return null;
         }

@@ -19,21 +19,19 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
+import org.onap.dcaegen2.services.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+
 import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
 import org.onap.dcaegen2.services.service.consumer.ExtendedDmaapConsumerHttpClientImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18

@@ -34,7 +34,6 @@ import org.apache.http.ssl.TrustStrategy;
 import org.onap.dcaegen2.services.config.AAIClientConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -46,7 +45,7 @@ public class AAIClientImpl implements AAIClient {
 
     private AAIClientConfiguration aaiHttpClientConfig;
 
-    @Autowired
+
     public AAIClientImpl(AAIClientConfiguration aaiHttpClientConfiguration) {
         this.aaiHttpClientConfig = aaiHttpClientConfiguration;
     }

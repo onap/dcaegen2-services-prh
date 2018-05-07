@@ -481,6 +481,11 @@
         <artifactId>tomcat-embed-websocket</artifactId>
         <version>${tomcat.version}</version>
       </dependency>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>12.0</version>
+      </dependency>
 
       <!-- LOGGING dependencies> -->
       <dependency>
@@ -583,6 +588,7 @@
     <module>prh-app-server</module>
     <module>prh-aai-client</module>
     <module>prh-dmaap-client</module>
+    <module>prh-commons</module>
   </modules>
 </project>
 

@@ -20,16 +20,16 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import java.util.Optional;
 import org.onap.dcaegen2.services.config.AAIClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
-import org.onap.dcaegen2.services.service.AAIProducerClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 public class AAIConsumerTaskImpl extends AAIConsumerTask<AAIClientConfiguration> {
@@ -46,15 +46,11 @@ public class AAIConsumerTaskImpl extends AAIConsumerTask<AAIClientConfiguration>
 
     @Override
     protected void consume() throws AAINotFoundException {
-        //TODO: @Piotr Wielebski
-        AAIProducerClient producerClient = new AAIProducerClient(prhAppConfig.getAAIClientConfiguration());
-
     }
 
     @Override
     public Object execute(Object object) throws AAINotFoundException {
         consume();
-        //TODO: @Piotr Wielebski
         return null;
     }
 

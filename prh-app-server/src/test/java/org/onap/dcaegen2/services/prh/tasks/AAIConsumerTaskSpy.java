@@ -22,7 +22,6 @@ package org.onap.dcaegen2.services.prh.tasks;
 import org.onap.dcaegen2.services.config.AAIClientConfiguration;
 
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
-import org.onap.dcaegen2.services.utils.HttpRequestDetails;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;

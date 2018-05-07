@@ -33,6 +33,8 @@ public class AAIHttpClientConfigurationTest {
     private static final Integer PORT = 1234;
     private static final String PROTOCOL = "https";
     private static final String USER_NAME_PASSWORD = "PRH";
+    private static final String BASE_PATH = "/aai/v11";
+    private static final String PNF_PATH = "/network/pnfs/pnf";
 
     @BeforeAll
     public static void init() {
@@ -43,6 +45,8 @@ public class AAIHttpClientConfigurationTest {
             .aaiUserName(USER_NAME_PASSWORD)
             .aaiUserPassword(USER_NAME_PASSWORD)
             .aaiIgnoreSSLCertificateErrors(true)
+            .aaiBasePath(BASE_PATH)
+            .aaiPnfPath(PNF_PATH)
             .build();
     }
 

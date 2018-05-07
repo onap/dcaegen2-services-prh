@@ -18,19 +18,27 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.service.producer;
+package org.onap.dcaegen2.services.model;
 
-import org.immutables.value.Value;
+import org.onap.dcaegen2.services.model.ConsumerDmaapModel;
 
-import java.util.Optional;
+public class ConsumerDmaapModelForUnitTest implements ConsumerDmaapModel {
 
-@Value.Immutable(prehash = true)
-@Value.Style(builder = "new")
-public abstract class DmaapPublisherRequestDetails {
+    private String pnfName = "NOKnhfsadhff";
+    private String ipv4 = "11.22.33.155";
+    private String ipv6 = "2001:0db8:85a3:0000:0000:8a2e:0370:7334";
 
-    @Value.Parameter
-    public abstract String dmaapAPIPath();
 
-    @Value.Parameter
-    public abstract String jsonBody();
+    public String getPnfName() {
+        return pnfName;
+    }
+
+    public String getIpv4() {
+        return ipv4;
+    }
+
+    public String getIpv6() {
+        return ipv6;
+    }
+
 }

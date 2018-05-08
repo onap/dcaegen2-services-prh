@@ -57,9 +57,9 @@ public class ExtendedDmaapConsumerHttpClientImplTest {
         when(configurationMock.dmaapUserName()).thenReturn("PRH");
         when(configurationMock.dmaapUserPassword()).thenReturn("PRH");
         when(configurationMock.dmaapContentType()).thenReturn("application/json");
-        when(configurationMock.dmaapTopicName()).thenReturn("pnfReady");
-        when(configurationMock.consumerGroup()).thenReturn("consumerGroup");
-        when(configurationMock.consumerId()).thenReturn("consumerId");
+        when(configurationMock.dmaapTopicName()).thenReturn("unauthenticated.SEC_OTHER_OUTPUT");
+        when(configurationMock.consumerGroup()).thenReturn("OpenDCAE-c12");
+        when(configurationMock.consumerId()).thenReturn("c12");
 
         objectUnderTest = new ExtendedDmaapConsumerHttpClientImpl(configurationMock);
 

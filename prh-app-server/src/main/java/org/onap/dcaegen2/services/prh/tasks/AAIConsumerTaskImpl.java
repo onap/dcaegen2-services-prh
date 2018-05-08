@@ -55,26 +55,25 @@ public class AAIConsumerTaskImpl extends AAIConsumerTask<AAIClientConfiguration>
 
     @Override
     protected void consume() throws AAINotFoundException {
-        logger.debug("Start task AAIConsumerTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
-                LocalDateTime.now()));
-
+        logger.debug("Start task AAIConsumerTask::publish() :: {}", dateTimeFormatter.format(
+            LocalDateTime.now()));
 
         producerClient = new AAIProducerClient(prhAppConfig.getAAIClientConfiguration());
 
         response = producerClient.getHttpResponse(requestDetails);
 
-        logger.debug("End task AAIConsumerTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
-                LocalDateTime.now()));
+        logger.debug("End task AAIConsumerTask::publish() :: {}", dateTimeFormatter.format(
+            LocalDateTime.now()));
 
     }
 
     @Override
-    public ResponseEntity execute(Object object) throws AAINotFoundException {
-        logger.debug("Start task AAIProducerTaskImpl::execute() :: Execution Time - {}", dateTimeFormatter.format(
-                LocalDateTime.now()));
+    public Object execute(Object object) throws AAINotFoundException {
+        logger.debug("Start task AAIProducerTaskImpl::execute() :: {}", dateTimeFormatter.format(
+            LocalDateTime.now()));
         consume();
-        logger.debug("End task AAIPublisherTaskImpl::execute() :: Execution Time - {}", dateTimeFormatter.format(
-                LocalDateTime.now()));
+        logger.debug("End task AAIPublisherTaskImpl::execute() :: {}", dateTimeFormatter.format(
+            LocalDateTime.now()));
         return null;
     }
 

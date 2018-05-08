@@ -105,19 +105,19 @@ public abstract class PrhAppConfig implements Config {
         } catch (FileNotFoundException e) {
             logger
                     .error(
-                            "Configuration PrhAppConfig initFileStreamReader()::FileNotFoundException :: Execution Time - {}:{}",
+                            "Configuration PrhAppConfig initFileStreamReader()::FileNotFoundException :: {}:{}",
                             dateTimeFormatter.format(
                                     LocalDateTime.now()), e);
         } catch (IOException e) {
             logger
                     .error(
-                            "Configuration PrhAppConfig initFileStreamReader()::IOException :: Execution Time - {}:{}",
+                            "Configuration PrhAppConfig initFileStreamReader()::IOException :: {}:{}",
                             dateTimeFormatter.format(
                                     LocalDateTime.now()), e);
         } catch (JsonSyntaxException e) {
             logger
                     .error(
-                            "Configuration PrhAppConfig initFileStreamReader()::JsonSyntaxException :: Execution Time - {}:{}",
+                            "Configuration PrhAppConfig initFileStreamReader()::JsonSyntaxException :: {}:{}",
                             dateTimeFormatter.format(
                                     LocalDateTime.now()), e);
         }

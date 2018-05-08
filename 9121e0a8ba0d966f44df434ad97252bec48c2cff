@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_a1db9b4d",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/exceptions/DmaapNotFoundException.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 2831
+      },
+      "writtenOn": "2018-05-08T12:11:17Z",
+      "side": 1,
+      "message": "not used import ?",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 6
+      },
+      "revId": "9121e0a8ba0d966f44df434ad97252bec48c2cff",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c1dee73d",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 2831
+      },
+      "writtenOn": "2018-05-08T12:11:17Z",
+      "side": 1,
+      "message": "I believe that \u0027S\u0027 is mistakenly here",
+      "range": {
+        "startLine": 49,
+        "startChar": 32,
+        "endLine": 49,
+        "endChar": 84
+      },
+      "revId": "9121e0a8ba0d966f44df434ad97252bec48c2cff",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_81e45f0d",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 2831
+      },
+      "writtenOn": "2018-05-08T12:11:17Z",
+      "side": 1,
+      "message": "\u0027execution time\u0027 can be misleading - it should explicitly state that this is the time when execution has started\n\nalso, does it need to log on \u0027info\u0027 level ?",
+      "range": {
+        "startLine": 59,
+        "startChar": 69,
+        "endLine": 59,
+        "endChar": 83
+      },
+      "revId": "9121e0a8ba0d966f44df434ad97252bec48c2cff",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_01c04f4e",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AAIConsumerTaskImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 2831
+      },
+      "writtenOn": "2018-05-08T12:11:17Z",
+      "side": 1,
+      "message": "is \u0027info\u0027 level necessary ?",
+      "range": {
+        "startLine": 58,
+        "startChar": 15,
+        "endLine": 58,
+        "endChar": 19
+      },
+      "revId": "9121e0a8ba0d966f44df434ad97252bec48c2cff",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

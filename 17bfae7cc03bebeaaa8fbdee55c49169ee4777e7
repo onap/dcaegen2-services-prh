@@ -2,6 +2,190 @@
   "comments": [
     {
       "key": {
+        "uuid": "5a93c517_411977cf",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-08T13:19:40Z",
+      "side": 1,
+      "message": "Why does validate returns String? I would expected it to return boolean - either valid or not.",
+      "range": {
+        "startLine": 59,
+        "startChar": 18,
+        "endLine": 59,
+        "endChar": 33
+      },
+      "revId": "17bfae7cc03bebeaaa8fbdee55c49169ee4777e7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_8123ff03",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-08T13:19:40Z",
+      "side": 1,
+      "message": "This won\u0027t work as expected. If you pass null value to Optional.of() you get NullPointerException. Use Optional.ofNullable()",
+      "range": {
+        "startLine": 66,
+        "startChar": 15,
+        "endLine": 67,
+        "endChar": 32
+      },
+      "revId": "17bfae7cc03bebeaaa8fbdee55c49169ee4777e7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c136e750",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-08T13:19:40Z",
+      "side": 1,
+      "message": "Why are you creating tw exception objects here? Why are you logging exception that you throw? You should log exceptions that you catch, not throw.",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 93
+      },
+      "revId": "17bfae7cc03bebeaaa8fbdee55c49169ee4777e7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_61d35304",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-08T13:19:40Z",
+      "side": 1,
+      "message": "This function is too long. Keep it around 10 lines.",
+      "range": {
+        "startLine": 79,
+        "startChar": 0,
+        "endLine": 79,
+        "endChar": 112
+      },
+      "revId": "17bfae7cc03bebeaaa8fbdee55c49169ee4777e7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_21478bbd",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-08T13:19:40Z",
+      "side": 1,
+      "message": "Ditto as below. NPE when json has vendor name, but not serial number.",
+      "range": {
+        "startLine": 84,
+        "startChar": 0,
+        "endLine": 87,
+        "endChar": 89
+      },
+      "revId": "17bfae7cc03bebeaaa8fbdee55c49169ee4777e7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_41d417e8",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-08T13:19:40Z",
+      "side": 1,
+      "message": "Potential NullPointerException here is jsonObject has IPv4, but not IPv6 (and vice versa). Get on IPv6 will return null, which will cause NPE on calling getAsString.",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 94,
+        "endChar": 17
+      },
+      "revId": "17bfae7cc03bebeaaa8fbdee55c49169ee4777e7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_e1068385",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-08T13:19:40Z",
+      "side": 1,
+      "message": "Decide whenever you want to have nulls or empty strings as no value to avoid such long ifs.",
+      "range": {
+        "startLine": 97,
+        "startChar": 0,
+        "endLine": 98,
+        "endChar": 55
+      },
+      "revId": "17bfae7cc03bebeaaa8fbdee55c49169ee4777e7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_010a8f89",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-08T13:19:40Z",
+      "side": 1,
+      "message": "Shouldn\u0027t logger automatically add timestamp to logs? I see no reason to add this manually in every log statement.",
+      "range": {
+        "startLine": 99,
+        "startChar": 0,
+        "endLine": 101,
+        "endChar": 50
+      },
+      "revId": "17bfae7cc03bebeaaa8fbdee55c49169ee4777e7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_01e36fd9",
         "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidator.java",
         "patchSetId": 4
@@ -25,6 +209,52 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_a10abb76",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-08T13:19:40Z",
+      "side": 1,
+      "message": "Rename function name to, for example \"isHeaderInJson\", \"containsHeader\"",
+      "range": {
+        "startLine": 138,
+        "startChar": 27,
+        "endLine": 138,
+        "endChar": 46
+      },
+      "revId": "17bfae7cc03bebeaaa8fbdee55c49169ee4777e7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_414737a3",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AAIProducerTaskImpl.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-08T13:19:40Z",
+      "side": 1,
+      "message": "Dead code - please remove",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 80
+      },
+      "revId": "17bfae7cc03bebeaaa8fbdee55c49169ee4777e7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_81ce9f58",
         "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/DmaapPublisherTaskImpl.java",
         "patchSetId": 4
@@ -41,6 +271,75 @@
         "startChar": 4,
         "endLine": 76,
         "endChar": 5
+      },
+      "revId": "17bfae7cc03bebeaaa8fbdee55c49169ee4777e7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_a1fcfb72",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidatorTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-08T13:19:40Z",
+      "side": 1,
+      "message": "Those lines are way too long. Also please avoid putting json in unit tests - it makes them unreadable.",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 811
+      },
+      "revId": "17bfae7cc03bebeaaa8fbdee55c49169ee4777e7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c1ffc764",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidatorTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-08T13:19:40Z",
+      "side": 1,
+      "message": "There is no reason for this assert - you\u0027re comparing it with other string later.",
+      "range": {
+        "startLine": 43,
+        "startChar": 8,
+        "endLine": 43,
+        "endChar": 47
+      },
+      "revId": "17bfae7cc03bebeaaa8fbdee55c49169ee4777e7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_21f0eb8f",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidatorTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-08T13:19:40Z",
+      "side": 1,
+      "message": "Incorrectly named variable. It\u0027s expectedJson, not createdJson. Also this test is sensitive to order of fields and white characters in json - so this test can fail even if class works perfectly fine.",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 164
       },
       "revId": "17bfae7cc03bebeaaa8fbdee55c49169ee4777e7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",

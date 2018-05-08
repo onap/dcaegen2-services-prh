@@ -52,7 +52,6 @@ public abstract class PrhAppConfig implements Config {
     private static final String DMAAP_CONSUMER = "dmaapConsumerConfiguration";
 
     private static final Logger logger = LoggerFactory.getLogger(PrhAppConfig.class);
-    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     AAIClientConfiguration aaiClientConfiguration;
 
@@ -91,40 +90,28 @@ public abstract class PrhAppConfig implements Config {
             if (rootElement.isJsonObject()) {
                 jsonObject = rootElement.getAsJsonObject();
                 aaiClientConfiguration = deserializeType(gsonBuilder,
-                        jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(AAI).getAsJsonObject(AAI_CONFIG),
-                        AAIClientConfiguration.class);
+                    jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(AAI).getAsJsonObject(AAI_CONFIG),
+                    AAIClientConfiguration.class);
 
                 dmaapConsumerConfiguration = deserializeType(gsonBuilder,
-                        jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(DMAAP).getAsJsonObject(DMAAP_CONSUMER),
-                        DmaapConsumerConfiguration.class);
+                    jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(DMAAP).getAsJsonObject(DMAAP_CONSUMER),
+                    DmaapConsumerConfiguration.class);
 
                 dmaapPublisherConfiguration = deserializeType(gsonBuilder,
-                        jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(DMAAP).getAsJsonObject(DMAAP_PRODUCER),
-                        DmaapPublisherConfiguration.class);
+                    jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(DMAAP).getAsJsonObject(DMAAP_PRODUCER),
+                    DmaapPublisherConfiguration.class);
             }
         } catch (FileNotFoundException e) {
-            logger
-                    .error(
-                            "Configuration PrhAppConfig initFileStreamReader()::FileNotFoundException :: Execution Time - {}:{}",
-                            dateTimeFormatter.format(
-                                    LocalDateTime.now()), e);
+            logger.warn("File doesn't exist in filepath: {}", filepath, e);
         } catch (IOException e) {
-            logger
-                    .error(
-                            "Configuration PrhAppConfig initFileStreamReader()::IOException :: Execution Time - {}:{}",
-                            dateTimeFormatter.format(
-                                    LocalDateTime.now()), e);
+            logger.warn("Problem with file loading, file: {}", filepath, e);
         } catch (JsonSyntaxException e) {
-            logger
-                    .error(
-                            "Configuration PrhAppConfig initFileStreamReader()::JsonSyntaxException :: Execution Time - {}:{}",
-                            dateTimeFormatter.format(
-                                    LocalDateTime.now()), e);
+            logger.warn("Problem with Json deserialization", e);
         }
     }
 
     private <T> T deserializeType(@NotNull GsonBuilder gsonBuilder, @NotNull JsonObject jsonObject,
-                                  @NotNull Class<T> type) {
+        @NotNull Class<T> type) {
         return gsonBuilder.create().fromJson(jsonObject, type);
     }
 

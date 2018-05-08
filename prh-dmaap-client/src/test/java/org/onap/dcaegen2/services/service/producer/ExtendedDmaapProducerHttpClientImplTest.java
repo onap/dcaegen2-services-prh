@@ -62,7 +62,7 @@ public class ExtendedDmaapProducerHttpClientImplTest {
         when(configurationMock.dmaapTopicName()).thenReturn("pnfReady");
 
         when(requestDetailsMock.dmaapAPIPath()).thenReturn("events");
-        when(requestDetailsMock.jsonBody()).thenReturn(Optional.of(JSON_MESSAGE));
+        when(requestDetailsMock.jsonBody()).thenReturn(JSON_MESSAGE);
 
         objectUnderTest = new ExtendedDmaapProducerHttpClientImpl(configurationMock);
 
@@ -75,7 +75,7 @@ public class ExtendedDmaapProducerHttpClientImplTest {
         expectedResult = Optional.of(RESPONSE_SUCCESS);
 
         when(closeableHttpClientMock.execute(any(HttpPost.class), any(ResponseHandler.class)))
-                .thenReturn(expectedResult);
+            .thenReturn(expectedResult);
 
         Optional<String> actualResult = objectUnderTest.getHttpProducerResponse(requestDetailsMock);
 
@@ -86,9 +86,9 @@ public class ExtendedDmaapProducerHttpClientImplTest {
     public void getExtendedDetails_returnsFailure() throws IOException {
         expectedResult = Optional.of(RESPONSE_FAILURE);
         when(closeableHttpClientMock.execute(any(HttpPost.class), any(ResponseHandler.class))).
-                thenReturn(Optional.empty());
-        Optional<String>  actualResult = objectUnderTest.getHttpProducerResponse(requestDetailsMock);
-        Assertions.assertEquals(Optional.empty(),actualResult);
+            thenReturn(Optional.empty());
+        Optional<String> actualResult = objectUnderTest.getHttpProducerResponse(requestDetailsMock);
+        Assertions.assertEquals(Optional.empty(), actualResult);
     }
 
 

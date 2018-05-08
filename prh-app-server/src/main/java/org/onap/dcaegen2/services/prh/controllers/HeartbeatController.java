@@ -44,7 +44,6 @@ import reactor.core.publisher.Mono;
 public class HeartbeatController {
 
     private static final Logger logger = LoggerFactory.getLogger(PrhAppConfig.class);
-    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     @RequestMapping(value = "heartbeat", method = RequestMethod.GET)
     @ApiOperation(value = "Returns liveness of PRH service")
@@ -56,15 +55,9 @@ public class HeartbeatController {
     }
     )
     public Mono<ResponseEntity<String>> heartbeat() {
-        logger.debug("Receiving request on on thread={} , time={} ", Thread.currentThread().getName(),
-            dateTimeFormatter.format(
-                LocalDateTime.now()));
-
-        return Mono.defer(() -> {
-            logger.debug("Sending response on thread={} , time={} ", Thread.currentThread().getName(),
-                dateTimeFormatter.format(
-                    LocalDateTime.now()));
-            return Mono.just(new ResponseEntity<>("I'm living", HttpStatus.OK));
-        });
+        logger.trace("Receiving heartbeat request");
+        return Mono.defer(() ->
+            Mono.just(new ResponseEntity<>("I'm living", HttpStatus.OK))
+        );
     }
 }

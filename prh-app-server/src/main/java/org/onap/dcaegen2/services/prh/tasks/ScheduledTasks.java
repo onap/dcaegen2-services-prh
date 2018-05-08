@@ -52,7 +52,7 @@ public class ScheduledTasks {
     }
 
     public void scheduleMainPrhEventTask() {
-        logger.debug("Task scheduledTaskAskingDMaaPOfConsumeEvent() :: Execution Time - {}", dateTimeFormatter.format(
+        logger.debug("Task scheduledTaskAskingDMaaPOfConsumeEvent() :: {}", dateTimeFormatter.format(
             LocalDateTime.now()));
         setTaskExecutionFlow();
         try {
@@ -60,7 +60,7 @@ public class ScheduledTasks {
             dmaapConsumerTask.receiveRequest(null);
         } catch (PrhTaskException e) {
             logger
-                .error("Task scheduledTaskAskingDMaaPOfConsumeEvent()::PrhTaskException :: Execution Time - {}:{}",
+                .error("Task scheduledTaskAskingDMaaPOfConsumeEvent()::PrhTaskException :: {}:{}",
                     dateTimeFormatter.format(
                         LocalDateTime.now()), e);
         }
@@ -68,9 +68,8 @@ public class ScheduledTasks {
 
     private void setTaskExecutionFlow() {
         dmaapConsumerTask.setNext(aaiProducerTask);
-        aaiProducerTask.setNext(dmaapProducerTask);
-        aaiConsumerTask.setNext(aaiConsumerTask);
-        dmaapProducerTask.setNext(dmaapConsumerTask);
+        aaiProducerTask.setNext(aaiConsumerTask);
+        aaiConsumerTask.setNext(dmaapProducerTask);
     }
 
 }

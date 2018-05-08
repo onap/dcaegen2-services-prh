@@ -24,10 +24,9 @@ import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
-public abstract class DmaapPublisherTask<T> extends Task {
+public abstract class DmaapPublisherTask<T, U> extends Task {
 
-    protected abstract void publish() throws DmaapNotFoundException;
+    protected abstract U publish(U message) throws DmaapNotFoundException;
 
     protected abstract T resolveConfiguration();
-
 }

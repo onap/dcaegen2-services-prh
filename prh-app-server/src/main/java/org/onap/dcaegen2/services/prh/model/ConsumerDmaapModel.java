@@ -17,16 +17,27 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.exceptions;
+package org.onap.dcaegen2.services.prh.model;
 
-import java.util.function.Supplier;
+import com.google.gson.annotations.SerializedName;
+import org.immutables.gson.Gson;
+import org.immutables.value.Value;
 
 /**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/8/18
  */
-public class DmaapNotFoundException extends PrhTaskException {
 
-    public DmaapNotFoundException(String message) {
-        super(message);
-    }
+@Value.Immutable(prehash = true)
+@Gson.TypeAdapters
+public interface ConsumerDmaapModel {
+
+    @SerializedName("pnf-name")
+    String getPnfName();
+
+    @SerializedName("ipaddress-v4-oam")
+    String getIpv4();
+
+    @SerializedName("ipaddress-v6-oam")
+    String getIpv6();
+
 }

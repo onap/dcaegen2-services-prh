@@ -57,24 +57,24 @@ public class AAIProducerTaskImpl extends AAIProducerTask<AAIClientConfiguration>
 
     @Override
     protected void publish() throws AAINotFoundException {
-        logger.debug("Start task AAIConsumerTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
+        logger.info("Start task AAIConsumerTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
 
         producerClient = new AAIProducerClient(prhAppConfig.getAAIClientConfiguration());
 
         response = producerClient.getHttpResponse(requestDetails);
 
-        logger.debug("End task AAIConsumerTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
+        logger.info("End task AAIConsumerTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
 
     }
 
     @Override
     public ResponseEntity execute(Object object) throws AAINotFoundException {
-        logger.debug("Start task AAIProducerTaskImpl::execute() :: Execution Time - {}", dateTimeFormatter.format(
+        logger.info("Start task AAIProducerTaskImpl::execute() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
         publish();
-        logger.debug("End task AAIPublisherTaskImpl::execute() :: Execution Time - {}", dateTimeFormatter.format(
+        logger.info("End task AAIPublisherTaskImpl::execute() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
         return null;
     }

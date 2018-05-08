@@ -24,7 +24,7 @@ package org.onap.dcaegen2.services.prh.exceptions;
  */
 public class PrhTaskException extends Exception {
 
-    PrhTaskException(String message) {
+    public PrhTaskException(String message) {
         super(message);
     }
 }

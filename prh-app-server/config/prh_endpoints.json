@@ -2,26 +2,26 @@
   "configs": {
     "dmaap": {
       "dmaapConsumerConfiguration": {
-        "dmmapHostName": "localhost",
-        "dmmapPortNumber": 2222,
-        "dmmapTopicName": "temp",
-        "dmmapProtocol": "http",
-        "dmmapUserName": "admin",
-        "dmmapUserPassword": "admin",
-        "dmmapContentType": "application/json",
+        "dmaapHostName": "localhost",
+        "dmaapPortNumber": 2222,
+        "dmaapTopicName": "temp",
+        "dmaapProtocol": "http",
+        "dmaapUserName": "admin",
+        "dmaapUserPassword": "admin",
+        "dmaapContentType": "application/json",
         "consumerId": "1",
         "consumerGroup": "other",
         "timeoutMS": 1000,
-        "message-limit": 1000
+        "messageLimit": 1000
       },
       "dmaapProducerConfiguration": {
-        "dmmapHostName": "localhost",
-        "dmmapPortNumber": 2223,
-        "dmmapTopicName": "temp",
-        "dmmapProtocol": "http",
-        "dmmapUserName": "admin",
-        "dmmapUserPassword": "admin",
-        "dmmapContentType": "application/json"
+        "dmaapHostName": "localhost",
+        "dmaapPortNumber": 2223,
+        "dmaapTopicName": "temp",
+        "dmaapProtocol": "http",
+        "dmaapUserName": "admin",
+        "dmaapUserPassword": "admin",
+        "dmaapContentType": "application/json"
       }
     },
     "aai": {

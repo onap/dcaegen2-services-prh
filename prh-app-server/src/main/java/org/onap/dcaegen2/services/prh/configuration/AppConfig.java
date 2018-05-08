@@ -108,64 +108,66 @@ public class AppConfig extends PrhAppConfig {
 
     @Override
     public DmaapConsumerConfiguration getDmaapConsumerConfiguration() {
+        DmaapConsumerConfiguration dmaapConsumerConfiguration = getDmaapConsumerConfiguration();
         return new ImmutableDmaapConsumerConfiguration.Builder()
-                .dmaapUserPassword(
-                        Optional.ofNullable(consumerDmaapUserPassword).orElse(dmaapConsumerConfiguration.dmaapUserPassword()))
-                .dmaapUserName(
-                        Optional.ofNullable(consumerDmaapUserName).orElse(dmaapConsumerConfiguration.dmaapUserName()))
-                .dmaapHostName(
-                        Optional.ofNullable(consumerDmaapHostName).orElse(dmaapConsumerConfiguration.dmaapHostName()))
-                .dmaapPortNumber(
-                        Optional.ofNullable(consumerDmaapPortNumber).orElse(dmaapConsumerConfiguration.dmaapPortNumber()))
-                .dmaapProtocol(
-                        Optional.ofNullable(consumerDmaapProtocol).orElse(dmaapConsumerConfiguration.dmaapProtocol()))
-                .dmaapContentType(
-                        Optional.ofNullable(consumerDmaapContentType).orElse(dmaapConsumerConfiguration.dmaapContentType()))
-                .dmaapTopicName(
-                        Optional.ofNullable(consumerDmaapTopicName).orElse(dmaapConsumerConfiguration.dmaapTopicName()))
-                .messageLimit(
-                        Optional.ofNullable(consumerMessageLimit).orElse(dmaapConsumerConfiguration.messageLimit()))
-                .timeoutMS(Optional.ofNullable(consumerTimeoutMS).orElse(dmaapConsumerConfiguration.timeoutMS()))
-                .consumerGroup(Optional.ofNullable(consumerGroup).orElse(dmaapConsumerConfiguration.consumerGroup()))
-                .consumerId(Optional.ofNullable(consumerId).orElse(dmaapConsumerConfiguration.consumerId()))
-                .build();
+            .dmaapUserPassword(
+                Optional.ofNullable(consumerDmaapUserPassword).orElse(dmaapConsumerConfiguration.dmaapUserPassword()))
+            .dmaapUserName(
+                Optional.ofNullable(consumerDmaapUserName).orElse(dmaapConsumerConfiguration.dmaapUserName()))
+            .dmaapHostName(
+                Optional.ofNullable(consumerDmaapHostName).orElse(dmaapConsumerConfiguration.dmaapHostName()))
+            .dmaapPortNumber(
+                Optional.ofNullable(consumerDmaapPortNumber).orElse(dmaapConsumerConfiguration.dmaapPortNumber()))
+            .dmaapProtocol(
+                Optional.ofNullable(consumerDmaapProtocol).orElse(dmaapConsumerConfiguration.dmaapProtocol()))
+            .dmaapContentType(
+                Optional.ofNullable(consumerDmaapContentType).orElse(dmaapConsumerConfiguration.dmaapContentType()))
+            .dmaapTopicName(
+                Optional.ofNullable(consumerDmaapTopicName).orElse(dmaapConsumerConfiguration.dmaapTopicName()))
+            .messageLimit(
+                Optional.ofNullable(consumerMessageLimit).orElse(dmaapConsumerConfiguration.messageLimit()))
+            .timeoutMS(Optional.ofNullable(consumerTimeoutMS).orElse(dmaapConsumerConfiguration.timeoutMS()))
+            .consumerGroup(Optional.ofNullable(consumerGroup).orElse(dmaapConsumerConfiguration.consumerGroup()))
+            .consumerId(Optional.ofNullable(consumerId).orElse(dmaapConsumerConfiguration.consumerId()))
+            .build();
     }
 
     @Override
     public AAIClientConfiguration getAAIClientConfiguration() {
+        AAIClientConfiguration aaiClientConfiguration = getAAIClientConfiguration();
         return new ImmutableAAIClientConfiguration.Builder()
-                .aaiHost(Optional.ofNullable(aaiHost).orElse(aaiClientConfiguration.aaiHost()))
-                .aaiHostPortNumber(
-                        Optional.ofNullable(aaiHostPortNumber).orElse(aaiClientConfiguration.aaiHostPortNumber()))
-                .aaiIgnoreSSLCertificateErrors(
-                        Optional.ofNullable(aaiIgnoreSSLCertificateErrors)
-                                .orElse(aaiClientConfiguration.aaiIgnoreSSLCertificateErrors()))
-                .aaiProtocol(Optional.ofNullable(aaiProtocol).orElse(aaiClientConfiguration.aaiProtocol()))
-                .aaiUserName(
-                        Optional.ofNullable(aaiUserName).orElse(aaiClientConfiguration.aaiUserName()))
-                .aaiUserPassword(Optional.ofNullable(
-                        aaiUserPassword).orElse(aaiClientConfiguration.aaiUserPassword()))
-                .build();
+            .aaiHost(Optional.ofNullable(aaiHost).orElse(aaiClientConfiguration.aaiHost()))
+            .aaiHostPortNumber(
+                Optional.ofNullable(aaiHostPortNumber).orElse(aaiClientConfiguration.aaiHostPortNumber()))
+            .aaiIgnoreSSLCertificateErrors(
+                Optional.ofNullable(aaiIgnoreSSLCertificateErrors)
+                    .orElse(aaiClientConfiguration.aaiIgnoreSSLCertificateErrors()))
+            .aaiProtocol(Optional.ofNullable(aaiProtocol).orElse(aaiClientConfiguration.aaiProtocol()))
+            .aaiUserName(
+                Optional.ofNullable(aaiUserName).orElse(aaiClientConfiguration.aaiUserName()))
+            .aaiUserPassword(Optional.ofNullable(
+                aaiUserPassword).orElse(aaiClientConfiguration.aaiUserPassword()))
+            .build();
     }
 
     @Override
     public DmaapPublisherConfiguration getDmaapPublisherConfiguration() {
         return new ImmutableDmaapPublisherConfiguration.Builder()
-                .dmaapContentType(
-                        Optional.ofNullable(producerDmaapContentType).orElse(dmaapPublisherConfiguration.dmaapContentType()))
-                .dmaapHostName(
-                        Optional.ofNullable(producerDmaapHostName).orElse(dmaapPublisherConfiguration.dmaapHostName()))
-                .dmaapPortNumber(
-                        Optional.ofNullable(producerDmaapPortNumber).orElse(dmaapPublisherConfiguration.dmaapPortNumber()))
-                .dmaapProtocol(
-                        Optional.ofNullable(producerDmaapProtocol).orElse(dmaapPublisherConfiguration.dmaapProtocol()))
-                .dmaapTopicName(
-                        Optional.ofNullable(producerDmaapTopicName).orElse(dmaapPublisherConfiguration.dmaapTopicName()))
-                .dmaapUserName(
-                        Optional.ofNullable(producerDmaapUserName).orElse(dmaapPublisherConfiguration.dmaapUserName()))
-                .dmaapUserPassword(
-                        Optional.ofNullable(producerDmaapUserPassword).orElse(dmaapPublisherConfiguration.dmaapUserPassword()))
-                .build();
+            .dmaapContentType(
+                Optional.ofNullable(producerDmaapContentType).orElse(dmaapPublisherConfiguration.dmaapContentType()))
+            .dmaapHostName(
+                Optional.ofNullable(producerDmaapHostName).orElse(dmaapPublisherConfiguration.dmaapHostName()))
+            .dmaapPortNumber(
+                Optional.ofNullable(producerDmaapPortNumber).orElse(dmaapPublisherConfiguration.dmaapPortNumber()))
+            .dmaapProtocol(
+                Optional.ofNullable(producerDmaapProtocol).orElse(dmaapPublisherConfiguration.dmaapProtocol()))
+            .dmaapTopicName(
+                Optional.ofNullable(producerDmaapTopicName).orElse(dmaapPublisherConfiguration.dmaapTopicName()))
+            .dmaapUserName(
+                Optional.ofNullable(producerDmaapUserName).orElse(dmaapPublisherConfiguration.dmaapUserName()))
+            .dmaapUserPassword(
+                Optional.ofNullable(producerDmaapUserPassword).orElse(dmaapPublisherConfiguration.dmaapUserPassword()))
+            .build();
     }
 
 }

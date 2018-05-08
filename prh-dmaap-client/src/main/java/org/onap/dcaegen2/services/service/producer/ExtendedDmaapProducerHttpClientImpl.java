@@ -52,7 +52,7 @@ public class ExtendedDmaapProducerHttpClientImpl {
     private final String dmaapContentType;
 
 
-    ExtendedDmaapProducerHttpClientImpl(DmaapPublisherConfiguration configuration) {
+    public ExtendedDmaapProducerHttpClientImpl(DmaapPublisherConfiguration configuration) {
         this.closeableHttpClient = new DmaapHttpClientImpl(configuration).getHttpClient();
         this.dmaapHostName = configuration.dmaapHostName();
         this.dmaapProtocol = configuration.dmaapProtocol();
@@ -61,7 +61,7 @@ public class ExtendedDmaapProducerHttpClientImpl {
         this.dmaapContentType = configuration.dmaapContentType();
     }
 
-     Optional<String> getHttpProducerResponse(DmaapPublisherRequestDetails requestDetails) {
+    public Optional<String> getHttpProducerResponse(DmaapPublisherRequestDetails requestDetails) {
 
         Optional<String> extendedDetails = Optional.empty();
         Optional<HttpRequestBase> request = createRequest(requestDetails);
@@ -74,11 +74,7 @@ public class ExtendedDmaapProducerHttpClientImpl {
 
         return extendedDetails;
     }
-
-    private Boolean isExtendedURINotNull(URI extendedURI) {
-        return extendedURI != null;
-    }
-
+    
     private Optional<StringEntity> createStringEntity(Optional<String> jsonBody) {
         return Optional.of(parseJson(jsonBody).get());
     }
@@ -95,7 +91,7 @@ public class ExtendedDmaapProducerHttpClientImpl {
         return stringEntity;
     }
 
-    private Optional<HttpRequestBase> createRequest (DmaapPublisherRequestDetails requestDetails) {
+    private Optional<HttpRequestBase> createRequest(DmaapPublisherRequestDetails requestDetails) {
 
         Optional<HttpRequestBase> request = Optional.empty();
         final URI extendedURI = createDmaapPublisherExtendedURI(requestDetails);
@@ -112,24 +108,24 @@ public class ExtendedDmaapProducerHttpClientImpl {
         URI extendedURI = null;
 
         final URIBuilder uriBuilder = new URIBuilder()
-                .setScheme(dmaapProtocol)
-                .setHost(dmaapHostName)
-                .setPort(dmaapPortNumber)
-                .setPath(requestDetails.dmaapAPIPath() + "/" + dmaapTopicName);
+            .setScheme(dmaapProtocol)
+            .setHost(dmaapHostName)
+            .setPort(dmaapPortNumber)
+            .setPath(requestDetails.dmaapAPIPath() + "/" + dmaapTopicName);
 
         try {
             extendedURI = uriBuilder.build();
-            logger.info("Building extended URI: {}",extendedURI);
+            logger.info("Building extended URI: {}", extendedURI);
         } catch (URISyntaxException e) {
-            logger.error("Exception while building extended URI: {}", e);
+            logger.error("Exception while building extended URI: ", e);
         }
 
         return extendedURI;
     }
 
     private HttpRequestBase createRequest(URI extendedURI, DmaapPublisherRequestDetails requestDetails) {
-        if (isExtendedURINotNull(extendedURI) && requestDetails.jsonBody().isPresent()) {
-            return createHttpPost(extendedURI, requestDetails.jsonBody());
+        if (extendedURI != null) {
+            return createHttpPost(extendedURI, Optional.ofNullable(requestDetails.jsonBody()));
         } else {
             return null;
         }
@@ -143,7 +139,7 @@ public class ExtendedDmaapProducerHttpClientImpl {
     }
 
     private ResponseHandler<Optional<String>> dmaapProducerResponseHandler() {
-        return httpResponse ->  {
+        return httpResponse -> {
             final int responseCode = httpResponse.getStatusLine().getStatusCode();
             final HttpEntity responseEntity = httpResponse.getEntity();
 

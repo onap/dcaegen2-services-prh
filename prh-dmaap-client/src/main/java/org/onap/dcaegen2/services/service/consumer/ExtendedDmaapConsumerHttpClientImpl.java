@@ -53,7 +53,7 @@ public class ExtendedDmaapConsumerHttpClientImpl {
     private final String dmaapContentType;
 
 
-    ExtendedDmaapConsumerHttpClientImpl(DmaapConsumerConfiguration configuration) {
+    public ExtendedDmaapConsumerHttpClientImpl(DmaapConsumerConfiguration configuration) {
         this.closeableHttpClient = new DmaapHttpClientImpl(configuration).getHttpClient();
         this.dmaapHostName = configuration.dmaapHostName();
         this.dmaapProtocol = configuration.dmaapProtocol();
@@ -111,10 +111,10 @@ public class ExtendedDmaapConsumerHttpClientImpl {
         URI extendedURI = null;
 
         final URIBuilder uriBuilder = new URIBuilder()
-                .setScheme(dmaapProtocol)
-                .setHost(dmaapHostName)
-                .setPort(dmaapPortNumber)
-                .setPath(createRequestPath());
+            .setScheme(dmaapProtocol)
+            .setHost(dmaapHostName)
+            .setPort(dmaapPortNumber)
+            .setPath(createRequestPath());
 
         try {
             extendedURI = uriBuilder.build();
@@ -127,19 +127,19 @@ public class ExtendedDmaapConsumerHttpClientImpl {
     }
 
     private ResponseHandler<Optional<String>> dmaapConsumerResponseHandler() {
-        return httpResponse ->  {
+        return httpResponse -> {
             final int responseCode = httpResponse.getStatusLine().getStatusCode();
             logger.info("Status code of operation: {}", responseCode);
             final HttpEntity responseEntity = httpResponse.getEntity();
 
-            if (HttpUtils.isSuccessfulResponseCode(responseCode) ) {
+            if (HttpUtils.isSuccessfulResponseCode(responseCode)) {
                 logger.info("HTTP response successful.");
                 final String dmaapResponse = EntityUtils.toString(responseEntity);
                 return Optional.of(dmaapResponse);
             } else {
                 String dmaapResponse = responseEntity != null ? EntityUtils.toString(responseEntity) : "";
                 logger.error("HTTP response not successful : {}", dmaapResponse);
-                return Optional.of("" + responseCode);
+                return Optional.of(String.valueOf(responseCode));
             }
         };
     }

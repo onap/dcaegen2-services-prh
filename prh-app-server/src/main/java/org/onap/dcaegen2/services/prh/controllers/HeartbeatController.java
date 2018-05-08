@@ -56,15 +56,9 @@ public class HeartbeatController {
     }
     )
     public Mono<ResponseEntity<String>> heartbeat() {
-        logger.debug("Receiving request on on thread={} , time={} ", Thread.currentThread().getName(),
-            dateTimeFormatter.format(
-                LocalDateTime.now()));
-
-        return Mono.defer(() -> {
-            logger.debug("Sending response on thread={} , time={} ", Thread.currentThread().getName(),
-                dateTimeFormatter.format(
-                    LocalDateTime.now()));
-            return Mono.just(new ResponseEntity<>("I'm living", HttpStatus.OK));
-        });
+        logger.trace("Receiving heartbeat request");
+        return Mono.defer(() ->
+            Mono.just(new ResponseEntity<>("I'm living", HttpStatus.OK))
+        );
     }
 }

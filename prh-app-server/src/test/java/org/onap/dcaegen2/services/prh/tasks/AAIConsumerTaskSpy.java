@@ -37,8 +37,7 @@ public class AAIConsumerTaskSpy {
     @Primary
     public AAIConsumerTask registerSimpleAAIPublisherTask() {
         AppConfig appConfig = mock(AppConfig.class);
-        HttpRequestDetails requestDetails = mock(HttpRequestDetails.class);
         when(appConfig.getAAIClientConfiguration()).thenReturn(mock(AAIClientConfiguration.class));
-        return spy(new AAIConsumerTaskImpl(appConfig, requestDetails));
+        return spy(new AAIConsumerTaskImpl(appConfig));
     }
 }

@@ -19,10 +19,13 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
+import com.google.gson.Gson;
 import org.onap.dcaegen2.services.config.AAIClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 import org.onap.dcaegen2.services.service.AAIProducerClient;
 import org.onap.dcaegen2.services.utils.HttpRequestDetails;
 import org.slf4j.Logger;
@@ -39,48 +42,36 @@ import java.util.Optional;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
 @Component
-public class AAIProducerTaskImpl extends AAIProducerTask<AAIClientConfiguration> {
+public class AAIProducerTaskImpl extends AAIProducerTask<AAIClientConfiguration, ConsumerDmaapModel, Object> {
 
     private static final Logger logger = LoggerFactory.getLogger(ScheduledTasks.class);
-    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     private final Config prhAppConfig;
     private AAIProducerClient producerClient;
-    private HttpRequestDetails requestDetails;
-    Optional<String> response;
+    private Optional<String> response;
 
     @Autowired
-    public AAIProducerTaskImpl(AppConfig prhAppConfig, HttpRequestDetails requestDetails) {
+    public AAIProducerTaskImpl(AppConfig prhAppConfig) {
         this.prhAppConfig = prhAppConfig;
-        this.requestDetails = requestDetails;
     }
 
     @Override
-    protected void publish() throws AAINotFoundException {
-        logger.debug("Start task AAIConsumerTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
-            LocalDateTime.now()));
-
+    protected Object publish(ConsumerDmaapModel consumerDmaapModel) throws AAINotFoundException {
+        logger.trace("Method %M called with arg {}", consumerDmaapModel);
         producerClient = new AAIProducerClient(prhAppConfig.getAAIClientConfiguration());
-
-        response = producerClient.getHttpResponse(requestDetails);
-
-        logger.debug("End task AAIConsumerTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
-            LocalDateTime.now()));
-
+        response = producerClient.getHttpResponse(null);
+        return response.get();
     }
 
     @Override
-    public ResponseEntity execute(Object object) throws AAINotFoundException {
-        logger.debug("Start task AAIProducerTaskImpl::execute() :: Execution Time - {}", dateTimeFormatter.format(
-            LocalDateTime.now()));
-        publish();
-        logger.debug("End task AAIPublisherTaskImpl::execute() :: Execution Time - {}", dateTimeFormatter.format(
-            LocalDateTime.now()));
-        return null;
+    public Object execute(Object object) throws AAINotFoundException {
+        logger.trace("Method %M called with arg {}", object);
+        return publish((ConsumerDmaapModel) object);
     }
 
     @Override
     void initConfigs() {
+        logger.trace("initConfigs for AAIProducerTaskImpl not needed/supported");
     }
 
     @Override

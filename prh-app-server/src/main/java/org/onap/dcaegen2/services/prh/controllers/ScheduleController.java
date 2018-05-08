@@ -67,14 +67,14 @@ public class ScheduleController {
     @RequestMapping(value = "start", method = RequestMethod.GET)
     @ApiOperation(value = "Start scheduling worker request")
     public Mono<ResponseEntity<String>> startTasks() {
-        logDebug("Starting scheduling worker request on on thread={} , time={} ");
+        logger.trace("Receiving start scheduling worker request");
         return Mono.fromSupplier(this::tryToStartTask).map(this::createStartTaskResponse);
     }
 
     @RequestMapping(value = "stopPrh", method = RequestMethod.GET)
-    @ApiOperation(value = "Stop scheduling worker request")
+    @ApiOperation(value = "Receiving stop scheduling worker request")
     public Mono<ResponseEntity<String>> stopTask() {
-        logDebug("Stopping scheduling worker request on on thread={} , time={} ");
+        logger.trace("Receiving stop scheduling worker request");
         return getResponseFromCancellationOfTasks();
     }
 
@@ -82,10 +82,9 @@ public class ScheduleController {
     private synchronized Mono<ResponseEntity<String>> getResponseFromCancellationOfTasks() {
         scheduledFutureList.forEach(x -> x.cancel(false));
         scheduledFutureList.clear();
-        return Mono.defer(() -> {
-            logDebug("Sending success response on stopping task execution thread={} , time={} ");
-            return Mono.just(new ResponseEntity<>("PRH Service has already been stopped!", HttpStatus.CREATED));
-        });
+        return Mono.defer(() ->
+            Mono.just(new ResponseEntity<>("PRH Service has already been stopped!", HttpStatus.CREATED))
+        );
     }
 
     @ApiOperation(value = "Start task if possible")
@@ -103,20 +102,9 @@ public class ScheduleController {
     @ApiOperation(value = "Sends success or error response on starting task execution")
     private ResponseEntity<String> createStartTaskResponse(boolean wasScheduled) {
         if (wasScheduled) {
-            logDebug("Sending success response on starting task execution thread={} , time={} ");
             return new ResponseEntity<>("PRH Service has been started!", HttpStatus.CREATED);
         } else {
-            logDebug("Sending error response on starting task execution thread={} , time={} ");
             return new ResponseEntity<>("PRH Service is still running!", HttpStatus.NOT_ACCEPTABLE);
-        }
-    }
-
-    private static void logDebug(String message) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(message,
-                Thread.currentThread().getName(),
-                dateTimeFormatter.format(
-                    LocalDateTime.now()));
         }
     }
 }

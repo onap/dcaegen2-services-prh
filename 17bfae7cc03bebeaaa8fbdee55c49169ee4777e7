@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "5a93c517_41de57db",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-08T13:33:37Z",
+      "side": 1,
+      "message": "Error message should describe what\u0027s whong, not where. You can get where is the problem from stack trace.",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 140
+      },
+      "revId": "17bfae7cc03bebeaaa8fbdee55c49169ee4777e7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_411977cf",
         "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidator.java",
         "patchSetId": 4
@@ -18,6 +41,29 @@
         "startChar": 18,
         "endLine": 59,
         "endChar": 33
+      },
+      "revId": "17bfae7cc03bebeaaa8fbdee55c49169ee4777e7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_e1f0c368",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-08T13:33:37Z",
+      "side": 1,
+      "message": "Logs like this are bad. Logs should say what\u0027s happening, not where. You can get info where it\u0027s happening using patterns for log4j - http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/PatternLayout.html",
+      "range": {
+        "startLine": 60,
+        "startChar": 8,
+        "endLine": 61,
+        "endChar": 34
       },
       "revId": "17bfae7cc03bebeaaa8fbdee55c49169ee4777e7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
@@ -225,6 +271,52 @@
         "startChar": 27,
         "endLine": 138,
         "endChar": 46
+      },
+      "revId": "17bfae7cc03bebeaaa8fbdee55c49169ee4777e7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_61dd93df",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AAIProducerTaskImpl.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-08T13:33:37Z",
+      "side": 1,
+      "message": "Why package private?",
+      "range": {
+        "startLine": 51,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 30
+      },
+      "revId": "17bfae7cc03bebeaaa8fbdee55c49169ee4777e7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_01f4cf58",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AAIProducerTaskImpl.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-08T13:33:37Z",
+      "side": 1,
+      "message": "Again, logs like this tells nothing when viewed in logs.",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 34
       },
       "revId": "17bfae7cc03bebeaaa8fbdee55c49169ee4777e7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",

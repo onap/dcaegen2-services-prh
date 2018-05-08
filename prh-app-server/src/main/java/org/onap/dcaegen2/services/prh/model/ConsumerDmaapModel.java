@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START=======================================================
- * PROJECT
+ * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
@@ -17,16 +17,27 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.tasks;
+package org.onap.dcaegen2.services.prh.model;
 
-import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
+import com.google.gson.annotations.SerializedName;
+import org.immutables.gson.Gson;
+import org.immutables.value.Value;
 
 /**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/8/18
  */
-public abstract class DmaapConsumerTask<T, U, V> extends Task {
 
-    protected abstract V consume(U message) throws DmaapNotFoundException;
+@Value.Immutable(prehash = true)
+@Gson.TypeAdapters
+public interface ConsumerDmaapModel {
 
-    protected abstract T resolveConfiguration();
+    @SerializedName("pnf-name")
+    String getPnfName();
+
+    @SerializedName("ipaddress-v4-oam")
+    String getIpv4();
+
+    @SerializedName("ipaddress-v6-oam")
+    String getIpv6();
+
 }

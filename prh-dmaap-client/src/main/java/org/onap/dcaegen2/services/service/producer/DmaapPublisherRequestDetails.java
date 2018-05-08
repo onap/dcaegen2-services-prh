@@ -28,11 +28,9 @@ import java.util.Optional;
 @Value.Style(builder = "new")
 public abstract class DmaapPublisherRequestDetails {
 
-    private static final long serialVersionUID = 1L;
-
     @Value.Parameter
     public abstract String dmaapAPIPath();
 
     @Value.Parameter
-    public abstract Optional<String> jsonBody();
+    public abstract String jsonBody();
 }

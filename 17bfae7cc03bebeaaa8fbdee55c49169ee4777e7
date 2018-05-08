@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_01e36fd9",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2018-05-08T12:58:53Z",
+      "side": 1,
+      "message": "checkHeaderPresenceInJson",
+      "range": {
+        "startLine": 138,
+        "startChar": 4,
+        "endLine": 138,
+        "endChar": 71
+      },
+      "revId": "17bfae7cc03bebeaaa8fbdee55c49169ee4777e7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_81ce9f58",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/DmaapPublisherTaskImpl.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2018-05-08T12:58:53Z",
+      "side": 1,
+      "message": "Empty method. Maaybe LOG.debug could point out message: initConfings for DmaapPublisherTaskImpl not needed/supported",
+      "range": {
+        "startLine": 73,
+        "startChar": 4,
+        "endLine": 76,
+        "endChar": 5
+      },
+      "revId": "17bfae7cc03bebeaaa8fbdee55c49169ee4777e7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

@@ -44,42 +44,35 @@ public class AAIConsumerTaskImpl extends AAIConsumerTask<AAIClientConfiguration>
 
     private final Config prhAppConfig;
     private final HttpRequestDetails requestDetails;
-    private AAIProducerClient producerClient;
-    Optional<String> response;
+    private Optional<String> response;
 
     @Autowired
-    public AAIConsumerTaskImpl(AppConfig prhAppConfig, HttpRequestDetails requestDetails) {
+    public AAIConsumerTaskImpl(AppConfig prhAppConfig) {
         this.prhAppConfig = prhAppConfig;
-        this.requestDetails = requestDetails;
+        this.requestDetails = null;
     }
 
     @Override
     protected void consume() throws AAINotFoundException {
-        logger.debug("Start task AAIConsumerTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
-                LocalDateTime.now()));
-
-
-        producerClient = new AAIProducerClient(prhAppConfig.getAAIClientConfiguration());
-
+        //TODO: @Piotr Wielebski
+        AAIProducerClient producerClient = new AAIProducerClient(prhAppConfig.getAAIClientConfiguration());
         response = producerClient.getHttpResponse(requestDetails);
-
-        logger.debug("End task AAIConsumerTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
-                LocalDateTime.now()));
+        logger.debug("End task AAIConsumerTask::publish() :: {}", dateTimeFormatter.format(
+            LocalDateTime.now()));
 
     }
 
     @Override
-    public ResponseEntity execute(Object object) throws AAINotFoundException {
-        logger.debug("Start task AAIProducerTaskImpl::execute() :: Execution Time - {}", dateTimeFormatter.format(
-                LocalDateTime.now()));
+    public Object execute(Object object) throws AAINotFoundException {
+        logger.trace("Method %M called with arg {}", object);
         consume();
-        logger.debug("End task AAIPublisherTaskImpl::execute() :: Execution Time - {}", dateTimeFormatter.format(
-                LocalDateTime.now()));
+        //TODO: @Piotr Wielebski
         return null;
     }
 
     @Override
     void initConfigs() {
+        logger.trace("initConfigs for AAIConsumerTaskImpl not needed/supported");
     }
 
     @Override

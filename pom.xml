@@ -53,6 +53,7 @@
     <compiler.plugin.version>3.7.0</compiler.plugin.version>
     <tomcat.version>8.5.28</tomcat.version>
     <docker.maven.version>1.0.0</docker.maven.version>
+    <resource.maven.plugin.version>3.1.0</resource.maven.plugin.version>
     <!-- DEVELOPMENT SETTINGS -->
     <immutable.version>2.5.6</immutable.version>
 
@@ -200,7 +201,6 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.19.1</version>
           <configuration>
-            <skipTests>false</skipTests>
             <argLine>-Xmx2048m -Djava.awt.headless=true -XX:+UseConcMarkSweepGC
               -XX:OnOutOfMemoryError="kill -9 %p" -XX:+HeapDumpOnOutOfMemoryError
             </argLine>
@@ -316,6 +316,11 @@
             <skipDockerBuild>true</skipDockerBuild>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>${resource.maven.plugin.version}</version>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -420,6 +425,11 @@
         <groupId>com.spotify</groupId>
         <artifactId>docker-maven-plugin</artifactId>
         <version>${docker.maven.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>${resource.maven.plugin.version}</version>
       </dependency>
       <dependency>
         <groupId>org.bouncycastle</groupId>

@@ -35,7 +35,6 @@ import java.time.format.DateTimeFormatter;
 public class ScheduledTasks {
 
     private static final Logger logger = LoggerFactory.getLogger(ScheduledTasks.class);
-    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     private final Task dmaapConsumerTask;
     private final Task dmaapProducerTask;
@@ -52,25 +51,21 @@ public class ScheduledTasks {
     }
 
     public void scheduleMainPrhEventTask() {
-        logger.debug("Task scheduledTaskAskingDMaaPOfConsumeEvent() :: Execution Time - {}", dateTimeFormatter.format(
-            LocalDateTime.now()));
+        logger.trace("Execution of task was registered");
         setTaskExecutionFlow();
         try {
             dmaapConsumerTask.initConfigs();
             dmaapConsumerTask.receiveRequest(null);
         } catch (PrhTaskException e) {
             logger
-                .error("Task scheduledTaskAskingDMaaPOfConsumeEvent()::PrhTaskException :: Execution Time - {}:{}",
-                    dateTimeFormatter.format(
-                        LocalDateTime.now()), e);
+                .warn("Chain of tasks have been aborted, because some errors occur in prh workflow ", e);
         }
     }
 
     private void setTaskExecutionFlow() {
         dmaapConsumerTask.setNext(aaiProducerTask);
-        aaiProducerTask.setNext(dmaapProducerTask);
-        aaiConsumerTask.setNext(aaiConsumerTask);
-        dmaapProducerTask.setNext(dmaapConsumerTask);
+        aaiProducerTask.setNext(aaiConsumerTask);
+        aaiConsumerTask.setNext(dmaapProducerTask);
     }
 
 }

@@ -68,9 +68,8 @@ public class ScheduledTasks {
 
     private void setTaskExecutionFlow() {
         dmaapConsumerTask.setNext(aaiProducerTask);
-        aaiProducerTask.setNext(dmaapProducerTask);
-        aaiConsumerTask.setNext(aaiConsumerTask);
-        dmaapProducerTask.setNext(dmaapConsumerTask);
+        aaiProducerTask.setNext(aaiConsumerTask);
+        aaiConsumerTask.setNext(dmaapProducerTask);
     }
 
 }

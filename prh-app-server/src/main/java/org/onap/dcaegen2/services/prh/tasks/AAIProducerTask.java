@@ -24,9 +24,9 @@ import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
-public abstract class AAIProducerTask<T> extends Task {
+public abstract class AAIProducerTask<T, U> extends Task {
 
-    protected abstract void publish() throws AAINotFoundException;
+    protected abstract U publish(U message) throws AAINotFoundException;
 
     protected abstract T resolveConfiguration();
 }

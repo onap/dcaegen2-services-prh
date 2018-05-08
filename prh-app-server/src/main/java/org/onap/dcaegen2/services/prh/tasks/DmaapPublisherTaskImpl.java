@@ -22,6 +22,9 @@ package org.onap.dcaegen2.services.prh.tasks;
 import org.onap.dcaegen2.services.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
+import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
+import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
+import org.onap.dcaegen2.services.service.producer.ExtendedDmaapProducerHttpClientImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +38,7 @@ import java.time.format.DateTimeFormatter;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
 @Component
-public class DmaapPublisherTaskImpl extends DmaapPublisherTask<DmaapPublisherConfiguration> {
+public class DmaapPublisherTaskImpl extends DmaapPublisherTask<DmaapPublisherConfiguration, String> {
 
     private static final Logger logger = LoggerFactory.getLogger(ScheduledTasks.class);
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -48,27 +51,29 @@ public class DmaapPublisherTaskImpl extends DmaapPublisherTask<DmaapPublisherCon
     }
 
     @Override
-    protected void publish() {
-        logger.debug("Start task DmaapPublisherTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
+    protected String publish(String message) throws DmaapNotFoundException {
+        logger.info("Start task DmaapPublisherTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
-
-        logger.debug("End task DmaapPublisherTask::publish() :: Execution Time - {}",
-            dateTimeFormatter.format(LocalDateTime.now()));
-    }
-
-    @Override
-    public ResponseEntity execute(Object object) {
-        logger.debug("Start task DmaapPublisherTask::consume() :: Execution Time - {}", dateTimeFormatter.format(
-            LocalDateTime.now()));
-        publish();
-        logger.debug("End task DmaapPublisherTask::consume() :: Execution Time - {}",
+        ExtendedDmaapProducerHttpClientImpl dmaapProducerHttpClient = new ExtendedDmaapProducerHttpClientImpl(
+            resolveConfiguration());
+        //todo:
+        logger.info("End task DmaapPublisherTask::publish() :: Execution Time - {}",
             dateTimeFormatter.format(LocalDateTime.now()));
         return null;
     }
 
     @Override
+    public Object execute(Object object) throws PrhTaskException {
+        logger.info("Start task DmaapPublisherTask::consume() :: Execution Time - {}", dateTimeFormatter.format(
+            LocalDateTime.now()));
+        logger.info("End task DmaapPublisherTask::consume() :: Execution Time - {}",
+            dateTimeFormatter.format(LocalDateTime.now()));
+        return publish((String) object);
+    }
+
+    @Override
     void initConfigs() {
-        
+
     }
 
     @Override

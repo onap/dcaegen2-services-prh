@@ -23,6 +23,7 @@ import org.onap.dcaegen2.services.config.AAIClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
+import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 import org.onap.dcaegen2.services.service.AAIProducerClient;
 import org.onap.dcaegen2.services.utils.HttpRequestDetails;
 import org.slf4j.Logger;
@@ -39,7 +40,7 @@ import java.util.Optional;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
 @Component
-public class AAIProducerTaskImpl extends AAIProducerTask<AAIClientConfiguration> {
+public class AAIProducerTaskImpl extends AAIProducerTask<AAIClientConfiguration, String> {
 
     private static final Logger logger = LoggerFactory.getLogger(ScheduledTasks.class);
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -56,25 +57,31 @@ public class AAIProducerTaskImpl extends AAIProducerTask<AAIClientConfiguration>
     }
 
     @Override
-    protected void publish() throws AAINotFoundException {
-        logger.debug("Start task AAIConsumerTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
+    protected String publish(String message) throws AAINotFoundException {
+        logger.info("Start task AAIConsumerTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
-
+        //json from DmaapProducer as a string
+        //Gson gson = new Gson();
+        //ConsumerDmaapModel consumerDmaapModel= gson.fromJson((String) object);
+        //ImmutableConsumerDmaapModel
         producerClient = new AAIProducerClient(prhAppConfig.getAAIClientConfiguration());
 
         response = producerClient.getHttpResponse(requestDetails);
 
-        logger.debug("End task AAIConsumerTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
+        logger.info("End task AAIConsumerTask::publish() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
-
+        return response.get();
     }
 
     @Override
-    public ResponseEntity execute(Object object) throws AAINotFoundException {
-        logger.debug("Start task AAIProducerTaskImpl::execute() :: Execution Time - {}", dateTimeFormatter.format(
+    public Object execute(Object object) throws AAINotFoundException {
+
+
+        logger.info("Start task AAIProducerTaskImpl::execute() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
-        publish();
-        logger.debug("End task AAIPublisherTaskImpl::execute() :: Execution Time - {}", dateTimeFormatter.format(
+        //publish(object);
+        publish("");
+        logger.info("End task AAIPublisherTaskImpl::execute() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
         return null;
     }

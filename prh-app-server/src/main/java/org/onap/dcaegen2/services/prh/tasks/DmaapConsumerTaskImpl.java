@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -22,6 +22,10 @@ package org.onap.dcaegen2.services.prh.tasks;
 import org.onap.dcaegen2.services.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
+import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
+import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
+import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonValidator;
+import org.onap.dcaegen2.services.service.consumer.ExtendedDmaapConsumerHttpClientImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +39,7 @@ import java.time.format.DateTimeFormatter;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
 @Component
-public class DmaapConsumerTaskImpl extends DmaapConsumerTask<DmaapConsumerConfiguration> {
+public class DmaapConsumerTaskImpl extends DmaapConsumerTask<DmaapConsumerConfiguration, String> {
 
 
     private static final Logger logger = LoggerFactory.getLogger(DmaapConsumerTaskImpl.class);
@@ -49,23 +53,28 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask<DmaapConsumerConfig
     }
 
     @Override
-    protected void consume() {
-        logger.debug("Start task DmaapConsumerTask::consume() :: Execution Time - {}", dateTimeFormatter.format(
+    protected String consume(String message) throws DmaapNotFoundException {
+        logger.info("Start task DmaapConsumerTask::consume() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
-
-        logger.debug("End task DmaapConsumerTask::consume() :: Execution Time - {}",
+        String jsonInformation = DmaapConsumerJsonValidator.validate(message);
+        logger.info("End task DmaapConsumerTask::consume() :: Execution Time - {}",
             dateTimeFormatter.format(LocalDateTime.now()));
-
+        return jsonInformation;
     }
 
     @Override
-    public ResponseEntity execute(Object object) {
-        logger.debug("Start task DmaapConsumerTask::execute() :: Execution Time - {}", dateTimeFormatter.format(
+    public Object execute(Object object) throws PrhTaskException {
+        logger.info("Start task DmaapConsumerTask::execute() :: Execution Time - {}", dateTimeFormatter.format(
             LocalDateTime.now()));
-        consume();
-        logger.debug("End task DmaapConsumerTask::execute() :: Execution Time - {}",
+        ExtendedDmaapConsumerHttpClientImpl dmaapConsumerHttpClient = new ExtendedDmaapConsumerHttpClientImpl(
+            resolveConfiguration());
+        logger.info("End task DmaapConsumerTask::execute() :: Execution Time - {}",
             dateTimeFormatter.format(LocalDateTime.now()));
-        return null;
+
+        return consume((dmaapConsumerHttpClient.getHttpConsumerResponse().orElseThrow(() -> {
+            logger.error("DmaapConsumerTask::execute() :: consume() :: DmaapConsumerResponse - null");
+            return new PrhTaskException("DmaapConsumerTask has returned null");
+        })));
     }
 
     @Override

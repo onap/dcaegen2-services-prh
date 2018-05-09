@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_92834e02",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonParser.java",
+        "patchSetId": 11
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-09T12:15:21Z",
+      "side": 1,
+      "message": "We don\u0027t want to use guava",
+      "parentUuid": "5a93c517_725562f8",
+      "range": {
+        "startLine": 88,
+        "startChar": 16,
+        "endLine": 88,
+        "endChar": 71
+      },
+      "revId": "b18cb9b58c6d03c6fb060a3b973093587ebd1fd6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_f21732ec",
         "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AAIConsumerTaskImpl.java",
         "patchSetId": 11

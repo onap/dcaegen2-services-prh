@@ -94,6 +94,54 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_4fff5d34",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidatorTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-09T12:15:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_8f8485d3",
+      "range": {
+        "startLine": 38,
+        "startChar": 41,
+        "endLine": 38,
+        "endChar": 42
+      },
+      "revId": "120ef3094380255423319eabdb3ca80db7bee531",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_2f045148",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidatorTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-09T12:15:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_4f23dd04",
+      "range": {
+        "startLine": 38,
+        "startChar": 27,
+        "endLine": 38,
+        "endChar": 36
+      },
+      "revId": "120ef3094380255423319eabdb3ca80db7bee531",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_ef1d09bf",
         "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidatorTest.java",
         "patchSetId": 5
@@ -105,6 +153,30 @@
       "writtenOn": "2018-05-09T08:39:27Z",
       "side": 1,
       "message": "It would be nice if you move message to //given section in the test (before //when)",
+      "range": {
+        "startLine": 40,
+        "startChar": 15,
+        "endLine": 40,
+        "endChar": 22
+      },
+      "revId": "120ef3094380255423319eabdb3ca80db7bee531",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_eff9894e",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidatorTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-09T12:15:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_ef1d09bf",
       "range": {
         "startLine": 40,
         "startChar": 15,
@@ -140,6 +212,30 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_6f9d7909",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidatorTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-09T12:15:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_af7b81f3",
+      "range": {
+        "startLine": 41,
+        "startChar": 15,
+        "endLine": 41,
+        "endChar": 27
+      },
+      "revId": "120ef3094380255423319eabdb3ca80db7bee531",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_0f1955d0",
         "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidatorTest.java",
         "patchSetId": 5
@@ -151,6 +247,30 @@
       "writtenOn": "2018-05-09T08:39:27Z",
       "side": 1,
       "message": "this is actually expectedJson, and this one I would also move to the //given section, as you expect this format from the early begining of the test",
+      "range": {
+        "startLine": 44,
+        "startChar": 15,
+        "endLine": 44,
+        "endChar": 26
+      },
+      "revId": "120ef3094380255423319eabdb3ca80db7bee531",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_cf9a8d13",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidatorTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-09T12:15:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_0f1955d0",
       "range": {
         "startLine": 44,
         "startChar": 15,

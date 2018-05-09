@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_72a32200",
+        "filename": "prh-app-server/pom.xml",
+        "patchSetId": 10
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2018-05-09T11:32:50Z",
+      "side": 1,
+      "message": "apply chnages as discussed offline to simplyfile configuration",
+      "range": {
+        "startLine": 58,
+        "startChar": 14,
+        "endLine": 65,
+        "endChar": 26
+      },
+      "revId": "353744764f5c9ffd39f7707e3dfd8e4fe394daaf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

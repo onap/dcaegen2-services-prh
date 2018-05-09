@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_9227ce62",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonParser.java",
+        "patchSetId": 11
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-09T11:57:31Z",
+      "side": 1,
+      "message": "Just inline those log messages.",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 114
+      },
+      "revId": "b18cb9b58c6d03c6fb060a3b973093587ebd1fd6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_725562f8",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonParser.java",
+        "patchSetId": 11
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-09T11:57:31Z",
+      "side": 1,
+      "message": "Strings.isNullOrEmpty(String string) from guava",
+      "range": {
+        "startLine": 88,
+        "startChar": 16,
+        "endLine": 88,
+        "endChar": 71
+      },
+      "revId": "b18cb9b58c6d03c6fb060a3b973093587ebd1fd6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_f21732ec",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AAIConsumerTaskImpl.java",
+        "patchSetId": 11
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-09T11:57:31Z",
+      "side": 1,
+      "message": "requestDetails will always be null",
+      "range": {
+        "startLine": 51,
+        "startChar": 8,
+        "endLine": 51,
+        "endChar": 35
+      },
+      "revId": "b18cb9b58c6d03c6fb060a3b973093587ebd1fd6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_32227a52",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AAIConsumerTaskImpl.java",
+        "patchSetId": 11
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-09T11:57:31Z",
+      "side": 1,
+      "message": "There is no point for such logs imo. You can always debug application for information like this.",
+      "range": {
+        "startLine": 64,
+        "startChar": 8,
+        "endLine": 64,
+        "endChar": 61
+      },
+      "revId": "b18cb9b58c6d03c6fb060a3b973093587ebd1fd6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_523e26b9",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonParserTest.java",
+        "patchSetId": 11
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-09T11:57:31Z",
+      "side": 1,
+      "message": "Those lines are too long",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 811
+      },
+      "revId": "b18cb9b58c6d03c6fb060a3b973093587ebd1fd6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_529386a2",
+        "filename": "prh-dmaap-client/src/main/java/org/onap/dcaegen2/services/service/consumer/ExtendedDmaapConsumerHttpClientImpl.java",
+        "patchSetId": 11
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-09T11:57:31Z",
+      "side": 1,
+      "message": "Just put creating URI and returning value inside this try. Also is it ok to just return null in case of incorrect uri? I think throwing exception would be better. Anyway this function can look like this:\n\nprivate URI createDmaapConsumerExtendedURI() {\n    try {\n        return new URIBuilder()\n            .setScheme(dmaapProtocol)\n            .setHost(dmaapHostName)\n            .setPort(dmaapPortNumber)\n            .setPath(createRequestPath())\n            .build();\n    } catch (URISyntaxException e) {\n        throw new RuntimeException(\"Exception while building extended URI\", e);\n    }\n}",
+      "range": {
+        "startLine": 119,
+        "startChar": 13,
+        "endLine": 121,
+        "endChar": 66
+      },
+      "revId": "b18cb9b58c6d03c6fb060a3b973093587ebd1fd6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_f28df27c",
+        "filename": "prh-dmaap-client/src/main/java/org/onap/dcaegen2/services/service/producer/ExtendedDmaapProducerHttpClientImpl.java",
+        "patchSetId": 11
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-09T11:57:31Z",
+      "side": 1,
+      "message": "Why not just extendedURI !\u003d null?",
+      "range": {
+        "startLine": 131,
+        "startChar": 12,
+        "endLine": 131,
+        "endChar": 45
+      },
+      "revId": "b18cb9b58c6d03c6fb060a3b973093587ebd1fd6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_b29d2abe",
+        "filename": "prh-dmaap-client/src/test/java/org/onap/dcaegen2/services/service/producer/ExtendedDmaapProducerHttpClientImplTest.java",
+        "patchSetId": 11
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-09T11:57:31Z",
+      "side": 1,
+      "message": "Move dot to the next line",
+      "range": {
+        "startLine": 88,
+        "startChar": 94,
+        "endLine": 88,
+        "endChar": 95
+      },
+      "revId": "b18cb9b58c6d03c6fb060a3b973093587ebd1fd6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

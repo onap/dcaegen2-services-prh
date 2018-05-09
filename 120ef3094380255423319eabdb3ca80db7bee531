@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_8f0d6591",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AAIProducerTaskImpl.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 2729
+      },
+      "writtenOn": "2018-05-09T08:39:27Z",
+      "side": 1,
+      "message": "are these tips for further development?",
+      "range": {
+        "startLine": 63,
+        "startChar": 8,
+        "endLine": 66,
+        "endChar": 37
+      },
+      "revId": "120ef3094380255423319eabdb3ca80db7bee531",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_6f0a597a",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AAIProducerTaskImpl.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 2729
+      },
+      "writtenOn": "2018-05-09T08:39:27Z",
+      "side": 1,
+      "message": "What\u0027s the reason for commented line? Is this target implementation? If so, couldn\u0027t you already publish object?",
+      "range": {
+        "startLine": 82,
+        "startChar": 8,
+        "endLine": 83,
+        "endChar": 20
+      },
+      "revId": "120ef3094380255423319eabdb3ca80db7bee531",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_4f23dd04",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidatorTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 2729
+      },
+      "writtenOn": "2018-05-09T08:39:27Z",
+      "side": 1,
+      "message": "shall be \"Correct\" I believe or \"Valid\", or the Json has been really \"corrected\" by the logic?",
+      "range": {
+        "startLine": 38,
+        "startChar": 27,
+        "endLine": 38,
+        "endChar": 36
+      },
+      "revId": "120ef3094380255423319eabdb3ca80db7bee531",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_8f8485d3",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidatorTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 2729
+      },
+      "writtenOn": "2018-05-09T08:39:27Z",
+      "side": 1,
+      "message": "start with lowercase after underscore (like you start new camelCase sentence)",
+      "range": {
+        "startLine": 38,
+        "startChar": 41,
+        "endLine": 38,
+        "endChar": 42
+      },
+      "revId": "120ef3094380255423319eabdb3ca80db7bee531",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_ef1d09bf",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidatorTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 2729
+      },
+      "writtenOn": "2018-05-09T08:39:27Z",
+      "side": 1,
+      "message": "It would be nice if you move message to //given section in the test (before //when)",
+      "range": {
+        "startLine": 40,
+        "startChar": 15,
+        "endLine": 40,
+        "endChar": 22
+      },
+      "revId": "120ef3094380255423319eabdb3ca80db7bee531",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_af7b81f3",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidatorTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 2729
+      },
+      "writtenOn": "2018-05-09T08:39:27Z",
+      "side": 1,
+      "message": "parsedObject could be renamed to \"createdJson\" if you also accept the comment below ;)",
+      "range": {
+        "startLine": 41,
+        "startChar": 15,
+        "endLine": 41,
+        "endChar": 27
+      },
+      "revId": "120ef3094380255423319eabdb3ca80db7bee531",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_0f1955d0",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidatorTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 2729
+      },
+      "writtenOn": "2018-05-09T08:39:27Z",
+      "side": 1,
+      "message": "this is actually expectedJson, and this one I would also move to the //given section, as you expect this format from the early begining of the test",
+      "range": {
+        "startLine": 44,
+        "startChar": 15,
+        "endLine": 44,
+        "endChar": 26
+      },
+      "revId": "120ef3094380255423319eabdb3ca80db7bee531",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_cf7e0de4",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonValidatorTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 2729
+      },
+      "writtenOn": "2018-05-09T08:39:27Z",
+      "side": 1,
+      "message": "is it incorrect syntax here, or you can also specify what\u0027s wrong in the message for this test also, similar to the next two tests?",
+      "range": {
+        "startLine": 49,
+        "startChar": 16,
+        "endLine": 49,
+        "endChar": 40
+      },
+      "revId": "120ef3094380255423319eabdb3ca80db7bee531",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

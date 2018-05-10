@@ -27,7 +27,7 @@ import org.immutables.value.Value;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/8/18
  */
 
-@Value.Immutable(prehash = true)
+@Value.Immutable
 @Gson.TypeAdapters
 public interface ConsumerDmaapModel {
 

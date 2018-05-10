@@ -21,7 +21,6 @@ package org.onap.dcaegen2.services.config;
 
 import org.immutables.gson.Gson;
 import org.immutables.value.Value;
-import org.springframework.stereotype.Component;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18

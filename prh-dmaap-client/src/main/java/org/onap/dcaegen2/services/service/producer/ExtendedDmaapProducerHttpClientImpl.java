@@ -69,7 +69,7 @@ public class ExtendedDmaapProducerHttpClientImpl {
         try {
             extendedDetails = closeableHttpClient.execute(request.get(), dmaapProducerResponseHandler());
         } catch (IOException | NullPointerException e) {
-            logger.error("Exception while executing HTTP request: {}", e);
+            logger.warn("Exception while executing HTTP request: ", e);
         }
 
         return extendedDetails;
@@ -85,7 +85,7 @@ public class ExtendedDmaapProducerHttpClientImpl {
         try {
             stringEntity = Optional.of(new StringEntity(jsonBody.get()));
         } catch (UnsupportedEncodingException e) {
-            logger.error("Exception while parsing JSON: {}", e);
+            logger.warn("Exception while parsing JSON: ", e);
         }
 
         return stringEntity;
@@ -115,9 +115,9 @@ public class ExtendedDmaapProducerHttpClientImpl {
 
         try {
             extendedURI = uriBuilder.build();
-            logger.info("Building extended URI: {}", extendedURI);
+            logger.trace("Building extended URI: {}", extendedURI);
         } catch (URISyntaxException e) {
-            logger.error("Exception while building extended URI: ", e);
+            logger.warn("Exception while building extended URI: ", e);
         }
 
         return extendedURI;
@@ -144,11 +144,11 @@ public class ExtendedDmaapProducerHttpClientImpl {
             final HttpEntity responseEntity = httpResponse.getEntity();
 
             if (HttpUtils.isSuccessfulResponseCode(responseCode)) {
-                logger.info("HTTP response successful.");
+                logger.trace("HTTP response successful.");
                 return Optional.of("" + responseCode);
             } else {
                 String response = responseEntity != null ? EntityUtils.toString(responseEntity) : "";
-                logger.error("HTTP response not successful : {}", response);
+                logger.warn("HTTP response not successful : {}", response);
                 return Optional.of("" + responseCode);
             }
         };

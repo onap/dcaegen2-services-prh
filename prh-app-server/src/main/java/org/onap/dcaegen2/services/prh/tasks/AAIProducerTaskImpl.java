@@ -24,6 +24,7 @@ import org.onap.dcaegen2.services.config.AAIClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
+import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 import org.onap.dcaegen2.services.service.AAIProducerClient;
@@ -65,10 +66,13 @@ public class AAIProducerTaskImpl extends AAIProducerTask<AAIClientConfiguration,
     }
 
     @Override
-    public Object execute(Object object) throws AAINotFoundException {
+    public Object execute(Object object) throws PrhTaskException {
         logger.trace("Method %M called with arg {}", object);
-        //TODO: @Piotr Wielebski
-        return publish((ConsumerDmaapModel) object);
+        if (object instanceof ConsumerDmaapModel) {
+            //TODO: @Piotr Wielebski
+            return publish((ConsumerDmaapModel) object);
+        }
+        throw new AAINotFoundException("Incorrect object type");
     }
 
     @Override

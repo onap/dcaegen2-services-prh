@@ -26,7 +26,7 @@ import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
  */
 public abstract class DmaapPublisherTask<T, U> extends Task {
 
-    protected abstract U publish(U message) throws DmaapNotFoundException;
+    protected abstract String publish(U message) throws DmaapNotFoundException;
 
     protected abstract T resolveConfiguration();
 }

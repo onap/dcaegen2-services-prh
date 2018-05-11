@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_a87e12e2",
+        "filename": "pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-11T07:19:22Z",
+      "side": 1,
+      "message": "For what ?",
+      "range": {
+        "startLine": 484,
+        "startChar": 0,
+        "endLine": 488,
+        "endChar": 19
+      },
+      "revId": "be77b7acfbdac0c8e272ff8461b0871926b42857",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_68848ad2",
+        "filename": "prh-aai-client/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-11T07:19:22Z",
+      "side": 1,
+      "message": "For what?",
+      "range": {
+        "startLine": 115,
+        "startChar": 0,
+        "endLine": 118,
+        "endChar": 17
+      },
+      "revId": "be77b7acfbdac0c8e272ff8461b0871926b42857",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_8862363c",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/service/AAIProducerClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-11T07:19:22Z",
+      "side": 1,
+      "message": "try {\n            return  closeableHttpClient.execute(request.get(), aaiResponseHandler());\n        } catch (IOException e) {\nthrow IOException;        }",
+      "range": {
+        "startLine": 73,
+        "startChar": 1,
+        "endLine": 78,
+        "endChar": 31
+      },
+      "revId": "be77b7acfbdac0c8e272ff8461b0871926b42857",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_a865b245",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/service/AAIProducerClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-11T07:19:22Z",
+      "side": 1,
+      "message": "you have got a gson converter from model to string, why u want to use apache commons? more libraries then jar weight will be bigger",
+      "range": {
+        "startLine": 115,
+        "startChar": 25,
+        "endLine": 115,
+        "endChar": 77
+      },
+      "revId": "be77b7acfbdac0c8e272ff8461b0871926b42857",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_0856265c",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/service/AAIProducerClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-11T07:19:22Z",
+      "side": 1,
+      "message": "put apache commons to trash",
+      "range": {
+        "startLine": 116,
+        "startChar": 49,
+        "endLine": 116,
+        "endChar": 71
+      },
+      "revId": "be77b7acfbdac0c8e272ff8461b0871926b42857",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_2851a261",
+        "filename": "prh-aai-client/src/test/java/org/onap/dcaegen2/services/service/AAIProducerClientTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-11T07:19:22Z",
+      "side": 1,
+      "message": "rewrite this test class accoridng to this rules\n-https://dzone.com/articles/7-popular-unit-test-naming\n-https://solidsoft.wordpress.com/2017/05/16/importance-of-given-when-then-in-unit-tests-and-tdd/\n\nIt will be more human readable",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 88,
+        "endChar": 1
+      },
+      "revId": "be77b7acfbdac0c8e272ff8461b0871926b42857",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_e8465aa6",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AAIProducerTaskImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-11T07:19:22Z",
+      "side": 1,
+      "message": "If u want u can refactor this using java functional style :)",
+      "range": {
+        "startLine": 57,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 71
+      },
+      "revId": "be77b7acfbdac0c8e272ff8461b0871926b42857",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c84b5eaf",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AAIProducerTaskImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-11T07:19:22Z",
+      "side": 1,
+      "message": "@Override\n    void initConfigs() {\n        logger.trace(\"initConfigs for AAIProducerTaskImpl not needed/supported\");\n    }",
+      "range": {
+        "startLine": 78,
+        "startChar": 0,
+        "endLine": 81,
+        "endChar": 5
+      },
+      "revId": "be77b7acfbdac0c8e272ff8461b0871926b42857",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_48cf4e29",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/model/CommonFunctions.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-11T07:19:22Z",
+      "side": 1,
+      "message": "register this only once as static property",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 41
+      },
+      "revId": "be77b7acfbdac0c8e272ff8461b0871926b42857",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_68d24ad2",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/model/ConsumerDmaapModel.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-11T07:19:22Z",
+      "side": 1,
+      "message": "default access modifier for interface method is still public, useless public keyword here",
+      "range": {
+        "startLine": 41,
+        "startChar": 4,
+        "endLine": 41,
+        "endChar": 10
+      },
+      "revId": "be77b7acfbdac0c8e272ff8461b0871926b42857",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

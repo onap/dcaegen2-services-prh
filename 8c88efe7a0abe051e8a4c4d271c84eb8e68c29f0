@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_a8ccd235",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/DmaapPublisherTaskImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-11T07:19:22Z",
+      "side": 0,
+      "message": "Have you inserted DmaapPublisherRequestDetails in HttpDMaap client ?",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 60,
+        "endChar": 86
+      },
+      "revId": "8c88efe7a0abe051e8a4c4d271c84eb8e68c29f0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

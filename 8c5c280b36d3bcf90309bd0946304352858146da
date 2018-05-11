@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_4b074818",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/service/AAIConsumerClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-11T10:05:43Z",
+      "side": 1,
+      "message": "the same refactor as in AAIProducer.class",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 76,
+        "endChar": 5
+      },
+      "revId": "8c5c280b36d3bcf90309bd0946304352858146da",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_cb3118ee",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/DmaapPublisherTaskImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-11T10:05:43Z",
+      "side": 1,
+      "message": "update as you can",
+      "range": {
+        "startLine": 43,
+        "startChar": 65,
+        "endLine": 43,
+        "endChar": 79
+      },
+      "revId": "8c5c280b36d3bcf90309bd0946304352858146da",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_8b28f086",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/model/CommonFunctions.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-11T10:05:43Z",
+      "side": 1,
+      "message": "inline this",
+      "range": {
+        "startLine": 27,
+        "startChar": 4,
+        "endLine": 28,
+        "endChar": 52
+      },
+      "revId": "8c5c280b36d3bcf90309bd0946304352858146da",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_eb2c1495",
+        "filename": "prh-dmaap-client/src/main/java/org/onap/dcaegen2/services/service/producer/ExtendedDmaapProducerHttpClientImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-11T10:05:43Z",
+      "side": 1,
+      "message": "bad practice of returning nullable values",
+      "range": {
+        "startLine": 123,
+        "startChar": 11,
+        "endLine": 123,
+        "endChar": 23
+      },
+      "revId": "8c5c280b36d3bcf90309bd0946304352858146da",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

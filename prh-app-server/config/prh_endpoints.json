@@ -4,7 +4,7 @@
       "dmaapConsumerConfiguration": {
         "dmaapHostName": "localhost",
         "dmaapPortNumber": 2222,
-        "dmaapTopicName": "temp",
+        "dmaapTopicName": "/events/unauthenticated.SEC_OTHER_OUTPUT",
         "dmaapProtocol": "http",
         "dmaapUserName": "admin",
         "dmaapUserPassword": "admin",
@@ -32,7 +32,7 @@
         "aaiUserName": "admin",
         "aaiUserPassword": "admin",
         "aaiIgnoreSSLCertificateErrors": true,
-        "aaiBasePath": "/aai/v11",
+        "aaiBasePath": "/aai/v12",
         "aaiPnfPath": "/network/pnfs/pnf",
         "aaiHeaders": {
           "X-FromAppId": "prh",

@@ -52,13 +52,13 @@ public class AAIConsumerClient {
     private final Map<String,String> aaiHeaders;
 
 
-    public AAIConsumerClient(AAIClientConfiguration aaiHttpClientConfiguration) {
-        closeableHttpClient = new AAIClientImpl(aaiHttpClientConfiguration).getAAIHttpClient();
-        aaiHost = aaiHttpClientConfiguration.aaiHost();
-        aaiProtocol = aaiHttpClientConfiguration.aaiProtocol();
-        aaiHostPortNumber = aaiHttpClientConfiguration.aaiHostPortNumber();
-        aaiPath = aaiHttpClientConfiguration.aaiBasePath() + aaiHttpClientConfiguration.aaiPnfPath();
-        aaiHeaders = aaiHttpClientConfiguration.aaiHeaders();
+    public AAIConsumerClient(AAIClientConfiguration aaiClientConfiguration) {
+        closeableHttpClient = new AAIClientImpl(aaiClientConfiguration).getAAIHttpClient();
+        aaiHost = aaiClientConfiguration.aaiHost();
+        aaiProtocol = aaiClientConfiguration.aaiProtocol();
+        aaiHostPortNumber = aaiClientConfiguration.aaiHostPortNumber();
+        aaiPath = aaiClientConfiguration.aaiBasePath() + aaiClientConfiguration.aaiPnfPath();
+        aaiHeaders = aaiClientConfiguration.aaiHeaders();
     }
 
     public Optional<String> getHttpResponse(ConsumerDmaapModel consumerDmaapModel) throws IOException {

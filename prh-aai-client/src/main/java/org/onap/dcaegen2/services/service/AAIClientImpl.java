@@ -41,20 +41,20 @@ import java.security.NoSuchAlgorithmException;
 
 public class AAIClientImpl implements AAIClient {
 
-    Logger logger = LoggerFactory.getLogger(AAIClientImpl.class);
+    private Logger logger = LoggerFactory.getLogger(AAIClientImpl.class);
 
-    private AAIClientConfiguration aaiHttpClientConfig;
+    private AAIClientConfiguration aaiClientConfig;
 
 
-    public AAIClientImpl(AAIClientConfiguration aaiHttpClientConfiguration) {
-        this.aaiHttpClientConfig = aaiHttpClientConfiguration;
+    public AAIClientImpl(AAIClientConfiguration aaiClientConfiguration) {
+        this.aaiClientConfig = aaiClientConfiguration;
     }
 
     @Override
     public CloseableHttpClient getAAIHttpClient() {
 
         final HttpClientBuilder httpClientBuilder = HttpClients.custom().useSystemProperties();
-        final boolean aaiIgnoreSSLCertificateErrors = aaiHttpClientConfig.aaiIgnoreSSLCertificateErrors();
+        final boolean aaiIgnoreSSLCertificateErrors = aaiClientConfig.aaiIgnoreSSLCertificateErrors();
 
         TrustStrategy acceptingTrustStrategy = (cert, authType) -> true;
 
@@ -72,14 +72,14 @@ public class AAIClientImpl implements AAIClient {
             httpClientBuilder.setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE);
         }
 
-        final String aaiUserName = aaiHttpClientConfig.aaiUserName();
+        final String aaiUserName = aaiClientConfig.aaiUserName();
 
         final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
 
         if (aaiUserName != null) {
-            final String aaiHost = aaiHttpClientConfig.aaiHost();
-            final Integer aaiHostPortNumber = aaiHttpClientConfig.aaiHostPortNumber();
-            final String aaiUserPassword = aaiHttpClientConfig.aaiUserPassword();
+            final String aaiHost = aaiClientConfig.aaiHost();
+            final Integer aaiHostPortNumber = aaiClientConfig.aaiHostPortNumber();
+            final String aaiUserPassword = aaiClientConfig.aaiUserPassword();
             final AuthScope aaiHostPortAuthScope = new AuthScope(aaiHost, aaiHostPortNumber);
             final Credentials aaiCredentials = new UsernamePasswordCredentials(aaiUserName, aaiUserPassword);
             credentialsProvider.setCredentials(aaiHostPortAuthScope, aaiCredentials);

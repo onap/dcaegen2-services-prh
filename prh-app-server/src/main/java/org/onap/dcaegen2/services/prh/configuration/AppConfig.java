@@ -88,28 +88,28 @@ public class AppConfig extends PrhAppConfig {
     @Value("${dmaap.dmaapProducerConfiguration.dmaapContentType:}")
     public String producerDmaapContentType;
 
-    @Value("${aai.aaiHttpClientConfiguration.aaiHost:}")
+    @Value("${aai.aaiClientConfiguration.aaiHost:}")
     public String aaiHost;
 
-    @Value("${aai.aaiHttpClientConfiguration.aaiHostPortNumber:}")
+    @Value("${aai.aaiClientConfiguration.aaiHostPortNumber:}")
     public Integer aaiHostPortNumber;
 
-    @Value("${aai.aaiHttpClientConfiguration.aaiProtocol:}")
+    @Value("${aai.aaiClientConfiguration.aaiProtocol:}")
     public String aaiProtocol;
 
-    @Value("${aai.aaiHttpClientConfiguration.aaiUserName:}")
+    @Value("${aai.aaiClientConfiguration.aaiUserName:}")
     public String aaiUserName;
 
-    @Value("${aai.aaiHttpClientConfiguration.aaiUserPassword:}")
+    @Value("${aai.aaiClientConfiguration.aaiUserPassword:}")
     public String aaiUserPassword;
 
-    @Value("${aai.aaiHttpClientConfiguration.aaiIgnoreSSLCertificateErrors:}")
+    @Value("${aai.aaiClientConfiguration.aaiIgnoreSSLCertificateErrors:}")
     public Boolean aaiIgnoreSSLCertificateErrors;
 
-    @Value("${aai.aaiHttpClientConfiguration.aaiBasePath:}")
+    @Value("${aai.aaiClientConfiguration.aaiBasePath:}")
     public String aaiBasePath;
 
-    @Value("${aai.aaiHttpClientConfiguration.aaiPnfPath:}")
+    @Value("${aai.aaiClientConfiguration.aaiPnfPath:}")
     public String aaiPnfPath;
 
     @Override

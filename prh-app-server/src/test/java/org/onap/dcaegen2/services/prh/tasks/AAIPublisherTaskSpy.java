@@ -21,6 +21,7 @@ package org.onap.dcaegen2.services.prh.tasks;
 
 import org.onap.dcaegen2.services.config.AAIClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
+import org.onap.dcaegen2.services.service.AAIProducerClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -36,8 +37,12 @@ public class AAIPublisherTaskSpy {
     @Bean
     @Primary
     public AAIProducerTask registerSimpleAAIPublisherTask() {
-        AppConfig appConfig = mock(AppConfig.class);
-        when(appConfig.getAAIClientConfiguration()).thenReturn(mock(AAIClientConfiguration.class));
-        return spy(new AAIProducerTaskImpl(appConfig));
+        AppConfig appConfig = spy(AppConfig.class);
+        doReturn(mock(AAIClientConfiguration.class)).when(appConfig).getAAIClientConfiguration();
+        AAIProducerTaskImpl aaiProducerTask = spy(new AAIProducerTaskImpl(appConfig));
+        AAIProducerClient aaiProducerClient = mock(AAIProducerClient.class);
+        doReturn(mock(AAIClientConfiguration.class)).when(aaiProducerTask).resolveConfiguration();
+        doReturn(aaiProducerClient).when(aaiProducerTask).resolveClient();
+        return aaiProducerTask;
     }
 }

@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_e0de656c",
+        "filename": "prh-app-server/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2018-05-16T11:51:00Z",
+      "side": 1,
+      "message": "same dependency copy-paste?",
+      "range": {
+        "startLine": 276,
+        "startChar": 4,
+        "endLine": 295,
+        "endChar": 17
+      },
+      "revId": "875fd1db889786066c9e00d6125986dfa41226a0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c0b6c924",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AAIConsumerTaskImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2018-05-16T11:51:00Z",
+      "side": 1,
+      "message": "Is it just method draft?",
+      "range": {
+        "startLine": 42,
+        "startChar": 4,
+        "endLine": 45,
+        "endChar": 5
+      },
+      "revId": "875fd1db889786066c9e00d6125986dfa41226a0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_800a01d0",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AAIProducerTaskImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2018-05-16T11:51:00Z",
+      "side": 1,
+      "message": "Cannot use response isEmpty() ?",
+      "range": {
+        "startLine": 55,
+        "startChar": 12,
+        "endLine": 57,
+        "endChar": 13
+      },
+      "revId": "875fd1db889786066c9e00d6125986dfa41226a0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

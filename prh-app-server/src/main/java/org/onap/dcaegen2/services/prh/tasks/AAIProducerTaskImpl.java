@@ -19,6 +19,7 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
+import java.util.Optional;
 import org.onap.dcaegen2.services.config.AAIClientConfiguration;
 import org.onap.dcaegen2.services.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
@@ -54,8 +55,11 @@ public class AAIProducerTaskImpl extends AAIProducerTask<AAIClientConfiguration,
         logger.trace("Method %M called with arg {}", consumerDmaapModel);
         AAIProducerClient producerClient = new AAIProducerClient(resolveConfiguration());
         try {
-            return  producerClient.getHttpResponse(consumerDmaapModel)
-                    .filter(HttpUtils::isSuccessfulResponseCode);
+            return producerClient.getHttpResponse(consumerDmaapModel)
+                .filter(HttpUtils::isSuccessfulResponseCode)
+                .map(responseCode -> consumerDmaapModel)
+                .orElseThrow(() -> new AAINotFoundException(
+                    "Incorrect response code for continuation of tasks workflow"));
         } catch (IOException e) {
             logger.warn("Patch request not successful", e);
             throw new AAINotFoundException("Patch request not successful");

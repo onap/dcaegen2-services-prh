@@ -28,5 +28,5 @@ public abstract class AAIProducerTask<T, U, V> extends Task {
 
     protected abstract V publish(U message) throws AAINotFoundException;
 
-    protected abstract T resolveConfiguration();
+    protected abstract T resolveClient();
 }

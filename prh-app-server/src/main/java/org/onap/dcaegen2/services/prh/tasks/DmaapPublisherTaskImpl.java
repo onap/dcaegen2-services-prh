@@ -19,11 +19,7 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
-import com.google.gson.Gson;
-import org.onap.dcaegen2.services.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.configuration.AppConfig;
-import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.service.producer.ExtendedDmaapProducerHttpClientImpl;
@@ -38,26 +34,22 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class DmaapPublisherTaskImpl extends
-        DmaapPublisherTask<DmaapPublisherConfiguration, ConsumerDmaapModel> {
+    DmaapPublisherTask<ConsumerDmaapModel> {
 
     private static final Logger logger = LoggerFactory.getLogger(DmaapPublisherTaskImpl.class);
-    private static final Gson gson = new Gson();
-    private final Config prhAppConfig;
+    private final ExtendedDmaapProducerHttpClientImpl dmaapProducerHttpClient;
 
     @Autowired
-    public DmaapPublisherTaskImpl(AppConfig prhAppConfig) {
-        this.prhAppConfig = prhAppConfig;
+    public DmaapPublisherTaskImpl(ExtendedDmaapProducerHttpClientImpl extendedDmaapProducerHttpClient) {
+        this.dmaapProducerHttpClient = extendedDmaapProducerHttpClient;
     }
 
     @Override
     protected String publish(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException {
         logger.trace("Method %M called with arg {}", consumerDmaapModel);
-        ExtendedDmaapProducerHttpClientImpl dmaapProducerHttpClient = new ExtendedDmaapProducerHttpClientImpl(
-                resolveConfiguration());
-
         return dmaapProducerHttpClient.getHttpProducerResponse(consumerDmaapModel)
-                .filter(x -> !x.isEmpty() && x.equals(String.valueOf(HttpStatus.OK.value())))
-                .orElseThrow(() -> new DmaapNotFoundException("Incorrect response from Dmaap"));
+            .filter(x -> !x.isEmpty() && x.equals(String.valueOf(HttpStatus.OK.value())))
+            .orElseThrow(() -> new DmaapNotFoundException("Incorrect response from Dmaap"));
     }
 
     @Override
@@ -72,10 +64,5 @@ public class DmaapPublisherTaskImpl extends
     @Override
     void initConfigs() {
         logger.trace("initConfigs for DmaapPublisherTaskImpl not needed/supported");
-    }
-
-    @Override
-    protected DmaapPublisherConfiguration resolveConfiguration() {
-        return prhAppConfig.getDmaapPublisherConfiguration();
     }
 }

@@ -28,6 +28,7 @@
       "aaiClientConfiguration": {
         "aaiHost": "localhost",
         "aaiHostPortNumber": 8080,
+        "aaiIgnoreSSLCertificateErrors": true,
         "aaiProtocol": "https",
         "aaiUserName": "admin",
         "aaiUserPassword": "admin",
@@ -38,9 +39,32 @@
           "X-FromAppId": "prh",
           "X-TransactionId": "9999",
           "Accept": "application/json",
-          "Real-Time": "true",
-          "Authorization": "Basic QUFJOkFBSQ=="
+          "Real-Time": "true"
         }
+      }
+    },
+    "dmaap": {
+      "dmaapConsumerConfiguration": {
+        "consumerGroup": "other",
+        "consumerId": "1",
+        "dmaapContentType": "application/json",
+        "dmaapHostName": "localhost",
+        "dmaapPortNumber": 2222,
+        "dmaapProtocol": "http",
+        "dmaapTopicName": "/events/pnfReady",
+        "dmaapUserName": "admin",
+        "dmaapUserPassword": "admin",
+        "messageLimit": 1000,
+        "timeoutMS": 1000
+      },
+      "dmaapProducerConfiguration": {
+        "dmaapContentType": "application/json",
+        "dmaapHostName": "localhost",
+        "dmaapPortNumber": 2223,
+        "dmaapProtocol": "http",
+        "dmaapTopicName": "/events/pnfReady",
+        "dmaapUserName": "admin",
+        "dmaapUserPassword": "admin"
       }
     }
   }

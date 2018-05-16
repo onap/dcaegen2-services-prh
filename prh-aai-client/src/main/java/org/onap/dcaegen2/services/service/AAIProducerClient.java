@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -45,6 +45,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class AAIProducerClient implements AAIExtendedHttpClient {
+
     Logger logger = LoggerFactory.getLogger(AAIProducerClient.class);
 
     private final CloseableHttpClient closeableHttpClient;
@@ -52,7 +53,7 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
     private final String aaiProtocol;
     private final Integer aaiHostPortNumber;
     private final String aaiPath;
-    private final Map<String,String> aaiHeaders;
+    private final Map<String, String> aaiHeaders;
 
 
     public AAIProducerClient(AAIClientConfiguration aaiClientConfiguration) {
@@ -79,10 +80,10 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
     private URI createAAIExtendedURI(final String pnfName) {
         URI extendedURI = null;
         final URIBuilder uriBuilder = new URIBuilder()
-                .setScheme(aaiProtocol)
-                .setHost(aaiHost)
-                .setPort(aaiHostPortNumber)
-                .setPath(aaiPath + "/" + pnfName);
+            .setScheme(aaiProtocol)
+            .setHost(aaiHost)
+            .setPort(aaiHostPortNumber)
+            .setPath(aaiPath + "/" + pnfName);
         try {
             extendedURI = uriBuilder.build();
             logger.trace("Building extended URI: {}", extendedURI);
@@ -93,7 +94,7 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
     }
 
     private ResponseHandler<Optional<Integer>> aaiResponseHandler() {
-        return (HttpResponse httpResponse) ->  {
+        return (HttpResponse httpResponse) -> {
             final Integer responseCode = httpResponse.getStatusLine().getStatusCode();
             logger.trace("Status code of operation: {}", responseCode);
             final HttpEntity responseEntity = httpResponse.getEntity();
@@ -113,7 +114,8 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
         String jsonBody = CommonFunctions.createJsonBody(consumerDmaapModel);
 
         if (isExtendedURINotNull(extendedURI) && jsonBody != null && !"".equals(jsonBody)) {
-            return createHttpPatch(extendedURI, Optional.ofNullable(CommonFunctions.createJsonBody(consumerDmaapModel)));
+            return createHttpPatch(extendedURI,
+                Optional.ofNullable(CommonFunctions.createJsonBody(consumerDmaapModel)));
         } else {
             return null;
         }

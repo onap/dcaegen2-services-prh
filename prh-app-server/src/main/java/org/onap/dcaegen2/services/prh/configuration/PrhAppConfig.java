@@ -60,22 +60,6 @@ public abstract class PrhAppConfig implements Config {
     @NotEmpty
     private String filepath;
 
-
-    @Override
-    public DmaapConsumerConfiguration getDmaapConsumerConfiguration() {
-        return dmaapConsumerConfiguration;
-    }
-
-    @Override
-    public AAIClientConfiguration getAAIClientConfiguration() {
-        return aaiClientConfiguration;
-    }
-
-    @Override
-    public DmaapPublisherConfiguration getDmaapPublisherConfiguration() {
-        return dmaapPublisherConfiguration;
-    }
-
     @Override
     public void initFileStreamReader() {
 
@@ -123,6 +107,5 @@ public abstract class PrhAppConfig implements Config {
 
     public void setFilepath(String filepath) {
         this.filepath = filepath;
-    }
-
+    };
 }

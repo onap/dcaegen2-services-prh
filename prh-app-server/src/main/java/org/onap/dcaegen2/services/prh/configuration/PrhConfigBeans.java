@@ -17,35 +17,41 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.tasks;
+package org.onap.dcaegen2.services.prh.configuration;
 
-import static org.mockito.Mockito.spy;
-
+import org.onap.dcaegen2.services.service.AAIProducerClient;
+import org.onap.dcaegen2.services.service.consumer.ExtendedDmaapConsumerHttpClientImpl;
+import org.onap.dcaegen2.services.service.producer.ExtendedDmaapProducerHttpClientImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 
 /**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/5/18
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/15/18
  */
+
 @Configuration
-public class ScheduleControllerSpy {
+public class PrhConfigBeans {
 
-
-    @Autowired
-    private DmaapConsumerTask dmaapConsumerTaskImplSpy;
+    private AppConfig appConfig;
 
     @Autowired
-    private DmaapPublisherTask dmaapPublisherTaskImplSpy;
-
-    @Autowired
-    private AAIProducerTask aaiPublisherTaskImplSpy;
-
+    public PrhConfigBeans(AppConfig appConfig) {
+        this.appConfig = appConfig;
+    }
 
     @Bean
-    @Primary
-    public ScheduledTasks registerSimpleScheduledTask() {
-        return spy(new ScheduledTasks(dmaapConsumerTaskImplSpy, dmaapPublisherTaskImplSpy, aaiPublisherTaskImplSpy));
+    public AAIProducerClient createProducerClient() {
+        return new AAIProducerClient(appConfig.getAAIClientConfiguration());
+    }
+
+    @Bean
+    public ExtendedDmaapProducerHttpClientImpl createDmaapProducerClient() {
+        return new ExtendedDmaapProducerHttpClientImpl(appConfig.getDmaapPublisherConfiguration());
+    }
+
+    @Bean
+    public ExtendedDmaapConsumerHttpClientImpl createDmaapConsumerClient() {
+        return new ExtendedDmaapConsumerHttpClientImpl(appConfig.getDmaapConsumerConfiguration());
     }
 }

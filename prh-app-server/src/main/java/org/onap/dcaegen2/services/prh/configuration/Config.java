@@ -28,11 +28,11 @@ import org.onap.dcaegen2.services.config.DmaapPublisherConfiguration;
  */
 public interface Config {
 
-    DmaapConsumerConfiguration getDmaapConsumerConfiguration();
+    void initFileStreamReader();
 
     AAIClientConfiguration getAAIClientConfiguration();
 
     DmaapPublisherConfiguration getDmaapPublisherConfiguration();
 
-    void initFileStreamReader();
+    DmaapConsumerConfiguration getDmaapConsumerConfiguration();
 }

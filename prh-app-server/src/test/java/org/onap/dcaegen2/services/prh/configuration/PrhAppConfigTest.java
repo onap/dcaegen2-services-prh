@@ -86,23 +86,23 @@ class PrhAppConfigTest {
         prhAppConfig.setFilepath(filePath);
         doReturn(inputStream).when(prhAppConfig).getInputStream(any());
         prhAppConfig.initFileStreamReader();
-        appConfig.dmaapConsumerConfiguration = prhAppConfig.getDmaapConsumerConfiguration();
-        appConfig.dmaapPublisherConfiguration = prhAppConfig.getDmaapPublisherConfiguration();
-        appConfig.aaiClientConfiguration = prhAppConfig.getAAIClientConfiguration();
+        appConfig.dmaapConsumerConfiguration = prhAppConfig.dmaapConsumerConfiguration;
+        appConfig.dmaapPublisherConfiguration = prhAppConfig.dmaapPublisherConfiguration;
+        appConfig.aaiClientConfiguration = prhAppConfig.aaiClientConfiguration;
         //
         // Then
         //
         verify(prhAppConfig, times(1)).setFilepath(anyString());
         verify(prhAppConfig, times(1)).initFileStreamReader();
-        Assertions.assertNotNull(prhAppConfig.getAAIClientConfiguration());
-        Assertions.assertNotNull(prhAppConfig.getDmaapConsumerConfiguration());
-        Assertions.assertNotNull(prhAppConfig.getDmaapPublisherConfiguration());
+        Assertions.assertNotNull(prhAppConfig.aaiClientConfiguration);
+        Assertions.assertNotNull(prhAppConfig.dmaapConsumerConfiguration);
+        Assertions.assertNotNull(prhAppConfig.dmaapPublisherConfiguration);
         Assertions
-            .assertEquals(appConfig.getDmaapPublisherConfiguration(), prhAppConfig.getDmaapPublisherConfiguration());
+            .assertEquals(appConfig.dmaapPublisherConfiguration, prhAppConfig.dmaapPublisherConfiguration);
         Assertions
-            .assertEquals(appConfig.getDmaapConsumerConfiguration(), prhAppConfig.getDmaapConsumerConfiguration());
+            .assertEquals(appConfig.dmaapConsumerConfiguration, prhAppConfig.dmaapConsumerConfiguration);
         Assertions
-            .assertEquals(appConfig.getAAIClientConfiguration(), prhAppConfig.getAAIClientConfiguration());
+            .assertEquals(appConfig.aaiClientConfiguration, prhAppConfig.aaiClientConfiguration);
 
     }
 
@@ -122,9 +122,9 @@ class PrhAppConfigTest {
         //
         verify(prhAppConfig, times(1)).setFilepath(anyString());
         verify(prhAppConfig, times(1)).initFileStreamReader();
-        Assertions.assertNull(prhAppConfig.getAAIClientConfiguration());
-        Assertions.assertNull(prhAppConfig.getDmaapConsumerConfiguration());
-        Assertions.assertNull(prhAppConfig.getDmaapPublisherConfiguration());
+        Assertions.assertNull(prhAppConfig.aaiClientConfiguration);
+        Assertions.assertNull(prhAppConfig.dmaapConsumerConfiguration);
+        Assertions.assertNull(prhAppConfig.dmaapPublisherConfiguration);
 
     }
 
@@ -147,9 +147,9 @@ class PrhAppConfigTest {
         //
         verify(prhAppConfig, times(1)).setFilepath(anyString());
         verify(prhAppConfig, times(1)).initFileStreamReader();
-        Assertions.assertNotNull(prhAppConfig.getAAIClientConfiguration());
-        Assertions.assertNotNull(prhAppConfig.getDmaapConsumerConfiguration());
-        Assertions.assertNull(prhAppConfig.getDmaapPublisherConfiguration());
+        Assertions.assertNotNull(prhAppConfig.aaiClientConfiguration);
+        Assertions.assertNotNull(prhAppConfig.dmaapConsumerConfiguration);
+        Assertions.assertNull(prhAppConfig.dmaapPublisherConfiguration);
 
 
     }

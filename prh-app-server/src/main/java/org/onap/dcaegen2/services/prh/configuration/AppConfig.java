@@ -19,12 +19,16 @@
  */
 package org.onap.dcaegen2.services.prh.configuration;
 
-import org.onap.dcaegen2.services.config.*;
+import java.util.Optional;
+import org.onap.dcaegen2.services.config.AAIClientConfiguration;
+import org.onap.dcaegen2.services.config.DmaapConsumerConfiguration;
+import org.onap.dcaegen2.services.config.DmaapPublisherConfiguration;
+import org.onap.dcaegen2.services.config.ImmutableAAIClientConfiguration;
+import org.onap.dcaegen2.services.config.ImmutableDmaapConsumerConfiguration;
+import org.onap.dcaegen2.services.config.ImmutableDmaapPublisherConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/9/18

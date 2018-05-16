@@ -20,32 +20,28 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.config.AAIClientConfiguration;
-import org.onap.dcaegen2.services.prh.configuration.AppConfig;
-import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
+import org.onap.dcaegen2.services.service.AAIProducerClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
-public class AAIConsumerTaskImpl extends AAIConsumerTask<AAIClientConfiguration> {
+public class AAIConsumerTaskImpl extends AAIConsumerTask {
 
     private static final Logger logger = LoggerFactory.getLogger(AAIConsumerTaskImpl.class);
 
-    private final Config prhAppConfig;
-    private Optional<String> response;
+    private AAIProducerClient aaiProducerClient;
 
     @Autowired
-    public AAIConsumerTaskImpl(AppConfig prhAppConfig) {
-        this.prhAppConfig = prhAppConfig;
+    public AAIConsumerTaskImpl(AAIProducerClient aaiProducerClient) {
+        this.aaiProducerClient = aaiProducerClient;
     }
 
     @Override
-    protected void consume() throws AAINotFoundException {
+    protected void consume() {
+        logger.trace(aaiProducerClient.toString());
     }
 
     @Override
@@ -57,10 +53,5 @@ public class AAIConsumerTaskImpl extends AAIConsumerTask<AAIClientConfiguration>
     @Override
     void initConfigs() {
         logger.trace("initConfigs for AAIConsumerTaskImpl not needed/supported");
-    }
-
-    @Override
-    protected AAIClientConfiguration resolveConfiguration() {
-        return prhAppConfig.getAAIClientConfiguration();
     }
 }

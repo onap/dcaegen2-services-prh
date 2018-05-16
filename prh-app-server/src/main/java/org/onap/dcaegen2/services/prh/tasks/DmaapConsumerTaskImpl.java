@@ -20,9 +20,7 @@
 package org.onap.dcaegen2.services.prh.tasks;
 
 import org.onap.dcaegen2.services.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.config.DmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.prh.configuration.AppConfig;
-import org.onap.dcaegen2.services.prh.configuration.Config;
+import org.onap.dcaegen2.services.prh.configuration.PrhAppConfig;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 
@@ -37,16 +35,19 @@ import org.springframework.stereotype.Component;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
 @Component
-public class DmaapConsumerTaskImpl extends DmaapConsumerTask<DmaapConsumerConfiguration, String, ConsumerDmaapModel> {
+public class DmaapConsumerTaskImpl extends DmaapConsumerTask<String, ConsumerDmaapModel> {
 
 
     private static final Logger logger = LoggerFactory.getLogger(DmaapConsumerTaskImpl.class);
 
-    private final Config prhAppConfig;
+    private ExtendedDmaapConsumerHttpClientImpl extendedDmaapConsumerHttpClient;
+    private PrhAppConfig prhAppConfig;
 
     @Autowired
-    public DmaapConsumerTaskImpl(AppConfig prhAppConfig) {
-        this.prhAppConfig = prhAppConfig;
+    public DmaapConsumerTaskImpl(ExtendedDmaapConsumerHttpClientImpl extendedDmaapConsumerHttpClient,
+        PrhAppConfig appConfig) {
+        this.extendedDmaapConsumerHttpClient = extendedDmaapConsumerHttpClient;
+        this.prhAppConfig = appConfig;
     }
 
     @Override
@@ -58,15 +59,8 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask<DmaapConsumerConfig
     @Override
     public Object execute(Object object) throws PrhTaskException {
         logger.trace("Method %M called with arg {}", object);
-        ExtendedDmaapConsumerHttpClientImpl dmaapConsumerHttpClient = new ExtendedDmaapConsumerHttpClientImpl(
-            resolveConfiguration());
-        return consume((dmaapConsumerHttpClient.getHttpConsumerResponse().orElseThrow(() ->
+        return consume((extendedDmaapConsumerHttpClient.getHttpConsumerResponse().orElseThrow(() ->
             new PrhTaskException("DmaapConsumerTask has returned null"))));
-    }
-
-    @Override
-    protected DmaapConsumerConfiguration resolveConfiguration() {
-        return prhAppConfig.getDmaapConsumerConfiguration();
     }
 
     @Override

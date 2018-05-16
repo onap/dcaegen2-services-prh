@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -22,9 +22,7 @@ package org.onap.dcaegen2.services.prh.tasks;
 
 import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
 
-public abstract class AAIConsumerTask<T> extends Task {
+public abstract class AAIConsumerTask extends Task {
 
     protected abstract void consume() throws AAINotFoundException;
-
-    protected abstract T resolveConfiguration();
 }

@@ -72,7 +72,7 @@ public class ExtendedDmaapConsumerHttpClientImpl {
         try {
             extendedDetails = closeableHttpClient.execute(request.get(), dmaapConsumerResponseHandler());
         } catch (IOException | NullPointerException e) {
-            logger.error("Exception while executing HTTP request: {}", e);
+            logger.warn("Exception while executing HTTP request: ", e);
         }
 
         return extendedDetails;
@@ -115,7 +115,7 @@ public class ExtendedDmaapConsumerHttpClientImpl {
                 .setPort(dmaapPortNumber)
                 .setPath(createRequestPath()).build();
         } catch (URISyntaxException e) {
-            throw new RuntimeException("Exception while building extended URI: {}", e);
+            throw new RuntimeException("Exception while building extended URI: ", e);
         }
     }
 
@@ -131,7 +131,7 @@ public class ExtendedDmaapConsumerHttpClientImpl {
                 return Optional.of(dmaapResponse);
             } else {
                 String dmaapResponse = responseEntity != null ? EntityUtils.toString(responseEntity) : "";
-                logger.error("HTTP response not successful : {}", dmaapResponse);
+                logger.warn("HTTP response not successful : {}", dmaapResponse);
                 return Optional.of(String.valueOf(responseCode));
             }
         };

@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_cffa72bc",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/Task.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 2999
+      },
+      "writtenOn": "2018-05-17T09:55:30Z",
+      "side": 1,
+      "message": "Unused import",
+      "revId": "edd9f054385bb3b6f6c328f77b9f1ad031d7f2b7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_eff5eeca",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/AAIConsumerTaskImplTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 2999
+      },
+      "writtenOn": "2018-05-17T09:55:30Z",
+      "side": 1,
+      "message": "change to current v12 version",
+      "range": {
+        "startLine": 53,
+        "startChar": 49,
+        "endLine": 53,
+        "endChar": 52
+      },
+      "revId": "edd9f054385bb3b6f6c328f77b9f1ad031d7f2b7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_8f00eaab",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/AAIConsumerTaskImplTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 2999
+      },
+      "writtenOn": "2018-05-17T09:55:30Z",
+      "side": 1,
+      "message": "v12",
+      "range": {
+        "startLine": 57,
+        "startChar": 50,
+        "endLine": 57,
+        "endChar": 53
+      },
+      "revId": "edd9f054385bb3b6f6c328f77b9f1ad031d7f2b7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

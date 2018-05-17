@@ -18,46 +18,58 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.service.config;
+package org.onap.dcaegen2.services.prh.service.config;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.onap.dcaegen2.services.config.DmaapPublisherConfiguration;
-import org.onap.dcaegen2.services.config.ImmutableDmaapPublisherConfiguration;
+import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
+import org.onap.dcaegen2.services.prh.config.ImmutableDmaapConsumerConfiguration;
 
-public class DmaapPublisherConfigurationTest {
-
-    // Given
-    private DmaapPublisherConfiguration configuration;
-    private String dmaapHostName = "localhost";
-    private Integer dmaapPortNumber = 2222;
-    private String dmaapTopicName = "temp";
-    private String dmaapProtocol = "http";
-    private String dmaapUserName = "admin";
-    private String dmaapUserPassword = "admin";
-    private String dmaapContentType = "application/json";
-
+public class DmaapConsumerConfigurationTest {
 
     @Test
     public void builder_shouldBuildConfigurationObject() {
+
+        // Given
+        DmaapConsumerConfiguration configuration;
+        String consumerId = "1";
+        String dmaapHostName = "localhost";
+        Integer dmaapPortNumber = 2222;
+        String dmaapTopicName = "temp";
+        String dmaapProtocol = "http";
+        String dmaapUserName = "admin";
+        String dmaapUserPassword = "admin";
+        String dmaapContentType = "application/json";
+        String consumerGroup = "other";
+        Integer timeoutMs = 1000;
+        Integer messageLimit = 1000;
+
         // When
-        configuration = new ImmutableDmaapPublisherConfiguration.Builder()
-                .dmaapHostName(dmaapHostName)
-                .dmaapPortNumber(dmaapPortNumber)
-                .dmaapTopicName(dmaapTopicName)
-                .dmaapProtocol(dmaapProtocol)
-                .dmaapUserName(dmaapUserName)
-                .dmaapUserPassword(dmaapUserPassword)
-                .dmaapContentType(dmaapContentType)
-                .build();
+        configuration = new ImmutableDmaapConsumerConfiguration.Builder()
+            .consumerId(consumerId)
+            .dmaapHostName(dmaapHostName)
+            .dmaapPortNumber(dmaapPortNumber)
+            .dmaapTopicName(dmaapTopicName)
+            .dmaapProtocol(dmaapProtocol)
+            .dmaapUserName(dmaapUserName)
+            .dmaapUserPassword(dmaapUserPassword)
+            .dmaapContentType(dmaapContentType)
+            .consumerGroup(consumerGroup)
+            .timeoutMS(timeoutMs)
+            .messageLimit(messageLimit)
+            .build();
 
         // Then
         Assertions.assertNotNull(configuration);
+        Assertions.assertEquals(consumerId, configuration.consumerId());
         Assertions.assertEquals(dmaapHostName, configuration.dmaapHostName());
         Assertions.assertEquals(dmaapPortNumber, configuration.dmaapPortNumber());
         Assertions.assertEquals(dmaapTopicName, configuration.dmaapTopicName());
         Assertions.assertEquals(dmaapProtocol, configuration.dmaapProtocol());
         Assertions.assertEquals(dmaapUserName, configuration.dmaapUserName());
         Assertions.assertEquals(dmaapUserPassword, configuration.dmaapUserPassword());
+        Assertions.assertEquals(consumerGroup, configuration.consumerGroup());
+        Assertions.assertEquals(timeoutMs, configuration.timeoutMS());
+        Assertions.assertEquals(messageLimit, configuration.messageLimit());
     }
 }

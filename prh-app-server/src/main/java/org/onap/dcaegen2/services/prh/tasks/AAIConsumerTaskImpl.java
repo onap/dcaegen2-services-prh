@@ -20,24 +20,25 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
+import java.io.IOException;
 import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.service.AAIConsumerClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
-public class AAIConsumerTaskImpl extends AAIConsumerTask<AAIClientConfiguration> {
+public class AAIConsumerTaskImpl extends AAIConsumerTask<AAIConsumerClient, ConsumerDmaapModel, Object> {
 
     private static final Logger logger = LoggerFactory.getLogger(AAIConsumerTaskImpl.class);
 
     private final Config prhAppConfig;
-    private Optional<String> response;
+    private AAIConsumerClient aaiConsumerClient;
 
     @Autowired
     public AAIConsumerTaskImpl(AppConfig prhAppConfig) {
@@ -45,13 +46,24 @@ public class AAIConsumerTaskImpl extends AAIConsumerTask<AAIClientConfiguration>
     }
 
     @Override
-    protected void consume() throws AAINotFoundException {
+    protected Object consume(ConsumerDmaapModel consumerDmaapModel) throws AAINotFoundException {
+        logger.trace("Method called with arg {}", consumerDmaapModel);
+        try {
+            return aaiConsumerClient.getHttpResponse(consumerDmaapModel);
+        } catch (IOException e) {
+            logger.warn("Get request not successful", e);
+            throw new AAINotFoundException("Get request not successful");
+        }
     }
 
     @Override
     public Object execute(Object object) throws AAINotFoundException {
-        consume();
-        return null;
+        setAAIClientConfig();
+        logger.trace("Method called with arg {}", object);
+        if (object instanceof ConsumerDmaapModel) {
+            return consume((ConsumerDmaapModel) object);
+        }
+        throw new AAINotFoundException("Incorrect object type");
     }
 
     @Override
@@ -59,8 +71,17 @@ public class AAIConsumerTaskImpl extends AAIConsumerTask<AAIClientConfiguration>
         logger.trace("initConfigs for AAIConsumerTaskImpl not needed/supported");
     }
 
-    @Override
-    protected AAIClientConfiguration resolveConfiguration() {
+
+    protected void setAAIClientConfig() {
+        aaiConsumerClient = resolveClient();
+    }
+
+    AAIClientConfiguration resolveConfiguration() {
         return prhAppConfig.getAAIClientConfiguration();
+    }
+
+    @Override
+    protected AAIConsumerClient resolveClient() {
+        return new AAIConsumerClient(resolveConfiguration());
     }
 }

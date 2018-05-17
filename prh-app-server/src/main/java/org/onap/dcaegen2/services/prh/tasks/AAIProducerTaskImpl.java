@@ -79,11 +79,11 @@ public class AAIProducerTaskImpl extends AAIProducerTask<AAIProducerClient, Cons
         logger.trace("initConfigs for AAIProducerTaskImpl not needed/supported");
     }
 
-    protected void setAAIClientConfig() {
+    void setAAIClientConfig() {
         aaiProducerClient = resolveClient();
     }
 
-    protected AAIClientConfiguration resolveConfiguration() {
+    AAIClientConfiguration resolveConfiguration() {
         return prhAppConfig.getAAIClientConfiguration();
     }
 

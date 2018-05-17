@@ -22,7 +22,7 @@ package org.onap.dcaegen2.services.prh.tasks;
 
 import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
 
-public abstract class AAIConsumerTask<T, U, V> extends Task {
+public abstract class AAIConsumerTask<T, U, V, Z> extends Task<Z> {
 
     protected abstract V consume(U message) throws AAINotFoundException;
 

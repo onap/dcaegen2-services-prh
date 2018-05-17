@@ -37,12 +37,14 @@ import org.springframework.stereotype.Component;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
 @Component
-public class DmaapConsumerTaskImpl extends DmaapConsumerTask<DmaapConsumerConfiguration, String, ConsumerDmaapModel> {
+public class DmaapConsumerTaskImpl extends
+    DmaapConsumerTask<ExtendedDmaapConsumerHttpClientImpl, String, ConsumerDmaapModel, DmaapConsumerConfiguration> {
 
 
     private static final Logger logger = LoggerFactory.getLogger(DmaapConsumerTaskImpl.class);
 
     private final Config prhAppConfig;
+    private ExtendedDmaapConsumerHttpClientImpl extendedDmaapConsumerHttpClient;
 
     @Autowired
     public DmaapConsumerTaskImpl(AppConfig prhAppConfig) {
@@ -57,20 +59,30 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask<DmaapConsumerConfig
 
     @Override
     public Object execute(Object object) throws PrhTaskException {
+        setDmaapClientConfig();
         logger.trace("Method called with arg {}", object);
-        ExtendedDmaapConsumerHttpClientImpl dmaapConsumerHttpClient = new ExtendedDmaapConsumerHttpClientImpl(
-            resolveConfiguration());
-        return consume((dmaapConsumerHttpClient.getHttpConsumerResponse().orElseThrow(() ->
+        return consume((extendedDmaapConsumerHttpClient.getHttpConsumerResponse().orElseThrow(() ->
             new PrhTaskException("DmaapConsumerTask has returned null"))));
     }
 
     @Override
-    protected DmaapConsumerConfiguration resolveConfiguration() {
+    void initConfigs() {
+        prhAppConfig.initFileStreamReader();
+    }
+
+    protected void setDmaapClientConfig() {
+        extendedDmaapConsumerHttpClient = resolveClient();
+    }
+
+    @Override
+    DmaapConsumerConfiguration resolveConfiguration() {
         return prhAppConfig.getDmaapConsumerConfiguration();
     }
 
     @Override
-    protected void initConfigs() {
-        prhAppConfig.initFileStreamReader();
+    protected ExtendedDmaapConsumerHttpClientImpl resolveClient() {
+        return new ExtendedDmaapConsumerHttpClientImpl(resolveConfiguration());
     }
+
+
 }

@@ -38,7 +38,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class DmaapPublisherTaskImpl extends
-        DmaapPublisherTask<DmaapPublisherConfiguration, ConsumerDmaapModel> {
+    DmaapPublisherTask<ExtendedDmaapProducerHttpClientImpl, ConsumerDmaapModel, DmaapPublisherConfiguration> {
 
     private static final Logger logger = LoggerFactory.getLogger(DmaapPublisherTaskImpl.class);
     private static final Gson gson = new Gson();
@@ -53,11 +53,11 @@ public class DmaapPublisherTaskImpl extends
     protected String publish(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException {
         logger.trace("Method called with arg {}", consumerDmaapModel);
         ExtendedDmaapProducerHttpClientImpl dmaapProducerHttpClient = new ExtendedDmaapProducerHttpClientImpl(
-                resolveConfiguration());
+            resolveConfiguration());
 
         return dmaapProducerHttpClient.getHttpProducerResponse(consumerDmaapModel)
-                .filter(x -> !x.isEmpty() && x.equals(String.valueOf(HttpStatus.OK.value())))
-                .orElseThrow(() -> new DmaapNotFoundException("Incorrect response from Dmaap"));
+            .filter(x -> !x.isEmpty() && x.equals(String.valueOf(HttpStatus.OK.value())))
+            .orElseThrow(() -> new DmaapNotFoundException("Incorrect response from Dmaap"));
     }
 
     @Override
@@ -70,12 +70,12 @@ public class DmaapPublisherTaskImpl extends
     }
 
     @Override
-    void initConfigs() {
-        logger.trace("initConfigs for DmaapPublisherTaskImpl not needed/supported");
+    DmaapPublisherConfiguration resolveConfiguration() {
+        return prhAppConfig.getDmaapPublisherConfiguration();
     }
 
     @Override
-    protected DmaapPublisherConfiguration resolveConfiguration() {
-        return prhAppConfig.getDmaapPublisherConfiguration();
+    protected ExtendedDmaapProducerHttpClientImpl resolveClient() {
+        return null;
     }
 }

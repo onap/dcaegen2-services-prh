@@ -33,7 +33,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AAIConsumerTaskImpl extends AAIConsumerTask<AAIConsumerClient, ConsumerDmaapModel, Object> {
+public class AAIConsumerTaskImpl extends
+    AAIConsumerTask<AAIConsumerClient, ConsumerDmaapModel, Object, AAIClientConfiguration> {
 
     private static final Logger logger = LoggerFactory.getLogger(AAIConsumerTaskImpl.class);
 
@@ -66,16 +67,11 @@ public class AAIConsumerTaskImpl extends AAIConsumerTask<AAIConsumerClient, Cons
         throw new AAINotFoundException("Incorrect object type");
     }
 
-    @Override
-    void initConfigs() {
-        logger.trace("initConfigs for AAIConsumerTaskImpl not needed/supported");
-    }
-
-
     protected void setAAIClientConfig() {
         aaiConsumerClient = resolveClient();
     }
 
+    @Override
     AAIClientConfiguration resolveConfiguration() {
         return prhAppConfig.getAAIClientConfiguration();
     }

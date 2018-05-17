@@ -110,7 +110,6 @@ class AAIConsumerTaskImplTest {
         when(aaiConsumerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
         doReturn(aaiConsumerClient).when(aaiConsumerTask).resolveClient();
         aaiConsumerTask.setAAIClientConfig();
-        aaiConsumerTask.initConfigs();
         response = aaiConsumerTask.execute(consumerDmaapModel);
 
         //then
@@ -133,7 +132,6 @@ class AAIConsumerTaskImplTest {
         when(aaiConsumerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
         doReturn(aaiConsumerClient).when(aaiConsumerTask).resolveClient();
         aaiConsumerTask.setAAIClientConfig();
-        aaiConsumerTask.initConfigs();
         try {
             response = aaiConsumerTask.execute(consumerDmaapModel);
         } catch (PrhTaskException e) {
@@ -158,7 +156,6 @@ class AAIConsumerTaskImplTest {
         when(aaiConsumerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
         doReturn(aaiConsumerClient).when(aaiConsumerTask).resolveClient();
         aaiConsumerTask.setAAIClientConfig();
-        aaiConsumerTask.initConfigs();
         try {
             response = aaiConsumerTask.execute(consumerDmaapModel);
         } catch (AAINotFoundException e) {

@@ -74,11 +74,6 @@ public class AAIProducerTaskImpl extends AAIProducerTask<AAIProducerClient, Cons
         throw new AAINotFoundException("Incorrect object type");
     }
 
-    @Override
-    void initConfigs() {
-        logger.trace("initConfigs for AAIProducerTaskImpl not needed/supported");
-    }
-
     void setAAIClientConfig() {
         aaiProducerClient = resolveClient();
     }

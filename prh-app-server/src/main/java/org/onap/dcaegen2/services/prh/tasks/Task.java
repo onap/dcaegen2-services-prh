@@ -26,7 +26,7 @@ import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
  */
 
 
-public abstract class Task {
+public abstract class Task<T> {
 
     private Task taskProcess;
 
@@ -44,5 +44,5 @@ public abstract class Task {
 
     abstract Object execute(Object object) throws PrhTaskException;
 
-    abstract void initConfigs();
+    abstract T resolveConfiguration();
 }

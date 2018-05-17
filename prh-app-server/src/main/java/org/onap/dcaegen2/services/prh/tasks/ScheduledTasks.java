@@ -33,9 +33,9 @@ public class ScheduledTasks {
 
     private static final Logger logger = LoggerFactory.getLogger(ScheduledTasks.class);
 
-    private final Task dmaapConsumerTask;
-    private final Task dmaapProducerTask;
-    private final Task aaiProducerTask;
+    private final DmaapConsumerTask dmaapConsumerTask;
+    private final DmaapPublisherTask dmaapProducerTask;
+    private final AAIProducerTask aaiProducerTask;
 
     @Autowired
     public ScheduledTasks(DmaapConsumerTask dmaapConsumerTask, DmaapPublisherTask dmaapPublisherTask,

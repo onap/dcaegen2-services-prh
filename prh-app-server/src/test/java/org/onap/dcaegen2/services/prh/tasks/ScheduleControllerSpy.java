@@ -32,7 +32,6 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 public class ScheduleControllerSpy {
 
-
     @Autowired
     private DmaapConsumerTask dmaapConsumerTaskImplSpy;
 
@@ -41,7 +40,6 @@ public class ScheduleControllerSpy {
 
     @Autowired
     private AAIProducerTask aaiPublisherTaskImplSpy;
-
 
     @Bean
     @Primary

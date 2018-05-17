@@ -19,13 +19,12 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
-import com.google.gson.Gson;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.producer.ExtendedDmaapProducerHttpClientImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,8 +40,8 @@ public class DmaapPublisherTaskImpl extends
     DmaapPublisherTask<ExtendedDmaapProducerHttpClientImpl, ConsumerDmaapModel, DmaapPublisherConfiguration> {
 
     private static final Logger logger = LoggerFactory.getLogger(DmaapPublisherTaskImpl.class);
-    private static final Gson gson = new Gson();
     private final Config prhAppConfig;
+    private ExtendedDmaapProducerHttpClientImpl extendedDmaapProducerHttpClient;
 
     @Autowired
     public DmaapPublisherTaskImpl(AppConfig prhAppConfig) {
@@ -52,10 +51,7 @@ public class DmaapPublisherTaskImpl extends
     @Override
     protected String publish(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException {
         logger.trace("Method called with arg {}", consumerDmaapModel);
-        ExtendedDmaapProducerHttpClientImpl dmaapProducerHttpClient = new ExtendedDmaapProducerHttpClientImpl(
-            resolveConfiguration());
-
-        return dmaapProducerHttpClient.getHttpProducerResponse(consumerDmaapModel)
+        return extendedDmaapProducerHttpClient.getHttpProducerResponse(consumerDmaapModel)
             .filter(x -> !x.isEmpty() && x.equals(String.valueOf(HttpStatus.OK.value())))
             .orElseThrow(() -> new DmaapNotFoundException("Incorrect response from Dmaap"));
     }
@@ -63,6 +59,7 @@ public class DmaapPublisherTaskImpl extends
     @Override
     public Object execute(Object object) throws PrhTaskException {
         if (object instanceof ConsumerDmaapModel) {
+            setDmaapClientConfig();
             logger.trace("Method called with arg {}", object);
             return publish((ConsumerDmaapModel) object);
         }
@@ -77,5 +74,9 @@ public class DmaapPublisherTaskImpl extends
     @Override
     protected ExtendedDmaapProducerHttpClientImpl resolveClient() {
         return null;
+    }
+
+    protected void setDmaapClientConfig() {
+        extendedDmaapProducerHttpClient = resolveClient();
     }
 }

@@ -22,6 +22,30 @@
       "revId": "269250a5700086cc68d20706ee6a9b345e0387be",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_ca42603d",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/DmaapPublisherTaskImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-17T13:06:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_6f1d5e72",
+      "range": {
+        "startLine": 59,
+        "startChar": 20,
+        "endLine": 59,
+        "endChar": 21
+      },
+      "revId": "269250a5700086cc68d20706ee6a9b345e0387be",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

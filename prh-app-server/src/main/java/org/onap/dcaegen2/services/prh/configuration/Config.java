@@ -19,9 +19,9 @@
  */
 package org.onap.dcaegen2.services.prh.configuration;
 
-import org.onap.dcaegen2.services.config.AAIClientConfiguration;
-import org.onap.dcaegen2.services.config.DmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.config.DmaapPublisherConfiguration;
+import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
+import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
+import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/25/18

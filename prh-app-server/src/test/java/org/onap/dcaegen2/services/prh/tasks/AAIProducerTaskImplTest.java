@@ -34,14 +34,14 @@ import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.onap.dcaegen2.services.config.AAIClientConfiguration;
-import org.onap.dcaegen2.services.config.ImmutableAAIClientConfiguration;
+import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
+import org.onap.dcaegen2.services.prh.config.ImmutableAAIClientConfiguration;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
-import org.onap.dcaegen2.services.service.AAIProducerClient;
+import org.onap.dcaegen2.services.prh.service.AAIProducerClient;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/14/18

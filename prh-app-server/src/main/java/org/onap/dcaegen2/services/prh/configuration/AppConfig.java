@@ -19,7 +19,7 @@
  */
 package org.onap.dcaegen2.services.prh.configuration;
 
-import org.onap.dcaegen2.services.config.*;
+import org.onap.dcaegen2.services.prh.config.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;

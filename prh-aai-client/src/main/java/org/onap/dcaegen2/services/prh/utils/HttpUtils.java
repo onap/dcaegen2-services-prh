@@ -1,6 +1,6 @@
-/*
+/*-
  * ============LICENSE_START=======================================================
- * PROJECT
+ * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
@@ -17,30 +17,15 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.tasks;
+package org.onap.dcaegen2.services.prh.utils;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
+import org.apache.http.HttpStatus;
 
-import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
-import org.onap.dcaegen2.services.prh.configuration.AppConfig;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+public final class HttpUtils implements HttpStatus {
 
-/**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
- */
-@Configuration
-public class DmaapProducerTaskSpy {
+    private HttpUtils() {}
 
-
-    @Bean
-    @Primary
-    public Task registerSimpleDmaapPublisherTask() {
-        AppConfig appConfig = mock(AppConfig.class);
-        when(appConfig.getDmaapPublisherConfiguration()).thenReturn(mock(DmaapPublisherConfiguration.class));
-        return spy(new DmaapPublisherTaskImpl(appConfig));
+    public static boolean isSuccessfulResponseCode(Integer statusCode) {
+        return statusCode >= 200 && statusCode < 300;
     }
 }

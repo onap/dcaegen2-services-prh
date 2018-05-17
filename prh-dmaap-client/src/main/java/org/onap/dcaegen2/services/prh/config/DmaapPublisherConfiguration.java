@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START=======================================================
- * PROJECT
+ * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
@@ -17,30 +17,27 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.tasks;
+package org.onap.dcaegen2.services.prh.config;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
-
-import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
-import org.onap.dcaegen2.services.prh.configuration.AppConfig;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import org.immutables.gson.Gson;
+import org.immutables.value.Value;
 
 /**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
-@Configuration
-public class DmaapProducerTaskSpy {
+@Value.Immutable(prehash = true)
+@Value.Style(builder = "new")
+@Gson.TypeAdapters
+public abstract class DmaapPublisherConfiguration implements DmaapCustomConfig {
 
+    private static final long serialVersionUID = 1L;
 
-    @Bean
-    @Primary
-    public Task registerSimpleDmaapPublisherTask() {
-        AppConfig appConfig = mock(AppConfig.class);
-        when(appConfig.getDmaapPublisherConfiguration()).thenReturn(mock(DmaapPublisherConfiguration.class));
-        return spy(new DmaapPublisherTaskImpl(appConfig));
+    interface Builder extends
+        DmaapCustomConfig.Builder<DmaapPublisherConfiguration, DmaapPublisherConfiguration.Builder> {
+
+    }
+
+    public static DmaapPublisherConfiguration.Builder builder() {
+        return ImmutableDmaapPublisherConfiguration.builder();
     }
 }

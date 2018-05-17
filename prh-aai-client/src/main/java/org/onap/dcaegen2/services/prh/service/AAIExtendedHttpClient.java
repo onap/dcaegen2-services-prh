@@ -1,6 +1,6 @@
-/*
+/*-
  * ============LICENSE_START=======================================================
- * PROJECT
+ * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
@@ -17,30 +17,15 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.tasks;
+package org.onap.dcaegen2.services.prh.service;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 
-import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
-import org.onap.dcaegen2.services.prh.configuration.AppConfig;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-
-/**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
- */
-@Configuration
-public class DmaapProducerTaskSpy {
+import java.io.IOException;
+import java.util.Optional;
 
 
-    @Bean
-    @Primary
-    public Task registerSimpleDmaapPublisherTask() {
-        AppConfig appConfig = mock(AppConfig.class);
-        when(appConfig.getDmaapPublisherConfiguration()).thenReturn(mock(DmaapPublisherConfiguration.class));
-        return spy(new DmaapPublisherTaskImpl(appConfig));
-    }
+@FunctionalInterface
+public interface AAIExtendedHttpClient {
+    Optional<Integer> getHttpResponse(ConsumerDmaapModel consumerDmaapModel) throws IOException;
 }

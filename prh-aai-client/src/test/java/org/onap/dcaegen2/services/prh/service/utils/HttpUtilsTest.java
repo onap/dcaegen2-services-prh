@@ -1,6 +1,6 @@
-/*
+/*-
  * ============LICENSE_START=======================================================
- * PROJECT
+ * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
@@ -17,30 +17,26 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.tasks;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
+package org.onap.dcaegen2.services.prh.service.utils;
 
-import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
-import org.onap.dcaegen2.services.prh.configuration.AppConfig;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import org.apache.http.HttpStatus;
+import org.junit.Test;
+import org.onap.dcaegen2.services.prh.utils.HttpUtils;
 
-/**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
- */
-@Configuration
-public class DmaapProducerTaskSpy {
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
 
 
-    @Bean
-    @Primary
-    public Task registerSimpleDmaapPublisherTask() {
-        AppConfig appConfig = mock(AppConfig.class);
-        when(appConfig.getDmaapPublisherConfiguration()).thenReturn(mock(DmaapPublisherConfiguration.class));
-        return spy(new DmaapPublisherTaskImpl(appConfig));
+public class HttpUtilsTest {
+
+    @Test
+    public void isSuccessfulResponseCode_shouldReturnTrue() {
+        assertTrue(HttpUtils.isSuccessfulResponseCode(HttpUtils.SC_ACCEPTED));
+    }
+
+    @Test
+    public void isSuccessfulResponseCode_shouldReturnFalse() {
+        assertFalse(HttpUtils.isSuccessfulResponseCode(HttpStatus.SC_BAD_GATEWAY));
     }
 }

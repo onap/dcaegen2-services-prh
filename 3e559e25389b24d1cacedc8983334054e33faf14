@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_b46f3f27",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/AppConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 2999
+      },
+      "writtenOn": "2018-05-17T08:07:15Z",
+      "side": 1,
+      "message": "AFAIK in other Onap projects wildcards in imports were not allowed",
+      "revId": "3e559e25389b24d1cacedc8983334054e33faf14",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_74653743",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/PrhAppConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 2999
+      },
+      "writtenOn": "2018-05-17T08:07:15Z",
+      "side": 1,
+      "message": "Wildcards",
+      "revId": "3e559e25389b24d1cacedc8983334054e33faf14",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_14587388",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/PrhAppConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 2999
+      },
+      "writtenOn": "2018-05-17T08:07:15Z",
+      "side": 1,
+      "message": "Wildcards",
+      "revId": "3e559e25389b24d1cacedc8983334054e33faf14",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

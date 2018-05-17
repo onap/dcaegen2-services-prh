@@ -20,11 +20,12 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
+import java.io.IOException;
 import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
 
-public abstract class AAIConsumerTask<T> extends Task {
+public abstract class AAIConsumerTask<T, U, V> extends Task {
 
-    protected abstract void consume() throws AAINotFoundException;
+    protected abstract V consume(U message) throws AAINotFoundException, IOException;
 
-    protected abstract T resolveConfiguration();
+    protected abstract T resolveClient();
 }

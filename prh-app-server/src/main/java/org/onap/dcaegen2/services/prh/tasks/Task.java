@@ -19,6 +19,7 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
+import java.io.IOException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 
 /**

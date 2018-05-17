@@ -17,7 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.utils;
+package org.onap.dcaegen2.services.prh.utils;
 
 import org.apache.http.HttpStatus;
 

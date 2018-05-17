@@ -22,7 +22,7 @@ package org.onap.dcaegen2.services.prh.service.utils;
 
 import org.apache.http.HttpStatus;
 import org.junit.Test;
-import org.onap.dcaegen2.services.utils.HttpUtils;
+import org.onap.dcaegen2.services.prh.utils.HttpUtils;
 
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;

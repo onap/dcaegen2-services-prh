@@ -51,13 +51,13 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask<DmaapConsumerConfig
 
     @Override
     protected ConsumerDmaapModel consume(String message) throws DmaapNotFoundException {
-        logger.trace("Method %M called with arg {}", message);
+        logger.trace("Method called with arg {}", message);
         return DmaapConsumerJsonParser.getJsonObject(message);
     }
 
     @Override
     public Object execute(Object object) throws PrhTaskException {
-        logger.trace("Method %M called with arg {}", object);
+        logger.trace("Method called with arg {}", object);
         ExtendedDmaapConsumerHttpClientImpl dmaapConsumerHttpClient = new ExtendedDmaapConsumerHttpClientImpl(
             resolveConfiguration());
         return consume((dmaapConsumerHttpClient.getHttpConsumerResponse().orElseThrow(() ->

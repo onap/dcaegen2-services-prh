@@ -51,7 +51,7 @@ public class DmaapPublisherTaskImpl extends
 
     @Override
     protected String publish(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException {
-        logger.trace("Method %M called with arg {}", consumerDmaapModel);
+        logger.trace("Method called with arg {}", consumerDmaapModel);
         ExtendedDmaapProducerHttpClientImpl dmaapProducerHttpClient = new ExtendedDmaapProducerHttpClientImpl(
                 resolveConfiguration());
 
@@ -63,7 +63,7 @@ public class DmaapPublisherTaskImpl extends
     @Override
     public Object execute(Object object) throws PrhTaskException {
         if (object instanceof ConsumerDmaapModel) {
-            logger.trace("Method %M called with arg {}", object);
+            logger.trace("Method called with arg {}", object);
             return publish((ConsumerDmaapModel) object);
         }
         throw new DmaapNotFoundException("Incorrect object type");

@@ -19,6 +19,7 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
+import java.io.IOException;
 import org.onap.dcaegen2.services.config.AAIClientConfiguration;
 import org.onap.dcaegen2.services.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
@@ -31,18 +32,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
 @Component
-public class AAIProducerTaskImpl extends AAIProducerTask<AAIClientConfiguration, ConsumerDmaapModel, Object> {
+public class AAIProducerTaskImpl extends AAIProducerTask<AAIProducerClient, ConsumerDmaapModel, Object> {
 
     private static final Logger logger = LoggerFactory.getLogger(AAIProducerTaskImpl.class);
 
     private final Config prhAppConfig;
-
+    private AAIProducerClient aaiProducerClient;
 
     @Autowired
     public AAIProducerTaskImpl(AppConfig prhAppConfig) {
@@ -51,11 +50,12 @@ public class AAIProducerTaskImpl extends AAIProducerTask<AAIClientConfiguration,
 
     @Override
     protected Object publish(ConsumerDmaapModel consumerDmaapModel) throws AAINotFoundException {
-        logger.trace("Method %M called with arg {}", consumerDmaapModel);
-        AAIProducerClient producerClient = new AAIProducerClient(resolveConfiguration());
+        logger.trace("Method called with arg {}", consumerDmaapModel);
+
         try {
-            return  producerClient.getHttpResponse(consumerDmaapModel)
-                    .filter(HttpUtils::isSuccessfulResponseCode);
+            return aaiProducerClient.getHttpResponse(consumerDmaapModel)
+                .filter(HttpUtils::isSuccessfulResponseCode).map(response -> consumerDmaapModel).orElseThrow(() ->
+                    new AAINotFoundException("Incorrect response code for continuation of tasks workflow"));
         } catch (IOException e) {
             logger.warn("Patch request not successful", e);
             throw new AAINotFoundException("Patch request not successful");
@@ -64,7 +64,8 @@ public class AAIProducerTaskImpl extends AAIProducerTask<AAIClientConfiguration,
 
     @Override
     public Object execute(Object object) throws AAINotFoundException {
-        logger.trace("Method %M called with arg {}", object);
+        setAAIClientConfig();
+        logger.trace("Method called with arg {}", object);
 
         if (object instanceof ConsumerDmaapModel) {
             return publish((ConsumerDmaapModel) object);
@@ -78,8 +79,16 @@ public class AAIProducerTaskImpl extends AAIProducerTask<AAIClientConfiguration,
         logger.trace("initConfigs for AAIProducerTaskImpl not needed/supported");
     }
 
-    @Override
+    protected void setAAIClientConfig() {
+        aaiProducerClient = resolveClient();
+    }
+
     protected AAIClientConfiguration resolveConfiguration() {
         return prhAppConfig.getAAIClientConfiguration();
+    }
+
+    @Override
+    protected AAIProducerClient resolveClient() {
+        return new AAIProducerClient(resolveConfiguration());
     }
 }

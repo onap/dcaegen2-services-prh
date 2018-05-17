@@ -226,7 +226,7 @@
               <exclude>**/*IT.java</exclude>
             </excludes>
             <!-- Sets the VM argument line used when unit tests are run. -->
-            <argLine>${surefireArgLine}</argLine>
+            <argLine>${argLine}</argLine>
           </configuration>
           <dependencies>
             <dependency>
@@ -321,6 +321,50 @@
           <artifactId>maven-resources-plugin</artifactId>
           <version>${resource.maven.plugin.version}</version>
         </plugin>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>default-prepare-agent</id>
+              <goals>
+                <goal>prepare-agent</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>report</id>
+              <phase>prepare-package</phase>
+              <goals>
+                <goal>report</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>check</id>
+              <goals>
+                <goal>check</goal>
+              </goals>
+              <configuration>
+                <rules>
+                  <rule>
+                    <element>CLASS</element>
+                    <limits>
+                      <limit>
+                        <counter>LINE</counter>
+                        <value>COVEREDRATIO</value>
+                        <!--<minimum>0.70</minimum>-->
+                      </limit>
+                      <limit>
+                        <counter>BRANCH</counter>
+                        <value>COVEREDRATIO</value>
+                        <!--<minimum>0.70</minimum>-->
+                      </limit>
+                    </limits>
+                  </rule>
+                </rules>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -354,6 +398,10 @@
         <artifactId>maven-javadoc-plugin</artifactId>
       </plugin>
 
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+      </plugin>
     </plugins>
   </build>
 

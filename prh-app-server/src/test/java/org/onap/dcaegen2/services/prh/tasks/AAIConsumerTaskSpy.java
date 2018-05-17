@@ -19,7 +19,7 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.config.AAIClientConfiguration;
+import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
 
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.springframework.context.annotation.Bean;

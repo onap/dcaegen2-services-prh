@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.model;
+package org.onap.dcaegen2.services.prh.model;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -19,7 +19,7 @@
  */
 package org.onap.dcaegen2.services.service;
 
-import org.onap.dcaegen2.services.model.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 
 import java.io.IOException;
 import java.util.Optional;

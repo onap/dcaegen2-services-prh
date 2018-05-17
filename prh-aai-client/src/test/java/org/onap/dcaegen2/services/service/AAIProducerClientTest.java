@@ -27,8 +27,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.config.AAIClientConfiguration;
-import org.onap.dcaegen2.services.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.model.ConsumerDmaapModelForUnitTest;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModelForUnitTest;
 
 
 import java.io.IOException;

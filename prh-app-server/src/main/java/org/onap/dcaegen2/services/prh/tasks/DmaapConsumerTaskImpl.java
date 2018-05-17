@@ -70,13 +70,13 @@ public class DmaapConsumerTaskImpl extends
         prhAppConfig.initFileStreamReader();
     }
 
-    protected void setDmaapClientConfig() {
-        extendedDmaapConsumerHttpClient = resolveClient();
-    }
-
     @Override
     DmaapConsumerConfiguration resolveConfiguration() {
         return prhAppConfig.getDmaapConsumerConfiguration();
+    }
+
+    protected void setDmaapClientConfig() {
+        extendedDmaapConsumerHttpClient = resolveClient();
     }
 
     @Override

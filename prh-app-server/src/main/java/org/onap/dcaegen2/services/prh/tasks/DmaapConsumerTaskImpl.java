@@ -19,7 +19,7 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.model.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;

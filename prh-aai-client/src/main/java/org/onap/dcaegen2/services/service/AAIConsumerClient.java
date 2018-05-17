@@ -28,7 +28,7 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.onap.dcaegen2.services.config.AAIClientConfiguration;
-import org.onap.dcaegen2.services.model.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.utils.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

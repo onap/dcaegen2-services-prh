@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -18,25 +18,19 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.model;
+package org.onap.dcaegen2.services.prh.model;
 
-public class ConsumerDmaapModelForUnitTest implements ConsumerDmaapModel {
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-    private String pnfName = "NOKnhfsadhff";
-    private String ipv4 = "11.22.33.155";
-    private String ipv6 = "2001:0db8:85a3:0000:0000:8a2e:0370:7334";
+public class CommonFunctions {
+
+    private static Gson gson = new GsonBuilder().create();
 
 
-    public String getPnfName() {
-        return pnfName;
+    private CommonFunctions() {}
+
+    public static String createJsonBody(ConsumerDmaapModel consumerDmaapModel) {
+        return gson.toJson(consumerDmaapModel);
     }
-
-    public String getIpv4() {
-        return ipv4;
-    }
-
-    public String getIpv6() {
-        return ipv6;
-    }
-
 }

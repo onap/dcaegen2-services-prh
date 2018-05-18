@@ -20,11 +20,14 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
+import java.util.Optional;
 import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.service.AAIConsumerClient;
 
-public abstract class AAIConsumerTask<T, U, V, Z> extends Task<Z> {
+public abstract class AAIConsumerTask<Request, Response, Conf> extends Task<Request, Response, Conf> {
 
-    protected abstract V consume(U message) throws AAINotFoundException;
+    abstract Optional<String> consume(ConsumerDmaapModel message) throws AAINotFoundException;
 
-    protected abstract T resolveClient();
+    abstract AAIConsumerClient resolveClient();
 }

@@ -82,7 +82,7 @@ class AAIProducerTaskImplTest {
     }
 
     @Test
-    public void whenPassedObjectDoesntFit_ThrowsPrhTaskException() throws IOException {
+    public void whenPassedObjectDoesntFit_ThrowsPrhTaskException() {
         //given
         Object response = null;
 
@@ -90,7 +90,7 @@ class AAIProducerTaskImplTest {
         when(appConfig.getAAIClientConfiguration()).thenReturn(aaiClientConfiguration);
         try {
             aaiProducerTask = new AAIProducerTaskImpl(appConfig);
-            response = aaiProducerTask.execute("Some string");
+            response = aaiProducerTask.execute(null);
         } catch (PrhTaskException e) {
             e.printStackTrace();
         }
@@ -111,7 +111,6 @@ class AAIProducerTaskImplTest {
         aaiProducerTask = spy(new AAIProducerTaskImpl(appConfig));
         when(aaiProducerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
         doReturn(aaiProducerClient).when(aaiProducerTask).resolveClient();
-        aaiProducerTask.setAAIClientConfig();
         response = aaiProducerTask.execute(consumerDmaapModel);
 
         //then
@@ -133,7 +132,6 @@ class AAIProducerTaskImplTest {
         aaiProducerTask = spy(new AAIProducerTaskImpl(appConfig));
         when(aaiProducerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
         doReturn(aaiProducerClient).when(aaiProducerTask).resolveClient();
-        aaiProducerTask.setAAIClientConfig();
         try {
             response = aaiProducerTask.execute(consumerDmaapModel);
         } catch (AAINotFoundException e) {
@@ -157,7 +155,6 @@ class AAIProducerTaskImplTest {
         aaiProducerTask = spy(new AAIProducerTaskImpl(appConfig));
         when(aaiProducerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
         doReturn(aaiProducerClient).when(aaiProducerTask).resolveClient();
-        aaiProducerTask.setAAIClientConfig();
         try {
             response = aaiProducerTask.execute(consumerDmaapModel);
         } catch (AAINotFoundException e) {

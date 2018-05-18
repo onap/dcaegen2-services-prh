@@ -33,6 +33,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
 import org.onap.dcaegen2.services.prh.config.ImmutableAAIClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
@@ -81,91 +82,66 @@ class AAIConsumerTaskImplTest {
     }
 
     @Test
-    public void whenPassedObjectDoesntFit_ThrowsPrhTaskException() throws IOException {
-        //given
-        Object response = null;
-
-        //when
+    public void whenPassedObjectDoesntFit_ThrowsPrhTaskException() {
+        //given/when
         when(appConfig.getAAIClientConfiguration()).thenReturn(aaiClientConfiguration);
-        try {
-            aaiConsumerTask = new AAIConsumerTaskImpl(appConfig);
-            response = aaiConsumerTask.execute("Some string");
-        } catch (PrhTaskException e) {
-            e.printStackTrace();
-        }
+        aaiConsumerTask = new AAIConsumerTaskImpl(appConfig);
+        Executable executableCode = () -> aaiConsumerTask.execute(null);
         //then
-        Assertions.assertNull(response);
+        Assertions
+            .assertThrows(PrhTaskException.class, executableCode, "Passing wrong object type to execute function");
+
     }
 
     @Test
     public void whenPassedObjectFits_ReturnsCorrectStatus() throws PrhTaskException, IOException {
-        //given
-        Object response;
-        aaiConsumerClient = mock(AAIConsumerClient.class);
-
-        //when
-        when(aaiConsumerClient.getHttpResponse(consumerDmaapModel)).thenReturn(Optional.of("200"));
-        when(appConfig.getAAIClientConfiguration()).thenReturn(aaiClientConfiguration);
-        aaiConsumerTask = spy(new AAIConsumerTaskImpl(appConfig));
-        when(aaiConsumerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
-        doReturn(aaiConsumerClient).when(aaiConsumerTask).resolveClient();
-        aaiConsumerTask.setAAIClientConfig();
-        response = aaiConsumerTask.execute(consumerDmaapModel);
+        //given/when
+        getAAIConsumerTask_WhenMockingHttpResponseCode("200", false);
+        String response = aaiConsumerTask.execute(consumerDmaapModel);
 
         //then
         verify(aaiConsumerClient, times(1)).getHttpResponse(any(ConsumerDmaapModel.class));
         verifyNoMoreInteractions(aaiConsumerClient);
-        Assertions.assertNotNull(response);
-        Assertions.assertEquals(Optional.of("200"), response);
-
+        Assertions.assertEquals("200", response);
     }
 
     @Test
-    public void whenPassedObjectFits_butIncorrectResponseReturns() throws IOException {
-        //given
-        Object response = null;
-        aaiConsumerClient = mock(AAIConsumerClient.class);
-        //when
-        when(aaiConsumerClient.getHttpResponse(consumerDmaapModel)).thenReturn(Optional.of("400"));
-        when(appConfig.getAAIClientConfiguration()).thenReturn(aaiClientConfiguration);
-        aaiConsumerTask = spy(new AAIConsumerTaskImpl(appConfig));
-        when(aaiConsumerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
-        doReturn(aaiConsumerClient).when(aaiConsumerTask).resolveClient();
-        aaiConsumerTask.setAAIClientConfig();
-        try {
-            response = aaiConsumerTask.execute(consumerDmaapModel);
-        } catch (PrhTaskException e) {
-            e.printStackTrace();
-        }
+    public void whenPassedObjectFits_butIncorrectResponseReturns() throws IOException, AAINotFoundException {
+        //given/when
+        getAAIConsumerTask_WhenMockingHttpResponseCode("400", false);
+        String response = aaiConsumerTask.execute(consumerDmaapModel);
 
         //then
         verify(aaiConsumerClient, times(1)).getHttpResponse(any(ConsumerDmaapModel.class));
         verifyNoMoreInteractions(aaiConsumerClient);
-        Assertions.assertEquals(Optional.of("400"), response);
+        Assertions.assertEquals("400", response);
     }
 
     @Test
     public void whenPassedObjectFits_ThrowsIOException() throws IOException {
-        //given
-        Object response = null;
+        //given/when
+        getAAIConsumerTask_WhenMockingHttpResponseCode(null, true);
+        Executable executableCode = () -> aaiConsumerTask.execute(any(ConsumerDmaapModel.class));
+        Assertions
+            .assertThrows(AAINotFoundException.class, executableCode, "HttpClient throws IOException");
+
+        //then
+        verifyNoMoreInteractions(aaiConsumerClient);
+    }
+
+
+    private static void getAAIConsumerTask_WhenMockingHttpResponseCode(String httpResponseCode, boolean throwsException)
+        throws IOException {
         aaiConsumerClient = mock(AAIConsumerClient.class);
-        //when
+        if (throwsException) {
+            when(aaiConsumerClient.getHttpResponse(consumerDmaapModel)).thenThrow(IOException.class);
+        } else {
+            when(aaiConsumerClient.getHttpResponse(consumerDmaapModel)).thenReturn(Optional.of(httpResponseCode));
+        }
         when(appConfig.getAAIClientConfiguration()).thenReturn(aaiClientConfiguration);
-        when(aaiConsumerClient.getHttpResponse(consumerDmaapModel)).thenThrow(IOException.class);
         aaiConsumerTask = spy(new AAIConsumerTaskImpl(appConfig));
         when(aaiConsumerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
         doReturn(aaiConsumerClient).when(aaiConsumerTask).resolveClient();
-        aaiConsumerTask.setAAIClientConfig();
-        try {
-            response = aaiConsumerTask.execute(consumerDmaapModel);
-        } catch (AAINotFoundException e) {
-            e.printStackTrace();
-        }
-
-        //then
-        verify(aaiConsumerClient, times(1)).getHttpResponse(any(ConsumerDmaapModel.class));
-        verifyNoMoreInteractions(aaiConsumerClient);
-        Assertions.assertNull(response);
     }
 
 }

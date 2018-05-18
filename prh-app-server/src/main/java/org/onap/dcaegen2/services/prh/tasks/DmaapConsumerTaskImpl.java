@@ -19,6 +19,7 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
+import java.util.Optional;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
@@ -38,11 +39,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class DmaapConsumerTaskImpl extends
-    DmaapConsumerTask<ExtendedDmaapConsumerHttpClientImpl, String, ConsumerDmaapModel, DmaapConsumerConfiguration> {
-
+    DmaapConsumerTask<String, ConsumerDmaapModel, DmaapConsumerConfiguration> {
 
     private static final Logger logger = LoggerFactory.getLogger(DmaapConsumerTaskImpl.class);
-
     private final Config prhAppConfig;
     private ExtendedDmaapConsumerHttpClientImpl extendedDmaapConsumerHttpClient;
 
@@ -52,14 +51,15 @@ public class DmaapConsumerTaskImpl extends
     }
 
     @Override
-    protected ConsumerDmaapModel consume(String message) throws DmaapNotFoundException {
+    ConsumerDmaapModel consume(String message) throws DmaapNotFoundException {
         logger.trace("Method called with arg {}", message);
         return DmaapConsumerJsonParser.getJsonObject(message);
     }
 
     @Override
-    public Object execute(Object object) throws PrhTaskException {
-        setDmaapClientConfig();
+    public ConsumerDmaapModel execute(String object) throws PrhTaskException {
+        extendedDmaapConsumerHttpClient = Optional.ofNullable(extendedDmaapConsumerHttpClient)
+            .orElseGet(this::resolveClient);
         logger.trace("Method called with arg {}", object);
         return consume((extendedDmaapConsumerHttpClient.getHttpConsumerResponse().orElseThrow(() ->
             new PrhTaskException("DmaapConsumerTask has returned null"))));
@@ -75,14 +75,8 @@ public class DmaapConsumerTaskImpl extends
         return prhAppConfig.getDmaapConsumerConfiguration();
     }
 
-    protected void setDmaapClientConfig() {
-        extendedDmaapConsumerHttpClient = resolveClient();
-    }
-
     @Override
-    protected ExtendedDmaapConsumerHttpClientImpl resolveClient() {
+    ExtendedDmaapConsumerHttpClientImpl resolveClient() {
         return new ExtendedDmaapConsumerHttpClientImpl(resolveConfiguration());
     }
-
-
 }

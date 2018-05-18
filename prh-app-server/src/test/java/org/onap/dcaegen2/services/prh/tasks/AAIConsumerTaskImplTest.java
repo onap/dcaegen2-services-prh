@@ -89,7 +89,7 @@ class AAIConsumerTaskImplTest {
         when(appConfig.getAAIClientConfiguration()).thenReturn(aaiClientConfiguration);
         try {
             aaiConsumerTask = new AAIConsumerTaskImpl(appConfig);
-            response = aaiConsumerTask.execute("Some string");
+            response = aaiConsumerTask.execute(null);
         } catch (PrhTaskException e) {
             e.printStackTrace();
         }
@@ -109,14 +109,13 @@ class AAIConsumerTaskImplTest {
         aaiConsumerTask = spy(new AAIConsumerTaskImpl(appConfig));
         when(aaiConsumerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
         doReturn(aaiConsumerClient).when(aaiConsumerTask).resolveClient();
-        aaiConsumerTask.setAAIClientConfig();
         response = aaiConsumerTask.execute(consumerDmaapModel);
 
         //then
         verify(aaiConsumerClient, times(1)).getHttpResponse(any(ConsumerDmaapModel.class));
         verifyNoMoreInteractions(aaiConsumerClient);
         Assertions.assertNotNull(response);
-        Assertions.assertEquals(Optional.of("200"), response);
+        Assertions.assertEquals("200", response);
 
     }
 
@@ -131,7 +130,6 @@ class AAIConsumerTaskImplTest {
         aaiConsumerTask = spy(new AAIConsumerTaskImpl(appConfig));
         when(aaiConsumerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
         doReturn(aaiConsumerClient).when(aaiConsumerTask).resolveClient();
-        aaiConsumerTask.setAAIClientConfig();
         try {
             response = aaiConsumerTask.execute(consumerDmaapModel);
         } catch (PrhTaskException e) {
@@ -141,7 +139,7 @@ class AAIConsumerTaskImplTest {
         //then
         verify(aaiConsumerClient, times(1)).getHttpResponse(any(ConsumerDmaapModel.class));
         verifyNoMoreInteractions(aaiConsumerClient);
-        Assertions.assertEquals(Optional.of("400"), response);
+        Assertions.assertEquals("400", response);
     }
 
     @Test
@@ -155,7 +153,6 @@ class AAIConsumerTaskImplTest {
         aaiConsumerTask = spy(new AAIConsumerTaskImpl(appConfig));
         when(aaiConsumerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
         doReturn(aaiConsumerClient).when(aaiConsumerTask).resolveClient();
-        aaiConsumerTask.setAAIClientConfig();
         try {
             response = aaiConsumerTask.execute(consumerDmaapModel);
         } catch (AAINotFoundException e) {

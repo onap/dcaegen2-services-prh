@@ -17,10 +17,10 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-
 package org.onap.dcaegen2.services.prh.tasks;
 
 import java.io.IOException;
+import java.util.Optional;
 import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
@@ -34,7 +34,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AAIConsumerTaskImpl extends
-    AAIConsumerTask<AAIConsumerClient, ConsumerDmaapModel, Object, AAIClientConfiguration> {
+    AAIConsumerTask<ConsumerDmaapModel, String, AAIClientConfiguration> {
 
     private static final Logger logger = LoggerFactory.getLogger(AAIConsumerTaskImpl.class);
 
@@ -47,7 +47,7 @@ public class AAIConsumerTaskImpl extends
     }
 
     @Override
-    protected Object consume(ConsumerDmaapModel consumerDmaapModel) throws AAINotFoundException {
+    Optional<String> consume(ConsumerDmaapModel consumerDmaapModel) throws AAINotFoundException {
         logger.trace("Method called with arg {}", consumerDmaapModel);
         try {
             return aaiConsumerClient.getHttpResponse(consumerDmaapModel);
@@ -58,17 +58,12 @@ public class AAIConsumerTaskImpl extends
     }
 
     @Override
-    public Object execute(Object object) throws AAINotFoundException {
-        setAAIClientConfig();
-        logger.trace("Method called with arg {}", object);
-        if (object instanceof ConsumerDmaapModel) {
-            return consume((ConsumerDmaapModel) object);
-        }
-        throw new AAINotFoundException("Incorrect object type");
-    }
-
-    protected void setAAIClientConfig() {
-        aaiConsumerClient = resolveClient();
+    public String execute(ConsumerDmaapModel consumerDmaapModel) throws AAINotFoundException {
+        consumerDmaapModel = Optional.ofNullable(consumerDmaapModel)
+            .orElseThrow(() -> new AAINotFoundException("Invoked null object to AAI task"));
+        logger.trace("Method called with arg {}", consumerDmaapModel);
+        aaiConsumerClient = Optional.ofNullable(aaiConsumerClient).orElseGet(this::resolveClient);
+        return consume(consumerDmaapModel).orElseThrow(() -> new AAINotFoundException("Null response code"));
     }
 
     @Override
@@ -77,7 +72,7 @@ public class AAIConsumerTaskImpl extends
     }
 
     @Override
-    protected AAIConsumerClient resolveClient() {
+    AAIConsumerClient resolveClient() {
         return new AAIConsumerClient(resolveConfiguration());
     }
 }

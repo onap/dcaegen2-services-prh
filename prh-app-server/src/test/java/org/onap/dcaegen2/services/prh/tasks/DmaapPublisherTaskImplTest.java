@@ -74,7 +74,7 @@ class DmaapPublisherTaskImplTest {
         when(appConfig.getDmaapPublisherConfiguration()).thenReturn(dmaapPublisherConfiguration);
         try {
             dmaapPublisherTask = new DmaapPublisherTaskImpl(appConfig);
-            response = dmaapPublisherTask.execute("");
+            response = dmaapPublisherTask.execute(null);
         } catch (PrhTaskException e) {
             e.printStackTrace();
         }

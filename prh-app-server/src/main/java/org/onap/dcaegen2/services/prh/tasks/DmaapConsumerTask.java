@@ -20,15 +20,17 @@
 package org.onap.dcaegen2.services.prh.tasks;
 
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.service.consumer.ExtendedDmaapConsumerHttpClientImpl;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
-public abstract class DmaapConsumerTask<T, U, V, Z> extends Task<Z> {
+abstract class DmaapConsumerTask<Request, Response, Config> extends Task<Request, Response, Config> {
 
-    protected abstract V consume(U message) throws DmaapNotFoundException;
+    abstract ConsumerDmaapModel consume(String message) throws DmaapNotFoundException;
 
-    protected abstract T resolveClient();
+    abstract ExtendedDmaapConsumerHttpClientImpl resolveClient();
 
     abstract void initConfigs();
 }

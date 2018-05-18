@@ -76,9 +76,8 @@ class DmaapConsumerTaskImplTest {
         dmaapConsumerTask = spy(new DmaapConsumerTaskImpl(appConfig));
         when(dmaapConsumerTask.resolveConfiguration()).thenReturn(dmaapConsumerConfiguration);
         doReturn(extendedDmaapConsumerHttpClient).when(dmaapConsumerTask).resolveClient();
-        dmaapConsumerTask.setDmaapClientConfig();
         try {
-            response = dmaapConsumerTask.execute(consumerDmaapModel);
+            response = dmaapConsumerTask.execute(null);
         } catch (PrhTaskException e) {
             e.printStackTrace();
         }
@@ -110,8 +109,7 @@ class DmaapConsumerTaskImplTest {
         dmaapConsumerTask = spy(new DmaapConsumerTaskImpl(appConfig));
         when(dmaapConsumerTask.resolveConfiguration()).thenReturn(dmaapConsumerConfiguration);
         doReturn(extendedDmaapConsumerHttpClient).when(dmaapConsumerTask).resolveClient();
-        dmaapConsumerTask.setDmaapClientConfig();
-        response = dmaapConsumerTask.execute(consumerDmaapModel);
+        response = dmaapConsumerTask.execute(null);
 
         //then
         verify(extendedDmaapConsumerHttpClient, times(1)).getHttpConsumerResponse();

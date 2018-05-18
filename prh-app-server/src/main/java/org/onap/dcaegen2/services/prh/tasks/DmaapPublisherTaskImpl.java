@@ -19,6 +19,7 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
+import java.util.Optional;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
@@ -37,7 +38,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class DmaapPublisherTaskImpl extends
-    DmaapPublisherTask<ExtendedDmaapProducerHttpClientImpl, ConsumerDmaapModel, DmaapPublisherConfiguration> {
+    DmaapPublisherTask<ConsumerDmaapModel, String, DmaapPublisherConfiguration> {
 
     private static final Logger logger = LoggerFactory.getLogger(DmaapPublisherTaskImpl.class);
     private final Config prhAppConfig;
@@ -49,7 +50,7 @@ public class DmaapPublisherTaskImpl extends
     }
 
     @Override
-    protected String publish(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException {
+    String publish(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException {
         logger.trace("Method called with arg {}", consumerDmaapModel);
         return extendedDmaapProducerHttpClient.getHttpProducerResponse(consumerDmaapModel)
             .filter(response -> !response.isEmpty() && response.equals(String.valueOf(HttpStatus.OK.value())))
@@ -57,13 +58,13 @@ public class DmaapPublisherTaskImpl extends
     }
 
     @Override
-    public Object execute(Object object) throws PrhTaskException {
-        if (object instanceof ConsumerDmaapModel) {
-            setDmaapClientConfig();
-            logger.trace("Method called with arg {}", object);
-            return publish((ConsumerDmaapModel) object);
-        }
-        throw new DmaapNotFoundException("Incorrect object type");
+    public String execute(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException {
+        consumerDmaapModel = Optional.ofNullable(consumerDmaapModel)
+            .orElseThrow(() -> new DmaapNotFoundException("Invoked null object to Dmaap task"));
+        extendedDmaapProducerHttpClient = Optional.ofNullable(extendedDmaapProducerHttpClient)
+            .orElseGet(this::resolveClient);
+        logger.trace("Method called with arg {}", consumerDmaapModel);
+        return publish(consumerDmaapModel);
     }
 
     @Override
@@ -72,11 +73,7 @@ public class DmaapPublisherTaskImpl extends
     }
 
     @Override
-    protected ExtendedDmaapProducerHttpClientImpl resolveClient() {
-        return null;
-    }
-
-    protected void setDmaapClientConfig() {
-        extendedDmaapProducerHttpClient = resolveClient();
+    ExtendedDmaapProducerHttpClientImpl resolveClient() {
+        return new ExtendedDmaapProducerHttpClientImpl(resolveConfiguration());
     }
 }

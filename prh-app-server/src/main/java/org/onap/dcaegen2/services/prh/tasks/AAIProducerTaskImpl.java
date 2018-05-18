@@ -20,7 +20,9 @@
 package org.onap.dcaegen2.services.prh.tasks;
 
 import java.io.IOException;
+import java.util.Optional;
 import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
+import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
@@ -36,7 +38,8 @@ import org.springframework.stereotype.Component;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
 @Component
-public class AAIProducerTaskImpl extends AAIProducerTask<AAIProducerClient, ConsumerDmaapModel, Object> {
+public class AAIProducerTaskImpl extends
+    AAIProducerTask<ConsumerDmaapModel, ConsumerDmaapModel, AAIClientConfiguration> {
 
     private static final Logger logger = LoggerFactory.getLogger(AAIProducerTaskImpl.class);
 
@@ -49,9 +52,8 @@ public class AAIProducerTaskImpl extends AAIProducerTask<AAIProducerClient, Cons
     }
 
     @Override
-    protected Object publish(ConsumerDmaapModel consumerDmaapModel) throws AAINotFoundException {
+    ConsumerDmaapModel publish(ConsumerDmaapModel consumerDmaapModel) throws AAINotFoundException {
         logger.trace("Method called with arg {}", consumerDmaapModel);
-
         try {
             return aaiProducerClient.getHttpResponse(consumerDmaapModel)
                 .filter(HttpUtils::isSuccessfulResponseCode).map(response -> consumerDmaapModel).orElseThrow(() ->
@@ -63,19 +65,12 @@ public class AAIProducerTaskImpl extends AAIProducerTask<AAIProducerClient, Cons
     }
 
     @Override
-    public Object execute(Object object) throws AAINotFoundException {
-        setAAIClientConfig();
-        logger.trace("Method called with arg {}", object);
-
-        if (object instanceof ConsumerDmaapModel) {
-            return publish((ConsumerDmaapModel) object);
-        }
-
-        throw new AAINotFoundException("Incorrect object type");
-    }
-
-    void setAAIClientConfig() {
-        aaiProducerClient = resolveClient();
+    public ConsumerDmaapModel execute(ConsumerDmaapModel consumerDmaapModel) throws AAINotFoundException {
+        consumerDmaapModel = Optional.ofNullable(consumerDmaapModel)
+            .orElseThrow(() -> new AAINotFoundException("Invoked null object to AAI task"));
+        logger.trace("Method called with arg {}", consumerDmaapModel);
+        aaiProducerClient = Optional.ofNullable(aaiProducerClient).orElseGet(this::resolveClient);
+        return publish(consumerDmaapModel);
     }
 
     AAIClientConfiguration resolveConfiguration() {
@@ -83,7 +78,7 @@ public class AAIProducerTaskImpl extends AAIProducerTask<AAIProducerClient, Cons
     }
 
     @Override
-    protected AAIProducerClient resolveClient() {
+    AAIProducerClient resolveClient() {
         return new AAIProducerClient(resolveConfiguration());
     }
 }

@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_9d4b43b1",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/AAIConsumerTaskImplTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2018-05-18T13:30:47Z",
+      "side": 1,
+      "message": "Many of the tests cases in different classes have one common issue -\u003e duplicate code. These sections can be moved to a private method, well named method (givenBLABLA) and the configurable part simply passed as parameters (i.e. expected http code returned by the mock). Also the \"when\" clauses are usually part of the given section as this is the expected behavior that produces an output in the invocation chain.",
+      "revId": "60405e263cd4e092f2c2c7ca8d3df31ec077bbf7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_bd487fb4",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/AAIConsumerTaskImplTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2018-05-18T13:30:47Z",
+      "side": 1,
+      "message": "This empty variable which holds a response is a little bit messy since it\u0027s in almost every test method. This variable should not be here since an empty response is hardly a required test input from a readibilty POV, just an artificial holder for the result. I want to read code from up to down, without jumping between the sections to reference stuff and assignments.",
+      "revId": "60405e263cd4e092f2c2c7ca8d3df31ec077bbf7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_7d63d741",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/DmaapPublisherTaskImplTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2018-05-18T13:30:47Z",
+      "side": 1,
+      "message": "Inconsistent test -\u003e api. The method signature does not declare that the PrhTaskException is thrown, but there are tests that verify this. Why not add this exception to the method sig ? Or verify the Exception that is actually declared, but not tested.",
+      "revId": "60405e263cd4e092f2c2c7ca8d3df31ec077bbf7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_1d0ad379",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/DmaapPublisherTaskImplTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2018-05-18T13:30:47Z",
+      "side": 1,
+      "message": "The GIVEN/WHEN/THEN derives from BDD. If you clearly separate sections using this notation I\u0027d strongly suggest using BDDMockito instead of Mockito. BDDMockito provides APIs that are more suitable and conforming to the behavioral naming convention. Check http://www.baeldung.com/bdd-mockito\nNaturally, this applies to all cases :)",
+      "revId": "60405e263cd4e092f2c2c7ca8d3df31ec077bbf7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_bd715f0e",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/DmaapPublisherTaskImplTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2018-05-18T13:30:47Z",
+      "side": 1,
+      "message": "Why is the response asserted for null, when the production code does not seem to return a null value ?? (if I\u0027m not mistaken). If this is to see if an exception was thrown (which means no value will be assigned to local variable response, thus it\u0027ll be null) then the intent is not clear and the tests are misleading. Possible solutions:\n1. use assertJ\u0027s cool fluent and lambda-compatible matchers to check that an exception of a certain type is expected upon invoking the production code.\n\n2. Avoid the try-catch and use the junit @ExpectedException\n\n3. use junit fail() method after the execute() method invocation to fail the test when exception was not thrown\n\nAnother suggestion: use static imports. No need to have the Assertions.* explicitly :)",
+      "revId": "60405e263cd4e092f2c2c7ca8d3df31ec077bbf7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

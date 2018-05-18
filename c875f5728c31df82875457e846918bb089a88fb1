@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_7d8bd71e",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/DmaapConsumerTaskImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 2999
+      },
+      "writtenOn": "2018-05-18T11:32:57Z",
+      "side": 1,
+      "message": "Can it be this line be part of resolveClient method?",
+      "revId": "c875f5728c31df82875457e846918bb089a88fb1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_1d8093f6",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/DmaapPublisherTaskImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 2999
+      },
+      "writtenOn": "2018-05-18T11:32:57Z",
+      "side": 1,
+      "message": "Can it be this line be part of resolveClient method?\nIn this case it returns not used reference.\nMore over can this two methods (execute and publish) be make more similar in this class and consumer class?",
+      "revId": "c875f5728c31df82875457e846918bb089a88fb1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

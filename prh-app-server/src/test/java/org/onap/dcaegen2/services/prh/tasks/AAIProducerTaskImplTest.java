@@ -34,13 +34,14 @@ import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
 import org.onap.dcaegen2.services.prh.config.ImmutableAAIClientConfiguration;
+import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
-import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.service.AAIProducerClient;
 
 /**
@@ -48,8 +49,6 @@ import org.onap.dcaegen2.services.prh.service.AAIProducerClient;
  */
 class AAIProducerTaskImplTest {
 
-    private static ConsumerDmaapModel consumerDmaapModel;
-    private static AAIProducerTaskImpl aaiProducerTask;
 
     private static final String AAI_HOST = "/aai/v11/network/pnfs/pnf/NOKQTFCOC540002E";
     private static final Integer PORT = 1234;
@@ -58,6 +57,8 @@ class AAIProducerTaskImplTest {
     private static final String BASE_PATH = "/aai/v11";
     private static final String PNF_PATH = "/network/pnfs/pnf";
 
+    private static ConsumerDmaapModel consumerDmaapModel;
+    private static AAIProducerTaskImpl aaiProducerTask;
     private static AAIClientConfiguration aaiClientConfiguration;
     private static AAIProducerClient aaiProducerClient;
     private static AppConfig appConfig;
@@ -82,91 +83,68 @@ class AAIProducerTaskImplTest {
     }
 
     @Test
-    public void whenPassedObjectDoesntFit_ThrowsPrhTaskException() throws IOException {
-        //given
-        Object response = null;
-
-        //when
+    public void whenPassedObjectDoesntFit_ThrowsPrhTaskException() {
+        //given/when/
         when(appConfig.getAAIClientConfiguration()).thenReturn(aaiClientConfiguration);
-        try {
-            aaiProducerTask = new AAIProducerTaskImpl(appConfig);
-            response = aaiProducerTask.execute("Some string");
-        } catch (PrhTaskException e) {
-            e.printStackTrace();
-        }
+        aaiProducerTask = new AAIProducerTaskImpl(appConfig);
+        Executable executableCode = () -> aaiProducerTask.execute(null);
 
         //then
-        Assertions.assertNull(response);
+        Assertions
+            .assertThrows(PrhTaskException.class, executableCode, "Passing wrong object type to execute function");
     }
 
     @Test
     public void whenPassedObjectFits_ReturnsCorrectStatus() throws AAINotFoundException, IOException {
-        //given
-        Object response;
-        aaiProducerClient = mock(AAIProducerClient.class);
-
-        //when
-        when(aaiProducerClient.getHttpResponse(consumerDmaapModel)).thenReturn(Optional.of(200));
-        when(appConfig.getAAIClientConfiguration()).thenReturn(aaiClientConfiguration);
-        aaiProducerTask = spy(new AAIProducerTaskImpl(appConfig));
-        when(aaiProducerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
-        doReturn(aaiProducerClient).when(aaiProducerTask).resolveClient();
-        aaiProducerTask.setAAIClientConfig();
-        response = aaiProducerTask.execute(consumerDmaapModel);
+        //given/when
+        getAAIProducerTask_whenMockingResponseObject(200, false);
+        ConsumerDmaapModel response = aaiProducerTask.execute(consumerDmaapModel);
 
         //then
         verify(aaiProducerClient, times(1)).getHttpResponse(any(ConsumerDmaapModel.class));
         verifyNoMoreInteractions(aaiProducerClient);
-        Assertions.assertNotNull(response);
         Assertions.assertEquals(consumerDmaapModel, response);
 
     }
 
+
     @Test
     public void whenPassedObjectFits_butIncorrectResponseReturns() throws IOException {
-        //given
-        Object response = null;
-        aaiProducerClient = mock(AAIProducerClient.class);
-        //when
-        when(aaiProducerClient.getHttpResponse(consumerDmaapModel)).thenReturn(Optional.of(400));
-        when(appConfig.getAAIClientConfiguration()).thenReturn(aaiClientConfiguration);
-        aaiProducerTask = spy(new AAIProducerTaskImpl(appConfig));
-        when(aaiProducerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
-        doReturn(aaiProducerClient).when(aaiProducerTask).resolveClient();
-        aaiProducerTask.setAAIClientConfig();
-        try {
-            response = aaiProducerTask.execute(consumerDmaapModel);
-        } catch (AAINotFoundException e) {
-            e.printStackTrace();
-        }
-
+        //given/when
+        getAAIProducerTask_whenMockingResponseObject(400, false);
+        Executable executableCode = () -> aaiProducerTask.execute(consumerDmaapModel);
+        Assertions
+            .assertThrows(PrhTaskException.class, executableCode, "Incorrect status code in response message");
         //then
         verify(aaiProducerClient, times(1)).getHttpResponse(any(ConsumerDmaapModel.class));
         verifyNoMoreInteractions(aaiProducerClient);
-        Assertions.assertNull(response);
     }
 
     @Test
-    public void whenPassedObjectFits_ThrowsIOException() throws IOException {
-        //given
-        Object response = null;
-        aaiProducerClient = mock(AAIProducerClient.class);
-        //when
-        when(appConfig.getAAIClientConfiguration()).thenReturn(aaiClientConfiguration);
-        when(aaiProducerClient.getHttpResponse(consumerDmaapModel)).thenThrow(IOException.class);
-        aaiProducerTask = spy(new AAIProducerTaskImpl(appConfig));
-        when(aaiProducerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
-        doReturn(aaiProducerClient).when(aaiProducerTask).resolveClient();
-        aaiProducerTask.setAAIClientConfig();
-        try {
-            response = aaiProducerTask.execute(consumerDmaapModel);
-        } catch (AAINotFoundException e) {
-            e.printStackTrace();
-        }
+    public void whenPassedObjectFits_butHTTPClientThrowsIOExceptionHandleIt() throws IOException {
+        //given/when
+        getAAIProducerTask_whenMockingResponseObject(0, true);
 
+        Executable executableCode = () -> aaiProducerTask.execute(consumerDmaapModel);
+        Assertions
+            .assertThrows(PrhTaskException.class, executableCode, "");
         //then
         verify(aaiProducerClient, times(1)).getHttpResponse(any(ConsumerDmaapModel.class));
         verifyNoMoreInteractions(aaiProducerClient);
-        Assertions.assertNull(response);
+    }
+
+
+    private static void getAAIProducerTask_whenMockingResponseObject(int statusCode, boolean throwsException)
+        throws IOException {
+        aaiProducerClient = mock(AAIProducerClient.class);
+        if (throwsException) {
+            when(aaiProducerClient.getHttpResponse(consumerDmaapModel)).thenThrow(IOException.class);
+        } else {
+            when(aaiProducerClient.getHttpResponse(consumerDmaapModel)).thenReturn(Optional.of(statusCode));
+        }
+        when(appConfig.getAAIClientConfiguration()).thenReturn(aaiClientConfiguration);
+        aaiProducerTask = spy(new AAIProducerTaskImpl(appConfig));
+        when(aaiProducerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
+        doReturn(aaiProducerClient).when(aaiProducerTask).resolveClient();
     }
 }

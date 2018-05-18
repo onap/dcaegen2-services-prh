@@ -28,11 +28,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import java.io.IOException;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.config.ImmutableDmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
@@ -66,67 +66,57 @@ class DmaapPublisherTaskImplTest {
     }
 
     @Test
-    public void whenPassedObjectDoesntFit_ThrowsPrhTaskException() throws IOException {
+    public void whenPassedObjectDoesntFit_ThrowsPrhTaskException() {
         //given
-        Object response = null;
+        when(appConfig.getDmaapPublisherConfiguration()).thenReturn(dmaapPublisherConfiguration);
+        dmaapPublisherTask = new DmaapPublisherTaskImpl(appConfig);
 
         //when
-        when(appConfig.getDmaapPublisherConfiguration()).thenReturn(dmaapPublisherConfiguration);
-        try {
-            dmaapPublisherTask = new DmaapPublisherTaskImpl(appConfig);
-            response = dmaapPublisherTask.execute("");
-        } catch (PrhTaskException e) {
-            e.printStackTrace();
-        }
+        Executable executableFunction = () -> dmaapPublisherTask.execute(null);
 
         //then
-        Assertions.assertNull(response);
+        Assertions
+            .assertThrows(PrhTaskException.class, executableFunction, "The specified parameter is incorrect");
     }
 
     @Test
     public void whenPassedObjectFits_ReturnsCorrectStatus() throws PrhTaskException {
         //given
-        Object response;
-        extendedDmaapProducerHttpClient = mock(ExtendedDmaapProducerHttpClientImpl.class);
+        prepareMocksForTests(HttpStatus.OK.toString());
 
         //when
-        when(extendedDmaapProducerHttpClient.getHttpProducerResponse(consumerDmaapModel))
-            .thenReturn(Optional.of(HttpStatus.OK.toString()));
-        when(appConfig.getDmaapPublisherConfiguration()).thenReturn(dmaapPublisherConfiguration);
-        dmaapPublisherTask = spy(new DmaapPublisherTaskImpl(appConfig));
-        when(dmaapPublisherTask.resolveConfiguration()).thenReturn(dmaapPublisherConfiguration);
-        doReturn(extendedDmaapProducerHttpClient).when(dmaapPublisherTask).resolveClient();
-        response = dmaapPublisherTask.execute(consumerDmaapModel);
+        String response = dmaapPublisherTask.execute(consumerDmaapModel);
 
         //then
         verify(extendedDmaapProducerHttpClient, times(1))
             .getHttpProducerResponse(any(ConsumerDmaapModel.class));
         verifyNoMoreInteractions(extendedDmaapProducerHttpClient);
-        Assertions.assertNotNull(response);
         Assertions.assertEquals(HttpStatus.OK.toString(), response);
     }
 
     @Test
     public void whenPassedObjectFits_butIncorrectResponseReturns() {
         //given
-        Object response = null;
-        extendedDmaapProducerHttpClient = mock(ExtendedDmaapProducerHttpClientImpl.class);
+        prepareMocksForTests("400");
+
         //when
+        Executable executableFunction = () -> dmaapPublisherTask.execute(consumerDmaapModel);
+
+        //then
+        Assertions
+            .assertThrows(PrhTaskException.class, executableFunction, "Incorrect response from DMAAP");
+        verify(extendedDmaapProducerHttpClient, times(1)).getHttpProducerResponse(any(ConsumerDmaapModel.class));
+        verifyNoMoreInteractions(extendedDmaapProducerHttpClient);
+    }
+
+
+    private void prepareMocksForTests(String httpResponseCode) {
+        extendedDmaapProducerHttpClient = mock(ExtendedDmaapProducerHttpClientImpl.class);
         when(extendedDmaapProducerHttpClient.getHttpProducerResponse(consumerDmaapModel))
-            .thenReturn(Optional.of("400"));
+            .thenReturn(Optional.of(httpResponseCode));
         when(appConfig.getDmaapPublisherConfiguration()).thenReturn(dmaapPublisherConfiguration);
         dmaapPublisherTask = spy(new DmaapPublisherTaskImpl(appConfig));
         when(dmaapPublisherTask.resolveConfiguration()).thenReturn(dmaapPublisherConfiguration);
         doReturn(extendedDmaapProducerHttpClient).when(dmaapPublisherTask).resolveClient();
-        try {
-            response = dmaapPublisherTask.execute(consumerDmaapModel);
-        } catch (PrhTaskException e) {
-            e.printStackTrace();
-        }
-
-        //then
-        verify(extendedDmaapProducerHttpClient, times(1)).getHttpProducerResponse(any(ConsumerDmaapModel.class));
-        verifyNoMoreInteractions(extendedDmaapProducerHttpClient);
-        Assertions.assertNull(response);
     }
 }

@@ -50,7 +50,7 @@ public class ScheduledTasks {
         setTaskExecutionFlow();
         try {
             dmaapConsumerTask.initConfigs();
-            dmaapConsumerTask.receiveRequest(null);
+            dmaapConsumerTask.receiveRequest("");
         } catch (PrhTaskException e) {
             logger
                 .warn("Chain of tasks have been aborted, because some errors occur in prh workflow ", e);

@@ -26,7 +26,7 @@ import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
  */
 
 
-public abstract class Task<T> {
+public abstract class Task<Request, Response, Config> {
 
     private Task taskProcess;
 
@@ -34,15 +34,15 @@ public abstract class Task<T> {
         this.taskProcess = task;
     }
 
-    public void receiveRequest(Object body) throws PrhTaskException {
+    public void receiveRequest(Request body) throws PrhTaskException {
 
-        Object response = execute(body);
+        Response response = execute(body);
         if (taskProcess != null) {
             taskProcess.receiveRequest(response);
         }
     }
 
-    abstract Object execute(Object object) throws PrhTaskException;
+    abstract Response execute(Request object) throws PrhTaskException;
 
-    abstract T resolveConfiguration();
+    abstract Config resolveConfiguration();
 }

@@ -45,7 +45,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class AAIProducerClient implements AAIExtendedHttpClient {
-    Logger logger = LoggerFactory.getLogger(AAIProducerClient.class);
+    private Logger logger = LoggerFactory.getLogger(AAIProducerClient.class);
 
     private final CloseableHttpClient closeableHttpClient;
     private final String aaiHost;
@@ -67,29 +67,26 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
 
     @Override
     public Optional<Integer> getHttpResponse(ConsumerDmaapModel consumerDmaapModel) throws IOException {
-        Optional<HttpRequestBase> request = createRequest(consumerDmaapModel);
         try {
-            return closeableHttpClient.execute(request.get(), aaiResponseHandler());
+            return closeableHttpClient.execute(createRequest(consumerDmaapModel), aaiResponseHandler());
         } catch (IOException e) {
             logger.warn("Exception while executing http client: ", e);
-            throw new IOException();
+            throw e;
         }
     }
 
-    private URI createAAIExtendedURI(final String pnfName) {
-        URI extendedURI = null;
+    private Optional<URI> createAAIExtendedURI(final String pnfName) {
         final URIBuilder uriBuilder = new URIBuilder()
                 .setScheme(aaiProtocol)
                 .setHost(aaiHost)
                 .setPort(aaiHostPortNumber)
                 .setPath(aaiPath + "/" + pnfName);
         try {
-            extendedURI = uriBuilder.build();
-            logger.trace("Building extended URI: {}", extendedURI);
+            return Optional.of(uriBuilder.build());
         } catch (URISyntaxException e) {
             logger.warn("Exception while building extended URI: ", e);
+            return Optional.empty();
         }
-        return extendedURI;
     }
 
     private ResponseHandler<Optional<Integer>> aaiResponseHandler() {
@@ -112,44 +109,35 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
     private HttpRequestBase createHttpRequest(URI extendedURI, ConsumerDmaapModel consumerDmaapModel) {
         String jsonBody = CommonFunctions.createJsonBody(consumerDmaapModel);
 
-        if (isExtendedURINotNull(extendedURI) && jsonBody != null && !"".equals(jsonBody)) {
-            return createHttpPatch(extendedURI, Optional.ofNullable(CommonFunctions.createJsonBody(consumerDmaapModel)));
+        if (extendedURI != null && jsonBody != null && !"".equals(jsonBody)) {
+            return createHttpPatch(extendedURI, CommonFunctions.createJsonBody(consumerDmaapModel));
         } else {
             return null;
         }
     }
 
-    private Boolean isExtendedURINotNull(URI extendedURI) {
-        return extendedURI != null;
-    }
-
-
-    private Optional<StringEntity> createStringEntity(Optional<String> jsonBody) {
-        return Optional.of(parseJson(jsonBody).get());
-    }
-
-    private HttpPatch createHttpPatch(URI extendedURI, Optional<String> jsonBody) {
+    private HttpPatch createHttpPatch(URI extendedURI, String jsonBody) {
         HttpPatch httpPatch = new HttpPatch(extendedURI);
-        Optional<StringEntity> stringEntity = createStringEntity(jsonBody);
-        httpPatch.setEntity(stringEntity.get());
+        Optional<StringEntity> stringEntity = parseJson(jsonBody);
+        stringEntity.ifPresent(httpPatch::setEntity);
         return httpPatch;
     }
 
-    private Optional<StringEntity> parseJson(Optional<String> jsonBody) {
+    private Optional<StringEntity> parseJson(String jsonBody) {
         Optional<StringEntity> stringEntity = Optional.empty();
         try {
-            stringEntity = Optional.of(new StringEntity(jsonBody.get()));
+            return Optional.of(new StringEntity(jsonBody));
         } catch (UnsupportedEncodingException e) {
             logger.warn("Exception while parsing JSON: ", e);
+            return stringEntity;
         }
-        return stringEntity;
     }
 
-    private Optional<HttpRequestBase> createRequest(ConsumerDmaapModel consumerDmaapModel) {
-        final URI extendedURI = createAAIExtendedURI(consumerDmaapModel.getPnfName());
+    private HttpRequestBase createRequest(ConsumerDmaapModel consumerDmaapModel) {
+        final URI extendedURI = createAAIExtendedURI(consumerDmaapModel.getPnfName()).get();
         HttpRequestBase request = createHttpRequest(extendedURI, consumerDmaapModel);
         aaiHeaders.forEach(Objects.requireNonNull(request)::addHeader);
         Objects.requireNonNull(request).addHeader("Content-Type", "application/merge-patch+json");
-        return Optional.of(request);
+        return request;
     }
 }

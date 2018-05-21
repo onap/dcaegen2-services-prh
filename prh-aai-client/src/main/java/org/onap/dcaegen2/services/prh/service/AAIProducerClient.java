@@ -45,7 +45,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class AAIProducerClient implements AAIExtendedHttpClient {
-    Logger logger = LoggerFactory.getLogger(AAIProducerClient.class);
+    private Logger logger = LoggerFactory.getLogger(AAIProducerClient.class);
 
     private final CloseableHttpClient closeableHttpClient;
     private final String aaiHost;
@@ -69,7 +69,10 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
     public Optional<Integer> getHttpResponse(ConsumerDmaapModel consumerDmaapModel) throws IOException {
         Optional<HttpRequestBase> request = createRequest(consumerDmaapModel);
         try {
-            return closeableHttpClient.execute(request.get(), aaiResponseHandler());
+            if (request.isPresent()) {
+                return closeableHttpClient.execute(request.get(), aaiResponseHandler());
+            }
+            return Optional.empty();
         } catch (IOException e) {
             logger.warn("Exception while executing http client: ", e);
             throw new IOException();
@@ -113,7 +116,7 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
         String jsonBody = CommonFunctions.createJsonBody(consumerDmaapModel);
 
         if (isExtendedURINotNull(extendedURI) && jsonBody != null && !"".equals(jsonBody)) {
-            return createHttpPatch(extendedURI, Optional.ofNullable(CommonFunctions.createJsonBody(consumerDmaapModel)));
+            return createHttpPatch(extendedURI, CommonFunctions.createJsonBody(consumerDmaapModel));
         } else {
             return null;
         }
@@ -124,21 +127,21 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
     }
 
 
-    private Optional<StringEntity> createStringEntity(Optional<String> jsonBody) {
-        return Optional.of(parseJson(jsonBody).get());
+    private Optional<StringEntity> createStringEntity(String jsonBody) {
+        return parseJson(jsonBody);
     }
 
-    private HttpPatch createHttpPatch(URI extendedURI, Optional<String> jsonBody) {
+    private HttpPatch createHttpPatch(URI extendedURI, String jsonBody) {
         HttpPatch httpPatch = new HttpPatch(extendedURI);
         Optional<StringEntity> stringEntity = createStringEntity(jsonBody);
-        httpPatch.setEntity(stringEntity.get());
+        stringEntity.ifPresent(httpPatch::setEntity);
         return httpPatch;
     }
 
-    private Optional<StringEntity> parseJson(Optional<String> jsonBody) {
+    private Optional<StringEntity> parseJson(String jsonBody) {
         Optional<StringEntity> stringEntity = Optional.empty();
         try {
-            stringEntity = Optional.of(new StringEntity(jsonBody.get()));
+            stringEntity = Optional.of(new StringEntity(jsonBody));
         } catch (UnsupportedEncodingException e) {
             logger.warn("Exception while parsing JSON: ", e);
         }

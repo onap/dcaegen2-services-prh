@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_8363e240",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/AAIConsumerTaskImplTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-21T09:34:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_9d4b43b1",
+      "revId": "60405e263cd4e092f2c2c7ca8d3df31ec077bbf7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_bd487fb4",
         "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/AAIConsumerTaskImplTest.java",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2018-05-18T13:30:47Z",
       "side": 1,
       "message": "This empty variable which holds a response is a little bit messy since it\u0027s in almost every test method. This variable should not be here since an empty response is hardly a required test input from a readibilty POV, just an artificial holder for the result. I want to read code from up to down, without jumping between the sections to reference stuff and assignments.",
+      "revId": "60405e263cd4e092f2c2c7ca8d3df31ec077bbf7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_2358ce89",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/AAIConsumerTaskImplTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-21T09:34:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_bd487fb4",
       "revId": "60405e263cd4e092f2c2c7ca8d3df31ec077bbf7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -70,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_a34b7eb0",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/DmaapPublisherTaskImplTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-21T09:34:15Z",
+      "side": 1,
+      "message": "For now I want to use only mockito without any extension. I will check BDDMockito and if BDDMockito meets the requirements of this simply tests I will try to use them later. Can we do this later ?",
+      "parentUuid": "5a93c517_1d0ad379",
+      "revId": "60405e263cd4e092f2c2c7ca8d3df31ec077bbf7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_bd715f0e",
         "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/DmaapPublisherTaskImplTest.java",
         "patchSetId": 2
@@ -81,6 +135,24 @@
       "writtenOn": "2018-05-18T13:30:47Z",
       "side": 1,
       "message": "Why is the response asserted for null, when the production code does not seem to return a null value ?? (if I\u0027m not mistaken). If this is to see if an exception was thrown (which means no value will be assigned to local variable response, thus it\u0027ll be null) then the intent is not clear and the tests are misleading. Possible solutions:\n1. use assertJ\u0027s cool fluent and lambda-compatible matchers to check that an exception of a certain type is expected upon invoking the production code.\n\n2. Avoid the try-catch and use the junit @ExpectedException\n\n3. use junit fail() method after the execute() method invocation to fail the test when exception was not thrown\n\nAnother suggestion: use static imports. No need to have the Assertions.* explicitly :)",
+      "revId": "60405e263cd4e092f2c2c7ca8d3df31ec077bbf7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c3480ab6",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/DmaapPublisherTaskImplTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-21T09:34:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_bd715f0e",
       "revId": "60405e263cd4e092f2c2c7ca8d3df31ec077bbf7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false

@@ -41,11 +41,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 public class AAIProducerClient implements AAIExtendedHttpClient {
-    Logger logger = LoggerFactory.getLogger(AAIProducerClient.class);
+    private Logger logger = LoggerFactory.getLogger(AAIProducerClient.class);
 
     private final CloseableHttpClient closeableHttpClient;
     private final String aaiHost;
@@ -66,30 +65,34 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
 
 
     @Override
-    public Optional<Integer> getHttpResponse(ConsumerDmaapModel consumerDmaapModel) throws IOException {
-        Optional<HttpRequestBase> request = createRequest(consumerDmaapModel);
+    public Optional<Integer> getHttpResponse(ConsumerDmaapModel consumerDmaapModel) throws
+            URISyntaxException {
         try {
-            return closeableHttpClient.execute(request.get(), aaiResponseHandler());
-        } catch (IOException e) {
+            return createRequest(consumerDmaapModel).flatMap(x->{
+                try {
+                    return closeableHttpClient.execute(x, aaiResponseHandler());
+                } catch (IOException e) {
+                    logger.warn("Exception while executing http client: ", e);
+                    return Optional.empty();
+                }
+            });
+        } catch (URISyntaxException e ) {
             logger.warn("Exception while executing http client: ", e);
-            throw new IOException();
+            throw e;
         }
     }
 
-    private URI createAAIExtendedURI(final String pnfName) {
-        URI extendedURI = null;
-        final URIBuilder uriBuilder = new URIBuilder()
+    private Optional<HttpRequestBase> createRequest(ConsumerDmaapModel consumerDmaapModel) throws URISyntaxException {
+        final URI extendedURI = createAAIExtendedURI(consumerDmaapModel.getPnfName());
+        return createHttpRequest(extendedURI, consumerDmaapModel);
+    }
+
+    private URI createAAIExtendedURI(final String pnfName) throws URISyntaxException {
+        return new URIBuilder()
                 .setScheme(aaiProtocol)
                 .setHost(aaiHost)
                 .setPort(aaiHostPortNumber)
-                .setPath(aaiPath + "/" + pnfName);
-        try {
-            extendedURI = uriBuilder.build();
-            logger.trace("Building extended URI: {}", extendedURI);
-        } catch (URISyntaxException e) {
-            logger.warn("Exception while building extended URI: ", e);
-        }
-        return extendedURI;
+                .setPath(aaiPath + "/" + pnfName).build();
     }
 
     private ResponseHandler<Optional<Integer>> aaiResponseHandler() {
@@ -109,47 +112,22 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
         };
     }
 
-    private HttpRequestBase createHttpRequest(URI extendedURI, ConsumerDmaapModel consumerDmaapModel) {
-        String jsonBody = CommonFunctions.createJsonBody(consumerDmaapModel);
-
-        if (isExtendedURINotNull(extendedURI) && jsonBody != null && !"".equals(jsonBody)) {
-            return createHttpPatch(extendedURI, Optional.ofNullable(CommonFunctions.createJsonBody(consumerDmaapModel)));
-        } else {
-            return null;
-        }
+    private Optional<HttpRequestBase> createHttpRequest(URI extendedURI, ConsumerDmaapModel consumerDmaapModel) {
+        return Optional.ofNullable(CommonFunctions.createJsonBody(consumerDmaapModel)).filter(x-> !x.isEmpty()).flatMap(myJson -> {
+            try {
+                return Optional.of(createHttpPatch(extendedURI, myJson));
+            } catch (UnsupportedEncodingException e) {
+                logger.warn("Exception while executing http client: ", e);
+            }
+            return Optional.empty();
+        });
     }
 
-    private Boolean isExtendedURINotNull(URI extendedURI) {
-        return extendedURI != null;
-    }
-
-
-    private Optional<StringEntity> createStringEntity(Optional<String> jsonBody) {
-        return Optional.of(parseJson(jsonBody).get());
-    }
-
-    private HttpPatch createHttpPatch(URI extendedURI, Optional<String> jsonBody) {
+    private HttpPatch createHttpPatch(URI extendedURI, String jsonBody) throws UnsupportedEncodingException {
         HttpPatch httpPatch = new HttpPatch(extendedURI);
-        Optional<StringEntity> stringEntity = createStringEntity(jsonBody);
-        httpPatch.setEntity(stringEntity.get());
+        httpPatch.setEntity( new StringEntity(jsonBody));
+        aaiHeaders.forEach(httpPatch::addHeader);
+        httpPatch.addHeader("Content-Type", "application/merge-patch+json");
         return httpPatch;
-    }
-
-    private Optional<StringEntity> parseJson(Optional<String> jsonBody) {
-        Optional<StringEntity> stringEntity = Optional.empty();
-        try {
-            stringEntity = Optional.of(new StringEntity(jsonBody.get()));
-        } catch (UnsupportedEncodingException e) {
-            logger.warn("Exception while parsing JSON: ", e);
-        }
-        return stringEntity;
-    }
-
-    private Optional<HttpRequestBase> createRequest(ConsumerDmaapModel consumerDmaapModel) {
-        final URI extendedURI = createAAIExtendedURI(consumerDmaapModel.getPnfName());
-        HttpRequestBase request = createHttpRequest(extendedURI, consumerDmaapModel);
-        aaiHeaders.forEach(Objects.requireNonNull(request)::addHeader);
-        Objects.requireNonNull(request).addHeader("Content-Type", "application/merge-patch+json");
-        return Optional.of(request);
     }
 }

@@ -42,7 +42,7 @@ import java.util.Optional;
 
 public class AAIConsumerClient {
 
-    Logger logger = LoggerFactory.getLogger(AAIConsumerClient.class);
+    private Logger logger = LoggerFactory.getLogger(AAIConsumerClient.class);
 
     private final CloseableHttpClient closeableHttpClient;
     private final String aaiHost;

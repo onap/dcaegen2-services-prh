@@ -33,6 +33,7 @@ import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModelForUnitTest;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -76,7 +77,7 @@ public class AAIProducerClientTest {
     }
 
     @Test
-    public void getHttpResponsePatch_shouldReturnSuccessStatusCode() throws IOException {
+    public void getHttpResponsePatch_shouldReturnSuccessStatusCode() throws IOException, URISyntaxException {
         //when
         when(closeableHttpClientMock.execute(any(HttpPatch.class), any(ResponseHandler.class)))
                 .thenReturn(Optional.of(SUCCESS));

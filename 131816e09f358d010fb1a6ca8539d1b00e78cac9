@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_869e90b7",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 2683
+      },
+      "writtenOn": "2018-05-21T12:01:34Z",
+      "side": 1,
+      "message": "Use Optional::map\n\nreturn request.map(req -\u003e closeable....execite(req, aai...()));",
+      "revId": "131816e09f358d010fb1a6ca8539d1b00e78cac9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_e6ac34f1",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 2683
+      },
+      "writtenOn": "2018-05-21T12:01:34Z",
+      "side": 1,
+      "message": "Implementation was changed - tests should also reflect these changes.",
+      "revId": "131816e09f358d010fb1a6ca8539d1b00e78cac9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

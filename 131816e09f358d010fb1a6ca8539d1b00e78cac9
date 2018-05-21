@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "5a93c517_a6e4ec3c",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-21T12:34:15Z",
+      "side": 1,
+      "message": "Name should be AaiProducerClient",
+      "range": {
+        "startLine": 47,
+        "startChar": 13,
+        "endLine": 47,
+        "endChar": 30
+      },
+      "revId": "131816e09f358d010fb1a6ca8539d1b00e78cac9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_46f648fb",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-21T12:34:15Z",
+      "side": 1,
+      "message": "request is always present, because createRequest always returns value. That means second return is dead code.",
+      "range": {
+        "startLine": 72,
+        "startChar": 12,
+        "endLine": 72,
+        "endChar": 38
+      },
+      "revId": "131816e09f358d010fb1a6ca8539d1b00e78cac9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_869e90b7",
         "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
         "patchSetId": 1
@@ -13,6 +59,24 @@
       "writtenOn": "2018-05-21T12:01:34Z",
       "side": 1,
       "message": "Use Optional::map\n\nreturn request.map(req -\u003e closeable....execite(req, aai...()));",
+      "revId": "131816e09f358d010fb1a6ca8539d1b00e78cac9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_e693d4a2",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-21T12:34:15Z",
+      "side": 1,
+      "message": "You can even inline request here to make it oneliner:\n\nreturn createRequest(...).map(req -\u003e ...);",
+      "parentUuid": "5a93c517_869e90b7",
       "revId": "131816e09f358d010fb1a6ca8539d1b00e78cac9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -59,6 +123,167 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_467f2867",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-21T12:34:15Z",
+      "side": 1,
+      "message": "Why throwing new exception? You lose information about the source of exception. Just rethrow it.",
+      "range": {
+        "startLine": 77,
+        "startChar": 12,
+        "endLine": 78,
+        "endChar": 36
+      },
+      "revId": "131816e09f358d010fb1a6ca8539d1b00e78cac9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_66cee4b9",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-21T12:34:15Z",
+      "side": 1,
+      "message": "return uriBuilder.build();",
+      "range": {
+        "startLine": 90,
+        "startChar": 12,
+        "endLine": 90,
+        "endChar": 45
+      },
+      "revId": "131816e09f358d010fb1a6ca8539d1b00e78cac9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_46cde8b6",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-21T12:34:15Z",
+      "side": 1,
+      "message": "Failure to build extended URI should end with exception or empty optional.",
+      "range": {
+        "startLine": 93,
+        "startChar": 13,
+        "endLine": 93,
+        "endChar": 70
+      },
+      "revId": "131816e09f358d010fb1a6ca8539d1b00e78cac9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_a68dcc7e",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-21T12:34:15Z",
+      "side": 1,
+      "message": "Why is it function that returns lambda instead of just function that implements it? You can use this::aaiResponseHandler instead of aaiResponseHandler then (I would suggest to change name to handleAaiResponse then).",
+      "range": {
+        "startLine": 98,
+        "startChar": 4,
+        "endLine": 98,
+        "endChar": 69
+      },
+      "revId": "131816e09f358d010fb1a6ca8539d1b00e78cac9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_06d8407e",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-21T12:34:15Z",
+      "side": 1,
+      "message": "extendedURI !\u003d null?",
+      "range": {
+        "startLine": 118,
+        "startChar": 12,
+        "endLine": 118,
+        "endChar": 45
+      },
+      "revId": "131816e09f358d010fb1a6ca8539d1b00e78cac9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_e6daf478",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-21T12:34:15Z",
+      "side": 1,
+      "message": "What\u0027s the point of this function? It doesn\u0027t make code more readable.",
+      "range": {
+        "startLine": 125,
+        "startChar": 0,
+        "endLine": 127,
+        "endChar": 5
+      },
+      "revId": "131816e09f358d010fb1a6ca8539d1b00e78cac9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_a6bb8c0e",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-21T12:34:15Z",
+      "side": 1,
+      "message": "Just inline this function. \"parseJson\" already tells more than \"createStringEntity\".",
+      "range": {
+        "startLine": 130,
+        "startChar": 0,
+        "endLine": 132,
+        "endChar": 5
+      },
+      "revId": "131816e09f358d010fb1a6ca8539d1b00e78cac9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_831be27f",
         "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
         "patchSetId": 1
@@ -98,6 +323,53 @@
         "startChar": 0,
         "endLine": 149,
         "endChar": 5
+      },
+      "revId": "131816e09f358d010fb1a6ca8539d1b00e78cac9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_0691209a",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-21T12:34:15Z",
+      "side": 1,
+      "message": "You can even move second return inside catch to improve clarity.",
+      "parentUuid": "5a93c517_a3037e0f",
+      "range": {
+        "startLine": 141,
+        "startChar": 0,
+        "endLine": 149,
+        "endChar": 5
+      },
+      "revId": "131816e09f358d010fb1a6ca8539d1b00e78cac9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_26f1bc01",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-21T12:34:15Z",
+      "side": 1,
+      "message": "Why does this function returns Optional if it always returns value?",
+      "range": {
+        "startLine": 151,
+        "startChar": 4,
+        "endLine": 151,
+        "endChar": 92
       },
       "revId": "131816e09f358d010fb1a6ca8539d1b00e78cac9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",

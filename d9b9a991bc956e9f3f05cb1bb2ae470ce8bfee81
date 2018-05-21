@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_468648dd",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-21T13:58:25Z",
+      "side": 1,
+      "message": "Just make this method returning Optional\u003cInteger\u003e, check my comment for revision 1.",
+      "range": {
+        "startLine": 92,
+        "startChar": 4,
+        "endLine": 92,
+        "endChar": 69
+      },
+      "revId": "d9b9a991bc956e9f3f05cb1bb2ae470ce8bfee81",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c64818b6",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-21T13:58:25Z",
+      "side": 1,
+      "message": "If you know that URI is not null, you don\u0027t have to check if it\u0027s null",
+      "range": {
+        "startLine": 112,
+        "startChar": 12,
+        "endLine": 112,
+        "endChar": 31
+      },
+      "revId": "d9b9a991bc956e9f3f05cb1bb2ae470ce8bfee81",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c671f80d",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-21T13:58:25Z",
+      "side": 1,
+      "message": "Strings.isNullOrEmpty",
+      "range": {
+        "startLine": 112,
+        "startChar": 35,
+        "endLine": 112,
+        "endChar": 75
+      },
+      "revId": "d9b9a991bc956e9f3f05cb1bb2ae470ce8bfee81",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_a6462cbf",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-21T13:58:25Z",
+      "side": 1,
+      "message": "No need for this variable to exist. Just return Optional.empty() in second return statement.",
+      "range": {
+        "startLine": 127,
+        "startChar": 8,
+        "endLine": 127,
+        "endChar": 63
+      },
+      "revId": "d9b9a991bc956e9f3f05cb1bb2ae470ce8bfee81",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_e623d404",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2018-05-21T13:58:25Z",
+      "side": 1,
+      "message": "You\u0027re calling get() on Optional you have no idea if it contains value. You can get NoSuchElementException. Either handle this case here or propagate it with Optional or Exception. I\u0027d suggest using exception, that\u0027s being thrown in createAAIExtendedURI - because if we cannot create URI we actually cannot do anything anyway.",
+      "range": {
+        "startLine": 137,
+        "startChar": 85,
+        "endLine": 137,
+        "endChar": 91
+      },
+      "revId": "d9b9a991bc956e9f3f05cb1bb2ae470ce8bfee81",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

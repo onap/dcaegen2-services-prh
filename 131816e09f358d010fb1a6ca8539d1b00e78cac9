@@ -33,6 +33,75 @@
       "revId": "131816e09f358d010fb1a6ca8539d1b00e78cac9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c3000a05",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-21T12:01:54Z",
+      "side": 1,
+      "message": "simplify",
+      "range": {
+        "startLine": 72,
+        "startChar": 11,
+        "endLine": 75,
+        "endChar": 36
+      },
+      "revId": "131816e09f358d010fb1a6ca8539d1b00e78cac9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_831be27f",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-21T12:01:54Z",
+      "side": 1,
+      "message": "What does this give you?",
+      "range": {
+        "startLine": 137,
+        "startChar": 8,
+        "endLine": 137,
+        "endChar": 53
+      },
+      "revId": "131816e09f358d010fb1a6ca8539d1b00e78cac9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_a3037e0f",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-21T12:01:54Z",
+      "side": 1,
+      "message": "private Optional\u003cStringEntity\u003e parseJson(String jsonBody) {\n        try {\n            return  Optional.of(new StringEntity(jsonBody));\n        } catch (UnsupportedEncodingException e) {\n            logger.warn(\"Exception while parsing JSON: \", e);\n        }\n        return Optional.empty();\n    }",
+      "range": {
+        "startLine": 141,
+        "startChar": 0,
+        "endLine": 149,
+        "endChar": 5
+      },
+      "revId": "131816e09f358d010fb1a6ca8539d1b00e78cac9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

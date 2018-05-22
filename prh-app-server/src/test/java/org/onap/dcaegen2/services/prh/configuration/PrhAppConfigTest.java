@@ -22,12 +22,16 @@ package org.onap.dcaegen2.services.prh.configuration;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -35,6 +39,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.onap.dcaegen2.services.prh.IT.junit5.mockito.MockitoExtension;
 
 /**
@@ -74,7 +79,7 @@ class PrhAppConfigTest {
 
     @Test
     public void whenTheConfigurationFits_GetAaiAndDmaapObjectRepresentationConfiguration()
-        throws FileNotFoundException {
+        throws IOException {
         //
         // Given
         //
@@ -107,7 +112,7 @@ class PrhAppConfigTest {
     }
 
     @Test
-    public void whenFileIsNotExist_ThrowFileNotFoundException() {
+    public void whenFileIsNotExist_ThrowIOException() {
         //
         // Given
         //
@@ -129,7 +134,7 @@ class PrhAppConfigTest {
     }
 
     @Test
-    public void whenFileIsExistsButJsonIsIncorrect() throws FileNotFoundException {
+    public void whenFileIsExistsButJsonIsIncorrect() throws IOException {
         //
         // Given
         //
@@ -151,6 +156,31 @@ class PrhAppConfigTest {
         Assertions.assertNotNull(prhAppConfig.getDmaapConsumerConfiguration());
         Assertions.assertNull(prhAppConfig.getDmaapPublisherConfiguration());
 
+    }
 
+
+    @Test
+    public void whenTheConfigurationFits_ButRootElementIsNotAJsonObject()
+        throws IOException {
+        // Given
+        InputStream inputStream = new ByteArrayInputStream((jsonString.getBytes(
+            StandardCharsets.UTF_8)));
+        // When
+        prhAppConfig.setFilepath(filePath);
+        doReturn(inputStream).when(prhAppConfig).getInputStream(any());
+        JsonElement jsonElement = mock(JsonElement.class);
+        when(jsonElement.isJsonObject()).thenReturn(false);
+        doReturn(jsonElement).when(prhAppConfig).getJsonElement(any(JsonParser.class), any(InputStream.class));
+        prhAppConfig.initFileStreamReader();
+        appConfig.dmaapConsumerConfiguration = prhAppConfig.getDmaapConsumerConfiguration();
+        appConfig.dmaapPublisherConfiguration = prhAppConfig.getDmaapPublisherConfiguration();
+        appConfig.aaiClientConfiguration = prhAppConfig.getAAIClientConfiguration();
+
+        // Then
+        verify(prhAppConfig, times(1)).setFilepath(anyString());
+        verify(prhAppConfig, times(1)).initFileStreamReader();
+        Assertions.assertNull(prhAppConfig.getAAIClientConfiguration());
+        Assertions.assertNull(prhAppConfig.getDmaapConsumerConfiguration());
+        Assertions.assertNull(prhAppConfig.getDmaapPublisherConfiguration());
     }
 }

@@ -351,12 +351,16 @@
                 <goal>check</goal>
               </goals>
               <configuration>
+                <excludes>
+                  <exclude>**/Immutable*</exclude>
+                  <exclude>**/GsonAdapters*</exclude>
+                  <exclude>**/*ForUnitTest*</exclude>
+                </excludes>
                 <rules>
                   <rule>
                     <element>CLASS</element>
                     <limits>
                       <limit>
-                        <counter>LINE</counter>
                         <value>COVEREDRATIO</value>
                         <!--<minimum>0.70</minimum>-->
                       </limit>

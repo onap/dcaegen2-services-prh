@@ -84,7 +84,7 @@ public abstract class PrhAppConfig implements Config {
         JsonParser parser = new JsonParser();
         JsonObject jsonObject;
         try (InputStream inputStream = getInputStream(filepath)) {
-            JsonElement rootElement = parser.parse(new InputStreamReader(inputStream));
+            JsonElement rootElement = getJsonElement(parser, inputStream);
             if (rootElement.isJsonObject()) {
                 jsonObject = rootElement.getAsJsonObject();
                 aaiClientConfiguration = deserializeType(gsonBuilder,
@@ -99,8 +99,6 @@ public abstract class PrhAppConfig implements Config {
                     jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(DMAAP).getAsJsonObject(DMAAP_PRODUCER),
                     DmaapPublisherConfiguration.class);
             }
-        } catch (FileNotFoundException e) {
-            logger.warn("File doesn't exist in filepath: {}", filepath, e);
         } catch (IOException e) {
             logger.warn("Problem with file loading, file: {}", filepath, e);
         } catch (JsonSyntaxException e) {
@@ -108,12 +106,16 @@ public abstract class PrhAppConfig implements Config {
         }
     }
 
+    JsonElement getJsonElement(JsonParser parser, InputStream inputStream) {
+        return parser.parse(new InputStreamReader(inputStream));
+    }
+
     private <T> T deserializeType(@NotNull GsonBuilder gsonBuilder, @NotNull JsonObject jsonObject,
         @NotNull Class<T> type) {
         return gsonBuilder.create().fromJson(jsonObject, type);
     }
 
-    InputStream getInputStream(@NotNull String filepath) throws FileNotFoundException {
+    InputStream getInputStream(@NotNull String filepath) throws IOException {
         return new BufferedInputStream(new FileInputStream(filepath));
     }
 

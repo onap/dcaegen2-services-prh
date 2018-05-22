@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_f2486e30",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-22T11:53:46Z",
+      "side": 1,
+      "message": "new URIBuilder()\n                .setScheme(aaiProtocol)\n                .setHost(aaiHost)\n                .setPort(aaiHostPortNumber)\n                .setPath(aaiPath + \"/\" + pnfName).build()\n\nWithout any kind of logging and catching errors. You ought to do logging in root/main method per class",
+      "range": {
+        "startLine": 80,
+        "startChar": 1,
+        "endLine": 90,
+        "endChar": 9
+      },
+      "revId": "998247eec36066afa3f703c9ba8e015afe187a8c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_5244c21a",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-22T11:53:46Z",
+      "side": 1,
+      "message": "throw exception without logging error. You have to log them in one main method per one class. Simply in this class this should be logged int getHttpResponse method",
+      "range": {
+        "startLine": 116,
+        "startChar": 12,
+        "endLine": 117,
+        "endChar": 36
+      },
+      "revId": "998247eec36066afa3f703c9ba8e015afe187a8c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_323fb689",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-22T11:53:46Z",
+      "side": 1,
+      "message": "do this directly in createHttpPatch and log this kind of error in main function of catching exception",
+      "range": {
+        "startLine": 129,
+        "startChar": 18,
+        "endLine": 129,
+        "endChar": 46
+      },
+      "revId": "998247eec36066afa3f703c9ba8e015afe187a8c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_923a4a97",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-22T11:53:46Z",
+      "side": 1,
+      "message": "Can you do this in one lambda in createHttpRequestMethod ?",
+      "range": {
+        "startLine": 139,
+        "startChar": 8,
+        "endLine": 140,
+        "endChar": 98
+      },
+      "revId": "998247eec36066afa3f703c9ba8e015afe187a8c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+Code-Review+1: Maciej Wejs <maciej.wejs@nokia.com>
+Code-Review+2: Lusheng Ji <lji@research.att.com>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Submitted-by: Lusheng Ji <lji@research.att.com>
+Submitted-at: Tue, 22 May 2018 16:13:06 +0000
+Reviewed-on: https://gerrit.onap.org/r/48465
+Project: dcaegen2/services/prh
+Branch: refs/heads/master

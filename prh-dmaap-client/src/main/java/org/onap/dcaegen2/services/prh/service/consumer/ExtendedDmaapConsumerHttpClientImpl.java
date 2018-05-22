@@ -20,6 +20,10 @@
 
 package org.onap.dcaegen2.services.prh.service.consumer;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Optional;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
@@ -32,11 +36,6 @@ import org.onap.dcaegen2.services.prh.service.DmaapHttpClientImpl;
 import org.onap.dcaegen2.services.prh.service.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Optional;
 
 
 public class ExtendedDmaapConsumerHttpClientImpl {
@@ -66,60 +65,50 @@ public class ExtendedDmaapConsumerHttpClientImpl {
 
     public Optional<String> getHttpConsumerResponse() {
 
-        Optional<String> extendedDetails = Optional.empty();
-        Optional<HttpRequestBase> request = createRequest();
-
         try {
-            extendedDetails = closeableHttpClient.execute(request.get(), dmaapConsumerResponseHandler());
-        } catch (IOException | NullPointerException e) {
-            logger.error("Exception while executing HTTP request: {}", e);
+            return createRequest()
+                .flatMap(this::executeHttpClient);
+        } catch (NullPointerException | URISyntaxException e) {
+            logger.warn("Exception while executing HTTP request: ", e);
         }
-
-        return extendedDetails;
+        return Optional.empty();
     }
 
-    private static HttpRequestBase createHttpRequest(URI extendedURI) {
-        if (isExtendedURINotNull(extendedURI)) {
-            return new HttpGet(extendedURI);
+    private Optional<String> executeHttpClient(HttpRequestBase httpRequestBase) {
+        try {
+            return closeableHttpClient.execute(httpRequestBase, getDmaapConsumerResponseHandler());
+        } catch (IOException e) {
+            logger.warn("Exception while executing HTTP request: ", e);
         }
-
-        return null;
+        return Optional.empty();
     }
 
-    private static Boolean isExtendedURINotNull(URI extendedURI) {
-        return extendedURI != null;
+    private Optional<HttpRequestBase> createRequest() throws URISyntaxException {
+        return createDmaapConsumerExtendedURI()
+            .filter(httpRequestBase -> "application/json".equals(dmaapContentType))
+            .map(this::createHttpRequest);
     }
 
-    private Optional<HttpRequestBase> createRequest() {
-
-        Optional<HttpRequestBase> request = Optional.empty();
-        final URI extendedURI = createDmaapConsumerExtendedURI();
-
-        if ("application/json".equals(dmaapContentType)) {
-            request = Optional.ofNullable(createHttpRequest(extendedURI));
-            request.get().addHeader("Content-type", dmaapContentType);
-        }
-
-        return request;
+    private HttpRequestBase createHttpRequest(URI extendedURI) {
+        HttpRequestBase httpRequestBase = new HttpGet(extendedURI);
+        httpRequestBase.addHeader("Content-type", dmaapContentType);
+        return httpRequestBase;
     }
+
 
     private String createRequestPath() {
         return dmaapTopicName + "/" + consumerGroup + "/" + consumerId;
     }
 
-    private URI createDmaapConsumerExtendedURI() {
-        try {
-            return new URIBuilder()
-                .setScheme(dmaapProtocol)
-                .setHost(dmaapHostName)
-                .setPort(dmaapPortNumber)
-                .setPath(createRequestPath()).build();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Exception while building extended URI: {}", e);
-        }
+    private Optional<URI> createDmaapConsumerExtendedURI() throws URISyntaxException {
+        return Optional.ofNullable(new URIBuilder()
+            .setScheme(dmaapProtocol)
+            .setHost(dmaapHostName)
+            .setPort(dmaapPortNumber)
+            .setPath(createRequestPath()).build());
     }
 
-    private ResponseHandler<Optional<String>> dmaapConsumerResponseHandler() {
+    private ResponseHandler<Optional<String>> getDmaapConsumerResponseHandler() {
         return httpResponse -> {
             final int responseCode = httpResponse.getStatusLine().getStatusCode();
             logger.info("Status code of operation: {}", responseCode);
@@ -131,7 +120,7 @@ public class ExtendedDmaapConsumerHttpClientImpl {
                 return Optional.of(dmaapResponse);
             } else {
                 String dmaapResponse = responseEntity != null ? EntityUtils.toString(responseEntity) : "";
-                logger.error("HTTP response not successful : {}", dmaapResponse);
+                logger.warn("HTTP response not successful : {}", dmaapResponse);
                 return Optional.of(String.valueOf(responseCode));
             }
         };

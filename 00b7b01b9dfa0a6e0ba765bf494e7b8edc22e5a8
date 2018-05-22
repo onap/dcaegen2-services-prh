@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_d2e1b22b",
+        "filename": "prh-dmaap-client/src/main/java/org/onap/dcaegen2/services/prh/service/consumer/ExtendedDmaapConsumerHttpClientImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 2683
+      },
+      "writtenOn": "2018-05-22T11:37:44Z",
+      "side": 1,
+      "message": "Intended usage of such higher order functions  (like map or filter) is to pass a pure function - do not modify, result always depends on an argument value. Here httpRequestBase is not even used in filter - it is not a pure function. It is still thread safe (result is based on final String) but a little bit ugly.",
+      "revId": "00b7b01b9dfa0a6e0ba765bf494e7b8edc22e5a8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

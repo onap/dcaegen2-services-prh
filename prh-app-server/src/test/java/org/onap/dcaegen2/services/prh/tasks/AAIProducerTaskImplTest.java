@@ -30,6 +30,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -95,7 +96,7 @@ class AAIProducerTaskImplTest {
     }
 
     @Test
-    public void whenPassedObjectFits_ReturnsCorrectStatus() throws AAINotFoundException, IOException {
+    public void whenPassedObjectFits_ReturnsCorrectStatus() throws AAINotFoundException, URISyntaxException {
         //given/when
         getAAIProducerTask_whenMockingResponseObject(200, false);
         ConsumerDmaapModel response = aaiProducerTask.execute(consumerDmaapModel);
@@ -109,7 +110,7 @@ class AAIProducerTaskImplTest {
 
 
     @Test
-    public void whenPassedObjectFits_butIncorrectResponseReturns() throws IOException {
+    public void whenPassedObjectFits_butIncorrectResponseReturns() throws IOException, URISyntaxException {
         //given/when
         getAAIProducerTask_whenMockingResponseObject(400, false);
         Executable executableCode = () -> aaiProducerTask.execute(consumerDmaapModel);
@@ -121,7 +122,7 @@ class AAIProducerTaskImplTest {
     }
 
     @Test
-    public void whenPassedObjectFits_butHTTPClientThrowsIOExceptionHandleIt() throws IOException {
+    public void whenPassedObjectFits_butHTTPClientThrowsIOExceptionHandleIt() throws URISyntaxException {
         //given/when
         getAAIProducerTask_whenMockingResponseObject(0, true);
 
@@ -135,10 +136,11 @@ class AAIProducerTaskImplTest {
 
 
     private static void getAAIProducerTask_whenMockingResponseObject(int statusCode, boolean throwsException)
-        throws IOException {
+        throws URISyntaxException {
+        //given
         aaiProducerClient = mock(AAIProducerClient.class);
         if (throwsException) {
-            when(aaiProducerClient.getHttpResponse(consumerDmaapModel)).thenThrow(IOException.class);
+            when(aaiProducerClient.getHttpResponse(consumerDmaapModel)).thenThrow(URISyntaxException.class);
         } else {
             when(aaiProducerClient.getHttpResponse(consumerDmaapModel)).thenReturn(Optional.of(statusCode));
         }

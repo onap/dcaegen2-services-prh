@@ -19,20 +19,20 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
-import java.io.IOException;
-import java.util.Optional;
 import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
-import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.AAIProducerClient;
 import org.onap.dcaegen2.services.prh.service.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.net.URISyntaxException;
+import java.util.Optional;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
@@ -58,7 +58,7 @@ public class AAIProducerTaskImpl extends
             return aaiProducerClient.getHttpResponse(consumerDmaapModel)
                 .filter(HttpUtils::isSuccessfulResponseCode).map(response -> consumerDmaapModel).orElseThrow(() ->
                     new AAINotFoundException("Incorrect response code for continuation of tasks workflow"));
-        } catch (IOException e) {
+        } catch ( URISyntaxException e) {
             logger.warn("Patch request not successful", e);
             throw new AAINotFoundException("Patch request not successful");
         }

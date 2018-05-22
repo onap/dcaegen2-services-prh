@@ -21,11 +21,11 @@ package org.onap.dcaegen2.services.prh.service;
 
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 
-import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Optional;
 
 
 @FunctionalInterface
 public interface AAIExtendedHttpClient {
-    Optional<Integer> getHttpResponse(ConsumerDmaapModel consumerDmaapModel) throws IOException;
+    Optional<Integer> getHttpResponse(ConsumerDmaapModel consumerDmaapModel) throws URISyntaxException;
 }

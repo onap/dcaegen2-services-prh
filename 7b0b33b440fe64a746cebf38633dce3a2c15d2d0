@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_baa4f8b9",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 2999
+      },
+      "writtenOn": "2018-05-23T14:14:03Z",
+      "side": 1,
+      "message": "See how it is done in in dmmap module and try to make it coherent if possible",
+      "range": {
+        "startLine": 65,
+        "startChar": 29,
+        "endLine": 65,
+        "endChar": 44
+      },
+      "revId": "7b0b33b440fe64a746cebf38633dce3a2c15d2d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_9ad1fc31",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 2999
+      },
+      "writtenOn": "2018-05-23T14:14:03Z",
+      "side": 1,
+      "message": "Why did you remove constant usage?",
+      "revId": "7b0b33b440fe64a746cebf38633dce3a2c15d2d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_5aa9348f",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 2999
+      },
+      "writtenOn": "2018-05-23T14:14:03Z",
+      "side": 1,
+      "message": ":D",
+      "range": {
+        "startLine": 96,
+        "startChar": 68,
+        "endLine": 96,
+        "endChar": 72
+      },
+      "revId": "7b0b33b440fe64a746cebf38633dce3a2c15d2d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_3a90e84d",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/CommonFunctions.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 2999
+      },
+      "writtenOn": "2018-05-23T14:14:03Z",
+      "side": 1,
+      "message": "It would be more precise to move it to HttpUtils and make usage of it in both dmaap and aai module",
+      "range": {
+        "startLine": 48,
+        "startChar": 36,
+        "endLine": 48,
+        "endChar": 50
+      },
+      "revId": "7b0b33b440fe64a746cebf38633dce3a2c15d2d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

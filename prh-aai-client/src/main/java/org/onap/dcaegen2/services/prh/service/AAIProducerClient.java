@@ -44,6 +44,8 @@ import java.util.Map;
 import java.util.Optional;
 
 public class AAIProducerClient implements AAIExtendedHttpClient {
+
+    public static final String EXCEPTION_MESSAGE = "Exception while executing http client: ";
     private Logger logger = LoggerFactory.getLogger(AAIProducerClient.class);
 
     private final CloseableHttpClient closeableHttpClient;
@@ -51,7 +53,7 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
     private final String aaiProtocol;
     private final Integer aaiHostPortNumber;
     private final String aaiPath;
-    private final Map<String,String> aaiHeaders;
+    private final Map<String, String> aaiHeaders;
 
 
     public AAIProducerClient(AAIClientConfiguration aaiClientConfiguration) {
@@ -66,18 +68,18 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
 
     @Override
     public Optional<Integer> getHttpResponse(ConsumerDmaapModel consumerDmaapModel) throws
-            URISyntaxException {
+        URISyntaxException {
         try {
-            return createRequest(consumerDmaapModel).flatMap(x->{
+            return createRequest(consumerDmaapModel).flatMap(x -> {
                 try {
                     return closeableHttpClient.execute(x, aaiResponseHandler());
                 } catch (IOException e) {
-                    logger.warn("Exception while executing http client: ", e);
+                    logger.warn(EXCEPTION_MESSAGE, e);
                     return Optional.empty();
                 }
             });
-        } catch (URISyntaxException e ) {
-            logger.warn("Exception while executing http client: ", e);
+        } catch (URISyntaxException e) {
+            logger.warn(EXCEPTION_MESSAGE, e);
             throw e;
         }
     }
@@ -89,14 +91,14 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
 
     private URI createAAIExtendedURI(final String pnfName) throws URISyntaxException {
         return new URIBuilder()
-                .setScheme(aaiProtocol)
-                .setHost(aaiHost)
-                .setPort(aaiHostPortNumber)
-                .setPath(aaiPath + "/" + pnfName).build();
+            .setScheme(aaiProtocol)
+            .setHost(aaiHost)
+            .setPort(aaiHostPortNumber)
+            .setPath(aaiPath + "/" + pnfName).build();
     }
 
     private ResponseHandler<Optional<Integer>> aaiResponseHandler() {
-        return (HttpResponse httpResponse) ->  {
+        return (HttpResponse httpResponse) -> {
             final Integer responseCode = httpResponse.getStatusLine().getStatusCode();
             logger.trace("Status code of operation: {}", responseCode);
             final HttpEntity responseEntity = httpResponse.getEntity();
@@ -113,19 +115,20 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
     }
 
     private Optional<HttpRequestBase> createHttpRequest(URI extendedURI, ConsumerDmaapModel consumerDmaapModel) {
-        return Optional.ofNullable(CommonFunctions.createJsonBody(consumerDmaapModel)).filter(x-> !x.isEmpty()).flatMap(myJson -> {
-            try {
-                return Optional.of(createHttpPatch(extendedURI, myJson));
-            } catch (UnsupportedEncodingException e) {
-                logger.warn("Exception while executing http client: ", e);
-            }
-            return Optional.empty();
-        });
+        return Optional.ofNullable(CommonFunctions.createJsonBody(consumerDmaapModel)).filter(x -> !x.isEmpty())
+            .flatMap(myJson -> {
+                try {
+                    return Optional.of(createHttpPatch(extendedURI, myJson));
+                } catch (UnsupportedEncodingException e) {
+                    logger.warn(EXCEPTION_MESSAGE, e);
+                }
+                return Optional.empty();
+            });
     }
 
     private HttpPatch createHttpPatch(URI extendedURI, String jsonBody) throws UnsupportedEncodingException {
         HttpPatch httpPatch = new HttpPatch(extendedURI);
-        httpPatch.setEntity( new StringEntity(jsonBody));
+        httpPatch.setEntity(new StringEntity(jsonBody));
         aaiHeaders.forEach(httpPatch::addHeader);
         httpPatch.addHeader("Content-Type", "application/merge-patch+json");
         return httpPatch;

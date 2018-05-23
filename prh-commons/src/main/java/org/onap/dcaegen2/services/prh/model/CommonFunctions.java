@@ -22,8 +22,19 @@ package org.onap.dcaegen2.services.prh.model;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
+import org.onap.dcaegen2.services.prh.model.utils.HttpUtils;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import java.io.IOException;
+import java.util.Optional;
+
 
 public class CommonFunctions {
+
+    private static Logger logger = LoggerFactory.getLogger(CommonFunctions.class);
 
     private static Gson gson = new GsonBuilder().create();
 
@@ -32,5 +43,20 @@ public class CommonFunctions {
 
     public static String createJsonBody(ConsumerDmaapModel consumerDmaapModel) {
         return gson.toJson(consumerDmaapModel);
+    }
+
+    public static Optional<Integer> handleResponse(HttpResponse response) throws IOException {
+        final Integer responseCode = response.getStatusLine().getStatusCode();
+        logger.trace("Status code of operation: {}", responseCode);
+        final HttpEntity responseEntity = response.getEntity();
+
+        if (HttpUtils.isSuccessfulResponseCode(responseCode)) {
+            logger.trace("HTTP response successful.");
+            return Optional.of(responseCode);
+        } else {
+            String aaiResponse = responseEntity != null ? EntityUtils.toString(responseEntity) : "";
+            logger.warn("HTTP response not successful : {}", aaiResponse);
+            return Optional.of(responseCode);
+        }
     }
 }

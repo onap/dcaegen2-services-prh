@@ -18,14 +18,13 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.service.utils;
+package org.onap.dcaegen2.services.prh.model.utils;
 
 import org.apache.http.HttpStatus;
-import org.junit.Test;
-import org.onap.dcaegen2.services.prh.utils.HttpUtils;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class HttpUtilsTest {

@@ -28,7 +28,7 @@ import org.onap.dcaegen2.services.prh.service.producer.ExtendedDmaapProducerHttp
  */
 abstract class DmaapPublisherTask<R, S, C> extends Task<R, S, C> {
 
-    abstract String publish(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException;
+    abstract Integer publish(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException;
 
     abstract ExtendedDmaapProducerHttpClientImpl resolveClient();
 }

@@ -20,16 +20,53 @@
 
 package org.onap.dcaegen2.services.prh.model;
 
-import org.junit.jupiter.api.Assertions;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class CommonFunctionsTest {
+import java.io.IOException;
+import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+class CommonFunctionsTest {
+    // Given
     private ConsumerDmaapModel model = new ConsumerDmaapModelForUnitTest();
     private String expectedResult = "{\"pnfName\":\"NOKnhfsadhff\",\"ipv4\":\"256.22.33.155\",\"ipv6\":\"2001:0db8:85a3:0000:0000:8a2e:0370:7334\"}";
 
+    final static HttpResponse httpResponseMock = mock(HttpResponse.class);
+    final static HttpEntity httpEntityMock = mock(HttpEntity.class);
+    final static StatusLine statusLineMock = mock(StatusLine.class);
+
+    @BeforeAll
+    static void setup() {
+        when(httpResponseMock.getEntity()).thenReturn(httpEntityMock);
+        when(httpResponseMock.getStatusLine()).thenReturn(statusLineMock);
+    }
+
     @Test
-    public void createJsonBody_shouldReturnJsonInString() {
-        Assertions.assertEquals(expectedResult, CommonFunctions.createJsonBody(model));
+    void createJsonBody_shouldReturnJsonInString() {
+        assertEquals(expectedResult, CommonFunctions.createJsonBody(model));
+    }
+
+    @Test
+    void handleResponse_shouldReturn200() throws IOException {
+        // When
+        when(httpResponseMock.getStatusLine().getStatusCode()).thenReturn(HttpStatus.SC_OK);
+        // Then
+        assertEquals(Optional.of(HttpStatus.SC_OK), CommonFunctions.handleResponse(httpResponseMock));
+    }
+
+    @Test
+    void handleResponse_shouldReturn300() throws IOException {
+        // When
+        when(httpResponseMock.getStatusLine().getStatusCode()).thenReturn(HttpStatus.SC_BAD_REQUEST);
+        // Then
+        assertEquals(Optional.of(HttpStatus.SC_BAD_REQUEST), CommonFunctions.handleResponse(httpResponseMock));
     }
 }

@@ -23,19 +23,22 @@ package org.onap.dcaegen2.services.prh.service;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModelForUnitTest;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -49,18 +52,8 @@ public class AAIProducerClientTest {
     private static ConsumerDmaapModel consumerDmaapModel = new ConsumerDmaapModelForUnitTest();
 
 
-    @Test
-    public void getHttpResponse_shouldReturnSuccessStatusCode()
-            throws IOException, URISyntaxException, NoSuchFieldException, IllegalAccessException {
-
-        //given
-        Map<String, String> aaiHeaders = new HashMap<>();
-        aaiHeaders.put("X-FromAppId", "prh");
-        aaiHeaders.put("X-TransactionId", "vv-temp");
-        aaiHeaders.put("Accept", "application/json");
-        aaiHeaders.put("Real-Time", "true");
-        aaiHeaders.put("Content-Type", "application/merge-patch+json");
-
+    @BeforeAll
+    static void setup() throws NoSuchFieldException, IllegalAccessException {
         when(aaiHttpClientConfigurationMock.aaiHost()).thenReturn("eucalyptus.es-si-eu-dhn-20.eecloud.nsn-net.net");
         when(aaiHttpClientConfigurationMock.aaiProtocol()).thenReturn("https");
         when(aaiHttpClientConfigurationMock.aaiHostPortNumber()).thenReturn(1234);
@@ -68,21 +61,57 @@ public class AAIProducerClientTest {
         when(aaiHttpClientConfigurationMock.aaiUserPassword()).thenReturn("PRH");
         when(aaiHttpClientConfigurationMock.aaiBasePath()).thenReturn("/aai/v11");
         when(aaiHttpClientConfigurationMock.aaiPnfPath()).thenReturn("/network/pnfs/pnf");
-        when(aaiHttpClientConfigurationMock.aaiHeaders()).thenReturn(aaiHeaders);
+        when(aaiHttpClientConfigurationMock.aaiHeaders()).thenReturn(setupHeaders());
 
         testedObject = new AAIProducerClient(aaiHttpClientConfigurationMock);
         setField();
+    }
+
+    @Test
+    void getHttpResponse_shouldReturnSuccessStatusCode() throws IOException, URISyntaxException {
+        // when
         when(closeableHttpClientMock.execute(any(HttpPatch.class), any(ResponseHandler.class)))
                 .thenReturn(Optional.of(SUCCESS));
         Optional<Integer> actualResult = testedObject.getHttpResponse(consumerDmaapModel);
+        // then
+        assertEquals(SUCCESS, actualResult.get());
+    }
 
-        //then
-        Assertions.assertEquals(SUCCESS, actualResult.get());
+    @Test
+    void getHttpResponse_shouldHandleIOException() throws IOException, URISyntaxException {
+        // when
+        when(closeableHttpClientMock.execute(any(HttpPatch.class), any(ResponseHandler.class)))
+                .thenThrow(new IOException("Error occur"));
+
+        testedObject.getHttpResponse(consumerDmaapModel);
+        // then
+        assertNotNull(testedObject.getHttpResponse(consumerDmaapModel));
+    }
+
+    @Test
+    void createHttpRequest_shouldCatchUnsupportedEncodingException() throws URISyntaxException, IOException {
+        // when
+        when(closeableHttpClientMock.execute(any(HttpPatch.class), any(ResponseHandler.class)))
+                .thenThrow(new UnsupportedEncodingException("A new Error"));
+        testedObject.getHttpResponse(consumerDmaapModel);
+        // then
+        assertNotNull(testedObject.getHttpResponse(consumerDmaapModel));
     }
 
     private static void setField() throws NoSuchFieldException, IllegalAccessException {
         Field field = testedObject.getClass().getDeclaredField("closeableHttpClient");
         field.setAccessible(true);
         field.set(testedObject, closeableHttpClientMock);
+    }
+
+    private static Map<String,String> setupHeaders() {
+        Map<String, String> aaiHeaders = new HashMap<>();
+        aaiHeaders.put("X-FromAppId", "prh");
+        aaiHeaders.put("X-TransactionId", "vv-temp");
+        aaiHeaders.put("Accept", "application/json");
+        aaiHeaders.put("Real-Time", "true");
+        aaiHeaders.put("Content-Type", "application/merge-patch+json");
+        return aaiHeaders;
+
     }
 }

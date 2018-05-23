@@ -42,18 +42,15 @@ import static org.mockito.Mockito.when;
 public class ExtendedDmaapProducerHttpClientImplTest {
 
     private static ExtendedDmaapProducerHttpClientImpl objectUnderTest;
-
     private static DmaapPublisherConfiguration configurationMock = mock(DmaapPublisherConfiguration.class);
     private static CloseableHttpClient closeableHttpClientMock = mock(CloseableHttpClient.class);
     private static ConsumerDmaapModel consumerDmaapModel = new ConsumerDmaapModelForUnitTest();
-
-    private static Optional<String> expectedResult = Optional.empty();
-    private static final String RESPONSE_SUCCESS = "200";
-    private static final String RESPONSE_FAILURE = "404";
+    private static Integer expectedResult;
+    private static final Integer RESPONSE_SUCCESS = 200;
+    private static final Integer RESPONSE_FAILURE = 404;
 
     @BeforeAll
     public static void init() throws NoSuchFieldException, IllegalAccessException {
-
         when(configurationMock.dmaapHostName()).thenReturn("54.45.33.2");
         when(configurationMock.dmaapProtocol()).thenReturn("https");
         when(configurationMock.dmaapPortNumber()).thenReturn(1234);
@@ -61,34 +58,28 @@ public class ExtendedDmaapProducerHttpClientImplTest {
         when(configurationMock.dmaapUserPassword()).thenReturn("PRH");
         when(configurationMock.dmaapContentType()).thenReturn("application/json");
         when(configurationMock.dmaapTopicName()).thenReturn("pnfReady");
-
         objectUnderTest = new ExtendedDmaapProducerHttpClientImpl(configurationMock);
-
         setField();
     }
 
 
     @Test
     public void getHttpResponsePost_success() throws IOException {
-        expectedResult = Optional.of(RESPONSE_SUCCESS);
-
+        expectedResult = RESPONSE_SUCCESS;
         when(closeableHttpClientMock.execute(any(HttpPost.class), any(ResponseHandler.class)))
-            .thenReturn(expectedResult);
-
-        Optional<String> actualResult = objectUnderTest.getHttpProducerResponse(consumerDmaapModel);
-
-        Assertions.assertEquals(expectedResult.get(), actualResult.get());
+            .thenReturn(Optional.of(expectedResult));
+        Optional<Integer> actualResult = objectUnderTest.getHttpProducerResponse(consumerDmaapModel);
+        Assertions.assertEquals(expectedResult, actualResult.get());
     }
 
     @Test
     public void getExtendedDetails_returnsFailure() throws IOException {
-        expectedResult = Optional.of(RESPONSE_FAILURE);
+        expectedResult = RESPONSE_FAILURE;
         when(closeableHttpClientMock.execute(any(HttpPost.class), any(ResponseHandler.class)))
-            .thenReturn(Optional.empty());
-        Optional<String> actualResult = objectUnderTest.getHttpProducerResponse(consumerDmaapModel);
-        Assertions.assertEquals(Optional.empty(), actualResult);
+            .thenReturn(Optional.of(expectedResult));
+        Optional<Integer> actualResult = objectUnderTest.getHttpProducerResponse(consumerDmaapModel);
+        Assertions.assertEquals(expectedResult, actualResult.get());
     }
-
 
     private static void setField() throws NoSuchFieldException, IllegalAccessException {
         Field field = objectUnderTest.getClass().getDeclaredField("closeableHttpClient");

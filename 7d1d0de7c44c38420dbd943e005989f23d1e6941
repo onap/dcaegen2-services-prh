@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_7571a3a7",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-23T16:44:35Z",
+      "side": 1,
+      "message": "If u can give the name of the x variable",
+      "range": {
+        "startLine": 67,
+        "startChar": 57,
+        "endLine": 67,
+        "endChar": 58
+      },
+      "revId": "7d1d0de7c44c38420dbd943e005989f23d1e6941",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_f55cd31b",
+        "filename": "prh-aai-client/src/test/java/org/onap/dcaegen2/services/prh/service/AAIProducerClientTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-23T16:44:35Z",
+      "side": 1,
+      "message": "put this in private function, setAAIHttpClientHeaders",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 71
+      },
+      "revId": "7d1d0de7c44c38420dbd943e005989f23d1e6941",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_15adbfea",
+        "filename": "prh-aai-client/src/test/java/org/onap/dcaegen2/services/prh/service/AAIProducerClientTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-23T16:44:35Z",
+      "side": 1,
+      "message": "put this in private function mockResponseFromAAIHttpClient",
+      "range": {
+        "startLine": 66,
+        "startChar": 8,
+        "endLine": 73,
+        "endChar": 81
+      },
+      "revId": "7d1d0de7c44c38420dbd943e005989f23d1e6941",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

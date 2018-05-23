@@ -37,7 +37,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class DmaapPublisherTaskImpl extends
-    DmaapPublisherTask<ConsumerDmaapModel, String, DmaapPublisherConfiguration> {
+    DmaapPublisherTask<ConsumerDmaapModel, Integer, DmaapPublisherConfiguration> {
 
     private static final Logger logger = LoggerFactory.getLogger(DmaapPublisherTaskImpl.class);
     private final Config prhAppConfig;
@@ -49,15 +49,15 @@ public class DmaapPublisherTaskImpl extends
     }
 
     @Override
-    String publish(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException {
+    Integer publish(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException {
         logger.trace("Method called with arg {}", consumerDmaapModel);
         return extendedDmaapProducerHttpClient.getHttpProducerResponse(consumerDmaapModel)
-            .filter(response -> !response.isEmpty() && response.equals(String.valueOf(HttpStatus.OK.value())))
+            .filter(response -> response == HttpStatus.OK.value())
             .orElseThrow(() -> new DmaapNotFoundException("Incorrect response from Dmaap"));
     }
 
     @Override
-    public String execute(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException {
+    public Integer execute(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException {
         consumerDmaapModel = Optional.ofNullable(consumerDmaapModel)
             .orElseThrow(() -> new DmaapNotFoundException("Invoked null object to Dmaap task"));
         extendedDmaapProducerHttpClient = resolveClient();

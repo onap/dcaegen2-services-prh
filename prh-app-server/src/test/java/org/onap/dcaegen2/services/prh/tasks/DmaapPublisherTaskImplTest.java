@@ -82,22 +82,22 @@ class DmaapPublisherTaskImplTest {
     @Test
     public void whenPassedObjectFits_ReturnsCorrectStatus() throws PrhTaskException {
         //given
-        prepareMocksForTests(HttpStatus.OK.toString());
+        prepareMocksForTests(HttpStatus.OK.value());
 
         //when
-        String response = dmaapPublisherTask.execute(consumerDmaapModel);
+        Integer response = dmaapPublisherTask.execute(consumerDmaapModel);
 
         //then
         verify(extendedDmaapProducerHttpClient, times(1))
             .getHttpProducerResponse(any(ConsumerDmaapModel.class));
         verifyNoMoreInteractions(extendedDmaapProducerHttpClient);
-        Assertions.assertEquals(HttpStatus.OK.toString(), response);
+        Assertions.assertEquals((Integer) HttpStatus.OK.value(), response);
     }
 
     @Test
     public void whenPassedObjectFits_butIncorrectResponseReturns() {
         //given
-        prepareMocksForTests("400");
+        prepareMocksForTests(HttpStatus.UNAUTHORIZED.value());
 
         //when
         Executable executableFunction = () -> dmaapPublisherTask.execute(consumerDmaapModel);
@@ -110,7 +110,7 @@ class DmaapPublisherTaskImplTest {
     }
 
 
-    private void prepareMocksForTests(String httpResponseCode) {
+    private void prepareMocksForTests(Integer httpResponseCode) {
         extendedDmaapProducerHttpClient = mock(ExtendedDmaapProducerHttpClientImpl.class);
         when(extendedDmaapProducerHttpClient.getHttpProducerResponse(consumerDmaapModel))
             .thenReturn(Optional.of(httpResponseCode));

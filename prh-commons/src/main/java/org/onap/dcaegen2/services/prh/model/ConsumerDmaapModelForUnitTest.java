@@ -22,21 +22,27 @@ package org.onap.dcaegen2.services.prh.model;
 
 public class ConsumerDmaapModelForUnitTest implements ConsumerDmaapModel {
 
-    private final String PNF_NAME = "NOKnhfsadhff";
-    private final String IPv4 = "256.22.33.155";
-    private final String IPv6 = "2001:0db8:85a3:0000:0000:8a2e:0370:7334";
+    private final String pnfName;
+    private final String ipv4;
+    private final String ipv6;
 
+    public ConsumerDmaapModelForUnitTest() {
+        this.pnfName = "NOKnhfsadhff";
+        this.ipv4 = "256.22.33.155";
+        this.ipv6 = "2001:0db8:85a3:0000:0000:8a2e:0370:7334";
+
+    }
 
     public String getPnfName() {
-        return PNF_NAME;
+        return pnfName;
     }
 
     public String getIpv4() {
-        return IPv4;
+        return ipv4;
     }
 
     public String getIpv6() {
-        return IPv6;
+        return ipv6;
     }
 
 }

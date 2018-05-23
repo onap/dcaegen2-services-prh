@@ -26,7 +26,7 @@ import org.onap.dcaegen2.services.prh.service.consumer.ExtendedDmaapConsumerHttp
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
-abstract class DmaapConsumerTask<Request, Response, Config> extends Task<Request, Response, Config> {
+abstract class DmaapConsumerTask<R, S, C> extends Task<R, S, C> {
 
     abstract ConsumerDmaapModel consume(String message) throws DmaapNotFoundException;
 

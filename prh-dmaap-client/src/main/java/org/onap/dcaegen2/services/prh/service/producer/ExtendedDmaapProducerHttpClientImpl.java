@@ -115,7 +115,7 @@ public class ExtendedDmaapProducerHttpClientImpl {
 
     private Optional<String> getDmaapProducerResponseHandler(HttpResponse httpResponse) throws IOException {
         final int responseCode = httpResponse.getStatusLine().getStatusCode();
-        logger.info("Status code of operation: {}", responseCode);
+        logger.trace("Status code of operation: {}", responseCode);
         final HttpEntity responseEntity = httpResponse.getEntity();
 
         if (HttpUtils.isSuccessfulResponseCode(responseCode)) {
@@ -123,7 +123,7 @@ public class ExtendedDmaapProducerHttpClientImpl {
             return Optional.of("" + responseCode);
         } else {
             String response = responseEntity != null ? EntityUtils.toString(responseEntity) : "";
-            logger.warn("HTTP response not successful : {}", response);
+            logger.trace("HTTP response not successful : {}", response);
             return Optional.of("" + responseCode);
         }
     }

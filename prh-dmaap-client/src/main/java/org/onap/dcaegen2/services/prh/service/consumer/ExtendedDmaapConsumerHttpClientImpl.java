@@ -111,16 +111,16 @@ public class ExtendedDmaapConsumerHttpClientImpl {
     private ResponseHandler<Optional<String>> getDmaapConsumerResponseHandler() {
         return httpResponse -> {
             final int responseCode = httpResponse.getStatusLine().getStatusCode();
-            logger.info("Status code of operation: {}", responseCode);
+            logger.trace("Status code of operation: {}", responseCode);
             final HttpEntity responseEntity = httpResponse.getEntity();
 
             if (HttpUtils.isSuccessfulResponseCode(responseCode)) {
-                logger.info("HTTP response successful.");
+                logger.trace("HTTP response successful.");
                 final String dmaapResponse = EntityUtils.toString(responseEntity);
                 return Optional.of(dmaapResponse);
             } else {
                 String dmaapResponse = responseEntity != null ? EntityUtils.toString(responseEntity) : "";
-                logger.warn("HTTP response not successful : {}", dmaapResponse);
+                logger.trace("HTTP response not successful : {}", dmaapResponse);
                 return Optional.of(String.valueOf(responseCode));
             }
         };

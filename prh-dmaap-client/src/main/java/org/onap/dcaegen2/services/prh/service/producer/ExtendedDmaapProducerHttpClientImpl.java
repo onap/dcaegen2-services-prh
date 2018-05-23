@@ -68,7 +68,7 @@ public class ExtendedDmaapProducerHttpClientImpl {
         try {
             return createRequest()
                 .flatMap(this::executeHttpClient);
-        } catch (NullPointerException | URISyntaxException e) {
+        } catch (URISyntaxException e) {
             logger.warn("Exception while executing HTTP request: ", e);
         }
         return Optional.empty();
@@ -114,16 +114,17 @@ public class ExtendedDmaapProducerHttpClientImpl {
     }
 
     private Optional<String> getDmaapProducerResponseHandler(HttpResponse httpResponse) throws IOException {
-            final int responseCode = httpResponse.getStatusLine().getStatusCode();
-            final HttpEntity responseEntity = httpResponse.getEntity();
+        final int responseCode = httpResponse.getStatusLine().getStatusCode();
+        logger.info("Status code of operation: {}", responseCode);
+        final HttpEntity responseEntity = httpResponse.getEntity();
 
-            if (HttpUtils.isSuccessfulResponseCode(responseCode)) {
-                logger.trace("HTTP response successful.");
-                return Optional.of("" + responseCode);
-            } else {
-                String response = responseEntity != null ? EntityUtils.toString(responseEntity) : "";
-                logger.warn("HTTP response not successful : {}", response);
-                return Optional.of("" + responseCode);
-            }
+        if (HttpUtils.isSuccessfulResponseCode(responseCode)) {
+            logger.trace("HTTP response successful.");
+            return Optional.of("" + responseCode);
+        } else {
+            String response = responseEntity != null ? EntityUtils.toString(responseEntity) : "";
+            logger.warn("HTTP response not successful : {}", response);
+            return Optional.of("" + responseCode);
+        }
     }
 }

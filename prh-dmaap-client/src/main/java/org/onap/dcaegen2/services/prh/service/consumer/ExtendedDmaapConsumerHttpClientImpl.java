@@ -68,7 +68,7 @@ public class ExtendedDmaapConsumerHttpClientImpl {
         try {
             return createRequest()
                 .flatMap(this::executeHttpClient);
-        } catch (NullPointerException | URISyntaxException e) {
+        } catch (URISyntaxException e) {
             logger.warn("Exception while executing HTTP request: ", e);
         }
         return Optional.empty();

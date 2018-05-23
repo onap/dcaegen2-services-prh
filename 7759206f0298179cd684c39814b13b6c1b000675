@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_fcce005b",
+        "filename": "prh-dmaap-client/src/main/java/org/onap/dcaegen2/services/prh/service/producer/ExtendedDmaapProducerHttpClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2018-05-23T06:04:56Z",
+      "side": 1,
+      "message": "Catching NullPointerException is bad practice, these exceptions are a result of a programming error, rather than a thought-through implementation and can be dangerous by hiding actual bugs in the code flow",
+      "revId": "7759206f0298179cd684c39814b13b6c1b000675",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

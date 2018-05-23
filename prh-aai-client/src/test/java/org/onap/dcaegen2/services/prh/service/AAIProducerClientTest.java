@@ -23,19 +23,22 @@ package org.onap.dcaegen2.services.prh.service;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModelForUnitTest;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -49,9 +52,8 @@ public class AAIProducerClientTest {
     private static ConsumerDmaapModel consumerDmaapModel = new ConsumerDmaapModelForUnitTest();
 
 
-    @Test
-    public void getHttpResponse_shouldReturnSuccessStatusCode()
-            throws IOException, URISyntaxException, NoSuchFieldException, IllegalAccessException {
+    @BeforeAll
+    static void setup() throws NoSuchFieldException, IllegalAccessException {
 
         //given
         Map<String, String> aaiHeaders = new HashMap<>();
@@ -72,12 +74,37 @@ public class AAIProducerClientTest {
 
         testedObject = new AAIProducerClient(aaiHttpClientConfigurationMock);
         setField();
+    }
+
+    @Test
+    void getHttpResponse_shouldReturnSuccessStatusCode() throws IOException, URISyntaxException {
+        // when
         when(closeableHttpClientMock.execute(any(HttpPatch.class), any(ResponseHandler.class)))
                 .thenReturn(Optional.of(SUCCESS));
         Optional<Integer> actualResult = testedObject.getHttpResponse(consumerDmaapModel);
+        // then
+        assertEquals(SUCCESS, actualResult.get());
+    }
 
-        //then
-        Assertions.assertEquals(SUCCESS, actualResult.get());
+    @Test
+    void getHttpResponse_shouldHandleIOException() throws IOException, URISyntaxException {
+        // when
+        when(closeableHttpClientMock.execute(any(HttpPatch.class), any(ResponseHandler.class)))
+                .thenThrow(new IOException("Error occur"));
+
+        testedObject.getHttpResponse(consumerDmaapModel);
+        // then
+        assertNotNull(testedObject.getHttpResponse(consumerDmaapModel));
+    }
+
+    @Test
+    void createHttpRequest_shouldCatchUnsupportedEncodingException() throws URISyntaxException, IOException {
+        // when
+        when(closeableHttpClientMock.execute(any(HttpPatch.class), any(ResponseHandler.class)))
+                .thenThrow(new UnsupportedEncodingException("A new Error"));
+        testedObject.getHttpResponse(consumerDmaapModel);
+        // then
+        assertNotNull(testedObject.getHttpResponse(consumerDmaapModel));
     }
 
     private static void setField() throws NoSuchFieldException, IllegalAccessException {
@@ -85,4 +112,6 @@ public class AAIProducerClientTest {
         field.setAccessible(true);
         field.set(testedObject, closeableHttpClientMock);
     }
+
+
 }

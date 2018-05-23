@@ -20,19 +20,14 @@
 
 package org.onap.dcaegen2.services.prh.service;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
 import org.onap.dcaegen2.services.prh.model.CommonFunctions;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.utils.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +48,7 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
     private final String aaiProtocol;
     private final Integer aaiHostPortNumber;
     private final String aaiPath;
-    private final Map<String, String> aaiHeaders;
+    private final Map<String,String> aaiHeaders;
 
 
     public AAIProducerClient(AAIClientConfiguration aaiClientConfiguration) {
@@ -67,16 +62,17 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
 
 
     @Override
-    public Optional<Integer> getHttpResponse(ConsumerDmaapModel consumerDmaapModel) throws
-        URISyntaxException {
-        return createRequest(consumerDmaapModel).flatMap(x -> {
+    public Optional<Integer> getHttpResponse(ConsumerDmaapModel consumerDmaapModel) throws URISyntaxException {
+
+        return createRequest(consumerDmaapModel).flatMap(x->{
             try {
-                return closeableHttpClient.execute(x, aaiResponseHandler());
+                return closeableHttpClient.execute(x, CommonFunctions::handleResponse);
             } catch (IOException e) {
                 logger.warn(EXCEPTION_MESSAGE, e);
                 return Optional.empty();
             }
         });
+
     }
 
     private Optional<HttpRequestBase> createRequest(ConsumerDmaapModel consumerDmaapModel) throws URISyntaxException {
@@ -92,38 +88,20 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
             .setPath(aaiPath + "/" + pnfName).build();
     }
 
-    private ResponseHandler<Optional<Integer>> aaiResponseHandler() {
-        return (HttpResponse httpResponse) -> {
-            final Integer responseCode = httpResponse.getStatusLine().getStatusCode();
-            logger.info("Status code of operation: {}", responseCode);
-            final HttpEntity responseEntity = httpResponse.getEntity();
-
-            if (HttpUtils.isSuccessfulResponseCode(responseCode)) {
-                logger.trace("HTTP response successful.");
-                return Optional.of(responseCode);
-            } else {
-                String aaiResponse = responseEntity != null ? EntityUtils.toString(responseEntity) : "";
-                logger.warn("HTTP response not successful : {}", aaiResponse);
-                return Optional.of(responseCode);
+    Optional<HttpRequestBase> createHttpRequest(URI extendedURI, ConsumerDmaapModel consumerDmaapModel) {
+        return Optional.ofNullable(CommonFunctions.createJsonBody(consumerDmaapModel)).filter(x-> !x.isEmpty()).flatMap(myJson -> {
+            try {
+                return Optional.of(createHttpPatch(extendedURI, myJson));
+            } catch (UnsupportedEncodingException e) {
+                logger.warn(EXCEPTION_MESSAGE, e);
             }
-        };
-    }
-
-    private Optional<HttpRequestBase> createHttpRequest(URI extendedURI, ConsumerDmaapModel consumerDmaapModel) {
-        return Optional.ofNullable(CommonFunctions.createJsonBody(consumerDmaapModel)).filter(x -> !x.isEmpty())
-            .flatMap(myJson -> {
-                try {
-                    return Optional.of(createHttpPatch(extendedURI, myJson));
-                } catch (UnsupportedEncodingException e) {
-                    logger.warn(EXCEPTION_MESSAGE, e);
-                }
-                return Optional.empty();
-            });
+            return Optional.empty();
+        });
     }
 
     private HttpPatch createHttpPatch(URI extendedURI, String jsonBody) throws UnsupportedEncodingException {
         HttpPatch httpPatch = new HttpPatch(extendedURI);
-        httpPatch.setEntity(new StringEntity(jsonBody));
+        httpPatch.setEntity( new StringEntity(jsonBody));
         aaiHeaders.forEach(httpPatch::addHeader);
         httpPatch.addHeader("Content-Type", "application/merge-patch+json");
         return httpPatch;

@@ -123,7 +123,7 @@ public class ExtendedDmaapProducerHttpClientImpl {
             return Optional.of("" + responseCode);
         } else {
             String response = responseEntity != null ? EntityUtils.toString(responseEntity) : "";
-            logger.warn("HTTP response not successful : {}", response);
+            logger.trace("HTTP response not successful : {}", response);
             return Optional.of("" + responseCode);
         }
     }

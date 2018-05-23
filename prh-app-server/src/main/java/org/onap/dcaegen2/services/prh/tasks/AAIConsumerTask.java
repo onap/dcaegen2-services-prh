@@ -25,7 +25,7 @@ import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.AAIConsumerClient;
 
-public abstract class AAIConsumerTask<Request, Response, Conf> extends Task<Request, Response, Conf> {
+public abstract class AAIConsumerTask<R, S, C> extends Task<R, S, C> {
 
     abstract Optional<String> consume(ConsumerDmaapModel message) throws AAINotFoundException;
 

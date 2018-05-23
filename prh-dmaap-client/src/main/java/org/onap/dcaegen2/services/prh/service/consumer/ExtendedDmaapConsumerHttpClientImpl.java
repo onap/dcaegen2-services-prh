@@ -115,12 +115,12 @@ public class ExtendedDmaapConsumerHttpClientImpl {
             final HttpEntity responseEntity = httpResponse.getEntity();
 
             if (HttpUtils.isSuccessfulResponseCode(responseCode)) {
-                logger.info("HTTP response successful.");
+                logger.trace("HTTP response successful.");
                 final String dmaapResponse = EntityUtils.toString(responseEntity);
                 return Optional.of(dmaapResponse);
             } else {
                 String dmaapResponse = responseEntity != null ? EntityUtils.toString(responseEntity) : "";
-                logger.warn("HTTP response not successful : {}", dmaapResponse);
+                logger.trace("HTTP response not successful : {}", dmaapResponse);
                 return Optional.of(String.valueOf(responseCode));
             }
         };

@@ -94,7 +94,7 @@ public class AAIConsumerClient {
     private ResponseHandler<Optional<String>> aaiResponseHandler() {
         return httpResponse ->  {
             final int responseCode = httpResponse.getStatusLine().getStatusCode();
-            logger.trace("Status code of operation: {}", responseCode);
+            logger.info("Status code of operation: {}", responseCode);
             final HttpEntity responseEntity = httpResponse.getEntity();
 
             if (HttpUtils.isSuccessfulResponseCode(responseCode) ) {

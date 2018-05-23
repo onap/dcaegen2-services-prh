@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 public class CommonFunctionsTest {
 
     private ConsumerDmaapModel model = new ConsumerDmaapModelForUnitTest();
-    private String expectedResult = "{\"PNF_NAME\":\"NOKnhfsadhff\",\"IPv4\":\"256.22.33.155\",\"IPv6\":\"2001:0db8:85a3:0000:0000:8a2e:0370:7334\"}";
+    private String expectedResult = "{\"pnfName\":\"NOKnhfsadhff\",\"ipv4\":\"256.22.33.155\",\"ipv6\":\"2001:0db8:85a3:0000:0000:8a2e:0370:7334\"}";
 
     @Test
     public void createJsonBody_shouldReturnJsonInString() {

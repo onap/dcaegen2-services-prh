@@ -16,6 +16,24 @@
       "revId": "69da977930bf2ec5a7665f0144e698118c3e0f1b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_5c013469",
+        "filename": "prh-dmaap-client/src/main/java/org/onap/dcaegen2/services/prh/service/consumer/ExtendedDmaapConsumerHttpClientImpl.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-23T06:34:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_1ccc0c61",
+      "revId": "69da977930bf2ec5a7665f0144e698118c3e0f1b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

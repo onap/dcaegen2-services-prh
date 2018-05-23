@@ -20,26 +20,23 @@
 
 package org.onap.dcaegen2.services.prh.service.producer;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Optional;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.model.CommonFunctions;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.DmaapHttpClientImpl;
-import org.onap.dcaegen2.services.prh.service.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Optional;
 
 public class ExtendedDmaapProducerHttpClientImpl {
 
@@ -63,7 +60,7 @@ public class ExtendedDmaapProducerHttpClientImpl {
         this.dmaapContentType = configuration.dmaapContentType();
     }
 
-    public Optional<String> getHttpProducerResponse(ConsumerDmaapModel consumerDmaapModel) {
+    public Optional<Integer> getHttpProducerResponse(ConsumerDmaapModel consumerDmaapModel) {
         this.consumerDmaapModel = consumerDmaapModel;
         try {
             return createRequest()
@@ -74,9 +71,9 @@ public class ExtendedDmaapProducerHttpClientImpl {
         return Optional.empty();
     }
 
-    private Optional<String> executeHttpClient(HttpRequestBase httpRequestBase) {
+    private Optional<Integer> executeHttpClient(HttpRequestBase httpRequestBase) {
         try {
-            return closeableHttpClient.execute(httpRequestBase, this::getDmaapProducerResponseHandler);
+            return closeableHttpClient.execute(httpRequestBase, CommonFunctions::handleResponse);
         } catch (IOException e) {
             logger.warn("Exception while executing HTTP request: ", e);
         }
@@ -111,20 +108,5 @@ public class ExtendedDmaapProducerHttpClientImpl {
             logger.warn("Exception while parsing JSON: ", e);
         }
         return Optional.empty();
-    }
-
-    private Optional<String> getDmaapProducerResponseHandler(HttpResponse httpResponse) throws IOException {
-        final int responseCode = httpResponse.getStatusLine().getStatusCode();
-        logger.info("Status code of operation: {}", responseCode);
-        final HttpEntity responseEntity = httpResponse.getEntity();
-
-        if (HttpUtils.isSuccessfulResponseCode(responseCode)) {
-            logger.trace("HTTP response successful.");
-            return Optional.of("" + responseCode);
-        } else {
-            String response = responseEntity != null ? EntityUtils.toString(responseEntity) : "";
-            logger.trace("HTTP response not successful : {}", response);
-            return Optional.of("" + responseCode);
-        }
     }
 }

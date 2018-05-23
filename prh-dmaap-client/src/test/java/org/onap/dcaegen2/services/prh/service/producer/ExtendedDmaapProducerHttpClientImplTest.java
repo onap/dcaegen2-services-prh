@@ -53,7 +53,6 @@ public class ExtendedDmaapProducerHttpClientImplTest {
 
     @BeforeAll
     public static void init() throws NoSuchFieldException, IllegalAccessException {
-
         when(configurationMock.dmaapHostName()).thenReturn("54.45.33.2");
         when(configurationMock.dmaapProtocol()).thenReturn("https");
         when(configurationMock.dmaapPortNumber()).thenReturn(1234);
@@ -61,9 +60,7 @@ public class ExtendedDmaapProducerHttpClientImplTest {
         when(configurationMock.dmaapUserPassword()).thenReturn("PRH");
         when(configurationMock.dmaapContentType()).thenReturn("application/json");
         when(configurationMock.dmaapTopicName()).thenReturn("pnfReady");
-
         objectUnderTest = new ExtendedDmaapProducerHttpClientImpl(configurationMock);
-
         setField();
     }
 
@@ -75,7 +72,7 @@ public class ExtendedDmaapProducerHttpClientImplTest {
         when(closeableHttpClientMock.execute(any(HttpPost.class), any(ResponseHandler.class)))
             .thenReturn(expectedResult);
 
-        Optional<String> actualResult = objectUnderTest.getHttpProducerResponse(consumerDmaapModel);
+        Optional<Integer> actualResult = objectUnderTest.getHttpProducerResponse(consumerDmaapModel);
 
         Assertions.assertEquals(expectedResult.get(), actualResult.get());
     }
@@ -85,7 +82,7 @@ public class ExtendedDmaapProducerHttpClientImplTest {
         expectedResult = Optional.of(RESPONSE_FAILURE);
         when(closeableHttpClientMock.execute(any(HttpPost.class), any(ResponseHandler.class)))
             .thenReturn(Optional.empty());
-        Optional<String> actualResult = objectUnderTest.getHttpProducerResponse(consumerDmaapModel);
+        Optional<Integer> actualResult = objectUnderTest.getHttpProducerResponse(consumerDmaapModel);
         Assertions.assertEquals(Optional.empty(), actualResult);
     }
 

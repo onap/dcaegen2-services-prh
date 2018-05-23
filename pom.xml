@@ -355,6 +355,7 @@
                   <exclude>**/Immutable*</exclude>
                   <exclude>**/GsonAdapters*</exclude>
                   <exclude>**/*ForUnitTest*</exclude>
+                  <exclude>**/AAIConsumer*</exclude>
                 </excludes>
                 <rules>
                   <rule>

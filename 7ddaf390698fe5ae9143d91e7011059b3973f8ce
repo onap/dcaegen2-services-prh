@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_34ad58eb",
+        "filename": "pom.xml",
+        "patchSetId": 5
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 51
+      },
+      "writtenOn": "2018-05-24T16:07:35Z",
+      "side": 1,
+      "message": "Do these exclusions affect SONAR coverage reporting?",
+      "revId": "7ddaf390698fe5ae9143d91e7011059b3973f8ce",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

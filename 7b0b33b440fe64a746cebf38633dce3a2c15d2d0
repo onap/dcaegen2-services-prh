@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "5a93c517_abeca793",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 3625
+      },
+      "writtenOn": "2018-05-24T19:09:04Z",
+      "side": 1,
+      "message": "\", \" missing, it was fine in the first place I think.",
+      "revId": "7b0b33b440fe64a746cebf38633dce3a2c15d2d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_baa4f8b9",
         "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
         "patchSetId": 1
@@ -59,6 +76,23 @@
         "endLine": 96,
         "endChar": 72
       },
+      "revId": "7b0b33b440fe64a746cebf38633dce3a2c15d2d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_8bebeb77",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 3625
+      },
+      "writtenOn": "2018-05-24T19:09:04Z",
+      "side": 1,
+      "message": "unnecessary \" \" I think. \nPlease run code formatter on the whole file (or at least on changed lines).",
       "revId": "7b0b33b440fe64a746cebf38633dce3a2c15d2d0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false

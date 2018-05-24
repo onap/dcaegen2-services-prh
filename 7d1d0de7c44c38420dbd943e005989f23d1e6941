@@ -68,6 +68,23 @@
       "revId": "7d1d0de7c44c38420dbd943e005989f23d1e6941",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_2b24170d",
+        "filename": "prh-commons/src/test/java/org/onap/dcaegen2/services/prh/model/CommonFunctionsTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 3625
+      },
+      "writtenOn": "2018-05-24T19:09:04Z",
+      "side": 1,
+      "message": "I\u0027d consider using libs like Wire Mock to test RESTful clients. It worked great for me so far.",
+      "revId": "7d1d0de7c44c38420dbd943e005989f23d1e6941",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

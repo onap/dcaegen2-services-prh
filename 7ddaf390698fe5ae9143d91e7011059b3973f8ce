@@ -16,6 +16,24 @@
       "revId": "7ddaf390698fe5ae9143d91e7011059b3973f8ce",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_da48db5e",
+        "filename": "pom.xml",
+        "patchSetId": 5
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 2807
+      },
+      "writtenOn": "2018-05-25T07:50:40Z",
+      "side": 1,
+      "message": "Most likely no. At this moment we decided to not use AAIConsumer in PRH task flow. It stays on a project in case of future need.",
+      "parentUuid": "5a93c517_34ad58eb",
+      "revId": "7ddaf390698fe5ae9143d91e7011059b3973f8ce",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

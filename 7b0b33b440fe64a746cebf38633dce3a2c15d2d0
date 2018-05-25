@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_7a7187a7",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 2807
+      },
+      "writtenOn": "2018-05-25T07:50:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_baa4f8b9",
+      "range": {
+        "startLine": 65,
+        "startChar": 29,
+        "endLine": 65,
+        "endChar": 44
+      },
+      "revId": "7b0b33b440fe64a746cebf38633dce3a2c15d2d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_9ad1fc31",
         "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AAIProducerClient.java",
         "patchSetId": 1

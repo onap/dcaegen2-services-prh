@@ -26,6 +26,8 @@ import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 
+import java.util.Optional;
+
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/8/18
  */
@@ -42,9 +44,11 @@ public class DmaapConsumerJsonParser {
     private DmaapConsumerJsonParser() {
     }
 
+
     public static ConsumerDmaapModel getJsonObject(String message) throws DmaapNotFoundException {
         JsonElement jsonElement = new JsonParser().parse(message);
-        JsonObject jsonObject = jsonElement.getAsJsonObject();
+        JsonObject jsonObject = Optional.ofNullable(jsonElement.getAsJsonArray().get(0).getAsJsonObject())
+                .orElseThrow(() -> new DmaapNotFoundException("Json object not found in json array"));
         return create(jsonObject);
     }
 

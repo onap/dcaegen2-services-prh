@@ -22,6 +22,30 @@
       "revId": "2f8f1ecbcf2a59506e719af404b46337449ccc96",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_aa3ed8d8",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonParser.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-05-28T12:50:30Z",
+      "side": 1,
+      "message": "By default JsonObject has been wrapped by Array in dmaap response. This code snipped have to be defined as getFirstElementFromJsonArray method. @Piotr ought to change this implementation as soon as possible.\n\n\n\nPiotr change implementation to this:\n\n`        JsonObject jsonObject \u003d StreamSupport.stream(jsonElement.getAsJsonArray().spliterator(), false).findFirst()\n            .orElseThrow(() -\u003e new DmaapNotFoundException(\"\")).getAsJsonObject();\n        return create(jsonObject);`",
+      "parentUuid": "5a93c517_8a42fc66",
+      "range": {
+        "startLine": 49,
+        "startChar": 9,
+        "endLine": 52,
+        "endChar": 34
+      },
+      "revId": "2f8f1ecbcf2a59506e719af404b46337449ccc96",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

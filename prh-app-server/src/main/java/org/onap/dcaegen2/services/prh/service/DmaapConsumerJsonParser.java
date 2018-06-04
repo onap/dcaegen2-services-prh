@@ -26,6 +26,7 @@ import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 /**
@@ -41,17 +42,16 @@ public class DmaapConsumerJsonParser {
     private static final String PNF_SERIAL_NUMBER = "pnfSerialNumber";
 
 
-    private DmaapConsumerJsonParser() {
-    }
+    private DmaapConsumerJsonParser() {}
 
 
     public static ConsumerDmaapModel getJsonObject(String message) throws DmaapNotFoundException {
         JsonElement jsonElement = new JsonParser().parse(message);
-        JsonObject jsonObject;
 
-        jsonObject = jsonElement.isJsonObject() ? jsonElement.getAsJsonObject() :
+        JsonObject jsonObject = jsonElement.isJsonObject() ? jsonElement.getAsJsonObject() :
                 StreamSupport.stream(jsonElement.getAsJsonArray().spliterator(), false).findFirst()
-                    .orElseThrow(() -> new DmaapNotFoundException("Json object not found in json array"))
+                        .flatMap(element -> Optional.of(new JsonParser().parse(element.toString()).getAsJsonObject()))
+                        .orElseThrow(() -> new DmaapNotFoundException("Json object not found in json array"))
                         .getAsJsonObject();
 
         return create(jsonObject);

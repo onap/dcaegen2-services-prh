@@ -59,7 +59,7 @@ class DmaapConsumerJsonParserTest {
             + "\"pnfVendorName\":\"Nokia\"}}}]";
 
     @Test
-    public void whenPassingCorrectJson_validationNotThrowingAnException() throws DmaapNotFoundException {
+    void whenPassingCorrectJson_validationNotThrowingAnException() throws DmaapNotFoundException {
         //given
         String message =
             "[{\"event\":{\"commonEventHeader\":{\"domain\":\"other\",\"eventId\":\"<<SerialNumber>>-reg\",\"eventName\""
@@ -84,7 +84,7 @@ class DmaapConsumerJsonParserTest {
 
 
     @Test
-    public void whenPassingCorrectJsonWihoutIPV4_validationNotThrowingAnException() throws DmaapNotFoundException {
+    void whenPassingCorrectJsonWithoutIPV4_validationNotThrowingAnException() throws DmaapNotFoundException {
         //given
         String message =
             "[{\"event\":{\"commonEventHeader\":{\"domain\":\"other\",\"eventId\":\"<<SerialNumber>>-reg\",\"eventName\""
@@ -108,7 +108,7 @@ class DmaapConsumerJsonParserTest {
     }
 
     @Test
-    public void whenPassingCorrectJsonWihoutIPV6_validationNotThrowingAnException() throws DmaapNotFoundException {
+    void whenPassingCorrectJsonWihoutIPV6_validationNotThrowingAnException() throws DmaapNotFoundException {
         //given
         String message =
             "[{\"event\":{\"commonEventHeader\":{\"domain\":\"other\",\"eventId\":\"<<SerialNumber>>-reg\",\"eventName\""
@@ -131,7 +131,7 @@ class DmaapConsumerJsonParserTest {
     }
 
     @Test
-    public void whenPassingCorrectJsonWihoutIPV4andIPV6_validationThrowingAnException() {
+    void whenPassingCorrectJsonWihoutIPV4andIPV6_validationThrowingAnException() {
         String message =
             "[{\"event\":{\"commonEventHeader\":{\"domain\":\"other\",\"eventId\":\"<<SerialNumber>>-reg\",\"eventName\""
                 + ":\"pnfRegistration_5GDU\",\"eventType\":\"pnfRegistration\",\"internalHeaderFields\":{},"
@@ -142,29 +142,25 @@ class DmaapConsumerJsonParserTest {
                 + ":1517206400,\"pnfManufactureDate\":1516406400,\"pnfModelNumber\":\"AJ02\",\"pnfSoftwareVersion\":"
                 + "\"v4.5.0.1\",\"pnfType\":\"AirScale\",\"pnfVendorName\":\"Nokia\"}}}]";
 
-        Assertions.assertThrows(DmaapNotFoundException.class, () -> {
-            DmaapConsumerJsonParser.getJsonObject(message);
-        });
+        Assertions.assertThrows(DmaapNotFoundException.class,
+                () -> DmaapConsumerJsonParser.getJsonObject(message));
     }
 
     @Test
-    public void whenPassingJsonWithoutMandatoryHeaderInformation_validationThrowingAnException() {
-        Assertions.assertThrows(DmaapNotFoundException.class, () -> {
-            DmaapConsumerJsonParser.getJsonObject(incorrectMessage);
-        });
+    void whenPassingJsonWithoutMandatoryHeaderInformation_validationThrowingAnException() {
+        Assertions.assertThrows(DmaapNotFoundException.class,
+                () -> DmaapConsumerJsonParser.getJsonObject(incorrectMessage));
     }
 
     @Test
-    public void whenPassingJsonWithoutPnfSerialNumberOrPnfVendorName_validationThrowingAnException() {
-        Assertions.assertThrows(DmaapNotFoundException.class, () -> {
-            DmaapConsumerJsonParser.getJsonObject(jsonWithoutPnfVendorAndSerialNumber);
-        });
+    void whenPassingJsonWithoutPnfSerialNumberOrPnfVendorName_validationThrowingAnException() {
+        Assertions.assertThrows(DmaapNotFoundException.class,
+                () -> DmaapConsumerJsonParser.getJsonObject(jsonWithoutPnfVendorAndSerialNumber));
     }
 
     @Test
-    public void whenPassingJsonWithoutIPInformation_validationThrowingAnException() {
-        Assertions.assertThrows(DmaapNotFoundException.class, () -> {
-            DmaapConsumerJsonParser.getJsonObject(jsonWithoutIPInformation);
-        });
+    void whenPassingJsonWithoutIPInformation_validationThrowingAnException() {
+        Assertions.assertThrows(DmaapNotFoundException.class,
+                () -> DmaapConsumerJsonParser.getJsonObject(jsonWithoutIPInformation));
     }
 }

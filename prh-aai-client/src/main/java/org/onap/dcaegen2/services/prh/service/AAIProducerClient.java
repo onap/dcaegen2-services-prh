@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Base64;
 import java.util.Map;
 import java.util.Optional;
 
@@ -49,6 +50,8 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
     private final Integer aaiHostPortNumber;
     private final String aaiPath;
     private final Map<String,String> aaiHeaders;
+    private final String aaiUserName;
+    private final String aaiUserPassword;
 
 
     public AAIProducerClient(AAIClientConfiguration aaiClientConfiguration) {
@@ -58,6 +61,8 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
         aaiHostPortNumber = aaiClientConfiguration.aaiHostPortNumber();
         aaiPath = aaiClientConfiguration.aaiBasePath() + aaiClientConfiguration.aaiPnfPath();
         aaiHeaders = aaiClientConfiguration.aaiHeaders();
+        aaiUserName = aaiClientConfiguration.aaiUserName();
+        aaiUserPassword = aaiClientConfiguration.aaiUserPassword();
     }
 
 
@@ -71,7 +76,6 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
                 return Optional.empty();
             }
         });
-
     }
 
     private Optional<HttpRequestBase> createRequest(ConsumerDmaapModel consumerDmaapModel) throws URISyntaxException {
@@ -98,11 +102,17 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
         });
     }
 
-    private HttpPatch createHttpPatch(URI extendedURI, String jsonBody) throws UnsupportedEncodingException {
+    HttpPatch createHttpPatch(URI extendedURI, String jsonBody) throws UnsupportedEncodingException {
         HttpPatch httpPatch = new HttpPatch(extendedURI);
         httpPatch.setEntity( new StringEntity(jsonBody));
         aaiHeaders.forEach(httpPatch::addHeader);
         httpPatch.addHeader("Content-Type", "application/merge-patch+json");
+        httpPatch.addHeader("Authorization", "Basic " + encode());
         return httpPatch;
+    }
+
+    String encode() throws UnsupportedEncodingException {
+        return Base64.getEncoder().encodeToString((this.aaiUserName + ":" + this.aaiUserPassword)
+                .getBytes("UTF-8"));
     }
 }

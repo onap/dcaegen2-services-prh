@@ -47,7 +47,7 @@ public class CommonFunctions {
 
     public static Optional<Integer> handleResponse(HttpResponse response) throws IOException {
         final Integer responseCode = response.getStatusLine().getStatusCode();
-        logger.trace("Status code of operation: {}", responseCode);
+        logger.info("Status code of operation: {}", responseCode);
         final HttpEntity responseEntity = response.getEntity();
 
         if (HttpUtils.isSuccessfulResponseCode(responseCode)) {

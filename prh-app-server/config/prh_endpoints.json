@@ -9,15 +9,15 @@
         "dmaapUserName": "admin",
         "dmaapUserPassword": "admin",
         "dmaapContentType": "application/json",
-        "consumerId": "1",
-        "consumerGroup": "other",
-        "timeoutMS": 1000,
-        "messageLimit": 1000
+        "consumerId": "c12",
+        "consumerGroup": "OpenDcae-c12",
+        "timeoutMS": -1,
+        "messageLimit": 1
       },
       "dmaapProducerConfiguration": {
         "dmaapHostName": "localhost",
         "dmaapPortNumber": 2223,
-        "dmaapTopicName": "/events/pnfReady",
+        "dmaapTopicName": "/events/unauthenticated.PNF_READY",
         "dmaapProtocol": "http",
         "dmaapUserName": "admin",
         "dmaapUserPassword": "admin",

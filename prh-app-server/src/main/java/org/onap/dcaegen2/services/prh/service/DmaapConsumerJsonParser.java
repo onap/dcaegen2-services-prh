@@ -22,12 +22,11 @@ package org.onap.dcaegen2.services.prh.service;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.util.Optional;
+import java.util.stream.StreamSupport;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
-
-import java.util.Optional;
-import java.util.stream.StreamSupport;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/8/18
@@ -41,23 +40,22 @@ public class DmaapConsumerJsonParser {
     private static final String PNF_VENDOR_NAME = "pnfVendorName";
     private static final String PNF_SERIAL_NUMBER = "pnfSerialNumber";
 
-
-    private DmaapConsumerJsonParser() {}
-
-
-    public static ConsumerDmaapModel getJsonObject(String message) throws DmaapNotFoundException {
+    public ConsumerDmaapModel getJsonObject(String message) throws DmaapNotFoundException {
         JsonElement jsonElement = new JsonParser().parse(message);
-
-        JsonObject jsonObject = jsonElement.isJsonObject() ? jsonElement.getAsJsonObject() :
-                StreamSupport.stream(jsonElement.getAsJsonArray().spliterator(), false).findFirst()
-                        .flatMap(element -> Optional.of(new JsonParser().parse(element.toString()).getAsJsonObject()))
-                        .orElseThrow(() -> new DmaapNotFoundException("Json object not found in json array"))
-                        .getAsJsonObject();
-
-        return create(jsonObject);
+        if (jsonElement.isJsonObject()) {
+            return create(jsonElement.getAsJsonObject());
+        } else {
+            return create(StreamSupport.stream(jsonElement.getAsJsonArray().spliterator(), false).findFirst()
+                .flatMap(this::getJsonObjectFromAnArray)
+                .orElseThrow(() -> new DmaapNotFoundException("Json object not found in json array")));
+        }
     }
 
-    private static ConsumerDmaapModel create(JsonObject jsonObject) throws DmaapNotFoundException {
+    public Optional<JsonObject> getJsonObjectFromAnArray(JsonElement element) {
+        return Optional.of(new JsonParser().parse(element.getAsString()).getAsJsonObject());
+    }
+
+    private ConsumerDmaapModel create(JsonObject jsonObject) throws DmaapNotFoundException {
         if (containsHeader(jsonObject)) {
             jsonObject = jsonObject.getAsJsonObject(EVENT).getAsJsonObject(OTHER_FIELDS);
             String pnfVendorName = getValueFromJson(jsonObject, PNF_VENDOR_NAME);
@@ -76,21 +74,21 @@ public class DmaapConsumerJsonParser {
         throw new DmaapNotFoundException("Incorrect JsonObject - missing header");
     }
 
-    private static String getValueFromJson(JsonObject jsonObject, String jsonKey) {
+    private String getValueFromJson(JsonObject jsonObject, String jsonKey) {
         return jsonObject.has(jsonKey) ? jsonObject.get(jsonKey).getAsString() : "";
     }
 
-    private static boolean isVendorAndSerialNotEmpty(String pnfSerialNumber, String pnfVendorName) {
+    private boolean isVendorAndSerialNotEmpty(String pnfSerialNumber, String pnfVendorName) {
         return ((pnfSerialNumber != null && !pnfSerialNumber.isEmpty()) && (pnfVendorName != null && !pnfVendorName
             .isEmpty()));
     }
 
-    private static boolean isIpPropertiesNotEmpty(String ipv4, String ipv6) {
+    private boolean isIpPropertiesNotEmpty(String ipv4, String ipv6) {
         return (ipv4 != null && !ipv4.isEmpty()) || (ipv6 != null
             && !ipv6.isEmpty());
     }
 
-    private static boolean containsHeader(JsonObject jsonObject) {
+    private boolean containsHeader(JsonObject jsonObject) {
         return jsonObject.has(EVENT) && jsonObject.getAsJsonObject(EVENT).has(OTHER_FIELDS);
     }
 

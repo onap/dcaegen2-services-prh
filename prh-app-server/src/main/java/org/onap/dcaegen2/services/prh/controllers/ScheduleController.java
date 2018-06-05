@@ -45,7 +45,7 @@ import java.util.concurrent.ScheduledFuture;
 public class ScheduleController {
 
     private static final Logger logger = LoggerFactory.getLogger(ScheduleController.class);
-    private static final int SCHEDULING_DELAY = 20000;
+    private static final int SCHEDULING_DELAY = 5000;
     private static volatile List<ScheduledFuture> scheduledFutureList = new ArrayList<>();
 
     private final TaskScheduler taskScheduler;

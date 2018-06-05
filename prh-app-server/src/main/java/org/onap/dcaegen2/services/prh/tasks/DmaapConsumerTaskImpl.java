@@ -44,16 +44,23 @@ public class DmaapConsumerTaskImpl extends
     private static final Logger logger = LoggerFactory.getLogger(DmaapConsumerTaskImpl.class);
     private final Config prhAppConfig;
     private ExtendedDmaapConsumerHttpClientImpl extendedDmaapConsumerHttpClient;
+    private DmaapConsumerJsonParser dmaapConsumerJsonParser;
 
     @Autowired
     public DmaapConsumerTaskImpl(AppConfig prhAppConfig) {
         this.prhAppConfig = prhAppConfig;
+        this.dmaapConsumerJsonParser = new DmaapConsumerJsonParser();
+    }
+
+    DmaapConsumerTaskImpl(AppConfig prhAppConfig, DmaapConsumerJsonParser dmaapConsumerJsonParser) {
+        this.prhAppConfig = prhAppConfig;
+        this.dmaapConsumerJsonParser = dmaapConsumerJsonParser;
     }
 
     @Override
     ConsumerDmaapModel consume(String message) throws DmaapNotFoundException {
         logger.trace("Method called with arg {}", message);
-        return DmaapConsumerJsonParser.getJsonObject(message);
+        return dmaapConsumerJsonParser.getJsonObject(message);
     }
 
     @Override

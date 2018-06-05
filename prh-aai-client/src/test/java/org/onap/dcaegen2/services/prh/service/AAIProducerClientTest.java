@@ -32,6 +32,7 @@ import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModelForUnitTest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
@@ -97,6 +98,29 @@ public class AAIProducerClientTest {
         // then
         assertNotNull(testedObject.getHttpResponse(consumerDmaapModel));
     }
+
+    @Test
+    void encode_shouldCreateEncodedString_whenUserAndPasswordAreSet() throws UnsupportedEncodingException {
+        // given
+        String expected = "UFJIOlBSSA==";
+        // when
+        String result = testedObject.encode();
+        // then
+        assertNotNull(result);
+        assertEquals(expected,result);
+    }
+
+    @Test
+    void createHttpPatch_shouldContainAuthorizationBasicValue() throws UnsupportedEncodingException {
+        // given
+        String expected = "Authorization: Basic UFJIOlBSSA==";
+        // when
+        HttpPatch patch = testedObject.createHttpPatch(URI.create("localhost"), "{}");
+        // then
+        assertNotNull(patch);
+        assertEquals(expected,patch.getLastHeader("Authorization").toString());
+    }
+
 
     private static void setField() throws NoSuchFieldException, IllegalAccessException {
         Field field = testedObject.getClass().getDeclaredField("closeableHttpClient");

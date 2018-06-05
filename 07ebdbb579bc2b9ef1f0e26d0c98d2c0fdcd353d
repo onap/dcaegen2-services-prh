@@ -1,0 +1,9 @@
+Code-Review+1: Przemyslaw Wasala <przemyslaw.wasala@nokia.com>
+Code-Review+1: Marcin Migdal <marcin.migdal@nokia.com>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Lusheng Ji <lji@research.att.com>
+Submitted-by: Lusheng Ji <lji@research.att.com>
+Submitted-at: Tue, 05 Jun 2018 14:44:41 +0000
+Reviewed-on: https://gerrit.onap.org/r/50317
+Project: dcaegen2/services/prh
+Branch: refs/heads/master

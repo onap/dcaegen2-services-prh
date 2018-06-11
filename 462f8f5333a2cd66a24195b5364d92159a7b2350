@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_fb424faa",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/CommonFunctions.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-06-11T12:24:23Z",
+      "side": 1,
+      "message": "Not in this way. Separate execution in each http client, according to logging specification.",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 1
+      },
+      "revId": "462f8f5333a2cd66a24195b5364d92159a7b2350",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

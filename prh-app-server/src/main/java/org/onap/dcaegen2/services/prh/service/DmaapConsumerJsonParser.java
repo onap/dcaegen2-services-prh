@@ -40,14 +40,15 @@ public class DmaapConsumerJsonParser {
     private static final String PNF_VENDOR_NAME = "pnfVendorName";
     private static final String PNF_SERIAL_NUMBER = "pnfSerialNumber";
 
-    public ConsumerDmaapModel getJsonObject(String message) throws DmaapNotFoundException {
+    public Optional<ConsumerDmaapModel> getJsonObject(String message) throws DmaapNotFoundException {
         JsonElement jsonElement = new JsonParser().parse(message);
         if (jsonElement.isJsonObject()) {
-            return create(jsonElement.getAsJsonObject());
+            return Optional.of(create(jsonElement.getAsJsonObject()));
         } else {
-            return create(StreamSupport.stream(jsonElement.getAsJsonArray().spliterator(), false).findFirst()
-                .flatMap(this::getJsonObjectFromAnArray)
-                .orElseThrow(() -> new DmaapNotFoundException("Json object not found in json array")));
+            return Optional
+                .of(create(StreamSupport.stream(jsonElement.getAsJsonArray().spliterator(), false).findFirst()
+                    .flatMap(this::getJsonObjectFromAnArray)
+                    .orElse(null)));
         }
     }
 

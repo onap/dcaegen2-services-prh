@@ -20,12 +20,17 @@
 
 package org.onap.dcaegen2.services.prh.service;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
+import org.onap.dcaegen2.services.prh.model.CommonFunctions;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModelForUnitTest;
 
@@ -44,13 +49,18 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class AAIProducerClientTest {
+class AAIProducerClientTest {
 
     private static final Integer SUCCESS = 200;
     private static AAIProducerClient testedObject;
     private static AAIClientConfiguration aaiHttpClientConfigurationMock = mock(AAIClientConfiguration.class);
     private static CloseableHttpClient closeableHttpClientMock = mock(CloseableHttpClient.class);
     private static ConsumerDmaapModel consumerDmaapModel = new ConsumerDmaapModelForUnitTest();
+
+    private final static HttpResponse httpResponseMock = mock(HttpResponse.class);
+    private final static HttpEntity httpEntityMock = mock(HttpEntity.class);
+    private final static StatusLine statusLineMock = mock(StatusLine.class);
+
 
 
     @BeforeAll
@@ -119,6 +129,26 @@ public class AAIProducerClientTest {
         // then
         assertNotNull(patch);
         assertEquals(expected, patch.getLastHeader("Authorization").toString());
+    }
+
+    @Test
+    void handleResponse_shouldReturn200() throws IOException {
+        // When
+        when(httpResponseMock.getEntity()).thenReturn(httpEntityMock);
+        when(httpResponseMock.getStatusLine()).thenReturn(statusLineMock);
+        when(httpResponseMock.getStatusLine().getStatusCode()).thenReturn(HttpStatus.SC_OK);
+        // Then
+        assertEquals(Optional.of(HttpStatus.SC_OK), testedObject.handleResponse(httpResponseMock));
+    }
+
+    @Test
+    void handleResponse_shouldReturn300() throws IOException {
+        // When
+        when(httpResponseMock.getEntity()).thenReturn(httpEntityMock);
+        when(httpResponseMock.getStatusLine()).thenReturn(statusLineMock);
+        when(httpResponseMock.getStatusLine().getStatusCode()).thenReturn(HttpStatus.SC_BAD_REQUEST);
+        // Then
+        assertEquals(Optional.of(HttpStatus.SC_BAD_REQUEST), testedObject.handleResponse(httpResponseMock));
     }
 
 

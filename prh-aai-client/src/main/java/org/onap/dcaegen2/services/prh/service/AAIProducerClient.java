@@ -20,14 +20,18 @@
 
 package org.onap.dcaegen2.services.prh.service;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
 import org.onap.dcaegen2.services.prh.model.CommonFunctions;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.model.utils.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +74,7 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
     public Optional<Integer> getHttpResponse(ConsumerDmaapModel consumerDmaapModel) throws URISyntaxException {
         return createRequest(consumerDmaapModel).flatMap(httpRequestBase -> {
             try {
-                return closeableHttpClient.execute(httpRequestBase, CommonFunctions::handleResponse);
+                return closeableHttpClient.execute(httpRequestBase, this::handleResponse);
             } catch (IOException e) {
                 logger.warn(EXCEPTION_MESSAGE, e);
                 return Optional.empty();
@@ -114,5 +118,21 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
     String encode() throws UnsupportedEncodingException {
         return Base64.getEncoder().encodeToString((this.aaiUserName + ":" + this.aaiUserPassword)
                 .getBytes("UTF-8"));
+    }
+
+    Optional<Integer> handleResponse(HttpResponse response) throws IOException {
+
+        final Integer responseCode = response.getStatusLine().getStatusCode();
+        logger.info("Status code of operation: {}", responseCode);
+        final HttpEntity responseEntity = response.getEntity();
+
+        if (HttpUtils.isSuccessfulResponseCode(responseCode)) {
+            logger.trace("HTTP response successful.");
+            return Optional.of(responseCode);
+        } else {
+            String aaiResponse = responseEntity != null ? EntityUtils.toString(responseEntity) : "";
+            logger.warn("HTTP response not successful : {}", aaiResponse);
+            return Optional.of(responseCode);
+        }
     }
 }

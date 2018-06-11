@@ -60,7 +60,9 @@ public class DmaapConsumerTaskImpl extends
     @Override
     ConsumerDmaapModel consume(String message) throws DmaapNotFoundException {
         logger.trace("Method called with arg {}", message);
-        return dmaapConsumerJsonParser.getJsonObject(message);
+        return dmaapConsumerJsonParser.getJsonObject(message)
+            .orElseThrow(() -> new DmaapNotFoundException(String.format("Nothing to consume from DmaaP %s topic.",
+                resolveConfiguration().dmaapTopicName())));
     }
 
     @Override

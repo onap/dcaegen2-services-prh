@@ -33,7 +33,9 @@
         <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
         <timeBasedFileNamingAndTriggeringPolicy
           class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-          <maxFileSize>10MB</maxFileSize>
+          <maxFileSize>50MB</maxFileSize>
+          <maxHistory>30</maxHistory>
+          <totalSizeCap>10GB</totalSizeCap>
         </timeBasedFileNamingAndTriggeringPolicy>
       </rollingPolicy>
     </appender>

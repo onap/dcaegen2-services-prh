@@ -26,15 +26,16 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.onap.dcaegen2.services.prh.model.utils.HttpUtils;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.Optional;
 
 
 public class CommonFunctions {
 
-    private static Logger logger = LoggerFactory.getLogger(CommonFunctions.class);
+    private static Logger logger = LoggerFactory.getLogger(getCallerClassName());
 
     private static Gson gson = new GsonBuilder().create();
 
@@ -46,6 +47,7 @@ public class CommonFunctions {
     }
 
     public static Optional<Integer> handleResponse(HttpResponse response) throws IOException {
+
         final Integer responseCode = response.getStatusLine().getStatusCode();
         logger.info("Status code of operation: {}", responseCode);
         final HttpEntity responseEntity = response.getEntity();
@@ -58,5 +60,10 @@ public class CommonFunctions {
             logger.warn("HTTP response not successful : {}", aaiResponse);
             return Optional.of(responseCode);
         }
+    }
+
+    private static String getCallerClassName() {
+        int indexOfCallerClassName = 2;
+        return Thread.currentThread().getStackTrace()[indexOfCallerClassName].getClassName();
     }
 }

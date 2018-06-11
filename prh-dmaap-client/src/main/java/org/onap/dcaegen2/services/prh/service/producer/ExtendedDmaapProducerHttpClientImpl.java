@@ -20,14 +20,18 @@
 
 package org.onap.dcaegen2.services.prh.service.producer;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.model.CommonFunctions;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.model.utils.HttpUtils;
 import org.onap.dcaegen2.services.prh.service.DmaapHttpClientImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +77,7 @@ public class ExtendedDmaapProducerHttpClientImpl {
 
     private Optional<Integer> executeHttpClient(HttpRequestBase httpRequestBase) {
         try {
-            return closeableHttpClient.execute(httpRequestBase, CommonFunctions::handleResponse);
+            return closeableHttpClient.execute(httpRequestBase, this::handleResponse);
         } catch (IOException e) {
             logger.warn("Exception while executing HTTP request: ", e);
         }
@@ -108,5 +112,21 @@ public class ExtendedDmaapProducerHttpClientImpl {
             logger.warn("Exception while parsing JSON: ", e);
         }
         return Optional.empty();
+    }
+
+    Optional<Integer> handleResponse(HttpResponse response) throws IOException {
+
+        final Integer responseCode = response.getStatusLine().getStatusCode();
+        logger.info("Status code of operation: {}", responseCode);
+        final HttpEntity responseEntity = response.getEntity();
+
+        if (HttpUtils.isSuccessfulResponseCode(responseCode)) {
+            logger.trace("HTTP response successful.");
+            return Optional.of(responseCode);
+        } else {
+            String aaiResponse = responseEntity != null ? EntityUtils.toString(responseEntity) : "";
+            logger.warn("HTTP response not successful : {}", aaiResponse);
+            return Optional.of(responseCode);
+        }
     }
 }

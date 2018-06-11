@@ -20,6 +20,10 @@
 
 package org.onap.dcaegen2.services.prh.service.producer;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -34,12 +38,13 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
-public class ExtendedDmaapProducerHttpClientImplTest {
+class ExtendedDmaapProducerHttpClientImplTest {
 
     private static ExtendedDmaapProducerHttpClientImpl objectUnderTest;
     private static DmaapPublisherConfiguration configurationMock = mock(DmaapPublisherConfiguration.class);
@@ -48,9 +53,13 @@ public class ExtendedDmaapProducerHttpClientImplTest {
     private static Integer expectedResult;
     private static final Integer RESPONSE_SUCCESS = 200;
     private static final Integer RESPONSE_FAILURE = 404;
+    private final static HttpResponse httpResponseMock = mock(HttpResponse.class);
+    private final static HttpEntity httpEntityMock = mock(HttpEntity.class);
+    private final static StatusLine statusLineMock = mock(StatusLine.class);
+
 
     @BeforeAll
-    public static void init() throws NoSuchFieldException, IllegalAccessException {
+    static void init() throws NoSuchFieldException, IllegalAccessException {
         when(configurationMock.dmaapHostName()).thenReturn("54.45.33.2");
         when(configurationMock.dmaapProtocol()).thenReturn("https");
         when(configurationMock.dmaapPortNumber()).thenReturn(1234);
@@ -64,7 +73,7 @@ public class ExtendedDmaapProducerHttpClientImplTest {
 
 
     @Test
-    public void getHttpResponsePost_success() throws IOException {
+    void getHttpResponsePost_success() throws IOException {
         expectedResult = RESPONSE_SUCCESS;
         when(closeableHttpClientMock.execute(any(HttpPost.class), any(ResponseHandler.class)))
             .thenReturn(Optional.of(expectedResult));
@@ -73,12 +82,32 @@ public class ExtendedDmaapProducerHttpClientImplTest {
     }
 
     @Test
-    public void getExtendedDetails_returnsFailure() throws IOException {
+    void getExtendedDetails_returnsFailure() throws IOException {
         expectedResult = RESPONSE_FAILURE;
         when(closeableHttpClientMock.execute(any(HttpPost.class), any(ResponseHandler.class)))
             .thenReturn(Optional.of(expectedResult));
         Optional<Integer> actualResult = objectUnderTest.getHttpProducerResponse(consumerDmaapModel);
         Assertions.assertEquals(expectedResult, actualResult.get());
+    }
+
+    @Test
+    void handleResponse_shouldReturn200() throws IOException {
+        // When
+        when(httpResponseMock.getEntity()).thenReturn(httpEntityMock);
+        when(httpResponseMock.getStatusLine()).thenReturn(statusLineMock);
+        when(httpResponseMock.getStatusLine().getStatusCode()).thenReturn(HttpStatus.SC_OK);
+        // Then
+        assertEquals(Optional.of(HttpStatus.SC_OK), objectUnderTest.handleResponse(httpResponseMock));
+    }
+
+    @Test
+    void handleResponse_shouldReturn300() throws IOException {
+        // When
+        when(httpResponseMock.getEntity()).thenReturn(httpEntityMock);
+        when(httpResponseMock.getStatusLine()).thenReturn(statusLineMock);
+        when(httpResponseMock.getStatusLine().getStatusCode()).thenReturn(HttpStatus.SC_BAD_REQUEST);
+        // Then
+        assertEquals(Optional.of(HttpStatus.SC_BAD_REQUEST), objectUnderTest.handleResponse(httpResponseMock));
     }
 
     private static void setField() throws NoSuchFieldException, IllegalAccessException {

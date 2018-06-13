@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ScheduledTasks {
 
-    private static final Logger logger = LoggerFactory.getLogger(ScheduledTasks.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final DmaapConsumerTask dmaapConsumerTask;
     private final DmaapPublisherTask dmaapProducerTask;

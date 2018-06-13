@@ -24,6 +24,7 @@ import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
+import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.producer.ExtendedDmaapProducerHttpClientImpl;
 import org.slf4j.Logger;
@@ -39,7 +40,7 @@ import org.springframework.stereotype.Component;
 public class DmaapPublisherTaskImpl extends
     DmaapPublisherTask<ConsumerDmaapModel, Integer, DmaapPublisherConfiguration> {
 
-    private static final Logger logger = LoggerFactory.getLogger(DmaapPublisherTaskImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Config prhAppConfig;
     private ExtendedDmaapProducerHttpClientImpl extendedDmaapProducerHttpClient;
 
@@ -50,10 +51,19 @@ public class DmaapPublisherTaskImpl extends
 
     @Override
     Integer publish(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException {
-        logger.trace("Method called with arg {}", consumerDmaapModel);
+        logger.info("Publishing on DmaaP topic {} object {}", resolveConfiguration().dmaapTopicName(),
+            consumerDmaapModel);
         return extendedDmaapProducerHttpClient.getHttpProducerResponse(consumerDmaapModel)
             .filter(response -> response == HttpStatus.OK.value())
             .orElseThrow(() -> new DmaapNotFoundException("Incorrect response from Dmaap"));
+    }
+
+    @Override
+    protected void receiveRequest(ConsumerDmaapModel body) throws PrhTaskException {
+            Integer response = execute(body);
+            if (taskProcess != null && response != null) {
+                taskProcess.receiveRequest(response);
+            }
     }
 
     @Override
@@ -66,7 +76,7 @@ public class DmaapPublisherTaskImpl extends
     }
 
     @Override
-    DmaapPublisherConfiguration resolveConfiguration() {
+    protected DmaapPublisherConfiguration resolveConfiguration() {
         return prhAppConfig.getDmaapPublisherConfiguration();
     }
 

@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START=======================================================
- * PROJECT
+ * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
@@ -17,20 +17,14 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.tasks;
-
-import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.service.consumer.ExtendedDmaapConsumerHttpClientImpl;
+package org.onap.dcaegen2.services.prh.exceptions;
 
 /**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 6/13/18
  */
-abstract class DmaapConsumerTask<R, S, C> extends Task<R, S, C> {
+public class DmaapEmptyResponseException extends PrhTaskException {
 
-    abstract ConsumerDmaapModel consume(String message) throws PrhTaskException;
-
-    abstract ExtendedDmaapConsumerHttpClientImpl resolveClient();
-
-    abstract void initConfigs();
+    public DmaapEmptyResponseException() {
+        super();
+    }
 }

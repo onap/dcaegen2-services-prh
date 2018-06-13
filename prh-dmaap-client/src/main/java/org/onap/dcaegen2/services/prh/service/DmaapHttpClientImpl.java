@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 
 public class DmaapHttpClientImpl {
 
-    private static Logger logger = LoggerFactory.getLogger(DmaapHttpClientImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final String dmaapHostName;
     private final Integer dmaapPortNumber;

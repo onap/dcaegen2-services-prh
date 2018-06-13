@@ -38,14 +38,14 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Profile("prod")
 public class SwaggerConfig extends WebMvcConfigurationSupport {
 
-  public static final String PACKAGE_PATH = "org.onap.dcaegen2.services.prh";
-  public static final String API_TITLE = "PRH app server";
-  public static final String DESCRIPTION = "This page lists all the rest apis for PRH app server.";
-  public static final String VERSION = "1.0";
-  public static final String RESOURCES_PATH = "classpath:/META-INF/resources/";
-  public static final String WEBJARS_PATH = RESOURCES_PATH + "webjars/";
-  public static final String SWAGGER_UI = "swagger-ui.html";
-  public static final String WEBJARS = "/webjars/**";
+  private static final String PACKAGE_PATH = "org.onap.dcaegen2.services.prh";
+  private static final String API_TITLE = "PRH app server";
+  private static final String DESCRIPTION = "This page lists all the rest apis for PRH app server.";
+  private static final String VERSION = "1.0";
+  private static final String RESOURCES_PATH = "classpath:/META-INF/resources/";
+  private static final String WEBJARS_PATH = RESOURCES_PATH + "webjars/";
+  private static final String SWAGGER_UI = "swagger-ui.html";
+  private static final String WEBJARS = "/webjars/**";
 
   @Bean
   public Docket api() {

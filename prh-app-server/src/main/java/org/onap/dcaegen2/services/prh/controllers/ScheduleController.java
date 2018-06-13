@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -21,6 +21,7 @@ package org.onap.dcaegen2.services.prh.controllers;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.onap.dcaegen2.services.prh.configuration.SchedulerConfig;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,52 +46,26 @@ import java.util.concurrent.ScheduledFuture;
 public class ScheduleController {
 
     private static final Logger logger = LoggerFactory.getLogger(ScheduleController.class);
-    private static final int SCHEDULING_DELAY = 5000;
-    private static volatile List<ScheduledFuture> scheduledFutureList = new ArrayList<>();
 
-    private final TaskScheduler taskScheduler;
-    private final ScheduledTasks scheduledTask;
-
+    private final SchedulerConfig schedulerConfig;
 
     @Autowired
-    public ScheduleController(TaskScheduler taskScheduler, ScheduledTasks scheduledTask) {
-        this.taskScheduler = taskScheduler;
-        this.scheduledTask = scheduledTask;
+    public ScheduleController(SchedulerConfig schedulerConfig) {
+        this.schedulerConfig = schedulerConfig;
     }
 
     @RequestMapping(value = "start", method = RequestMethod.GET)
     @ApiOperation(value = "Start scheduling worker request")
     public Mono<ResponseEntity<String>> startTasks() {
         logger.trace("Receiving start scheduling worker request");
-        return Mono.fromSupplier(this::tryToStartTask).map(this::createStartTaskResponse);
+        return Mono.fromSupplier(schedulerConfig::tryToStartTask).map(this::createStartTaskResponse);
     }
 
     @RequestMapping(value = "stopPrh", method = RequestMethod.GET)
     @ApiOperation(value = "Receiving stop scheduling worker request")
     public Mono<ResponseEntity<String>> stopTask() {
         logger.trace("Receiving stop scheduling worker request");
-        return getResponseFromCancellationOfTasks();
-    }
-
-    @ApiOperation(value = "Get response on stopping task execution")
-    private synchronized Mono<ResponseEntity<String>> getResponseFromCancellationOfTasks() {
-        scheduledFutureList.forEach(x -> x.cancel(false));
-        scheduledFutureList.clear();
-        return Mono.defer(() ->
-            Mono.just(new ResponseEntity<>("PRH Service has already been stopped!", HttpStatus.CREATED))
-        );
-    }
-
-    @ApiOperation(value = "Start task if possible")
-    private synchronized boolean tryToStartTask() {
-        if (scheduledFutureList.isEmpty()) {
-            scheduledFutureList.add(taskScheduler
-                .scheduleWithFixedDelay(scheduledTask::scheduleMainPrhEventTask, SCHEDULING_DELAY));
-            return true;
-        } else {
-            return false;
-        }
-
+        return schedulerConfig.getResponseFromCancellationOfTasks();
     }
 
     @ApiOperation(value = "Sends success or error response on starting task execution")

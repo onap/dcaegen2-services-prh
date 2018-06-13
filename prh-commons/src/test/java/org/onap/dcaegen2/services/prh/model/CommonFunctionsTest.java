@@ -50,7 +50,7 @@ class CommonFunctionsTest {
 
     @Test
     void createJsonBody_shouldReturnJsonInString() {
-        String expectedResult = "{\"pnfName\":\"NOKnhfsadhff\",\"ipv4\":\"256.22.33.155\",\"ipv6\":\"2001:0db8:85a3:0000:0000:8a2e:0370:7334\"}";
+        String expectedResult = "{\"pnf-name\":\"NOKnhfsadhff\",\"ipaddress-v4-oam\":\"256.22.33.155\",\"ipaddress-v6-oam\":\"2001:0db8:85a3:0000:0000:8a2e:0370:7334\"}";
         assertEquals(expectedResult, CommonFunctions.createJsonBody(model));
     }
 }

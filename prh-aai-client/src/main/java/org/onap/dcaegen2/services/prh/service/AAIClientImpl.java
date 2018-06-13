@@ -41,7 +41,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class AAIClientImpl implements AAIClient {
 
-    private Logger logger = LoggerFactory.getLogger(AAIClientImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private AAIClientConfiguration aaiClientConfig;
 
@@ -62,10 +62,10 @@ public class AAIClientImpl implements AAIClient {
             try {
                 logger.info("Setting SSL Context for AAI HTTP Client");
                 httpClientBuilder.setSSLContext(new SSLContextBuilder()
-                        .loadTrustMaterial(null, acceptingTrustStrategy)
-                        .build());
+                    .loadTrustMaterial(null, acceptingTrustStrategy)
+                    .build());
 
-            } catch (NoSuchAlgorithmException | KeyStoreException |  KeyManagementException e )  {
+            } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
                 logger.error("Exception while setting SSL Context for AAI HTTP Client: {}", e);
             }
 

@@ -25,6 +25,7 @@ import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
+import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.AAIConsumerClient;
 import org.slf4j.Logger;
@@ -36,7 +37,7 @@ import org.springframework.stereotype.Component;
 public class AAIConsumerTaskImpl extends
     AAIConsumerTask<ConsumerDmaapModel, String, AAIClientConfiguration> {
 
-    private static final Logger logger = LoggerFactory.getLogger(AAIConsumerTaskImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final Config prhAppConfig;
     private AAIConsumerClient aaiConsumerClient;
@@ -58,6 +59,14 @@ public class AAIConsumerTaskImpl extends
     }
 
     @Override
+    protected void receiveRequest(ConsumerDmaapModel body) throws PrhTaskException {
+        String response = execute(body);
+        if (taskProcess != null && response != null && !response.isEmpty()) {
+            taskProcess.receiveRequest(response);
+        }
+    }
+
+    @Override
     public String execute(ConsumerDmaapModel consumerDmaapModel) throws AAINotFoundException {
         consumerDmaapModel = Optional.ofNullable(consumerDmaapModel)
             .orElseThrow(() -> new AAINotFoundException("Invoked null object to AAI task"));
@@ -67,7 +76,7 @@ public class AAIConsumerTaskImpl extends
     }
 
     @Override
-    AAIClientConfiguration resolveConfiguration() {
+    protected AAIClientConfiguration resolveConfiguration() {
         return prhAppConfig.getAAIClientConfiguration();
     }
 

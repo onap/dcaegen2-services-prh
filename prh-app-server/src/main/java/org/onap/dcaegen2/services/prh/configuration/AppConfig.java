@@ -19,6 +19,7 @@
  */
 package org.onap.dcaegen2.services.prh.configuration;
 
+import java.util.function.Predicate;
 import org.onap.dcaegen2.services.prh.config.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -34,6 +35,7 @@ import java.util.Optional;
 @Configuration
 public class AppConfig extends PrhAppConfig {
 
+    private static Predicate<String> isEmpty = String::isEmpty;
     @Value("${dmaap.dmaapConsumerConfiguration.dmaapHostName:}")
     public String consumerDmaapHostName;
 
@@ -116,34 +118,34 @@ public class AppConfig extends PrhAppConfig {
     public DmaapConsumerConfiguration getDmaapConsumerConfiguration() {
         return new ImmutableDmaapConsumerConfiguration.Builder()
             .dmaapUserPassword(
-                Optional.ofNullable(consumerDmaapUserPassword).filter(p -> !p.isEmpty())
+                Optional.ofNullable(consumerDmaapUserPassword).filter(isEmpty.negate())
                     .orElse(dmaapConsumerConfiguration.dmaapUserPassword()))
             .dmaapUserName(
-                Optional.ofNullable(consumerDmaapUserName).filter(p -> !p.isEmpty())
+                Optional.ofNullable(consumerDmaapUserName).filter(isEmpty.negate())
                     .orElse(dmaapConsumerConfiguration.dmaapUserName()))
             .dmaapHostName(
-                Optional.ofNullable(consumerDmaapHostName).filter(p -> !p.isEmpty())
+                Optional.ofNullable(consumerDmaapHostName).filter(isEmpty.negate())
                     .orElse(dmaapConsumerConfiguration.dmaapHostName()))
             .dmaapPortNumber(
                 Optional.ofNullable(consumerDmaapPortNumber).filter(p -> !p.toString().isEmpty())
                     .orElse(dmaapConsumerConfiguration.dmaapPortNumber()))
             .dmaapProtocol(
-                Optional.ofNullable(consumerDmaapProtocol).filter(p -> !p.isEmpty())
+                Optional.ofNullable(consumerDmaapProtocol).filter(isEmpty.negate())
                     .orElse(dmaapConsumerConfiguration.dmaapProtocol()))
             .dmaapContentType(
-                Optional.ofNullable(consumerDmaapContentType).filter(p -> !p.isEmpty())
+                Optional.ofNullable(consumerDmaapContentType).filter(isEmpty.negate())
                     .orElse(dmaapConsumerConfiguration.dmaapContentType()))
             .dmaapTopicName(
-                Optional.ofNullable(consumerDmaapTopicName).filter(p -> !p.isEmpty())
+                Optional.ofNullable(consumerDmaapTopicName).filter(isEmpty.negate())
                     .orElse(dmaapConsumerConfiguration.dmaapTopicName()))
             .messageLimit(
                 Optional.ofNullable(consumerMessageLimit).filter(p -> !p.toString().isEmpty())
                     .orElse(dmaapConsumerConfiguration.messageLimit()))
             .timeoutMS(Optional.ofNullable(consumerTimeoutMS).filter(p -> !p.toString().isEmpty())
                 .orElse(dmaapConsumerConfiguration.timeoutMS()))
-            .consumerGroup(Optional.ofNullable(consumerGroup).filter(p -> !p.isEmpty())
+            .consumerGroup(Optional.ofNullable(consumerGroup).filter(isEmpty.negate())
                 .orElse(dmaapConsumerConfiguration.consumerGroup()))
-            .consumerId(Optional.ofNullable(consumerId).filter(p -> !p.isEmpty())
+            .consumerId(Optional.ofNullable(consumerId).filter(isEmpty.negate())
                 .orElse(dmaapConsumerConfiguration.consumerId()))
             .build();
     }
@@ -151,7 +153,7 @@ public class AppConfig extends PrhAppConfig {
     @Override
     public AAIClientConfiguration getAAIClientConfiguration() {
         return new ImmutableAAIClientConfiguration.Builder()
-            .aaiHost(Optional.ofNullable(aaiHost).filter(p -> !p.isEmpty()).orElse(aaiClientConfiguration.aaiHost()))
+            .aaiHost(Optional.ofNullable(aaiHost).filter(isEmpty.negate()).orElse(aaiClientConfiguration.aaiHost()))
             .aaiHostPortNumber(
                 Optional.ofNullable(aaiHostPortNumber).filter(p -> !p.toString().isEmpty())
                     .orElse(aaiClientConfiguration.aaiHostPortNumber()))
@@ -159,15 +161,15 @@ public class AppConfig extends PrhAppConfig {
                 Optional.ofNullable(aaiIgnoreSSLCertificateErrors).filter(p -> !p.toString().isEmpty())
                     .orElse(aaiClientConfiguration.aaiIgnoreSSLCertificateErrors()))
             .aaiProtocol(
-                Optional.ofNullable(aaiProtocol).filter(p -> !p.isEmpty()).orElse(aaiClientConfiguration.aaiProtocol()))
+                Optional.ofNullable(aaiProtocol).filter(isEmpty.negate()).orElse(aaiClientConfiguration.aaiProtocol()))
             .aaiUserName(
-                Optional.ofNullable(aaiUserName).filter(p -> !p.isEmpty()).orElse(aaiClientConfiguration.aaiUserName()))
-            .aaiUserPassword(Optional.ofNullable(aaiUserPassword).filter(p -> !p.isEmpty())
+                Optional.ofNullable(aaiUserName).filter(isEmpty.negate()).orElse(aaiClientConfiguration.aaiUserName()))
+            .aaiUserPassword(Optional.ofNullable(aaiUserPassword).filter(isEmpty.negate())
                 .orElse(aaiClientConfiguration.aaiUserPassword()))
-            .aaiBasePath(Optional.ofNullable(aaiBasePath).filter(p -> !p.isEmpty())
+            .aaiBasePath(Optional.ofNullable(aaiBasePath).filter(isEmpty.negate())
                 .orElse(aaiClientConfiguration.aaiBasePath()))
             .aaiPnfPath(
-                Optional.ofNullable(aaiPnfPath).filter(p -> !p.isEmpty()).orElse(aaiClientConfiguration.aaiPnfPath()))
+                Optional.ofNullable(aaiPnfPath).filter(isEmpty.negate()).orElse(aaiClientConfiguration.aaiPnfPath()))
             .aaiHeaders(aaiClientConfiguration.aaiHeaders())
             .build();
     }
@@ -176,25 +178,25 @@ public class AppConfig extends PrhAppConfig {
     public DmaapPublisherConfiguration getDmaapPublisherConfiguration() {
         return new ImmutableDmaapPublisherConfiguration.Builder()
             .dmaapContentType(
-                Optional.ofNullable(producerDmaapContentType).filter(p -> !p.isEmpty())
+                Optional.ofNullable(producerDmaapContentType).filter(isEmpty.negate())
                     .orElse(dmaapPublisherConfiguration.dmaapContentType()))
             .dmaapHostName(
-                Optional.ofNullable(producerDmaapHostName).filter(p -> !p.isEmpty())
+                Optional.ofNullable(producerDmaapHostName).filter(isEmpty.negate())
                     .orElse(dmaapPublisherConfiguration.dmaapHostName()))
             .dmaapPortNumber(
                 Optional.ofNullable(producerDmaapPortNumber).filter(p -> !p.toString().isEmpty())
                     .orElse(dmaapPublisherConfiguration.dmaapPortNumber()))
             .dmaapProtocol(
-                Optional.ofNullable(producerDmaapProtocol).filter(p -> !p.isEmpty())
+                Optional.ofNullable(producerDmaapProtocol).filter(isEmpty.negate())
                     .orElse(dmaapPublisherConfiguration.dmaapProtocol()))
             .dmaapTopicName(
-                Optional.ofNullable(producerDmaapTopicName).filter(p -> !p.isEmpty())
+                Optional.ofNullable(producerDmaapTopicName).filter(isEmpty.negate())
                     .orElse(dmaapPublisherConfiguration.dmaapTopicName()))
             .dmaapUserName(
-                Optional.ofNullable(producerDmaapUserName).filter(p -> !p.isEmpty())
+                Optional.ofNullable(producerDmaapUserName).filter(isEmpty.negate())
                     .orElse(dmaapPublisherConfiguration.dmaapUserName()))
             .dmaapUserPassword(
-                Optional.ofNullable(producerDmaapUserPassword).filter(p -> !p.isEmpty())
+                Optional.ofNullable(producerDmaapUserPassword).filter(isEmpty.negate())
                     .orElse(dmaapPublisherConfiguration.dmaapUserPassword()))
             .build();
     }

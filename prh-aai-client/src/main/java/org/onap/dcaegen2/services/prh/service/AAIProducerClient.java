@@ -20,6 +20,7 @@
 
 package org.onap.dcaegen2.services.prh.service;
 
+import java.util.function.Predicate;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPatch;
@@ -46,14 +47,14 @@ import java.util.Optional;
 public class AAIProducerClient implements AAIExtendedHttpClient {
 
     private static final String EXCEPTION_MESSAGE = "Exception while executing http client: ";
-    private Logger logger = LoggerFactory.getLogger(AAIProducerClient.class);
-
+    private static Predicate<String> isEmpty = String::isEmpty;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final CloseableHttpClient closeableHttpClient;
     private final String aaiHost;
     private final String aaiProtocol;
     private final Integer aaiHostPortNumber;
     private final String aaiPath;
-    private final Map<String,String> aaiHeaders;
+    private final Map<String, String> aaiHeaders;
     private final String aaiUserName;
     private final String aaiUserPassword;
 
@@ -96,19 +97,21 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
     }
 
     Optional<HttpRequestBase> createHttpRequest(URI extendedURI, ConsumerDmaapModel consumerDmaapModel) {
-        return Optional.ofNullable(CommonFunctions.createJsonBody(consumerDmaapModel)).filter(x-> !x.isEmpty()).flatMap(myJson -> {
-            try {
-                return Optional.of(createHttpPatch(extendedURI, myJson));
-            } catch (UnsupportedEncodingException e) {
-                logger.warn(EXCEPTION_MESSAGE, e);
-            }
-            return Optional.empty();
-        });
+        return Optional.ofNullable(CommonFunctions.createJsonBody(consumerDmaapModel)).filter(isEmpty.negate())
+            .flatMap(myJson -> {
+                try {
+                    logger.info("AAI: sending json {}", myJson);
+                    return Optional.of(createHttpPatch(extendedURI, myJson));
+                } catch (UnsupportedEncodingException e) {
+                    logger.warn(EXCEPTION_MESSAGE, e);
+                }
+                return Optional.empty();
+            });
     }
 
     HttpPatch createHttpPatch(URI extendedURI, String jsonBody) throws UnsupportedEncodingException {
         HttpPatch httpPatch = new HttpPatch(extendedURI);
-        httpPatch.setEntity( new StringEntity(jsonBody));
+        httpPatch.setEntity(new StringEntity(jsonBody));
         aaiHeaders.forEach(httpPatch::addHeader);
         httpPatch.addHeader("Content-Type", "application/merge-patch+json");
         httpPatch.addHeader("Authorization", "Basic " + encode());
@@ -117,7 +120,7 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
 
     String encode() throws UnsupportedEncodingException {
         return Base64.getEncoder().encodeToString((this.aaiUserName + ":" + this.aaiUserPassword)
-                .getBytes("UTF-8"));
+            .getBytes("UTF-8"));
     }
 
     Optional<Integer> handleResponse(HttpResponse response) throws IOException {

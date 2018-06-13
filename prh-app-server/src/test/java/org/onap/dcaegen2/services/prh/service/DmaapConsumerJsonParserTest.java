@@ -27,7 +27,9 @@ import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
+import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 
@@ -65,7 +67,8 @@ class DmaapConsumerJsonParserTest {
             + "\"pnfVendorName\":\"Nokia\"}}}]";
 
     @Test
-    void whenPassingCorrectJson_validationNotThrowingAnException() throws DmaapNotFoundException {
+    void whenPassingCorrectJson_validationNotThrowingAnException()
+        throws PrhTaskException {
         //given
         String message =
             "[{\"event\":{\"commonEventHeader\":{\"domain\":\"other\",\"eventId\":\"<<SerialNumber>>-reg\",\"eventName\""
@@ -103,7 +106,8 @@ class DmaapConsumerJsonParserTest {
     }
 
     @Test
-    void whenPassingCorrectJsonWithoutIPV4_validationNotThrowingAnException() throws DmaapNotFoundException {
+    void whenPassingCorrectJsonWithoutIPV4_validationNotThrowingAnException()
+        throws PrhTaskException {
         //given
         String message =
             "[{\"event\":{\"commonEventHeader\":{\"domain\":\"other\",\"eventId\":\"<<SerialNumber>>-reg\",\"eventName\""
@@ -142,7 +146,8 @@ class DmaapConsumerJsonParserTest {
     }
 
     @Test
-    void whenPassingCorrectJsonWihoutIPV6_validationNotThrowingAnException() throws DmaapNotFoundException {
+    void whenPassingCorrectJsonWihoutIPV6_validationNotThrowingAnException()
+        throws PrhTaskException {
         //given
         String message =
             "[{\"event\":{\"commonEventHeader\":{\"domain\":\"other\",\"eventId\":\"<<SerialNumber>>-reg\",\"eventName\""

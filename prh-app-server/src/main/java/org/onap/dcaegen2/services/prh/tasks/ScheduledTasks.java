@@ -19,6 +19,7 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
+import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +52,7 @@ public class ScheduledTasks {
         try {
             dmaapConsumerTask.initConfigs();
             dmaapConsumerTask.receiveRequest("");
+        } catch (DmaapEmptyResponseException e) {
         } catch (PrhTaskException e) {
             logger
                 .warn("Chain of tasks have been aborted, because some errors occur in prh workflow ", e);

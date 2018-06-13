@@ -20,15 +20,11 @@
 package org.onap.dcaegen2.services.prh.exceptions;
 
 /**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 6/13/18
  */
-public class PrhTaskException extends Exception {
+public class DmaapEmptyResponseException extends PrhTaskException {
 
-    public PrhTaskException() {
+    public DmaapEmptyResponseException() {
         super();
-    }
-
-    public PrhTaskException(String message) {
-        super(message);
     }
 }

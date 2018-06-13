@@ -28,15 +28,15 @@ import org.immutables.value.Value;
  */
 
 @Value.Immutable
-@Gson.TypeAdapters
+@Gson.TypeAdapters(fieldNamingStrategy = true)
 public interface ConsumerDmaapModel {
 
-    @SerializedName("pnf-name")
+    @SerializedName(value = "pnf-name", alternate = "pnf-name")
     String getPnfName();
 
-    @SerializedName("ipaddress-v4-oam")
+    @SerializedName(value = "ipaddress-v4-oam", alternate = "ipaddress-v4-oam")
     String getIpv4();
 
-    @SerializedName("ipaddress-v6-oam")
+    @SerializedName(value = "ipaddress-v6-oam", alternate = "ipaddress-v6-oam")
     String getIpv6();
 }

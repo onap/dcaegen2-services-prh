@@ -20,6 +20,7 @@
 package org.onap.dcaegen2.services.prh.tasks;
 
 import java.util.Optional;
+import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
@@ -58,11 +59,16 @@ public class DmaapConsumerTaskImpl extends
     }
 
     @Override
-    ConsumerDmaapModel consume(String message) throws DmaapNotFoundException {
-        logger.trace("Method called with arg {}", message);
-        return dmaapConsumerJsonParser.getJsonObject(message)
-            .orElseThrow(() -> new DmaapNotFoundException(String.format("Nothing to consume from DmaaP %s topic.",
-                resolveConfiguration().dmaapTopicName())));
+    ConsumerDmaapModel consume(String message) throws DmaapNotFoundException, DmaapEmptyResponseException {
+        logger.info("Consumed model from DmaaP: {}", message);
+        try {
+            return dmaapConsumerJsonParser.getJsonObject(message)
+                .orElseThrow(() -> new DmaapNotFoundException("Null response from JSONObject in single reqeust"));
+        } catch (DmaapEmptyResponseException e) {
+            logger.warn("Nothing to consume from DmaaP {} topic.",
+                resolveConfiguration().dmaapTopicName());
+            throw e;
+        }
     }
 
     @Override

@@ -19,6 +19,7 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
+import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.consumer.ExtendedDmaapConsumerHttpClientImpl;
@@ -28,7 +29,7 @@ import org.onap.dcaegen2.services.prh.service.consumer.ExtendedDmaapConsumerHttp
  */
 abstract class DmaapConsumerTask<R, S, C> extends Task<R, S, C> {
 
-    abstract ConsumerDmaapModel consume(String message) throws DmaapNotFoundException;
+    abstract ConsumerDmaapModel consume(String message) throws DmaapNotFoundException, DmaapEmptyResponseException;
 
     abstract ExtendedDmaapConsumerHttpClientImpl resolveClient();
 

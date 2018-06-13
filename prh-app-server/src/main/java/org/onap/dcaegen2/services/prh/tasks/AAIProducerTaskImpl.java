@@ -53,12 +53,12 @@ public class AAIProducerTaskImpl extends
 
     @Override
     ConsumerDmaapModel publish(ConsumerDmaapModel consumerDmaapModel) throws AAINotFoundException {
-        logger.trace("Method called with arg {}", consumerDmaapModel);
+        logger.info("Sending PNF model to AAI {}", consumerDmaapModel);
         try {
             return aaiProducerClient.getHttpResponse(consumerDmaapModel)
                 .filter(HttpUtils::isSuccessfulResponseCode).map(response -> consumerDmaapModel).orElseThrow(() ->
                     new AAINotFoundException("Incorrect response code for continuation of tasks workflow"));
-        } catch ( URISyntaxException e) {
+        } catch (URISyntaxException e) {
             logger.warn("Patch request not successful", e);
             throw new AAINotFoundException("Patch request not successful");
         }

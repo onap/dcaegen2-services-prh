@@ -50,7 +50,8 @@ public class DmaapPublisherTaskImpl extends
 
     @Override
     Integer publish(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException {
-        logger.trace("Method called with arg {}", consumerDmaapModel);
+        logger.info("Publishing on DmaaP topic {} object {}", resolveConfiguration().dmaapTopicName(),
+            consumerDmaapModel);
         return extendedDmaapProducerHttpClient.getHttpProducerResponse(consumerDmaapModel)
             .filter(response -> response == HttpStatus.OK.value())
             .orElseThrow(() -> new DmaapNotFoundException("Incorrect response from Dmaap"));

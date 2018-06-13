@@ -27,12 +27,16 @@ import java.util.stream.StreamSupport;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.tasks.DmaapConsumerTaskImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/8/18
  */
 public class DmaapConsumerJsonParser {
 
+    private static final Logger logger = LoggerFactory.getLogger(DmaapConsumerTaskImpl.class);
     private static final String EVENT = "event";
     private static final String OTHER_FIELDS = "otherFields";
     private static final String PNF_OAM_IPV_4_ADDRESS = "pnfOamIpv4Address";
@@ -40,16 +44,20 @@ public class DmaapConsumerJsonParser {
     private static final String PNF_VENDOR_NAME = "pnfVendorName";
     private static final String PNF_SERIAL_NUMBER = "pnfSerialNumber";
 
+
     public Optional<ConsumerDmaapModel> getJsonObject(String message) throws DmaapNotFoundException {
         JsonElement jsonElement = new JsonParser().parse(message);
+        Optional<ConsumerDmaapModel> consumerDmaapModel = null;
         if (jsonElement.isJsonObject()) {
-            return Optional.of(create(jsonElement.getAsJsonObject()));
+            consumerDmaapModel = Optional.of(create(jsonElement.getAsJsonObject()));
         } else {
-            return Optional
+            consumerDmaapModel = Optional
                 .of(create(StreamSupport.stream(jsonElement.getAsJsonArray().spliterator(), false).findFirst()
                     .flatMap(this::getJsonObjectFromAnArray)
                     .orElse(null)));
         }
+        logger.info("Parsed model from DmaaP after getting it: {}", consumerDmaapModel);
+        return consumerDmaapModel;
     }
 
     public Optional<JsonObject> getJsonObjectFromAnArray(JsonElement element) {

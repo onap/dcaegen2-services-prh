@@ -22,15 +22,20 @@ package org.onap.dcaegen2.services.prh.model;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapterFactory;
+import java.util.ServiceLoader;
 
 
 public class CommonFunctions {
 
-    private static Gson gson = new GsonBuilder().create();
-
-    private CommonFunctions() {}
+    private CommonFunctions() {
+    }
 
     public static String createJsonBody(ConsumerDmaapModel consumerDmaapModel) {
-        return gson.toJson(consumerDmaapModel);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        ServiceLoader.load(TypeAdapterFactory.class).forEach(gsonBuilder::registerTypeAdapterFactory);
+        Gson gson = gsonBuilder.create();
+        return gson.toJson(ImmutableConsumerDmaapModel.builder().ipv4(consumerDmaapModel.getIpv4())
+            .ipv6(consumerDmaapModel.getIpv6()).pnfName(consumerDmaapModel.getPnfName()).build());
     }
 }

@@ -44,7 +44,7 @@ import java.util.Optional;
 
 public class ExtendedDmaapProducerHttpClientImpl {
 
-    private static Logger logger = LoggerFactory.getLogger(ExtendedDmaapProducerHttpClientImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final CloseableHttpClient closeableHttpClient;
     private final String dmaapHostName;

@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 
 public class ExtendedDmaapConsumerHttpClientImpl {
 
-    private static Logger logger = LoggerFactory.getLogger(ExtendedDmaapConsumerHttpClientImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final CloseableHttpClient closeableHttpClient;
     private final String dmaapHostName;

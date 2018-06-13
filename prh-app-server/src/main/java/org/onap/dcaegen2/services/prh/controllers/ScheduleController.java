@@ -22,21 +22,15 @@ package org.onap.dcaegen2.services.prh.controllers;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.onap.dcaegen2.services.prh.configuration.SchedulerConfig;
-import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.TaskScheduler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ScheduledFuture;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/5/18
@@ -45,7 +39,7 @@ import java.util.concurrent.ScheduledFuture;
 @Api(value = "ScheduleController", description = "Schedule Controller")
 public class ScheduleController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ScheduleController.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final SchedulerConfig schedulerConfig;
 

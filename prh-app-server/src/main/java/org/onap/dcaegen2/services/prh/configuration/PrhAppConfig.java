@@ -49,7 +49,7 @@ public abstract class PrhAppConfig implements Config {
     private static final String DMAAP_PRODUCER = "dmaapProducerConfiguration";
     private static final String DMAAP_CONSUMER = "dmaapConsumerConfiguration";
 
-    private static final Logger logger = LoggerFactory.getLogger(PrhAppConfig.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     AAIClientConfiguration aaiClientConfiguration;
 

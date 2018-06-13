@@ -23,6 +23,7 @@ import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
+import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.AAIProducerClient;
 import org.onap.dcaegen2.services.prh.service.HttpUtils;
@@ -41,7 +42,7 @@ import java.util.Optional;
 public class AAIProducerTaskImpl extends
     AAIProducerTask<ConsumerDmaapModel, ConsumerDmaapModel, AAIClientConfiguration> {
 
-    private static final Logger logger = LoggerFactory.getLogger(AAIProducerTaskImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final Config prhAppConfig;
     private AAIProducerClient aaiProducerClient;
@@ -53,14 +54,22 @@ public class AAIProducerTaskImpl extends
 
     @Override
     ConsumerDmaapModel publish(ConsumerDmaapModel consumerDmaapModel) throws AAINotFoundException {
-        logger.trace("Method called with arg {}", consumerDmaapModel);
+        logger.info("Sending PNF model to AAI {}", consumerDmaapModel);
         try {
             return aaiProducerClient.getHttpResponse(consumerDmaapModel)
                 .filter(HttpUtils::isSuccessfulResponseCode).map(response -> consumerDmaapModel).orElseThrow(() ->
                     new AAINotFoundException("Incorrect response code for continuation of tasks workflow"));
-        } catch ( URISyntaxException e) {
+        } catch (URISyntaxException e) {
             logger.warn("Patch request not successful", e);
             throw new AAINotFoundException("Patch request not successful");
+        }
+    }
+
+    @Override
+    protected void receiveRequest(ConsumerDmaapModel body) throws PrhTaskException {
+        ConsumerDmaapModel response = execute(body);
+        if (taskProcess != null && response != null) {
+            taskProcess.receiveRequest(response);
         }
     }
 
@@ -73,7 +82,7 @@ public class AAIProducerTaskImpl extends
         return publish(consumerDmaapModel);
     }
 
-    AAIClientConfiguration resolveConfiguration() {
+    protected AAIClientConfiguration resolveConfiguration() {
         return prhAppConfig.getAAIClientConfiguration();
     }
 

@@ -36,7 +36,6 @@
   <properties>
     <main.basedir>${project.parent.basedir}</main.basedir>
   </properties>
-
   <dependencies>
 
     <!-- DEVELOPMENT DEPENDENCIES -->
@@ -104,6 +103,5 @@
       <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
 </project>

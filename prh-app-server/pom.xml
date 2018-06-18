@@ -37,6 +37,8 @@
     <nexusproxy>https://nexus.onap.org</nexusproxy>
     <snapshots.path>content/repositories/snapshots/</snapshots.path>
     <releases.path>content/repositories/releases/</releases.path>
+    <docker.repo.url>${onap.nexus.dockerregistry.daily}</docker.repo.url>
+    <nexus.staging>false</nexus.staging>
   </properties>
   <build>
     <plugins>
@@ -114,18 +116,7 @@
             <imageTag>${project.version}</imageTag>
             <imageTag>latest</imageTag>
           </imageTags>
-          <serverId>${onap.nexus.dockerregistry.daily}</serverId>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>1.6.7</version>
-        <extensions>true</extensions>
-        <configuration>
-          <serverId>ecomp-staging</serverId>
-          <nexusUrl>${nexusproxy}</nexusUrl>
-          <stagingProfileId>176c31dfe190a</stagingProfileId>
+          <serverId>${docker.repo.url}</serverId>
         </configuration>
       </plugin>
     </plugins>

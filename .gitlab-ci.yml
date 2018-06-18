@@ -1,0 +1,24 @@
+image: archive.docker-registry.eecloud.nsn-net.net/imp/matryoshka:18.02.0
+
+stages:
+  - build
+  - publish
+
+build:
+  stage: build
+  script:
+    - mvn -e clean install -T2 docker:build
+  artifacts:
+    expire_in: 5 days
+    paths:
+      - prh-commons/target/site/jacoco
+      - prh-aai-client/target/site/jacoco
+      - prh-dmaap-client/target/site/jacoco
+      - prh-app-server/target/site/jacoco
+publish:
+  stage: publish
+#  only:
+#    - master
+  script:
+    - docker login $DOCKER_REPO_ADDR -u $DOCKER_REPO_USER -p $DOCKER_REPO_PASS
+    - mvn -e -DskipTests -Ddocker.repo.url="$DOCKER_REPO_ADDR" -Dnexus.staging="true" deploy

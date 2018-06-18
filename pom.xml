@@ -78,6 +78,21 @@
   </properties>
 
   <pluginRepositories>
+
+
+    <pluginRepository>
+      <id>40_openecomp-release</id>
+      <name>40_openecomp-release</name>
+      <url>https://nexus.onap.org/content/repositories/releases/</url>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+
     <!-- Black Duck plugin dependencies -->
     <pluginRepository>
       <id>JCenter</id>
@@ -91,10 +106,23 @@
     </pluginRepository>
   </pluginRepositories>
 
+
   <repositories>
     <repository>
       <id>external-repository</id>
       <url>https://oss.sonatype.org/content/repositories</url>
+    </repository>
+    <repository>
+      <id>40_openecomp-release</id>
+      <name>40_openecomp-release</name>
+      <url>https://nexus.onap.org/content/repositories/releases/</url>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
     </repository>
   </repositories>
 

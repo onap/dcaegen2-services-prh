@@ -38,7 +38,6 @@
   <properties>
     <main.basedir>${project.parent.basedir}</main.basedir>
   </properties>
-
   <dependencies>
 
     <!-- DEVELOPMENT DEPENDENCIES -->

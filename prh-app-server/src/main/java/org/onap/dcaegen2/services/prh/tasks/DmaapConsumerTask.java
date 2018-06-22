@@ -26,11 +26,13 @@ import org.onap.dcaegen2.services.prh.service.consumer.ExtendedDmaapConsumerHttp
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
-abstract class DmaapConsumerTask<R, S, C> extends Task<R, S, C> {
+abstract class DmaapConsumerTask /*<R, S, C> extends Task<R, S, C>*/ {
 
     abstract ConsumerDmaapModel consume(String message) throws PrhTaskException;
 
     abstract ExtendedDmaapConsumerHttpClientImpl resolveClient();
 
     abstract void initConfigs();
+
+    abstract protected ConsumerDmaapModel execute(String object) throws PrhTaskException;
 }

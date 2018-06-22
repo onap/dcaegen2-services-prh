@@ -41,7 +41,7 @@ public class DmaapConsumerTaskSpy {
 
     @Bean
     @Primary
-    public Task registerSimpleDmaapConsumerTask() {
+    public DmaapConsumerTask registerSimpleDmaapConsumerTask() {
         AppConfig appConfig = spy(AppConfig.class);
         doReturn(mock(DmaapConsumerConfiguration.class)).when(appConfig).getDmaapConsumerConfiguration();
         DmaapConsumerTaskImpl dmaapConsumerTask = spy(new DmaapConsumerTaskImpl(appConfig));

@@ -13,7 +13,7 @@
       </encoder>
       <file>${LOG_FILE}</file>
       <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-        <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.log</fileNamePattern>
+        <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
         <maxFileSize>50MB</maxFileSize>
         <maxHistory>30</maxHistory>
         <totalSizeCap>10GB</totalSizeCap>

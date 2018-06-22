@@ -26,9 +26,11 @@ import org.onap.dcaegen2.services.prh.service.producer.ExtendedDmaapProducerHttp
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
-abstract class DmaapPublisherTask<R, S, C> extends Task<R, S, C> {
+abstract class DmaapPublisherTask {
 
     abstract Integer publish(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException;
 
     abstract ExtendedDmaapProducerHttpClientImpl resolveClient();
+
+    abstract protected Integer execute(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException;
 }

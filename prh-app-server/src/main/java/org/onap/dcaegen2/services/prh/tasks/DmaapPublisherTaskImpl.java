@@ -24,7 +24,6 @@ import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
-import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.producer.ExtendedDmaapProducerHttpClientImpl;
 import org.slf4j.Logger;
@@ -37,8 +36,7 @@ import org.springframework.stereotype.Component;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
 @Component
-public class DmaapPublisherTaskImpl extends
-    DmaapPublisherTask<ConsumerDmaapModel, Integer, DmaapPublisherConfiguration> {
+public class DmaapPublisherTaskImpl extends DmaapPublisherTask {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Config prhAppConfig;
@@ -59,14 +57,6 @@ public class DmaapPublisherTaskImpl extends
     }
 
     @Override
-    protected void receiveRequest(ConsumerDmaapModel body) throws PrhTaskException {
-            Integer response = execute(body);
-            if (taskProcess != null && response != null) {
-                taskProcess.receiveRequest(response);
-            }
-    }
-
-    @Override
     public Integer execute(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException {
         consumerDmaapModel = Optional.ofNullable(consumerDmaapModel)
             .orElseThrow(() -> new DmaapNotFoundException("Invoked null object to Dmaap task"));
@@ -75,7 +65,6 @@ public class DmaapPublisherTaskImpl extends
         return publish(consumerDmaapModel);
     }
 
-    @Override
     protected DmaapPublisherConfiguration resolveConfiguration() {
         return prhAppConfig.getDmaapPublisherConfiguration();
     }

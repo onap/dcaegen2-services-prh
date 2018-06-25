@@ -58,10 +58,9 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
 
     @Override
     ConsumerDmaapModel consume(String message) throws PrhTaskException {
-        logger.info("Consumed model from DmaaP: {}", message);
+        logger.info("Consumed model from DMaaP: {}", message);
         return dmaapConsumerJsonParser.getJsonObject(message)
-            .orElseThrow(() -> new DmaapNotFoundException("Null response from JSONObject in single reqeust"));
-
+            .orElseThrow(() -> new DmaapNotFoundException("Null response from JSON Object in single request"));
     }
 
     @Override
@@ -69,7 +68,7 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
         extendedDmaapConsumerHttpClient = resolveClient();
         logger.trace("Method called with arg {}", object);
         return consume((extendedDmaapConsumerHttpClient.getHttpConsumerResponse().orElseThrow(() ->
-            new PrhTaskException("DmaapConsumerTask has returned null"))));
+            new PrhTaskException("DMaaPConsumerTask has returned null"))));
     }
 
     @Override

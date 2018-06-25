@@ -31,5 +31,5 @@ public abstract class AAIConsumerTask {
 
     abstract AAIConsumerClient resolveClient();
 
-    abstract protected String execute(ConsumerDmaapModel consumerDmaapModel) throws AAINotFoundException;
+    protected abstract String execute(ConsumerDmaapModel consumerDmaapModel) throws AAINotFoundException;
 }

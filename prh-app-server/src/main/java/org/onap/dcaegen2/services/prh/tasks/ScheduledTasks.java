@@ -19,6 +19,7 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
+import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,18 +54,21 @@ public class ScheduledTasks {
         {
             dmaapConsumerTask.initConfigs();
             return dmaapConsumerTask.execute("");
-        }).subscribe(consumerDmaapModel -> Mono
-                .fromCallable(() -> aaiProducerTask.execute(consumerDmaapModel))
-                .subscribe(
-                    aaiConsumerDmaapModel -> Mono.fromCallable(() -> dmaapProducerTask.execute(aaiConsumerDmaapModel))
-                        .subscribe(resp -> logger.info("Message was published to DmaaP, response code: {}", resp),
-                            error -> logger.warn("Error has been thrown in DmaapProduerTask: {}", error),
-                            () -> logger.info("Completed DmaapPublisher task"))),
-            errorResponse -> logger
-                .warn("Error has been thrown in AAIProducerTask: {}", errorResponse)
-            , () -> logger.info("Completed AAIProducer task")))
-            .subscribe(Disposable::dispose, tasksError -> logger
-                    .warn("Chain of tasks have been aborted, because some errors occur in PRH workflow ", tasksError)
-                , () -> logger.info("PRH tasks was consumed properly")).dispose();
+        })
+            .doOnError(DmaapEmptyResponseException.class, error -> logger.warn("Nothing to consume from DmaaP"))
+            .subscribe(consumerDmaapModel -> Mono.fromCallable(() -> aaiProducerTask.execute(consumerDmaapModel))
+                    .subscribe(
+                        aaiConsumerDmaapModel -> Mono.fromCallable(() -> dmaapProducerTask.execute(aaiConsumerDmaapModel))
+                            .subscribe(
+                                response -> logger.info("Message was published to DmaaP, response code: {}", response),
+                                error -> logger.warn("Error has been thrown in DmaapProducerTask: ", error),
+                                () -> logger.info("Completed DmaapPublisher task"))),
+                        errorResponse -> {if(!(errorResponse instanceof DmaapEmptyResponseException)) logger.warn("Error has been thrown in AAIProducerTask: ", errorResponse);},
+                        () -> logger.info("Completed AAIProducer task")))
+        .subscribe(
+            Disposable::dispose,
+            tasksError -> logger.warn("Chain of tasks have been aborted, because some errors occur in PRH workflow ", tasksError),
+            () -> logger.info("PRH tasks have been completed")
+        ).dispose();
     }
 }

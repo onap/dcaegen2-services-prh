@@ -32,5 +32,5 @@ abstract class DmaapPublisherTask {
 
     abstract ExtendedDmaapProducerHttpClientImpl resolveClient();
 
-    abstract protected Integer execute(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException;
+    protected abstract Integer execute(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException;
 }

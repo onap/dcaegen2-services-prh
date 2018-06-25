@@ -60,7 +60,7 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
     ConsumerDmaapModel consume(String message) throws PrhTaskException {
         logger.info("Consumed model from DmaaP: {}", message);
         return dmaapConsumerJsonParser.getJsonObject(message)
-            .orElseThrow(() -> new DmaapNotFoundException("Null response from JSONObject in single reqeust"));
+            .orElseThrow(() -> new DmaapNotFoundException("Null response from JSONObject in single request"));
 
     }
 

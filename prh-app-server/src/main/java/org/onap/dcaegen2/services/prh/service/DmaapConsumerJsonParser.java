@@ -46,8 +46,7 @@ public class DmaapConsumerJsonParser {
     private static final String PNF_SERIAL_NUMBER = "pnfSerialNumber";
 
 
-    public Optional<ConsumerDmaapModel> getJsonObject(String message)
-        throws PrhTaskException {
+    public Optional<ConsumerDmaapModel> getJsonObject(String message) throws PrhTaskException {
         JsonElement jsonElement = new JsonParser().parse(message);
         Optional<ConsumerDmaapModel> consumerDmaapModel;
         if (jsonElement.isJsonObject()) {

@@ -26,11 +26,11 @@ import java.util.Optional;
 import java.util.stream.StreamSupport;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
-import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Mono;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/8/18
@@ -46,6 +46,7 @@ public class DmaapConsumerJsonParser {
     private static final String PNF_SERIAL_NUMBER = "pnfSerialNumber";
 
 
+<<<<<<< HEAD
     public Optional<ConsumerDmaapModel> getJsonObject(String message) throws PrhTaskException {
         JsonElement jsonElement = new JsonParser().parse(message);
         Optional<ConsumerDmaapModel> consumerDmaapModel;
@@ -59,6 +60,28 @@ public class DmaapConsumerJsonParser {
         }
         logger.info("Parsed model from DmaaP after getting it: {}", consumerDmaapModel);
         return consumerDmaapModel;
+=======
+    public Mono<Optional<ConsumerDmaapModel>> getJsonObject(Mono<String> monoMessage) {
+        return monoMessage.flatMap(message ->
+        {
+            JsonElement jsonElement = new JsonParser().parse(message);
+            Optional<ConsumerDmaapModel> consumerDmaapModel;
+            try {
+                if (jsonElement.isJsonObject()) {
+                    consumerDmaapModel = Optional.of(create(jsonElement.getAsJsonObject()));
+                } else {
+                    consumerDmaapModel = Optional
+                        .of(create(StreamSupport.stream(jsonElement.getAsJsonArray().spliterator(), false).findFirst()
+                            .flatMap(this::getJsonObjectFromAnArray)
+                            .orElseThrow(DmaapEmptyResponseException::new)));
+                }
+                logger.info("Parsed model from DmaaP after getting it: {}", consumerDmaapModel);
+                return Mono.just(consumerDmaapModel);
+            } catch (DmaapNotFoundException | DmaapEmptyResponseException e) {
+                return Mono.error(e);
+            }
+        });
+>>>>>>> 3663b83... Added dmaapReactiveConsumer
     }
 
     public Optional<JsonObject> getJsonObjectFromAnArray(JsonElement element) {

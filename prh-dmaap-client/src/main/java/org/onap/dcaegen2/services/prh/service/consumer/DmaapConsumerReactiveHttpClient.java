@@ -24,6 +24,7 @@ import static org.springframework.web.reactive.function.client.ExchangeFilterFun
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 import org.apache.http.client.utils.URIBuilder;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.slf4j.Logger;
@@ -66,7 +67,7 @@ public class DmaapConsumerReactiveHttpClient {
             .build();
     }
 
-    public Mono<String> getDmaaPConsumerResposne() {
+    public Mono<Optional<String>> getDmaaPConsumerResponse() {
         try {
             return webClient
                 .get()
@@ -75,8 +76,10 @@ public class DmaapConsumerReactiveHttpClient {
                 .onStatus(HttpStatus::is4xxClientError, clientResponse ->
                     Mono.error(new Exception("HTTP 400"))
                 )
-                .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(new Exception("HTTP 500")))
-                .bodyToMono(String.class);
+                .onStatus(HttpStatus::is5xxServerError, clientResponse ->
+                    Mono.error(new Exception("HTTP 500")))
+                .bodyToMono(String.class)
+                .map(Optional::of);
         } catch (URISyntaxException e) {
             logger.warn("Exception while executing HTTP request: ", e);
             return Mono.error(e);

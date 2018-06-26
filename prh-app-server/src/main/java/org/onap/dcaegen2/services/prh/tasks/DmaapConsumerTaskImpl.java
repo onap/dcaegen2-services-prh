@@ -19,12 +19,15 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
-import java.util.Objects;
 import java.util.Optional;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
+<<<<<<< HEAD
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
+=======
+import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
+>>>>>>> a57e468... DmaapConsumerReactive fixed tests
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
@@ -39,7 +42,12 @@ import reactor.core.publisher.Mono;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
 @Component
+<<<<<<< HEAD
 public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
+=======
+public class DmaapConsumerTaskImpl extends
+    DmaapConsumerTask<String, Mono<Optional<ConsumerDmaapModel>>, DmaapConsumerConfiguration> {
+>>>>>>> a57e468... DmaapConsumerReactive fixed tests
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Config prhAppConfig;
@@ -59,8 +67,9 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
 
 
     @Override
-    ConsumerDmaapModel consume(Mono<String> message) throws PrhTaskException {
+    Mono<Optional<ConsumerDmaapModel>> consume(Mono<Optional<String>> message) throws PrhTaskException {
         logger.info("Consumed model from DmaaP: {}", message);
+<<<<<<< HEAD
 <<<<<<< HEAD
         return dmaapConsumerJsonParser.getJsonObject(message)
             .orElseThrow(() -> new DmaapNotFoundException("Null response from JSONObject in single request"));
@@ -68,12 +77,15 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
         //for this moment consumed is blocked from reactive POV
         return Objects.requireNonNull(dmaapConsumerJsonParser.getJsonObject(message).block())
             .orElseThrow(() -> new DmaapNotFoundException("Null response from JSONObject in single reqeust"));
+=======
+        return dmaapConsumerJsonParser.getJsonObject(message);
+>>>>>>> a57e468... DmaapConsumerReactive fixed tests
     }
 
     @Override
     protected void receiveRequest(String body) throws PrhTaskException {
         try {
-            ConsumerDmaapModel response = execute(body);
+            Mono<Optional<ConsumerDmaapModel>> response = execute(body);
             if (taskProcess != null && response != null) {
                 taskProcess.receiveRequest(response);
             }
@@ -86,10 +98,10 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
     }
 
     @Override
-    public ConsumerDmaapModel execute(String object) throws PrhTaskException {
+    public Mono<Optional<ConsumerDmaapModel>> execute(String object) throws PrhTaskException {
         dmaapConsumerReactiveHttpClient = resolveClient();
         logger.trace("Method called with arg {}", object);
-        return consume((dmaapConsumerReactiveHttpClient.getDmaaPConsumerResposne()));
+        return consume((dmaapConsumerReactiveHttpClient.getDmaaPConsumerResponse()));
     }
 
     @Override

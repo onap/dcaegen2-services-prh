@@ -27,11 +27,12 @@ import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/8/18
@@ -67,8 +68,7 @@ class DmaapConsumerJsonParserTest {
             + "\"pnfVendorName\":\"Nokia\"}}}]";
 
     @Test
-    void whenPassingCorrectJson_validationNotThrowingAnException()
-        throws PrhTaskException {
+    void whenPassingCorrectJson_validationNotThrowingAnException() {
         //given
         String message =
             "[{\"event\":{\"commonEventHeader\":{\"domain\":\"other\",\"eventId\":\"<<SerialNumber>>-reg\",\"eventName\""
@@ -99,15 +99,14 @@ class DmaapConsumerJsonParserTest {
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
-        ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser.getJsonObject(message).get();
+        ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser.getJsonObject(Mono.just(message)).block().get();
         //then
         Assertions.assertNotNull(consumerDmaapModel);
         Assertions.assertEquals(expectedObject, consumerDmaapModel);
     }
 
     @Test
-    void whenPassingCorrectJsonWithoutIPV4_validationNotThrowingAnException()
-        throws PrhTaskException {
+    void whenPassingCorrectJsonWithoutIPV4_validationNotThrowingAnException() {
         //given
         String message =
             "[{\"event\":{\"commonEventHeader\":{\"domain\":\"other\",\"eventId\":\"<<SerialNumber>>-reg\",\"eventName\""
@@ -139,15 +138,14 @@ class DmaapConsumerJsonParserTest {
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
-        ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser.getJsonObject(message).get();
+        ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser.getJsonObject(Mono.just(message)).block().get();
         //then
         Assertions.assertNotNull(consumerDmaapModel);
         Assertions.assertEquals(expectedObject, consumerDmaapModel);
     }
 
     @Test
-    void whenPassingCorrectJsonWihoutIPV6_validationNotThrowingAnException()
-        throws PrhTaskException {
+    void whenPassingCorrectJsonWihoutIPV6_validationNotThrowingAnException() {
         //given
         String message =
             "[{\"event\":{\"commonEventHeader\":{\"domain\":\"other\",\"eventId\":\"<<SerialNumber>>-reg\",\"eventName\""
@@ -177,7 +175,7 @@ class DmaapConsumerJsonParserTest {
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
-        ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser.getJsonObject(message).get();
+        ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser.getJsonObject(Mono.just(message)).block().get();
         //then
         Assertions.assertNotNull(consumerDmaapModel);
         Assertions.assertEquals(expectedObject, consumerDmaapModel);
@@ -207,8 +205,9 @@ class DmaapConsumerJsonParserTest {
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
-        Assertions.assertThrows(DmaapNotFoundException.class,
-            () -> dmaapConsumerJsonParser.getJsonObject(message));
+        StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(message)))
+            .expectSubscription().expectError(DmaapNotFoundException.class);
+
     }
 
     @Test
@@ -222,8 +221,8 @@ class DmaapConsumerJsonParserTest {
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
-        Assertions.assertThrows(DmaapNotFoundException.class,
-            () -> dmaapConsumerJsonParser.getJsonObject(incorrectMessage));
+        StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(incorrectMessage)))
+            .expectSubscription().expectError(DmaapNotFoundException.class);
     }
 
     @Test
@@ -241,8 +240,8 @@ class DmaapConsumerJsonParserTest {
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
-        Assertions.assertThrows(DmaapNotFoundException.class,
-            () -> dmaapConsumerJsonParser.getJsonObject(jsonWithoutPnfVendorAndSerialNumber));
+        StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(jsonWithoutPnfVendorAndSerialNumber)))
+            .expectSubscription().expectError(DmaapNotFoundException.class);
     }
 
     @Test
@@ -260,7 +259,7 @@ class DmaapConsumerJsonParserTest {
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
-        Assertions.assertThrows(DmaapNotFoundException.class,
-            () -> dmaapConsumerJsonParser.getJsonObject(jsonWithoutIPInformation));
+        StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(jsonWithoutIPInformation)))
+            .expectSubscription().expectError(DmaapNotFoundException.class);
     }
 }

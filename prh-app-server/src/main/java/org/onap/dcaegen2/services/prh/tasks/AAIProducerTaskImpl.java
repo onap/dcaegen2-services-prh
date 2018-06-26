@@ -19,12 +19,11 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
-import java.net.URISyntaxException;
-import java.util.Optional;
 import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
+import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.AAIProducerClient;
 import org.onap.dcaegen2.services.prh.service.HttpUtils;
@@ -33,12 +32,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.net.URISyntaxException;
+import java.util.Optional;
+
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
 @Component
 public class AAIProducerTaskImpl extends
-    AAIProducerTask {
+    AAIProducerTask<ConsumerDmaapModel, ConsumerDmaapModel, AAIClientConfiguration> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -60,6 +62,14 @@ public class AAIProducerTaskImpl extends
         } catch (URISyntaxException e) {
             logger.warn("Patch request not successful", e);
             throw new AAINotFoundException("Patch request not successful");
+        }
+    }
+
+    @Override
+    protected void receiveRequest(ConsumerDmaapModel body) throws PrhTaskException {
+        ConsumerDmaapModel response = execute(body);
+        if (taskProcess != null && response != null) {
+            taskProcess.receiveRequest(response);
         }
     }
 

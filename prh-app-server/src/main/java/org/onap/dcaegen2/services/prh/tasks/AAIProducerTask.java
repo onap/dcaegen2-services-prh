@@ -20,18 +20,15 @@
 package org.onap.dcaegen2.services.prh.tasks;
 
 import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
-import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.AAIProducerClient;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
-public abstract class AAIProducerTask {
+public abstract class AAIProducerTask<R, S, C> extends Task<R, S, C> {
 
     abstract ConsumerDmaapModel publish(ConsumerDmaapModel message) throws AAINotFoundException;
 
     abstract AAIProducerClient resolveClient();
-
-    protected abstract ConsumerDmaapModel execute(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException;
 }

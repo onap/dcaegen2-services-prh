@@ -55,7 +55,7 @@ public class ScheduledTasks {
 
         Mono<Integer> dmaapProducerResponse = Mono.fromCallable(consumeFromDMaaPMessage())
             .doOnError(DmaapEmptyResponseException.class, error -> logger.warn("Nothing to consume from DMaaP"))
-            .flatMap(this::publishToAAIConfiguration)
+            .map(this::publishToAAIConfiguration)
             .flatMap(this::publishToDMaaPConfiguration)
             .subscribeOn(Schedulers.elastic());
 
@@ -76,7 +76,7 @@ public class ScheduledTasks {
         }
     }
 
-    private Callable<ConsumerDmaapModel> consumeFromDMaaPMessage() {
+    private Callable<Mono<ConsumerDmaapModel>> consumeFromDMaaPMessage() {
         return () ->
         {
             dmaapConsumerTask.initConfigs();
@@ -84,21 +84,25 @@ public class ScheduledTasks {
         };
     }
 
-    private Mono<ConsumerDmaapModel> publishToAAIConfiguration(ConsumerDmaapModel dmaapModel) {
-        try {
-            return Mono.just(aaiProducerTask.execute(dmaapModel));
-        } catch (PrhTaskException e) {
-            logger.warn("Exception in A&AIProducer task ", e);
-            return Mono.error(e);
-        }
+    private Mono<ConsumerDmaapModel> publishToAAIConfiguration(Mono<ConsumerDmaapModel> monoDMaaPModel) {
+        return monoDMaaPModel.flatMap(dmaapModel -> {
+            try {
+                return Mono.just(aaiProducerTask.execute(dmaapModel));
+            } catch (PrhTaskException e) {
+                logger.warn("Exception in A&AIProducer task ", e);
+                return Mono.error(e);
+            }
+        });
     }
 
-    private Mono<Integer> publishToDMaaPConfiguration(ConsumerDmaapModel aaiModel) {
-        try {
-            return Mono.just(dmaapProducerTask.execute(aaiModel));
-        } catch (PrhTaskException e) {
-            logger.warn("Exception in DMaaPProducer task ", e);
-            return Mono.error(e);
-        }
+    private Mono<Integer> publishToDMaaPConfiguration(Mono<ConsumerDmaapModel> monoAAIModel) {
+        return monoAAIModel.flatMap(aaiModel -> {
+            try {
+                return Mono.just(dmaapProducerTask.execute(aaiModel));
+            } catch (PrhTaskException e) {
+                logger.warn("Exception in DMaaPProducer task ", e);
+                return Mono.error(e);
+            }
+        });
     }
 }

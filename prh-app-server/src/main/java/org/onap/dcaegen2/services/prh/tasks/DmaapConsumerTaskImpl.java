@@ -23,15 +23,17 @@ import java.util.Optional;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
+import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
-import org.onap.dcaegen2.services.prh.service.consumer.ExtendedDmaapConsumerHttpClientImpl;
+import org.onap.dcaegen2.services.prh.service.consumer.DmaapConsumerReactiveHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
@@ -41,8 +43,8 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Config prhAppConfig;
-    private ExtendedDmaapConsumerHttpClientImpl extendedDmaapConsumerHttpClient;
     private DmaapConsumerJsonParser dmaapConsumerJsonParser;
+    private DmaapConsumerReactiveHttpClient dmaapConsumerReactiveHttpClient;
 
     @Autowired
     public DmaapConsumerTaskImpl(AppConfig prhAppConfig) {
@@ -57,18 +59,18 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
 
 
     @Override
-    ConsumerDmaapModel consume(String message) throws PrhTaskException {
-        logger.info("Consumed model from DMaaP: {}", message);
-        return dmaapConsumerJsonParser.getJsonObject(message)
-            .orElseThrow(() -> new DmaapNotFoundException("Null response from JSON Object in single request"));
+    Mono<ConsumerDmaapModel> consume(Mono<String> message) {
+        logger.info("Consumed model from DmaaP: {}", message);
+        return dmaapConsumerJsonParser.getJsonObject(message);
     }
 
+
     @Override
-    public ConsumerDmaapModel execute(String object) throws PrhTaskException {
-        extendedDmaapConsumerHttpClient = resolveClient();
+    public Mono<ConsumerDmaapModel> execute(String object) {
+        dmaapConsumerReactiveHttpClient = resolveClient();
+//        dmaapConsumerReactiveHttpClient.initWebClient();
         logger.trace("Method called with arg {}", object);
-        return consume((extendedDmaapConsumerHttpClient.getHttpConsumerResponse().orElseThrow(() ->
-            new PrhTaskException("DMaaPConsumerTask has returned null"))));
+        return consume((dmaapConsumerReactiveHttpClient.getDmaaPConsumerResposne()));
     }
 
     @Override
@@ -81,8 +83,8 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
     }
 
     @Override
-    ExtendedDmaapConsumerHttpClientImpl resolveClient() {
-        return Optional.ofNullable(extendedDmaapConsumerHttpClient)
-            .orElseGet(() -> new ExtendedDmaapConsumerHttpClientImpl(resolveConfiguration()));
+    DmaapConsumerReactiveHttpClient resolveClient() {
+        return Optional.ofNullable(dmaapConsumerReactiveHttpClient)
+            .orElseGet(() -> new DmaapConsumerReactiveHttpClient(resolveConfiguration()));
     }
 }

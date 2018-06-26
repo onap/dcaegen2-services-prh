@@ -19,6 +19,7 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
@@ -76,7 +77,7 @@ public class ScheduledTasks {
         }
     }
 
-    private Callable<Mono<ConsumerDmaapModel>> consumeFromDMaaPMessage() {
+    private Callable<Mono<Optional<ConsumerDmaapModel>>> consumeFromDMaaPMessage() {
         return () ->
         {
             dmaapConsumerTask.initConfigs();
@@ -84,10 +85,10 @@ public class ScheduledTasks {
         };
     }
 
-    private Mono<ConsumerDmaapModel> publishToAAIConfiguration(Mono<ConsumerDmaapModel> monoDMaaPModel) {
+    private Mono<ConsumerDmaapModel> publishToAAIConfiguration(Mono<Optional<ConsumerDmaapModel>> monoDMaaPModel) {
         return monoDMaaPModel.flatMap(dmaapModel -> {
             try {
-                return Mono.just(aaiProducerTask.execute(dmaapModel));
+                return Mono.just(aaiProducerTask.execute(dmaapModel.get()));
             } catch (PrhTaskException e) {
                 logger.warn("Exception in A&AIProducer task ", e);
                 return Mono.error(e);

@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START=======================================================
- * PROJECT
+ * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
@@ -19,22 +19,24 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
-import java.util.Optional;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.service.consumer.DmaapConsumerReactiveHttpClient;
-import reactor.core.publisher.Mono;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
-abstract class DmaapConsumerTask {
 
-    abstract Mono<Optional<ConsumerDmaapModel>> consume(Mono<Optional<String>> message) throws PrhTaskException;
 
-    abstract DmaapConsumerReactiveHttpClient resolveClient();
+public abstract class Task<R, S, C> {
 
-    abstract void initConfigs();
+    Task taskProcess;
 
-    protected abstract Mono<Optional<ConsumerDmaapModel>> execute(String object) throws PrhTaskException;
+    protected abstract void receiveRequest(R body) throws PrhTaskException;
+
+    protected abstract S execute(R object) throws PrhTaskException;
+
+    protected abstract C resolveConfiguration();
+
+    void setNext(Task task) {
+        this.taskProcess = task;
+    }
 }

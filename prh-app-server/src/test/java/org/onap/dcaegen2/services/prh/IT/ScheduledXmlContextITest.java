@@ -45,7 +45,7 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/27/18
  */
 
-/*@Configuration
+@Configuration
 @ComponentScan
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
 @ContextConfiguration(locations = {"classpath:scheduled-context.xml"})
@@ -79,4 +79,4 @@ class ServiceMockProvider {
     public ConsumerDmaapModel getRequestDetails() {
         return mock(ConsumerDmaapModel.class);
     }
-}*/
+}

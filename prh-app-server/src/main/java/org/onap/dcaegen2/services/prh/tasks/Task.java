@@ -30,11 +30,11 @@ public abstract class Task<R, S, C> {
 
     Task taskProcess;
 
-    abstract protected void receiveRequest(R body) throws PrhTaskException;
+    protected abstract void receiveRequest(R body) throws PrhTaskException;
 
-    abstract protected S execute(R object) throws PrhTaskException;
+    protected abstract S execute(R object) throws PrhTaskException;
 
-    abstract protected C resolveConfiguration();
+    protected abstract C resolveConfiguration();
 
     void setNext(Task task) {
         this.taskProcess = task;

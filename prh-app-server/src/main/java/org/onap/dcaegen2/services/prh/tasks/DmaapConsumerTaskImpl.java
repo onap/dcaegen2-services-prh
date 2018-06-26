@@ -19,13 +19,11 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
-import java.util.Objects;
 import java.util.Optional;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
-import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
@@ -41,7 +39,7 @@ import reactor.core.publisher.Mono;
  */
 @Component
 public class DmaapConsumerTaskImpl extends
-    DmaapConsumerTask<String, ConsumerDmaapModel, DmaapConsumerConfiguration> {
+    DmaapConsumerTask<String, Mono<Optional<ConsumerDmaapModel>>, DmaapConsumerConfiguration> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Config prhAppConfig;
@@ -61,17 +59,15 @@ public class DmaapConsumerTaskImpl extends
 
 
     @Override
-    ConsumerDmaapModel consume(Mono<String> message) throws PrhTaskException {
+    Mono<Optional<ConsumerDmaapModel>> consume(Mono<Optional<String>> message) throws PrhTaskException {
         logger.info("Consumed model from DmaaP: {}", message);
-        //for this moment consumed is blocked from reactive POV
-        return Objects.requireNonNull(dmaapConsumerJsonParser.getJsonObject(message).block())
-            .orElseThrow(() -> new DmaapNotFoundException("Null response from JSONObject in single reqeust"));
+        return dmaapConsumerJsonParser.getJsonObject(message);
     }
 
     @Override
     protected void receiveRequest(String body) throws PrhTaskException {
         try {
-            ConsumerDmaapModel response = execute(body);
+            Mono<Optional<ConsumerDmaapModel>> response = execute(body);
             if (taskProcess != null && response != null) {
                 taskProcess.receiveRequest(response);
             }
@@ -83,10 +79,10 @@ public class DmaapConsumerTaskImpl extends
     }
 
     @Override
-    public ConsumerDmaapModel execute(String object) throws PrhTaskException {
+    public Mono<Optional<ConsumerDmaapModel>> execute(String object) throws PrhTaskException {
         dmaapConsumerReactiveHttpClient = resolveClient();
         logger.trace("Method called with arg {}", object);
-        return consume((dmaapConsumerReactiveHttpClient.getDmaaPConsumerResposne()));
+        return consume((dmaapConsumerReactiveHttpClient.getDmaaPConsumerResponse()));
     }
 
     @Override

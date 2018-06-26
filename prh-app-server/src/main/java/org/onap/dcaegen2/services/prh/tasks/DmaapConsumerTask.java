@@ -19,10 +19,10 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
+import java.util.Optional;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.consumer.DmaapConsumerReactiveHttpClient;
-import org.onap.dcaegen2.services.prh.service.consumer.ExtendedDmaapConsumerHttpClientImpl;
 import reactor.core.publisher.Mono;
 
 /**
@@ -30,7 +30,7 @@ import reactor.core.publisher.Mono;
  */
 abstract class DmaapConsumerTask<R, S, C> extends Task<R, S, C> {
 
-    abstract ConsumerDmaapModel consume(Mono<String> message) throws PrhTaskException;
+    abstract Mono<Optional<ConsumerDmaapModel>> consume(Mono<Optional<String>> message) throws PrhTaskException;
 
     abstract DmaapConsumerReactiveHttpClient resolveClient();
 

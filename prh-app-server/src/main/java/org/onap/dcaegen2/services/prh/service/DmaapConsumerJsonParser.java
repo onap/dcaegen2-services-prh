@@ -46,25 +46,29 @@ public class DmaapConsumerJsonParser {
     private static final String PNF_SERIAL_NUMBER = "pnfSerialNumber";
 
 
-    public Mono<Optional<ConsumerDmaapModel>> getJsonObject(Mono<String> monoMessage) {
+    public Mono<Optional<ConsumerDmaapModel>> getJsonObject(Mono<Optional<String>> monoMessage) {
         return monoMessage.flatMap(message ->
         {
-            JsonElement jsonElement = new JsonParser().parse(message);
-            Optional<ConsumerDmaapModel> consumerDmaapModel;
-            try {
-                if (jsonElement.isJsonObject()) {
-                    consumerDmaapModel = Optional.of(create(jsonElement.getAsJsonObject()));
-                } else {
-                    consumerDmaapModel = Optional
-                        .of(create(StreamSupport.stream(jsonElement.getAsJsonArray().spliterator(), false).findFirst()
-                            .flatMap(this::getJsonObjectFromAnArray)
-                            .orElseThrow(DmaapEmptyResponseException::new)));
+            if (message.isPresent()) {
+                JsonElement jsonElement = new JsonParser().parse(message.orElse(""));
+                Optional<ConsumerDmaapModel> consumerDmaapModel;
+                try {
+                    if (jsonElement.isJsonObject()) {
+                        consumerDmaapModel = Optional.of(create(jsonElement.getAsJsonObject()));
+                    } else {
+                        consumerDmaapModel = Optional
+                            .of(create(
+                                StreamSupport.stream(jsonElement.getAsJsonArray().spliterator(), false).findFirst()
+                                    .flatMap(this::getJsonObjectFromAnArray)
+                                    .orElseThrow(DmaapEmptyResponseException::new)));
+                    }
+                    logger.info("Parsed model from DmaaP after getting it: {}", consumerDmaapModel);
+                    return Mono.just(consumerDmaapModel);
+                } catch (DmaapNotFoundException | DmaapEmptyResponseException e) {
+                    return Mono.error(e);
                 }
-                logger.info("Parsed model from DmaaP after getting it: {}", consumerDmaapModel);
-                return Mono.just(consumerDmaapModel);
-            } catch (DmaapNotFoundException | DmaapEmptyResponseException e) {
-                return Mono.error(e);
             }
+            return Mono.error(new DmaapEmptyResponseException());
         });
     }
 

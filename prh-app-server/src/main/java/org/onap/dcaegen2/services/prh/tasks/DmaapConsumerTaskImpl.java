@@ -39,7 +39,7 @@ import reactor.core.publisher.Mono;
  */
 @Component
 public class DmaapConsumerTaskImpl extends
-    DmaapConsumerTask<String, Mono<Optional<ConsumerDmaapModel>>, DmaapConsumerConfiguration> {
+    DmaapConsumerTask<String, Mono<ConsumerDmaapModel>, DmaapConsumerConfiguration> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Config prhAppConfig;
@@ -59,7 +59,7 @@ public class DmaapConsumerTaskImpl extends
 
 
     @Override
-    Mono<Optional<ConsumerDmaapModel>> consume(Mono<Optional<String>> message) throws PrhTaskException {
+    Mono<ConsumerDmaapModel> consume(Mono<String> message) {
         logger.info("Consumed model from DmaaP: {}", message);
         return dmaapConsumerJsonParser.getJsonObject(message);
     }
@@ -67,7 +67,7 @@ public class DmaapConsumerTaskImpl extends
     @Override
     protected void receiveRequest(String body) throws PrhTaskException {
         try {
-            Mono<Optional<ConsumerDmaapModel>> response = execute(body);
+            Mono<ConsumerDmaapModel> response = execute(body);
             if (taskProcess != null && response != null) {
                 taskProcess.receiveRequest(response);
             }
@@ -75,12 +75,12 @@ public class DmaapConsumerTaskImpl extends
             logger.warn("Nothing to consume from DmaaP {} topic.",
                 resolveConfiguration().dmaapTopicName());
         }
-
     }
 
     @Override
-    public Mono<Optional<ConsumerDmaapModel>> execute(String object) throws PrhTaskException {
+    public Mono<ConsumerDmaapModel> execute(String object) {
         dmaapConsumerReactiveHttpClient = resolveClient();
+        dmaapConsumerReactiveHttpClient.initWebClient();
         logger.trace("Method called with arg {}", object);
         return consume((dmaapConsumerReactiveHttpClient.getDmaaPConsumerResponse()));
     }

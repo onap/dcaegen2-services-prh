@@ -77,7 +77,7 @@ public class ScheduledTasks {
         }
     }
 
-    private Callable<Mono<Optional<ConsumerDmaapModel>>> consumeFromDMaaPMessage() {
+    private Callable<Mono<ConsumerDmaapModel>> consumeFromDMaaPMessage() {
         return () ->
         {
             dmaapConsumerTask.initConfigs();
@@ -85,10 +85,10 @@ public class ScheduledTasks {
         };
     }
 
-    private Mono<ConsumerDmaapModel> publishToAAIConfiguration(Mono<Optional<ConsumerDmaapModel>> monoDMaaPModel) {
+    private Mono<ConsumerDmaapModel> publishToAAIConfiguration(Mono<ConsumerDmaapModel> monoDMaaPModel) {
         return monoDMaaPModel.flatMap(dmaapModel -> {
             try {
-                return Mono.just(aaiProducerTask.execute(dmaapModel.get()));
+                return Mono.just(aaiProducerTask.execute(dmaapModel));
             } catch (PrhTaskException e) {
                 logger.warn("Exception in A&AIProducer task ", e);
                 return Mono.error(e);

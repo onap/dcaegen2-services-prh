@@ -40,7 +40,6 @@ import reactor.core.publisher.Mono;
 @Component
 public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
 
-
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Config prhAppConfig;
     private DmaapConsumerJsonParser dmaapConsumerJsonParser;
@@ -57,17 +56,16 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
         this.dmaapConsumerJsonParser = dmaapConsumerJsonParser;
     }
 
-
     @Override
-    Mono<Optional<ConsumerDmaapModel>> consume(Mono<Optional<String>> message) throws PrhTaskException {
+    Mono<ConsumerDmaapModel> consume(Mono<String> message) {
         logger.info("Consumed model from DmaaP: {}", message);
         return dmaapConsumerJsonParser.getJsonObject(message);
     }
 
     @Override
-    public Mono<Optional<ConsumerDmaapModel>> execute(String object) throws PrhTaskException {
+    public Mono<ConsumerDmaapModel> execute(String object) {
         dmaapConsumerReactiveHttpClient = resolveClient();
-//        dmaapConsumerReactiveHttpClient.initWebClient();
+        dmaapConsumerReactiveHttpClient.initWebClient();
         logger.trace("Method called with arg {}", object);
         return consume((dmaapConsumerReactiveHttpClient.getDmaaPConsumerResponse()));
     }

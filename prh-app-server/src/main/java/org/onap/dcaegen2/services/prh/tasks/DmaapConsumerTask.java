@@ -30,11 +30,11 @@ import reactor.core.publisher.Mono;
  */
 abstract class DmaapConsumerTask {
 
-    abstract Mono<Optional<ConsumerDmaapModel>> consume(Mono<Optional<String>> message) throws PrhTaskException;
+    abstract Mono<ConsumerDmaapModel> consume(Mono<String> message) throws PrhTaskException;
 
     abstract DmaapConsumerReactiveHttpClient resolveClient();
 
     abstract void initConfigs();
 
-    protected abstract Mono<Optional<ConsumerDmaapModel>> execute(String object) throws PrhTaskException;
+    protected abstract Mono<ConsumerDmaapModel> execute(String object) throws PrhTaskException;
 }

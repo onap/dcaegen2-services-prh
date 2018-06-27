@@ -46,8 +46,12 @@ import reactor.core.publisher.Mono;
 public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
 =======
 public class DmaapConsumerTaskImpl extends
+<<<<<<< HEAD
     DmaapConsumerTask<String, Mono<Optional<ConsumerDmaapModel>>, DmaapConsumerConfiguration> {
 >>>>>>> a57e468... DmaapConsumerReactive fixed tests
+=======
+    DmaapConsumerTask<String, Mono<ConsumerDmaapModel>, DmaapConsumerConfiguration> {
+>>>>>>> 75e5a75... Refactor Optional in MonoResponse
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Config prhAppConfig;
@@ -67,7 +71,7 @@ public class DmaapConsumerTaskImpl extends
 
 
     @Override
-    Mono<Optional<ConsumerDmaapModel>> consume(Mono<Optional<String>> message) throws PrhTaskException {
+    Mono<ConsumerDmaapModel> consume(Mono<String> message) {
         logger.info("Consumed model from DmaaP: {}", message);
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -85,7 +89,7 @@ public class DmaapConsumerTaskImpl extends
     @Override
     protected void receiveRequest(String body) throws PrhTaskException {
         try {
-            Mono<Optional<ConsumerDmaapModel>> response = execute(body);
+            Mono<ConsumerDmaapModel> response = execute(body);
             if (taskProcess != null && response != null) {
                 taskProcess.receiveRequest(response);
             }
@@ -93,13 +97,17 @@ public class DmaapConsumerTaskImpl extends
             logger.warn("Nothing to consume from DmaaP {} topic.",
                 resolveConfiguration().dmaapTopicName());
         }
+<<<<<<< HEAD
 >>>>>>> 3663b83... Added dmaapReactiveConsumer
 
+=======
+>>>>>>> 75e5a75... Refactor Optional in MonoResponse
     }
 
     @Override
-    public Mono<Optional<ConsumerDmaapModel>> execute(String object) throws PrhTaskException {
+    public Mono<ConsumerDmaapModel> execute(String object) {
         dmaapConsumerReactiveHttpClient = resolveClient();
+        dmaapConsumerReactiveHttpClient.initWebClient();
         logger.trace("Method called with arg {}", object);
         return consume((dmaapConsumerReactiveHttpClient.getDmaaPConsumerResponse()));
     }

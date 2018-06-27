@@ -32,7 +32,6 @@ import com.google.gson.JsonParser;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
@@ -103,7 +102,6 @@ class DmaapConsumerTaskImplTest {
             .expectError(DmaapEmptyResponseException.class);
 
         verify(dmaapConsumerReactiveHttpClient, times(1)).getDmaaPConsumerResponse();
-        verifyNoMoreInteractions(dmaapConsumerReactiveHttpClient);
     }
 
     @Test
@@ -111,13 +109,12 @@ class DmaapConsumerTaskImplTest {
         //given
         prepareMocksForDmaapConsumer(Optional.of(message));
         //when
-        Mono<Optional<ConsumerDmaapModel>> response = dmaapConsumerTask.execute("Sample input");
+        Mono<ConsumerDmaapModel> response = dmaapConsumerTask.execute("Sample input");
 
         //then
         verify(dmaapConsumerReactiveHttpClient, times(1)).getDmaaPConsumerResponse();
-        verifyNoMoreInteractions(dmaapConsumerReactiveHttpClient);
         Assertions.assertNotNull(response);
-        Assertions.assertEquals(consumerDmaapModel, response.block().get());
+        Assertions.assertEquals(consumerDmaapModel, response.block());
 
     }
 
@@ -127,7 +124,7 @@ class DmaapConsumerTaskImplTest {
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
         dmaapConsumerReactiveHttpClient = mock(DmaapConsumerReactiveHttpClient.class);
-        when(dmaapConsumerReactiveHttpClient.getDmaaPConsumerResponse()).thenReturn(Mono.just(message));
+        when(dmaapConsumerReactiveHttpClient.getDmaaPConsumerResponse()).thenReturn(Mono.just(message.orElse("")));
         when(appConfig.getDmaapConsumerConfiguration()).thenReturn(dmaapConsumerConfiguration);
         dmaapConsumerTask = spy(new DmaapConsumerTaskImpl(appConfig, dmaapConsumerJsonParser));
         when(dmaapConsumerTask.resolveConfiguration()).thenReturn(dmaapConsumerConfiguration);

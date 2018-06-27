@@ -38,34 +38,6 @@ import reactor.test.StepVerifier;
  */
 class DmaapConsumerJsonParserTest {
 
-    private String incorrectMessage =
-        "[{\"event\":{\"commonEventHeader\":{\"domain\":\"other\",\"eventId\":\"<<SerialNumber>>-reg\""
-            + ",\"eventName\":\"pnfRegistration_5GDU\",\"eventType\":\"pnfRegistration\",\"internalHeaderFields\":{},"
-            + "\"lastEpochMicrosec\":1519837825682,\"nfNamingCode\":\"5GRAN\",\"nfcNamingCode\":\"5DU\",\"priority\""
-            + ":\"Normal\",\"reportingEntityName\":\"5GRAN_DU\",\"sequence\":0,\"sourceId\":\"<<SerialNumber>>\","
-            + "\"sourceName\":\"5GRAN_DU\",\"startEpochMicrosec\":1519837825682,\"version\":3}}}]";
-
-    private String jsonWithoutPnfVendorAndSerialNumber =
-        "[{\"event\":{\"commonEventHeader\":{\"domain\":\"other\",\"eventId\":"
-            + "\"<<SerialNumber>>-reg\",\"eventName\":\"pnfRegistration_5GDU\",\"eventType\":\"pnfRegistration\",\""
-            + "internalHeaderFields\":{},\"lastEpochMicrosec\":1519837825682,\"nfNamingCode\":\"5GRAN\",\"nfcNamingCode\""
-            + ":\"5DU\",\"priority\":\"Normal\",reportingEntityName\":\"5GRAN_DU\",\"sequence\":0,\"sourceId\":\""
-            + "<<SerialNumber>>\",\"sourceName\":\"5GRAN_DU\",startEpochMicrosec\":1519837825682,\"version\":3},"
-            + "\"otherFields\":{\"otherFieldsVersion\":1,\"pnfFamily\":\"BBU\",\"pnfLastServiceDate\":1517206400,"
-            + "\"pnfManufactureDate\":1516406400,\"pnfModelNumber\":\"AJ02\",\"pnfOamIpv4Address\":"
-            + "\"10.16.123.234\",\"pnfOamIpv6Address\":\"0:0:0:0:0:FFFF:0A10:7BEA\",\"pnfSoftwareVersion\":\"v4.5.0.1\","
-            + "\"pnfType\":\"AirScale\"}}}]";
-
-    private String jsonWithoutIPInformation =
-        "[{\"event\":{\"commonEventHeader\":{\"domain\":\"other\",\"eventId\":\"<<SerialNumber>>-reg\",\"eventName\":"
-            + "\"pnfRegistration_5GDU\",\"eventType\":\"pnfRegistration\",\"internalHeaderFields\":{},\"lastEpochMicrosec\""
-            + ":1519837825682,\"nfNamingCode\":\"5GRAN\",\"nfcNamingCode\":\"5DU\",\"priority\":\"Normal\","
-            + "\"reportingEntityName\":\"5GRAN_DU\",\"sequence\":0,\"sourceId\":\"<<SerialNumber>>\",\"sourceName\":"
-            + "\"5GRAN_DU\",\"startEpochMicrosec\":1519837825682,\"version\":3},\"otherFields\":{\"otherFieldsVersion\":1,"
-            + "\"pnfFamily\":\"BBU\",\"pnfLastServiceDate\":1517206400,\"pnfManufactureDate\":1516406400,\"pnfModelNumber\":"
-            + "\"AJ02\",\"pnfSerialNumber\":\"QTFCOC540002E\",\"pnfSoftwareVersion\":\"v4.5.0.1\",\"pnfType\":\"AirScale\","
-            + "\"pnfVendorName\":\"Nokia\"}}}]";
-
     @Test
     void whenPassingCorrectJson_validationNotThrowingAnException() {
         //given
@@ -99,7 +71,7 @@ class DmaapConsumerJsonParserTest {
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
         ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser
-            .getJsonObject(Mono.just(Optional.of(message))).block().get();
+            .getJsonObject(Mono.just((message))).block();
         //then
         Assertions.assertNotNull(consumerDmaapModel);
         Assertions.assertEquals(expectedObject, consumerDmaapModel);
@@ -138,8 +110,8 @@ class DmaapConsumerJsonParserTest {
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
-        ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser.getJsonObject(Mono.just(Optional.of(message)))
-            .block().get();
+        ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser.getJsonObject(Mono.just((message)))
+            .block();
         //then
         Assertions.assertNotNull(consumerDmaapModel);
         Assertions.assertEquals(expectedObject, consumerDmaapModel);
@@ -176,8 +148,8 @@ class DmaapConsumerJsonParserTest {
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
-        ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser.getJsonObject(Mono.just(Optional.of(message)))
-            .block().get();
+        ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser.getJsonObject(Mono.just((message)))
+            .block();
         //then
         Assertions.assertNotNull(consumerDmaapModel);
         Assertions.assertEquals(expectedObject, consumerDmaapModel);
@@ -207,7 +179,7 @@ class DmaapConsumerJsonParserTest {
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
-        StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(Optional.of(message))))
+        StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(message)))
             .expectSubscription().expectError(DmaapNotFoundException.class);
 
     }
@@ -223,7 +195,13 @@ class DmaapConsumerJsonParserTest {
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
-        StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(Optional.of(incorrectMessage))))
+        String incorrectMessage =
+            "[{\"event\":{\"commonEventHeader\":{\"domain\":\"other\",\"eventId\":\"<<SerialNumber>>-reg\""
+                + ",\"eventName\":\"pnfRegistration_5GDU\",\"eventType\":\"pnfRegistration\",\"internalHeaderFields\":{},"
+                + "\"lastEpochMicrosec\":1519837825682,\"nfNamingCode\":\"5GRAN\",\"nfcNamingCode\":\"5DU\",\"priority\""
+                + ":\"Normal\",\"reportingEntityName\":\"5GRAN_DU\",\"sequence\":0,\"sourceId\":\"<<SerialNumber>>\","
+                + "\"sourceName\":\"5GRAN_DU\",\"startEpochMicrosec\":1519837825682,\"version\":3}}}]";
+        StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(incorrectMessage)))
             .expectSubscription().expectError(DmaapNotFoundException.class);
     }
 
@@ -242,8 +220,18 @@ class DmaapConsumerJsonParserTest {
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
+        String jsonWithoutPnfVendorAndSerialNumber =
+            "[{\"event\":{\"commonEventHeader\":{\"domain\":\"other\",\"eventId\":"
+                + "\"<<SerialNumber>>-reg\",\"eventName\":\"pnfRegistration_5GDU\",\"eventType\":\"pnfRegistration\",\""
+                + "internalHeaderFields\":{},\"lastEpochMicrosec\":1519837825682,\"nfNamingCode\":\"5GRAN\",\"nfcNamingCode\""
+                + ":\"5DU\",\"priority\":\"Normal\",reportingEntityName\":\"5GRAN_DU\",\"sequence\":0,\"sourceId\":\""
+                + "<<SerialNumber>>\",\"sourceName\":\"5GRAN_DU\",startEpochMicrosec\":1519837825682,\"version\":3},"
+                + "\"otherFields\":{\"otherFieldsVersion\":1,\"pnfFamily\":\"BBU\",\"pnfLastServiceDate\":1517206400,"
+                + "\"pnfManufactureDate\":1516406400,\"pnfModelNumber\":\"AJ02\",\"pnfOamIpv4Address\":"
+                + "\"10.16.123.234\",\"pnfOamIpv6Address\":\"0:0:0:0:0:FFFF:0A10:7BEA\",\"pnfSoftwareVersion\":\"v4.5.0.1\","
+                + "\"pnfType\":\"AirScale\"}}}]";
         StepVerifier
-            .create(dmaapConsumerJsonParser.getJsonObject(Mono.just(Optional.of(jsonWithoutPnfVendorAndSerialNumber))))
+            .create(dmaapConsumerJsonParser.getJsonObject(Mono.just(jsonWithoutPnfVendorAndSerialNumber)))
             .expectSubscription().expectError(DmaapNotFoundException.class);
     }
 
@@ -262,7 +250,16 @@ class DmaapConsumerJsonParserTest {
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
-        StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(Optional.of(jsonWithoutIPInformation))))
+        String jsonWithoutIPInformation =
+            "[{\"event\":{\"commonEventHeader\":{\"domain\":\"other\",\"eventId\":\"<<SerialNumber>>-reg\",\"eventName\":"
+                + "\"pnfRegistration_5GDU\",\"eventType\":\"pnfRegistration\",\"internalHeaderFields\":{},\"lastEpochMicrosec\""
+                + ":1519837825682,\"nfNamingCode\":\"5GRAN\",\"nfcNamingCode\":\"5DU\",\"priority\":\"Normal\","
+                + "\"reportingEntityName\":\"5GRAN_DU\",\"sequence\":0,\"sourceId\":\"<<SerialNumber>>\",\"sourceName\":"
+                + "\"5GRAN_DU\",\"startEpochMicrosec\":1519837825682,\"version\":3},\"otherFields\":{\"otherFieldsVersion\":1,"
+                + "\"pnfFamily\":\"BBU\",\"pnfLastServiceDate\":1517206400,\"pnfManufactureDate\":1516406400,\"pnfModelNumber\":"
+                + "\"AJ02\",\"pnfSerialNumber\":\"QTFCOC540002E\",\"pnfSoftwareVersion\":\"v4.5.0.1\",\"pnfType\":\"AirScale\","
+                + "\"pnfVendorName\":\"Nokia\"}}}]";
+        StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(jsonWithoutIPInformation)))
             .expectSubscription().expectError(DmaapNotFoundException.class);
     }
 }

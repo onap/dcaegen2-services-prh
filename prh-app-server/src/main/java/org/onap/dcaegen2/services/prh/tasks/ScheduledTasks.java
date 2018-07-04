@@ -97,13 +97,11 @@ public class ScheduledTasks {
     }
 
     private Mono<Integer> publishToDMaaPConfiguration(Mono<ConsumerDmaapModel> monoAAIModel) {
-        return monoAAIModel.flatMap(aaiModel -> {
-            try {
-                return Mono.just(dmaapProducerTask.execute(aaiModel));
-            } catch (PrhTaskException e) {
-                logger.warn("Exception in DMaaPProducer task ", e);
-                return Mono.error(e);
-            }
-        });
+        try {
+            return dmaapProducerTask.execute(monoAAIModel);
+        } catch (PrhTaskException e) {
+            logger.warn("Exception in DMaaPProducer task ", e);
+            return Mono.error(e);
+        }
     }
 }

@@ -28,7 +28,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -36,11 +35,14 @@ import org.junit.jupiter.api.function.Executable;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.config.ImmutableDmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
+import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.service.producer.ExtendedDmaapProducerHttpClientImpl;
+import org.onap.dcaegen2.services.prh.service.producer.DMaaPProducerReactiveHttpClient;
 import org.springframework.http.HttpStatus;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/17/18
@@ -49,7 +51,7 @@ class DmaapPublisherTaskImplTest {
 
     private static ConsumerDmaapModel consumerDmaapModel;
     private static DmaapPublisherTaskImpl dmaapPublisherTask;
-    private static ExtendedDmaapProducerHttpClientImpl extendedDmaapProducerHttpClient;
+    private static DMaaPProducerReactiveHttpClient dMaaPProducerReactiveHttpClient;
     private static AppConfig appConfig;
     private static DmaapPublisherConfiguration dmaapPublisherConfiguration;
 
@@ -85,38 +87,36 @@ class DmaapPublisherTaskImplTest {
         prepareMocksForTests(HttpStatus.OK.value());
 
         //when
-        Integer response = dmaapPublisherTask.execute(consumerDmaapModel);
+        StepVerifier.create(dmaapPublisherTask.execute(Mono.just(consumerDmaapModel))).expectSubscription()
+            .expectNext(HttpStatus.OK.value());
 
         //then
-        verify(extendedDmaapProducerHttpClient, times(1))
-            .getHttpProducerResponse(any(ConsumerDmaapModel.class));
-        verifyNoMoreInteractions(extendedDmaapProducerHttpClient);
-        Assertions.assertEquals((Integer) HttpStatus.OK.value(), response);
+        verify(dMaaPProducerReactiveHttpClient, times(1))
+            .getDMaaPProducerResponse(any(Mono.class));
+        verifyNoMoreInteractions(dMaaPProducerReactiveHttpClient);
     }
 
     @Test
-    public void whenPassedObjectFits_butIncorrectResponseReturns() {
+    public void whenPassedObjectFits_butIncorrectResponseReturns() throws DmaapNotFoundException {
         //given
         prepareMocksForTests(HttpStatus.UNAUTHORIZED.value());
 
         //when
-        Executable executableFunction = () -> dmaapPublisherTask.execute(consumerDmaapModel);
+        StepVerifier.create(dmaapPublisherTask.execute(Mono.just(consumerDmaapModel))).expectSubscription()
+            .expectError(PrhTaskException.class);
 
         //then
-        Assertions
-            .assertThrows(PrhTaskException.class, executableFunction, "Incorrect response from DMAAP");
-        verify(extendedDmaapProducerHttpClient, times(1)).getHttpProducerResponse(any(ConsumerDmaapModel.class));
-        verifyNoMoreInteractions(extendedDmaapProducerHttpClient);
+        verify(dMaaPProducerReactiveHttpClient, times(1)).getDMaaPProducerResponse(any(Mono.class));
+        verifyNoMoreInteractions(dMaaPProducerReactiveHttpClient);
     }
 
 
     private void prepareMocksForTests(Integer httpResponseCode) {
-        extendedDmaapProducerHttpClient = mock(ExtendedDmaapProducerHttpClientImpl.class);
-        when(extendedDmaapProducerHttpClient.getHttpProducerResponse(consumerDmaapModel))
-            .thenReturn(Optional.of(httpResponseCode));
-        when(appConfig.getDmaapPublisherConfiguration()).thenReturn(dmaapPublisherConfiguration);
+        dMaaPProducerReactiveHttpClient = mock(DMaaPProducerReactiveHttpClient.class);
+        when(dMaaPProducerReactiveHttpClient.getDMaaPProducerResponse(any(Mono.class)))
+            .thenReturn(Mono.just(httpResponseCode));
         dmaapPublisherTask = spy(new DmaapPublisherTaskImpl(appConfig));
         when(dmaapPublisherTask.resolveConfiguration()).thenReturn(dmaapPublisherConfiguration);
-        doReturn(extendedDmaapProducerHttpClient).when(dmaapPublisherTask).resolveClient();
+        doReturn(dMaaPProducerReactiveHttpClient).when(dmaapPublisherTask).resolveClient();
     }
 }

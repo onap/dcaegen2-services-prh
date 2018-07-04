@@ -19,24 +19,20 @@
  */
 package org.onap.dcaegen2.services.prh.service.consumer;
 
-import static org.springframework.web.reactive.function.client.ExchangeFilterFunctions.basicAuthentication;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import org.apache.http.client.utils.URIBuilder;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 6/26/18
  */
-public class DmaapConsumerReactiveHttpClient {
+public class DMaaPConsumerReactiveHttpClient {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -47,32 +43,17 @@ public class DmaapConsumerReactiveHttpClient {
     private final String dmaapTopicName;
     private final String consumerGroup;
     private final String consumerId;
-    private final String dmaapContentType;
-    private final String dmaapUserName;
-    private final String dmaapUserPassword;
 
-    public DmaapConsumerReactiveHttpClient(DmaapConsumerConfiguration consumerConfiguration) {
+    public DMaaPConsumerReactiveHttpClient(DmaapConsumerConfiguration consumerConfiguration) {
         this.dmaapHostName = consumerConfiguration.dmaapHostName();
         this.dmaapProtocol = consumerConfiguration.dmaapProtocol();
         this.dmaapPortNumber = consumerConfiguration.dmaapPortNumber();
         this.dmaapTopicName = consumerConfiguration.dmaapTopicName();
         this.consumerGroup = consumerConfiguration.consumerGroup();
         this.consumerId = consumerConfiguration.consumerId();
-        this.dmaapContentType = consumerConfiguration.dmaapContentType();
-        this.dmaapUserName = consumerConfiguration.dmaapUserName();
-        this.dmaapUserPassword = consumerConfiguration.dmaapUserPassword();
     }
 
-    public void initWebClient() {
-        this.webClient = WebClient.builder()
-            .defaultHeader(HttpHeaders.CONTENT_TYPE, dmaapContentType)
-            .filter(basicAuthentication(dmaapUserName, dmaapUserPassword))
-            .filter(logRequest())
-            .filter(logResponse())
-            .build();
-    }
-
-    public Mono<String> getDmaaPConsumerResponse() {
+    public Mono<String> getDMaaPConsumerResponse() {
         try {
             return webClient
                 .get()
@@ -85,7 +66,7 @@ public class DmaapConsumerReactiveHttpClient {
                     Mono.error(new Exception("HTTP 500")))
                 .bodyToMono(String.class);
         } catch (URISyntaxException e) {
-            logger.warn("Exception while executing HTTP request: ", e);
+            logger.warn("Exception while evaluating URI ");
             return Mono.error(e);
         }
     }
@@ -94,28 +75,13 @@ public class DmaapConsumerReactiveHttpClient {
         return dmaapTopicName + "/" + consumerGroup + "/" + consumerId;
     }
 
-    void initWebClient(WebClient webClient) {
+    public DMaaPConsumerReactiveHttpClient createDMaaPWebClient(WebClient webClient) {
         this.webClient = webClient;
-    }
-
-    ExchangeFilterFunction logResponse() {
-        return ExchangeFilterFunction.ofResponseProcessor(clientResponse -> {
-            logger.info("Response Status {}", clientResponse.statusCode());
-            return Mono.just(clientResponse);
-        });
+        return this;
     }
 
     URI getUri() throws URISyntaxException {
         return new URIBuilder().setScheme(dmaapProtocol).setHost(dmaapHostName).setPort(dmaapPortNumber)
             .setPath(createRequestPath()).build();
-    }
-
-    ExchangeFilterFunction logRequest() {
-        return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
-            logger.info("Request: {} {}", clientRequest.method(), clientRequest.url());
-            clientRequest.headers()
-                .forEach((name, values) -> values.forEach(value -> logger.info("{}={}", name, value)));
-            return Mono.just(clientRequest);
-        });
     }
 }

@@ -23,11 +23,10 @@ import java.util.Optional;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
-import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
-import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.service.DMaaPReactiveWebClient;
 import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
-import org.onap.dcaegen2.services.prh.service.consumer.DmaapConsumerReactiveHttpClient;
+import org.onap.dcaegen2.services.prh.service.consumer.DMaaPConsumerReactiveHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +42,7 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Config prhAppConfig;
     private DmaapConsumerJsonParser dmaapConsumerJsonParser;
-    private DmaapConsumerReactiveHttpClient dmaapConsumerReactiveHttpClient;
+    private DMaaPConsumerReactiveHttpClient dMaaPConsumerReactiveHttpClient;
 
     @Autowired
     public DmaapConsumerTaskImpl(AppConfig prhAppConfig) {
@@ -58,16 +57,15 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
 
     @Override
     Mono<ConsumerDmaapModel> consume(Mono<String> message) {
-        logger.info("Consumed model from DmaaP: {}", message);
+        logger.info("Consumed model from DMaaP: {}", message);
         return dmaapConsumerJsonParser.getJsonObject(message);
     }
 
     @Override
     public Mono<ConsumerDmaapModel> execute(String object) {
-        dmaapConsumerReactiveHttpClient = resolveClient();
-        dmaapConsumerReactiveHttpClient.initWebClient();
+        dMaaPConsumerReactiveHttpClient = resolveClient();
         logger.trace("Method called with arg {}", object);
-        return consume((dmaapConsumerReactiveHttpClient.getDmaaPConsumerResponse()));
+        return consume((dMaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse()));
     }
 
     @Override
@@ -80,8 +78,16 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
     }
 
     @Override
-    DmaapConsumerReactiveHttpClient resolveClient() {
-        return Optional.ofNullable(dmaapConsumerReactiveHttpClient)
-            .orElseGet(() -> new DmaapConsumerReactiveHttpClient(resolveConfiguration()));
+    DMaaPConsumerReactiveHttpClient resolveClient() {
+
+        return Optional.ofNullable(dMaaPConsumerReactiveHttpClient)
+            .orElseGet(() -> {
+                DmaapConsumerConfiguration dmaapConsumerConfiguration = resolveConfiguration();
+                return new DMaaPConsumerReactiveHttpClient(dmaapConsumerConfiguration).createDMaaPWebClient(
+                    new DMaaPReactiveWebClient.WebClientBuilder()
+                        .dmaapContentType(dmaapConsumerConfiguration.dmaapContentType())
+                        .dmaapUserName(dmaapConsumerConfiguration.dmaapUserName())
+                        .dmaapUserPassword(dmaapConsumerConfiguration.dmaapUserPassword()).build());
+            });
     }
 }

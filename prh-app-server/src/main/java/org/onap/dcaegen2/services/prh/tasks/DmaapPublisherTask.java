@@ -21,16 +21,17 @@ package org.onap.dcaegen2.services.prh.tasks;
 
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.service.producer.ExtendedDmaapProducerHttpClientImpl;
+import org.onap.dcaegen2.services.prh.service.producer.DMaaPProducerReactiveHttpClient;
+import reactor.core.publisher.Mono;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
 abstract class DmaapPublisherTask {
 
-    abstract Integer publish(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException;
+    abstract Mono<Integer> publish(Mono<ConsumerDmaapModel> consumerDmaapModel) throws PrhTaskException;
 
-    abstract ExtendedDmaapProducerHttpClientImpl resolveClient();
+    abstract DMaaPProducerReactiveHttpClient resolveClient();
 
-    protected abstract Integer execute(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException;
+    protected abstract Mono<Integer> execute(Mono<ConsumerDmaapModel> consumerDmaapModel) throws PrhTaskException;
 }

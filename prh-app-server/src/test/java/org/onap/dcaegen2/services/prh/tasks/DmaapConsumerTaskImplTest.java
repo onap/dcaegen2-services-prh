@@ -24,7 +24,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import com.google.gson.JsonElement;
@@ -32,7 +31,6 @@ import com.google.gson.JsonParser;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
@@ -43,7 +41,7 @@ import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
-import org.onap.dcaegen2.services.prh.service.consumer.DmaapConsumerReactiveHttpClient;
+import org.onap.dcaegen2.services.prh.service.consumer.DMaaPConsumerReactiveHttpClient;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -54,7 +52,7 @@ class DmaapConsumerTaskImplTest {
 
     private static ConsumerDmaapModel consumerDmaapModel;
     private static DmaapConsumerTaskImpl dmaapConsumerTask;
-    private static DmaapConsumerReactiveHttpClient dmaapConsumerReactiveHttpClient;
+    private static DMaaPConsumerReactiveHttpClient dMaaPConsumerReactiveHttpClient;
     private static AppConfig appConfig;
     private static DmaapConsumerConfiguration dmaapConsumerConfiguration;
     private static String message;
@@ -102,21 +100,20 @@ class DmaapConsumerTaskImplTest {
         StepVerifier.create(dmaapConsumerTask.execute("Sample input")).expectSubscription()
             .expectError(DmaapEmptyResponseException.class);
 
-        verify(dmaapConsumerReactiveHttpClient, times(1)).getDmaaPConsumerResponse();
+        verify(dMaaPConsumerReactiveHttpClient, times(1)).getDMaaPConsumerResponse();
     }
 
     @Test
     public void whenPassedObjectFits_ReturnsCorrectResponse() throws PrhTaskException {
         //given
         prepareMocksForDmaapConsumer(Optional.of(message));
-
         //when
         Mono<ConsumerDmaapModel> response = dmaapConsumerTask.execute("Sample input");
 
         //then
-        verify(dmaapConsumerReactiveHttpClient, times(1)).getDmaaPConsumerResponse();
-        Assertions.assertNotNull(response);
+        verify(dMaaPConsumerReactiveHttpClient, times(1)).getDMaaPConsumerResponse();
         Assertions.assertEquals(consumerDmaapModel, response.block());
+
 
     }
 
@@ -125,11 +122,11 @@ class DmaapConsumerTaskImplTest {
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
-        dmaapConsumerReactiveHttpClient = mock(DmaapConsumerReactiveHttpClient.class);
-        when(dmaapConsumerReactiveHttpClient.getDmaaPConsumerResponse()).thenReturn(Mono.just(message.orElse("")));
+        dMaaPConsumerReactiveHttpClient = mock(DMaaPConsumerReactiveHttpClient.class);
+        when(dMaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse()).thenReturn(Mono.just(message.orElse("")));
         when(appConfig.getDmaapConsumerConfiguration()).thenReturn(dmaapConsumerConfiguration);
         dmaapConsumerTask = spy(new DmaapConsumerTaskImpl(appConfig, dmaapConsumerJsonParser));
         when(dmaapConsumerTask.resolveConfiguration()).thenReturn(dmaapConsumerConfiguration);
-        doReturn(dmaapConsumerReactiveHttpClient).when(dmaapConsumerTask).resolveClient();
+        doReturn(dMaaPConsumerReactiveHttpClient).when(dmaapConsumerTask).resolveClient();
     }
 }

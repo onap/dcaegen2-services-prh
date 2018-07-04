@@ -44,9 +44,9 @@ import reactor.test.StepVerifier;
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 6/27/18
  */
-public class DmaapConsumerReactiveHttpClientTest {
+public class DMaaPConsumerReactiveHttpClientTest {
 
-    private static DmaapConsumerReactiveHttpClient dmaapConsumerReactiveHttpClient;
+    private static DMaaPConsumerReactiveHttpClient DMaaPConsumerReactiveHttpClient;
 
     private static DmaapConsumerConfiguration consumerConfigurationMock = mock(DmaapConsumerConfiguration.class);
     private static final String JSON_MESSAGE = "{ \"responseFromDmaap\": \"Success\"}";
@@ -68,13 +68,11 @@ public class DmaapConsumerReactiveHttpClientTest {
         when(consumerConfigurationMock.consumerGroup()).thenReturn("OpenDCAE-c12");
         when(consumerConfigurationMock.consumerId()).thenReturn("c12");
 
-        dmaapConsumerReactiveHttpClient = new DmaapConsumerReactiveHttpClient(consumerConfigurationMock);
+        DMaaPConsumerReactiveHttpClient = new DMaaPConsumerReactiveHttpClient(consumerConfigurationMock);
         webClient = spy(WebClient.builder()
             .defaultHeader(HttpHeaders.CONTENT_TYPE, consumerConfigurationMock.dmaapContentType())
             .filter(basicAuthentication(consumerConfigurationMock.dmaapUserName(),
                 consumerConfigurationMock.dmaapUserPassword()))
-            .filter(dmaapConsumerReactiveHttpClient.logRequest())
-            .filter(dmaapConsumerReactiveHttpClient.logResponse())
             .build());
         requestHeadersSpec = mock(RequestHeadersUriSpec.class);
         responseSpec = mock(ResponseSpec.class);
@@ -89,8 +87,8 @@ public class DmaapConsumerReactiveHttpClientTest {
         //when
         mockDependantObjects();
         doReturn(expectedResult).when(responseSpec).bodyToMono(String.class);
-        dmaapConsumerReactiveHttpClient.initWebClient(webClient);
-        Mono<String> response = dmaapConsumerReactiveHttpClient.getDmaaPConsumerResponse();
+        DMaaPConsumerReactiveHttpClient.createDMaaPWebClient(webClient);
+        Mono<String> response = DMaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse();
 
         //then
         StepVerifier.create(response).expectSubscription()
@@ -108,11 +106,10 @@ public class DmaapConsumerReactiveHttpClientTest {
         mockDependantObjects();
         doAnswer(invocationOnMock -> Mono.error(new Exception("400")))
             .when(responseSpec).onStatus(HttpStatus::is4xxClientError, e -> Mono.error(new Exception("400")));
-        dmaapConsumerReactiveHttpClient.initWebClient();
-        dmaapConsumerReactiveHttpClient.initWebClient(webClient);
+        DMaaPConsumerReactiveHttpClient.createDMaaPWebClient(webClient);
 
         //then
-        StepVerifier.create(dmaapConsumerReactiveHttpClient.getDmaaPConsumerResponse()).expectSubscription()
+        StepVerifier.create(DMaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse()).expectSubscription()
             .expectError(Exception.class);
 
     }
@@ -124,25 +121,24 @@ public class DmaapConsumerReactiveHttpClientTest {
         mockDependantObjects();
         doAnswer(invocationOnMock -> Mono.error(new Exception("500")))
             .when(responseSpec).onStatus(HttpStatus::is4xxClientError, e -> Mono.error(new Exception("500")));
-        dmaapConsumerReactiveHttpClient.initWebClient();
-        dmaapConsumerReactiveHttpClient.initWebClient(webClient);
+        DMaaPConsumerReactiveHttpClient.createDMaaPWebClient(webClient);
 
         //then
-        StepVerifier.create(dmaapConsumerReactiveHttpClient.getDmaaPConsumerResponse()).expectSubscription()
+        StepVerifier.create(DMaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse()).expectSubscription()
             .expectError(Exception.class);
     }
 
     @Test
     public void getHttpResponse_whenURISyntaxExceptionHasBeenThrown() throws URISyntaxException {
         //given
-        dmaapConsumerReactiveHttpClient = spy(dmaapConsumerReactiveHttpClient);
+        DMaaPConsumerReactiveHttpClient = spy(DMaaPConsumerReactiveHttpClient);
         //when
         when(webClient.get()).thenReturn(requestHeadersSpec);
-        dmaapConsumerReactiveHttpClient.initWebClient(webClient);
-        when(dmaapConsumerReactiveHttpClient.getUri()).thenThrow(URISyntaxException.class);
+        DMaaPConsumerReactiveHttpClient.createDMaaPWebClient(webClient);
+        when(DMaaPConsumerReactiveHttpClient.getUri()).thenThrow(URISyntaxException.class);
 
         //then
-        StepVerifier.create(dmaapConsumerReactiveHttpClient.getDmaaPConsumerResponse()).expectSubscription()
+        StepVerifier.create(DMaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse()).expectSubscription()
             .expectError(Exception.class);
     }
 

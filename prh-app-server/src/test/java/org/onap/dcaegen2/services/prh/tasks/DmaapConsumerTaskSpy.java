@@ -25,7 +25,7 @@ import static org.mockito.Mockito.spy;
 
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
-import org.onap.dcaegen2.services.prh.service.consumer.DmaapConsumerReactiveHttpClient;
+import org.onap.dcaegen2.services.prh.service.consumer.DMaaPConsumerReactiveHttpClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -42,10 +42,10 @@ public class DmaapConsumerTaskSpy {
         AppConfig appConfig = spy(AppConfig.class);
         doReturn(mock(DmaapConsumerConfiguration.class)).when(appConfig).getDmaapConsumerConfiguration();
         DmaapConsumerTaskImpl dmaapConsumerTask = spy(new DmaapConsumerTaskImpl(appConfig));
-        DmaapConsumerReactiveHttpClient dmaapConsumerReactiveHttpClient = mock(
-            DmaapConsumerReactiveHttpClient.class);
+        DMaaPConsumerReactiveHttpClient DMaaPConsumerReactiveHttpClient = mock(
+            DMaaPConsumerReactiveHttpClient.class);
         doReturn(mock(DmaapConsumerConfiguration.class)).when(dmaapConsumerTask).resolveConfiguration();
-        doReturn(dmaapConsumerReactiveHttpClient).when(dmaapConsumerTask).resolveClient();
+        doReturn(DMaaPConsumerReactiveHttpClient).when(dmaapConsumerTask).resolveClient();
         return dmaapConsumerTask;
     }
 }

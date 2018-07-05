@@ -48,28 +48,30 @@ public class DmaapConsumerJsonParser {
 
 
     public Mono<ConsumerDmaapModel> getJsonObject(Mono<String> monoMessage) {
-        return monoMessage.flatMap(message ->
-        {
-            if (!StringUtils.isEmpty(message)) {
-                JsonElement jsonElement = new JsonParser().parse(message);
-                ConsumerDmaapModel consumerDmaapModel;
-                try {
-                    if (jsonElement.isJsonObject()) {
-                        consumerDmaapModel = create(jsonElement.getAsJsonObject());
-                    } else {
-                        consumerDmaapModel = create(
-                            StreamSupport.stream(jsonElement.getAsJsonArray().spliterator(), false).findFirst()
-                                .flatMap(this::getJsonObjectFromAnArray)
-                                .orElseThrow(DmaapEmptyResponseException::new));
-                    }
-                    logger.info("Parsed model from DmaaP after getting it: {}", consumerDmaapModel);
-                    return Mono.just(consumerDmaapModel);
-                } catch (DmaapNotFoundException | DmaapEmptyResponseException e) {
-                    return Mono.error(e);
-                }
-            }
-            return Mono.error(new DmaapEmptyResponseException());
-        });
+        return monoMessage
+            .flatMap(message -> (StringUtils.isEmpty(message) ? Mono.error(new DmaapEmptyResponseException())
+                : convertJsonToConsumerDmaapModel(message)));
+    }
+
+    private Mono<? extends ConsumerDmaapModel> convertJsonToConsumerDmaapModel(String message) {
+        try {
+            JsonElement jsonElement = new JsonParser().parse(message);
+            ConsumerDmaapModel consumerDmaapModel = jsonElement.isJsonObject() ?
+                create(jsonElement.getAsJsonObject()) :
+                getConsumerDmaapModelFromJsonArray(jsonElement);
+            logger.info("Parsed model from DmaaP after getting it: {}", consumerDmaapModel);
+            return Mono.just(consumerDmaapModel);
+        } catch (DmaapNotFoundException | DmaapEmptyResponseException e) {
+            return Mono.error(e);
+        }
+    }
+
+    private ConsumerDmaapModel getConsumerDmaapModelFromJsonArray(JsonElement jsonElement)
+        throws DmaapNotFoundException, DmaapEmptyResponseException {
+        return create(
+            StreamSupport.stream(jsonElement.getAsJsonArray().spliterator(), false).findFirst()
+                .flatMap(this::getJsonObjectFromAnArray)
+                .orElseThrow(DmaapEmptyResponseException::new));
     }
 
     public Optional<JsonObject> getJsonObjectFromAnArray(JsonElement element) {

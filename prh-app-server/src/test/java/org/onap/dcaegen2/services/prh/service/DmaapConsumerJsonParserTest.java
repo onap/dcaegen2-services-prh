@@ -180,7 +180,7 @@ class DmaapConsumerJsonParserTest {
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
         StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(message)))
-            .expectSubscription().expectError(DmaapNotFoundException.class);
+            .expectSubscription().expectError(DmaapNotFoundException.class).verify();
 
     }
 
@@ -202,7 +202,7 @@ class DmaapConsumerJsonParserTest {
                 + ":\"Normal\",\"reportingEntityName\":\"5GRAN_DU\",\"sequence\":0,\"sourceId\":\"<<SerialNumber>>\","
                 + "\"sourceName\":\"5GRAN_DU\",\"startEpochMicrosec\":1519837825682,\"version\":3}}}]";
         StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(incorrectMessage)))
-            .expectSubscription().expectError(DmaapNotFoundException.class);
+            .expectSubscription().expectError(DmaapNotFoundException.class).verify();
     }
 
     @Test
@@ -232,7 +232,7 @@ class DmaapConsumerJsonParserTest {
                 + "\"pnfType\":\"AirScale\"}}}]";
         StepVerifier
             .create(dmaapConsumerJsonParser.getJsonObject(Mono.just(jsonWithoutPnfVendorAndSerialNumber)))
-            .expectSubscription().expectError(DmaapNotFoundException.class);
+            .expectSubscription().expectError(DmaapNotFoundException.class).verify();
     }
 
     @Test
@@ -260,6 +260,6 @@ class DmaapConsumerJsonParserTest {
                 + "\"AJ02\",\"pnfSerialNumber\":\"QTFCOC540002E\",\"pnfSoftwareVersion\":\"v4.5.0.1\",\"pnfType\":\"AirScale\","
                 + "\"pnfVendorName\":\"Nokia\"}}}]";
         StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(jsonWithoutIPInformation)))
-            .expectSubscription().expectError(DmaapNotFoundException.class);
+            .expectSubscription().expectError(DmaapNotFoundException.class).verify();
     }
 }

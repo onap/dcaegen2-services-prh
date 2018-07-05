@@ -48,14 +48,14 @@ public class DmaapPublisherTaskImpl extends DmaapPublisherTask {
     }
 
     @Override
-    Mono<Integer> publish(Mono<ConsumerDmaapModel> consumerDmaapModel) {
+    Mono<String> publish(Mono<ConsumerDmaapModel> consumerDmaapModel) {
         logger.info("Publishing on DMaaP topic {} object {}", resolveConfiguration().dmaapTopicName(),
             consumerDmaapModel);
-        return dMaaPProducerReactiveHttpClient.getDMaaPProducerResponse(consumerDmaapModel).map(Integer::parseInt);
+        return dMaaPProducerReactiveHttpClient.getDMaaPProducerResponse(consumerDmaapModel);
     }
 
     @Override
-    public Mono<Integer> execute(Mono<ConsumerDmaapModel> consumerDmaapModel) throws DmaapNotFoundException {
+    public Mono<String> execute(Mono<ConsumerDmaapModel> consumerDmaapModel) throws DmaapNotFoundException {
         consumerDmaapModel = Optional.ofNullable(consumerDmaapModel)
             .orElseThrow(() -> new DmaapNotFoundException("Invoked null object to DMaaP task"));
         dMaaPProducerReactiveHttpClient = resolveClient();
@@ -70,8 +70,8 @@ public class DmaapPublisherTaskImpl extends DmaapPublisherTask {
 
     @Override
     DMaaPProducerReactiveHttpClient resolveClient() {
-        return Optional.ofNullable(dMaaPProducerReactiveHttpClient)
-            .orElseGet(() -> new DMaaPProducerReactiveHttpClient(resolveConfiguration())
-                .createDMaaPWebClient(buildWebClient()));
+        return dMaaPProducerReactiveHttpClient == null
+            ? new DMaaPProducerReactiveHttpClient(resolveConfiguration()).createDMaaPWebClient(buildWebClient())
+            : dMaaPProducerReactiveHttpClient;
     }
 }

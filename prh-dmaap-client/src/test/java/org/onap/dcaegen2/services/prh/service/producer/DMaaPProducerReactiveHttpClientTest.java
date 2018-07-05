@@ -20,7 +20,6 @@
 package org.onap.dcaegen2.services.prh.service.producer;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -36,7 +35,6 @@ import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModelForUnitTest;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClient.RequestBodyUriSpec;
 import org.springframework.web.reactive.function.client.WebClient.RequestHeadersSpec;
@@ -97,37 +95,6 @@ public class DMaaPProducerReactiveHttpClientTest {
     }
 
     @Test
-    public void getHttpResponse_HttpResponse4xxClientError() {
-        //when
-        mockWebClientDependantObject();
-
-        doAnswer(invocationOnMock -> Mono.error(new Exception("400")))
-            .when(responseSpec).onStatus(HttpStatus::is4xxClientError, e -> Mono.error(new Exception("400")));
-        dMaaPProducerReactiveHttpClient.createDMaaPWebClient(webClient);
-
-        //then
-        StepVerifier.create(dMaaPProducerReactiveHttpClient.getDMaaPProducerResponse(Mono.just(consumerDmaapModel)))
-            .expectSubscription()
-            .expectError(Exception.class);
-
-    }
-
-    @Test
-    public void getHttpResponse_HttpResponse5xxClientError() {
-
-        //when
-        mockWebClientDependantObject();
-        doAnswer(invocationOnMock -> Mono.error(new Exception("500")))
-            .when(responseSpec).onStatus(HttpStatus::is4xxClientError, e -> Mono.error(new Exception("500")));
-        dMaaPProducerReactiveHttpClient.createDMaaPWebClient(webClient);
-
-        //then
-        StepVerifier.create(dMaaPProducerReactiveHttpClient.getDMaaPProducerResponse(Mono.just(consumerDmaapModel)))
-            .expectSubscription()
-            .expectError(Exception.class);
-    }
-
-    @Test
     public void getHttpResponse_whenURISyntaxExceptionHasBeenThrown() throws URISyntaxException {
         //given
         dMaaPProducerReactiveHttpClient = spy(dMaaPProducerReactiveHttpClient);
@@ -138,7 +105,7 @@ public class DMaaPProducerReactiveHttpClientTest {
 
         //then
         StepVerifier.create(dMaaPProducerReactiveHttpClient.getDMaaPProducerResponse(any())).expectSubscription()
-            .expectError(Exception.class);
+            .expectError(Exception.class).verify();
     }
 
     private void mockWebClientDependantObject() {

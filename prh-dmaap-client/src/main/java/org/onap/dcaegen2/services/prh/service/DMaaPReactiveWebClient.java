@@ -21,6 +21,7 @@ package org.onap.dcaegen2.services.prh.service;
 
 import static org.springframework.web.reactive.function.client.ExchangeFilterFunctions.basicAuthentication;
 
+import org.onap.dcaegen2.services.prh.config.DmaapCustomConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -35,26 +36,34 @@ public class DMaaPReactiveWebClient {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private DMaaPReactiveWebClient() {
+    private String dMaaPContentType;
+    private String dMaaPUserName;
+    private String dMaaPUserPassword;
+
+    public DMaaPReactiveWebClient fromConfiguration(DmaapCustomConfig dmaapCustomConfig) {
+        this.dMaaPUserName = dmaapCustomConfig.dmaapUserName();
+        this.dMaaPUserPassword = dmaapCustomConfig.dmaapUserPassword();
+        this.dMaaPContentType = dmaapCustomConfig.dmaapContentType();
+        return this;
     }
 
-    private WebClient create(WebClientBuilder webClientBuilder) {
+    public WebClient build() {
         return WebClient.builder()
-            .defaultHeader(HttpHeaders.CONTENT_TYPE, webClientBuilder.dMaaPContentType)
-            .filter(basicAuthentication(webClientBuilder.dMaaPUserName, webClientBuilder.dMaaPUserPassword))
+            .defaultHeader(HttpHeaders.CONTENT_TYPE, dMaaPContentType)
+            .filter(basicAuthentication(dMaaPUserName, dMaaPUserPassword))
             .filter(logRequest())
             .filter(logResponse())
             .build();
     }
 
-    ExchangeFilterFunction logResponse() {
+    private ExchangeFilterFunction logResponse() {
         return ExchangeFilterFunction.ofResponseProcessor(clientResponse -> {
             logger.info("Response Status {}", clientResponse.statusCode());
             return Mono.just(clientResponse);
         });
     }
 
-    ExchangeFilterFunction logRequest() {
+    private ExchangeFilterFunction logRequest() {
         return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
             logger.info("Request: {} {}", clientRequest.method(), clientRequest.url());
             clientRequest.headers()
@@ -63,32 +72,4 @@ public class DMaaPReactiveWebClient {
         });
     }
 
-    public static class WebClientBuilder {
-
-        private String dMaaPContentType;
-        private String dMaaPUserName;
-        private String dMaaPUserPassword;
-
-        public WebClientBuilder() {
-        }
-
-        public WebClientBuilder dmaapContentType(String dmaapContentType) {
-            this.dMaaPContentType = dmaapContentType;
-            return this;
-        }
-
-        public WebClientBuilder dmaapUserName(String dmaapUserName) {
-            this.dMaaPUserName = dmaapUserName;
-            return this;
-        }
-
-        public WebClientBuilder dmaapUserPassword(String dmaapUserPassword) {
-            this.dMaaPUserPassword = dmaapUserPassword;
-            return this;
-        }
-
-        public WebClient build() {
-            return new DMaaPReactiveWebClient().create(this);
-        }
-    }
 }

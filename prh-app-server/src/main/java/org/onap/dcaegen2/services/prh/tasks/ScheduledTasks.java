@@ -54,7 +54,7 @@ public class ScheduledTasks {
     public void scheduleMainPrhEventTask() {
         logger.trace("Execution of tasks was registered");
 
-        Mono<Integer> dmaapProducerResponse = Mono.fromCallable(consumeFromDMaaPMessage())
+        Mono<String> dmaapProducerResponse = Mono.fromCallable(consumeFromDMaaPMessage())
             .doOnError(DmaapEmptyResponseException.class, error -> logger.warn("Nothing to consume from DMaaP"))
             .map(this::publishToAAIConfiguration)
             .flatMap(this::publishToDMaaPConfiguration)
@@ -67,7 +67,7 @@ public class ScheduledTasks {
         logger.info("PRH tasks have been completed");
     }
 
-    private void onSuccess(Integer responseCode) {
+    private void onSuccess(String responseCode) {
         logger.info("Prh consumed tasks. HTTP Response code {}", responseCode);
     }
 
@@ -90,17 +90,15 @@ public class ScheduledTasks {
             try {
                 return Mono.just(aaiProducerTask.execute(dmaapModel));
             } catch (PrhTaskException e) {
-                logger.warn("Exception in A&AIProducer task ", e);
                 return Mono.error(e);
             }
         });
     }
 
-    private Mono<Integer> publishToDMaaPConfiguration(Mono<ConsumerDmaapModel> monoAAIModel) {
+    private Mono<String> publishToDMaaPConfiguration(Mono<ConsumerDmaapModel> monoAAIModel) {
         try {
             return dmaapProducerTask.execute(monoAAIModel);
         } catch (PrhTaskException e) {
-            logger.warn("Exception in DMaaPProducer task ", e);
             return Mono.error(e);
         }
     }

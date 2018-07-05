@@ -98,36 +98,6 @@ public class DMaaPConsumerReactiveHttpClientTest {
             }).verifyComplete();
     }
 
-
-    @Test
-    public void getHttpResponse_HttpResponse4xxClientError() {
-
-        //when
-        mockDependantObjects();
-        doAnswer(invocationOnMock -> Mono.error(new Exception("400")))
-            .when(responseSpec).onStatus(HttpStatus::is4xxClientError, e -> Mono.error(new Exception("400")));
-        DMaaPConsumerReactiveHttpClient.createDMaaPWebClient(webClient);
-
-        //then
-        StepVerifier.create(DMaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse()).expectSubscription()
-            .expectError(Exception.class);
-
-    }
-
-    @Test
-    public void getHttpResponse_HttpResponse5xxClientError() {
-
-        //when
-        mockDependantObjects();
-        doAnswer(invocationOnMock -> Mono.error(new Exception("500")))
-            .when(responseSpec).onStatus(HttpStatus::is4xxClientError, e -> Mono.error(new Exception("500")));
-        DMaaPConsumerReactiveHttpClient.createDMaaPWebClient(webClient);
-
-        //then
-        StepVerifier.create(DMaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse()).expectSubscription()
-            .expectError(Exception.class);
-    }
-
     @Test
     public void getHttpResponse_whenURISyntaxExceptionHasBeenThrown() throws URISyntaxException {
         //given
@@ -139,7 +109,7 @@ public class DMaaPConsumerReactiveHttpClientTest {
 
         //then
         StepVerifier.create(DMaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse()).expectSubscription()
-            .expectError(Exception.class);
+            .expectError(Exception.class).verify();
     }
 
     private void mockDependantObjects() {

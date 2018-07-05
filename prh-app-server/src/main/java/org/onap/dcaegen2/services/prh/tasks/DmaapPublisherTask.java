@@ -32,19 +32,15 @@ import reactor.core.publisher.Mono;
  */
 abstract class DmaapPublisherTask {
 
-    abstract Mono<Integer> publish(Mono<ConsumerDmaapModel> consumerDmaapModel) throws PrhTaskException;
+    abstract Mono<String> publish(Mono<ConsumerDmaapModel> consumerDmaapModel) throws PrhTaskException;
 
     abstract DMaaPProducerReactiveHttpClient resolveClient();
 
     protected abstract DmaapPublisherConfiguration resolveConfiguration();
 
-    protected abstract Mono<Integer> execute(Mono<ConsumerDmaapModel> consumerDmaapModel) throws PrhTaskException;
+    protected abstract Mono<String> execute(Mono<ConsumerDmaapModel> consumerDmaapModel) throws PrhTaskException;
 
     WebClient buildWebClient() {
-        DmaapPublisherConfiguration dmaapPublisherConfiguration = resolveConfiguration();
-        return new DMaaPReactiveWebClient.WebClientBuilder()
-            .dmaapContentType(dmaapPublisherConfiguration.dmaapContentType())
-            .dmaapUserName(dmaapPublisherConfiguration.dmaapUserName())
-            .dmaapUserPassword(dmaapPublisherConfiguration.dmaapUserPassword()).build();
+        return new DMaaPReactiveWebClient().fromConfiguration(resolveConfiguration()).build();
     }
 }

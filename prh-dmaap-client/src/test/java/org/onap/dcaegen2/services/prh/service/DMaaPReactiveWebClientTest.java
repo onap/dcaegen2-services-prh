@@ -19,8 +19,12 @@
  */
 package org.onap.dcaegen2.services.prh.service;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.springframework.web.reactive.function.client.WebClient;
 
 /**
@@ -28,19 +32,23 @@ import org.springframework.web.reactive.function.client.WebClient;
  */
 public class DMaaPReactiveWebClientTest {
 
+
     @Test
     public void builder_shouldBuildDMaaPReactiveWebClient() {
         //given
+        DmaapConsumerConfiguration dmaapConsumerConfiguration = mock(DmaapConsumerConfiguration.class);
         WebClient dMaaPReactiveWebClient;
         String dMaaPContentType = "*/*";
         String dMaaPUserName = "DMaaP";
         String dMaaPUserPassword = "DMaaP";
 
         //when
-        dMaaPReactiveWebClient = new DMaaPReactiveWebClient.WebClientBuilder()
-            .dmaapContentType(dMaaPContentType)
-            .dmaapUserName(dMaaPUserName)
-            .dmaapUserPassword(dMaaPUserPassword).build();
+        when(dmaapConsumerConfiguration.dmaapContentType()).thenReturn(dMaaPContentType);
+        when(dmaapConsumerConfiguration.dmaapUserName()).thenReturn(dMaaPUserName);
+        when(dmaapConsumerConfiguration.dmaapUserPassword()).thenReturn(dMaaPUserPassword);
+        dMaaPReactiveWebClient = new DMaaPReactiveWebClient()
+            .fromConfiguration(dmaapConsumerConfiguration)
+            .build();
 
         //then
         Assertions.assertNotNull(dMaaPReactiveWebClient);

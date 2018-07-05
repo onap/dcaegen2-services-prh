@@ -19,7 +19,6 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
-import java.util.Optional;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
@@ -79,8 +78,8 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
 
     @Override
     DMaaPConsumerReactiveHttpClient resolveClient() {
-        return Optional.ofNullable(dMaaPConsumerReactiveHttpClient)
-            .orElseGet(() -> new DMaaPConsumerReactiveHttpClient(resolveConfiguration()).createDMaaPWebClient(
-                buildWebClient()));
+        return dMaaPConsumerReactiveHttpClient == null
+            ? new DMaaPConsumerReactiveHttpClient(resolveConfiguration()).createDMaaPWebClient(buildWebClient())
+            : dMaaPConsumerReactiveHttpClient;
     }
 }

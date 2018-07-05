@@ -43,10 +43,6 @@ abstract class DmaapConsumerTask {
     protected abstract Mono<ConsumerDmaapModel> execute(String object) throws PrhTaskException;
 
     WebClient buildWebClient() {
-        DmaapConsumerConfiguration dmaapConsumerConfiguration = resolveConfiguration();
-        return new DMaaPReactiveWebClient.WebClientBuilder()
-            .dmaapContentType(dmaapConsumerConfiguration.dmaapContentType())
-            .dmaapUserName(dmaapConsumerConfiguration.dmaapUserName())
-            .dmaapUserPassword(dmaapConsumerConfiguration.dmaapUserPassword()).build();
+        return new DMaaPReactiveWebClient().fromConfiguration(resolveConfiguration()).build();
     }
 }

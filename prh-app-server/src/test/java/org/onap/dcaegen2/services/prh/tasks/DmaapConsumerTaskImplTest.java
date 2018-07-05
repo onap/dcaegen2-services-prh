@@ -19,6 +19,7 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -98,7 +99,7 @@ class DmaapConsumerTaskImplTest {
 
         //then
         StepVerifier.create(dmaapConsumerTask.execute("Sample input")).expectSubscription()
-            .expectError(DmaapEmptyResponseException.class);
+            .expectError(DmaapEmptyResponseException.class).verify();
 
         verify(dMaaPConsumerReactiveHttpClient, times(1)).getDMaaPConsumerResponse();
     }
@@ -112,7 +113,7 @@ class DmaapConsumerTaskImplTest {
 
         //then
         verify(dMaaPConsumerReactiveHttpClient, times(1)).getDMaaPConsumerResponse();
-        Assertions.assertEquals(consumerDmaapModel, response.block());
+        assertEquals(consumerDmaapModel, response.block());
 
 
     }

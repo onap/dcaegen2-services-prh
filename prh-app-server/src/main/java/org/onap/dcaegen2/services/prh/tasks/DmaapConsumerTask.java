@@ -19,10 +19,12 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
-import java.util.Optional;
+import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.service.DMaaPReactiveWebClient;
 import org.onap.dcaegen2.services.prh.service.consumer.DMaaPConsumerReactiveHttpClient;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 /**
@@ -36,5 +38,15 @@ abstract class DmaapConsumerTask {
 
     abstract void initConfigs();
 
+    protected abstract DmaapConsumerConfiguration resolveConfiguration();
+
     protected abstract Mono<ConsumerDmaapModel> execute(String object) throws PrhTaskException;
+
+    WebClient buildWebClient() {
+        DmaapConsumerConfiguration dmaapConsumerConfiguration = resolveConfiguration();
+        return new DMaaPReactiveWebClient.WebClientBuilder()
+            .dmaapContentType(dmaapConsumerConfiguration.dmaapContentType())
+            .dmaapUserName(dmaapConsumerConfiguration.dmaapUserName())
+            .dmaapUserPassword(dmaapConsumerConfiguration.dmaapUserPassword()).build();
+    }
 }

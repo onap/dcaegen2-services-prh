@@ -55,7 +55,6 @@ public class DMaaPProducerReactiveHttpClientTest {
         DmaapPublisherConfiguration.class);
     private static final Integer RESPONSE_SUCCESS = 200;
     private static ConsumerDmaapModel consumerDmaapModel = new ConsumerDmaapModelForUnitTest();
-    private static Mono<Integer> expectedResult = Mono.empty();
     private static WebClient webClient = mock(WebClient.class);
     private static RequestBodyUriSpec requestBodyUriSpec;
     private static ResponseSpec responseSpec;
@@ -85,7 +84,7 @@ public class DMaaPProducerReactiveHttpClientTest {
     @Test
     public void getHttpResponse_Success() {
         //given
-        expectedResult = Mono.just(RESPONSE_SUCCESS);
+        Mono<Integer> expectedResult = Mono.just(RESPONSE_SUCCESS);
 
         //when
         mockWebClientDependantObject();

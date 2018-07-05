@@ -25,7 +25,6 @@ import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.service.DMaaPReactiveWebClient;
 import org.onap.dcaegen2.services.prh.service.producer.DMaaPProducerReactiveHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +63,7 @@ public class DmaapPublisherTaskImpl extends DmaapPublisherTask {
         return publish(consumerDmaapModel);
     }
 
+    @Override
     protected DmaapPublisherConfiguration resolveConfiguration() {
         return prhAppConfig.getDmaapPublisherConfiguration();
     }
@@ -71,13 +71,7 @@ public class DmaapPublisherTaskImpl extends DmaapPublisherTask {
     @Override
     DMaaPProducerReactiveHttpClient resolveClient() {
         return Optional.ofNullable(dMaaPProducerReactiveHttpClient)
-            .orElseGet(() -> {
-                DmaapPublisherConfiguration dmaapPublisherConfiguration = resolveConfiguration();
-                return new DMaaPProducerReactiveHttpClient(dmaapPublisherConfiguration).createDMaaPWebClient(
-                    new DMaaPReactiveWebClient.WebClientBuilder()
-                        .dmaapContentType(dmaapPublisherConfiguration.dmaapContentType())
-                        .dmaapUserName(dmaapPublisherConfiguration.dmaapUserName())
-                        .dmaapUserPassword(dmaapPublisherConfiguration.dmaapUserPassword()).build());
-            });
+            .orElseGet(() -> new DMaaPProducerReactiveHttpClient(resolveConfiguration())
+                .createDMaaPWebClient(buildWebClient()));
     }
 }

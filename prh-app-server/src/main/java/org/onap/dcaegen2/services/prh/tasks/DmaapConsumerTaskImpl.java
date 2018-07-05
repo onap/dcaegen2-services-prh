@@ -24,7 +24,6 @@ import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.service.DMaaPReactiveWebClient;
 import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
 import org.onap.dcaegen2.services.prh.service.consumer.DMaaPConsumerReactiveHttpClient;
 import org.slf4j.Logger;
@@ -73,21 +72,15 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
         prhAppConfig.initFileStreamReader();
     }
 
+    @Override
     protected DmaapConsumerConfiguration resolveConfiguration() {
         return prhAppConfig.getDmaapConsumerConfiguration();
     }
 
     @Override
     DMaaPConsumerReactiveHttpClient resolveClient() {
-
         return Optional.ofNullable(dMaaPConsumerReactiveHttpClient)
-            .orElseGet(() -> {
-                DmaapConsumerConfiguration dmaapConsumerConfiguration = resolveConfiguration();
-                return new DMaaPConsumerReactiveHttpClient(dmaapConsumerConfiguration).createDMaaPWebClient(
-                    new DMaaPReactiveWebClient.WebClientBuilder()
-                        .dmaapContentType(dmaapConsumerConfiguration.dmaapContentType())
-                        .dmaapUserName(dmaapConsumerConfiguration.dmaapUserName())
-                        .dmaapUserPassword(dmaapConsumerConfiguration.dmaapUserPassword()).build());
-            });
+            .orElseGet(() -> new DMaaPConsumerReactiveHttpClient(resolveConfiguration()).createDMaaPWebClient(
+                buildWebClient()));
     }
 }

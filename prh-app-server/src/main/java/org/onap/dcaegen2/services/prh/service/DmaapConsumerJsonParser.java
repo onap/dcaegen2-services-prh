@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.prh.service;
 
 import com.google.gson.JsonElement;
@@ -28,8 +29,6 @@ import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Mono;
 
@@ -38,7 +37,6 @@ import reactor.core.publisher.Mono;
  */
 public class DmaapConsumerJsonParser {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private static final String EVENT = "event";
     private static final String OTHER_FIELDS = "otherFields";
     private static final String PNF_OAM_IPV_4_ADDRESS = "pnfOamIpv4Address";
@@ -46,73 +44,80 @@ public class DmaapConsumerJsonParser {
     private static final String PNF_VENDOR_NAME = "pnfVendorName";
     private static final String PNF_SERIAL_NUMBER = "pnfSerialNumber";
 
-
     public Mono<ConsumerDmaapModel> getJsonObject(Mono<String> monoMessage) {
         return monoMessage
-            .flatMap(message -> (StringUtils.isEmpty(message) ? Mono.error(new DmaapEmptyResponseException())
-                : convertJsonToConsumerDmaapModel(message)));
+            .flatMap(this::getJsonParserMessage)
+            .flatMap(this::createJsonConsumerModel);
     }
 
-    private Mono<? extends ConsumerDmaapModel> convertJsonToConsumerDmaapModel(String message) {
-        try {
-            JsonElement jsonElement = new JsonParser().parse(message);
-            ConsumerDmaapModel consumerDmaapModel = jsonElement.isJsonObject() ?
-                create(jsonElement.getAsJsonObject()) :
-                getConsumerDmaapModelFromJsonArray(jsonElement);
-            logger.info("Parsed model from DmaaP after getting it: {}", consumerDmaapModel);
-            return Mono.just(consumerDmaapModel);
-        } catch (DmaapNotFoundException | DmaapEmptyResponseException e) {
-            return Mono.error(e);
-        }
+    private Mono<JsonElement> getJsonParserMessage(String message) {
+        return StringUtils.isEmpty(message) ? Mono.error(new DmaapEmptyResponseException())
+            : Mono.fromSupplier(() -> new JsonParser().parse(message));
     }
 
-    private ConsumerDmaapModel getConsumerDmaapModelFromJsonArray(JsonElement jsonElement)
-        throws DmaapNotFoundException, DmaapEmptyResponseException {
+    private Mono<ConsumerDmaapModel> createJsonConsumerModel(JsonElement jsonElement) {
+        return jsonElement.isJsonObject()
+            ? create(Mono.fromSupplier(jsonElement::getAsJsonObject))
+            : getConsumerDmaapModelFromJsonArray(jsonElement);
+    }
+
+    private Mono<ConsumerDmaapModel> getConsumerDmaapModelFromJsonArray(JsonElement jsonElement) {
         return create(
-            StreamSupport.stream(jsonElement.getAsJsonArray().spliterator(), false).findFirst()
+            Mono.fromCallable(() -> StreamSupport.stream(jsonElement.getAsJsonArray().spliterator(), false).findFirst()
                 .flatMap(this::getJsonObjectFromAnArray)
-                .orElseThrow(DmaapEmptyResponseException::new));
+                .orElseThrow(DmaapEmptyResponseException::new)));
     }
 
     public Optional<JsonObject> getJsonObjectFromAnArray(JsonElement element) {
         return Optional.of(new JsonParser().parse(element.getAsString()).getAsJsonObject());
     }
 
-    private ConsumerDmaapModel create(JsonObject jsonObject) throws DmaapNotFoundException {
-        if (containsHeader(jsonObject)) {
-            jsonObject = jsonObject.getAsJsonObject(EVENT).getAsJsonObject(OTHER_FIELDS);
-            String pnfVendorName = getValueFromJson(jsonObject, PNF_VENDOR_NAME);
-            String pnfSerialNumber = getValueFromJson(jsonObject, PNF_SERIAL_NUMBER);
-            String pnfOamIpv4Address = getValueFromJson(jsonObject, PNF_OAM_IPV_4_ADDRESS);
-            String pnfOamIpv6Address = getValueFromJson(jsonObject, PNF_OAM_IPV_6_ADDRESS);
-            if (isVendorAndSerialNotEmpty(pnfSerialNumber, pnfVendorName) && isIpPropertiesNotEmpty(pnfOamIpv4Address,
-                pnfOamIpv6Address)) {
-                String correlationID = pnfVendorName.substring(0, Math.min(pnfVendorName.length(), 3)).toUpperCase()
-                    .concat(pnfSerialNumber);
-                return ImmutableConsumerDmaapModel.builder().pnfName(correlationID).ipv4(pnfOamIpv4Address)
-                    .ipv6(pnfOamIpv6Address).build();
-            }
-            throw new DmaapNotFoundException("IPV4 and IPV6 are empty");
-        }
-        throw new DmaapNotFoundException("Incorrect JsonObject - missing header");
+    private Mono<ConsumerDmaapModel> create(Mono<JsonObject> jsonObject) {
+        return jsonObject.flatMap(monoJsonP ->
+            !containsHeader(monoJsonP) ? Mono.error(new DmaapNotFoundException("Incorrect JsonObject - missing header"))
+                : transform(monoJsonP));
+    }
+
+    private Mono<ConsumerDmaapModel> transform(JsonObject monoJsonP) {
+        monoJsonP = monoJsonP.getAsJsonObject(EVENT).getAsJsonObject(OTHER_FIELDS);
+        String pnfVendorName = getValueFromJson(monoJsonP, PNF_VENDOR_NAME);
+        String pnfSerialNumber = getValueFromJson(monoJsonP, PNF_SERIAL_NUMBER);
+        String pnfOamIpv4Address = getValueFromJson(monoJsonP, PNF_OAM_IPV_4_ADDRESS);
+        String pnfOamIpv6Address = getValueFromJson(monoJsonP, PNF_OAM_IPV_6_ADDRESS);
+        return
+            (!vendorAndSerialNotEmpty(pnfSerialNumber, pnfVendorName) || !ipPropertiesNotEmpty(pnfOamIpv4Address,
+                pnfOamIpv6Address))
+                ? Mono.error(new DmaapNotFoundException("Incorrect json, consumerDmaapModel can not be created: "
+                + printMessage(pnfVendorName, pnfSerialNumber, pnfOamIpv4Address, pnfOamIpv6Address))) :
+                Mono.just(ImmutableConsumerDmaapModel.builder()
+                    .pnfName(pnfVendorName.substring(0, Math.min(pnfVendorName.length(), 3)).toUpperCase()
+                        .concat(pnfSerialNumber)).ipv4(pnfOamIpv4Address)
+                    .ipv6(pnfOamIpv6Address).build());
     }
 
     private String getValueFromJson(JsonObject jsonObject, String jsonKey) {
         return jsonObject.has(jsonKey) ? jsonObject.get(jsonKey).getAsString() : "";
     }
 
-    private boolean isVendorAndSerialNotEmpty(String pnfSerialNumber, String pnfVendorName) {
-        return ((pnfSerialNumber != null && !pnfSerialNumber.isEmpty()) && (pnfVendorName != null && !pnfVendorName
-            .isEmpty()));
+    private boolean vendorAndSerialNotEmpty(String pnfSerialNumber, String pnfVendorName) {
+        return (!StringUtils.isEmpty(pnfSerialNumber) && !StringUtils.isEmpty(pnfVendorName));
     }
 
-    private boolean isIpPropertiesNotEmpty(String ipv4, String ipv6) {
-        return (ipv4 != null && !ipv4.isEmpty()) || (ipv6 != null
-            && !ipv6.isEmpty());
+    private boolean ipPropertiesNotEmpty(String ipv4, String ipv6) {
+        return (!StringUtils.isEmpty(ipv4)) || !(StringUtils.isEmpty(ipv6));
     }
 
     private boolean containsHeader(JsonObject jsonObject) {
         return jsonObject.has(EVENT) && jsonObject.getAsJsonObject(EVENT).has(OTHER_FIELDS);
     }
 
+    private String printMessage(String pnfVendorName, String pnfSerialNumber, String pnfOamIpv4Address,
+        String pnfOamIpv6Address) {
+        return String.format("\n{"
+            + "\"pnfVendorName\" : \"%s\","
+            + "\"pnfSerialNumber\": \"%s\","
+            + "\"pnfOamIpv4Address\": \"%s\","
+            + "\"pnfOamIpv6Address\": \"%s\""
+            + "\n}", pnfVendorName, pnfSerialNumber, pnfOamIpv4Address, pnfOamIpv6Address);
+    }
 }

@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.prh.service;
 
 import static org.mockito.Mockito.spy;
@@ -110,6 +111,7 @@ class DmaapConsumerJsonParserTest {
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
+        dmaapConsumerJsonParser.getJsonObject(Mono.just((message)));
         ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser.getJsonObject(Mono.just((message)))
             .block();
         //then

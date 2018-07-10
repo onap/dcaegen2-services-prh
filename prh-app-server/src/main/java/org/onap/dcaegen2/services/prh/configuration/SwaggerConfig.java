@@ -48,6 +48,10 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
     private static final String SWAGGER_UI = "swagger-ui.html";
     private static final String WEBJARS = "/webjars/**";
 
+    /**
+     * Swagger configuration function for hosting it next to spring http website.
+     * @return Docket
+     */
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)

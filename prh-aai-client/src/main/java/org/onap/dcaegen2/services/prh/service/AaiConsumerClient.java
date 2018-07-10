@@ -53,9 +53,9 @@ public class AaiConsumerClient {
     private final Map<String, String> aaiHeaders;
 
     /**
-     * AAI client for consuming data.
+     * A{@literal &}AI client for consuming data from A{@literal &}AI.
      *
-     * @param aaiClientConfiguration - client config
+     * @param aaiClientConfiguration - A{@literal &}AI client config
      */
     public AaiConsumerClient(AaiClientConfiguration aaiClientConfiguration) {
         closeableHttpClient = new AaiClientImpl(aaiClientConfiguration).getAaiHttpClient();
@@ -67,7 +67,7 @@ public class AaiConsumerClient {
     }
 
     /**
-     * Function which call http client for getting object from AAI.
+     * Function which call http client for getting object from A{@literal &}AI.
      *
      * @param consumerDmaapModel - helper object for uri generation
      * @return - status code of operation

@@ -37,6 +37,11 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 public class AaiPublisherTaskSpy {
 
+    /**
+     * Mocking bean for tests.
+     *
+     * @return A&AI ProducerTask spy
+     */
     @Bean
     @Primary
     public AaiProducerTask registerSimpleAaiPublisherTask() {

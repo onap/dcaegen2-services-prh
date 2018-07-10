@@ -26,6 +26,9 @@ public class ConsumerDmaapModelForUnitTest implements ConsumerDmaapModel {
     private final String ipv4;
     private final String ipv6;
 
+    /**
+     * Class for testing serialization of ConsumerDmaapModel.
+     */
     public ConsumerDmaapModelForUnitTest() {
         this.pnfName = "NOKnhfsadhff";
         this.ipv4 = "256.22.33.155";

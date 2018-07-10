@@ -58,7 +58,11 @@ public class AaiProducerClient implements AaiExtendedHttpClient {
     private final String aaiUserName;
     private final String aaiUserPassword;
 
-
+    /**
+     * A{@literal &}AI client for publishing data to A{@literal &}AI.
+     *
+     * @param aaiClientConfiguration - confiuration for A{@literal &}AI
+     */
     public AaiProducerClient(AaiClientConfiguration aaiClientConfiguration) {
         closeableHttpClient = new AaiClientImpl(aaiClientConfiguration).getAaiHttpClient();
         aaiHost = aaiClientConfiguration.aaiHost();

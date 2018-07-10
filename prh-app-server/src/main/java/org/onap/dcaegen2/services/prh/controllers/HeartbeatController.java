@@ -42,6 +42,11 @@ public class HeartbeatController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * Endpoint for checking that PRH is alive.
+     *
+     * @return HTTP Status Code
+     */
     @RequestMapping(value = "heartbeat", method = RequestMethod.GET)
     @ApiOperation(value = "Returns liveness of PRH service")
     @ApiResponses(value = {

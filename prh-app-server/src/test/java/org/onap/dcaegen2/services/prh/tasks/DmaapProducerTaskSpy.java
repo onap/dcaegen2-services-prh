@@ -37,6 +37,11 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 public class DmaapProducerTaskSpy {
 
+    /**
+     * Mocking bean for tests.
+     *
+     * @return DMaaP PublisherTask spy
+     */
     @Bean
     @Primary
     public DmaapPublisherTask registerSimpleDmaapPublisherTask() {

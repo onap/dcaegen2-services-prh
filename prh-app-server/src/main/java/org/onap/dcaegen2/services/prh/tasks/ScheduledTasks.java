@@ -44,6 +44,13 @@ public class ScheduledTasks {
     private final DmaapPublisherTask dmaapProducerTask;
     private final AaiProducerTask aaiProducerTask;
 
+    /**
+     * Constructor for tasks registration in PRHWorkflow.
+     *
+     * @param dmaapConsumerTask - fist task
+     * @param dmaapPublisherTask - third task
+     * @param aaiPublisherTask - second task
+     */
     @Autowired
     public ScheduledTasks(DmaapConsumerTask dmaapConsumerTask, DmaapPublisherTask dmaapPublisherTask,
         AaiProducerTask aaiPublisherTask) {
@@ -52,6 +59,9 @@ public class ScheduledTasks {
         this.aaiProducerTask = aaiPublisherTask;
     }
 
+    /**
+     * Main function for scheduling prhWorkflow.
+     */
     public void scheduleMainPrhEventTask() {
         logger.trace("Execution of tasks was registered");
 

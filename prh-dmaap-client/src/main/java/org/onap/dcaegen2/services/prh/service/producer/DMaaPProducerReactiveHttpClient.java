@@ -45,6 +45,11 @@ public class DMaaPProducerReactiveHttpClient {
     private final String dmaapProtocol;
     private final String dmaapTopicName;
 
+    /**
+     * Constructor DMaaPProducerReactiveHttpClient.
+     *
+     * @param dmaapPublisherConfiguration - DMaaP producer configuration object
+     */
     public DMaaPProducerReactiveHttpClient(DmaapPublisherConfiguration dmaapPublisherConfiguration) {
         this.dmaapHostName = dmaapPublisherConfiguration.dmaapHostName();
         this.dmaapProtocol = dmaapPublisherConfiguration.dmaapProtocol();
@@ -52,6 +57,12 @@ public class DMaaPProducerReactiveHttpClient {
         this.dmaapTopicName = dmaapPublisherConfiguration.dmaapTopicName();
     }
 
+    /**
+     * Function for calling DMaaP HTTP producer - post request to DMaaP.
+     *
+     * @param consumerDmaapModelMono - object which will be sended to DMaaP
+     * @return status code of operation
+     */
     public Mono<String> getDMaaPProducerResponse(Mono<ConsumerDmaapModel> consumerDmaapModelMono) {
         try {
             return webClient

@@ -53,6 +53,11 @@ public class SchedulerConfig extends PrhAppConfig {
         this.scheduledTask = scheduledTask;
     }
 
+    /**
+     * Function which have to stop tasks execution.
+     *
+     * @return response entity about status of cancellation operation
+     */
     @ApiOperation(value = "Get response on stopping task execution")
     public synchronized Mono<ResponseEntity<String>> getResponseFromCancellationOfTasks() {
         scheduledFutureList.forEach(x -> x.cancel(false));
@@ -62,6 +67,11 @@ public class SchedulerConfig extends PrhAppConfig {
         );
     }
 
+    /**
+     * Function for starting scheduling PRH workflow.
+     *
+     * @return status of operation execution: true - started, false - not started
+     */
     @PostConstruct
     @ApiOperation(value = "Start task if possible")
     public synchronized boolean tryToStartTask() {

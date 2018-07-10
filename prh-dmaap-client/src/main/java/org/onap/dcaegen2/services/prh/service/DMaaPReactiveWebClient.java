@@ -41,6 +41,12 @@ public class DMaaPReactiveWebClient {
     private String dmaaPUserName;
     private String dmaaPUserPassword;
 
+    /**
+     * Creating DMaaPReactiveWebClient passing to them basic DMaaPConfig.
+     *
+     * @param dmaapCustomConfig - configuration object
+     * @return DMaaPReactiveWebClient
+     */
     public DMaaPReactiveWebClient fromConfiguration(DmaapCustomConfig dmaapCustomConfig) {
         this.dmaaPUserName = dmaapCustomConfig.dmaapUserName();
         this.dmaaPUserPassword = dmaapCustomConfig.dmaapUserPassword();
@@ -48,6 +54,11 @@ public class DMaaPReactiveWebClient {
         return this;
     }
 
+    /**
+     * Construct Reactive WebClient with appropriate settings.
+     *
+     * @return WebClient
+     */
     public WebClient build() {
         return WebClient.builder()
             .defaultHeader(HttpHeaders.CONTENT_TYPE, dmaaPContentType)

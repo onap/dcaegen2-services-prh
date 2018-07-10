@@ -44,6 +44,12 @@ public class DmaapConsumerJsonParser {
     private static final String PNF_VENDOR_NAME = "pnfVendorName";
     private static final String PNF_SERIAL_NUMBER = "pnfSerialNumber";
 
+    /**
+     * Extract info from string and create @see {@link org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel}.
+     *
+     * @param monoMessage - results from DMaaP
+     * @return reactive DMaaPModel
+     */
     public Mono<ConsumerDmaapModel> getJsonObject(Mono<String> monoMessage) {
         return monoMessage
             .flatMap(this::getJsonParserMessage)

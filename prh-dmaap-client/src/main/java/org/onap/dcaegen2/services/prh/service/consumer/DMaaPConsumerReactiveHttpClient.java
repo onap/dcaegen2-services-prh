@@ -45,6 +45,11 @@ public class DMaaPConsumerReactiveHttpClient {
     private final String consumerGroup;
     private final String consumerId;
 
+    /**
+     * Constructor of DMaaPConsumerReactiveHttpClient.
+     *
+     * @param consumerConfiguration - DMaaP consumer configuration object
+     */
     public DMaaPConsumerReactiveHttpClient(DmaapConsumerConfiguration consumerConfiguration) {
         this.dmaapHostName = consumerConfiguration.dmaapHostName();
         this.dmaapProtocol = consumerConfiguration.dmaapProtocol();
@@ -54,6 +59,11 @@ public class DMaaPConsumerReactiveHttpClient {
         this.consumerId = consumerConfiguration.consumerId();
     }
 
+    /**
+     * Function for calling DMaaP HTTP consumer - consuming messages from Kafka/DMaaP from topic.
+     *
+     * @return reactive response from DMaaP in string format
+     */
     public Mono<String> getDMaaPConsumerResponse() {
         try {
             return webClient

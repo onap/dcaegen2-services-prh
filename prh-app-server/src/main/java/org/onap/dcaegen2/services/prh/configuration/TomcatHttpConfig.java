@@ -32,6 +32,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class TomcatHttpConfig {
 
+    /**
+     * Class for setting up hosting PRH on http/https.
+     *
+     * @return ServletWebServerFactory
+     */
     @Bean
     public ServletWebServerFactory servletContainer() {
         TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();

@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -20,6 +20,10 @@
 
 package org.onap.dcaegen2.services.prh.service;
 
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -31,34 +35,31 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.TrustStrategy;
-import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
+import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 
-public class AAIClientImpl implements AAIClient {
+public class AaiClientImpl implements AaiClient {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private AAIClientConfiguration aaiClientConfig;
+    private AaiClientConfiguration aaiClientConfig;
 
 
-    public AAIClientImpl(AAIClientConfiguration aaiClientConfiguration) {
+    AaiClientImpl(AaiClientConfiguration aaiClientConfiguration) {
         this.aaiClientConfig = aaiClientConfiguration;
     }
 
     @Override
-    public CloseableHttpClient getAAIHttpClient() {
+    public CloseableHttpClient getAaiHttpClient() {
 
         final HttpClientBuilder httpClientBuilder = HttpClients.custom().useSystemProperties();
-        final boolean aaiIgnoreSSLCertificateErrors = aaiClientConfig.aaiIgnoreSSLCertificateErrors();
+        final boolean aaiIgnoreSslCertificateErrors = aaiClientConfig.aaiIgnoreSslCertificateErrors();
 
         TrustStrategy acceptingTrustStrategy = (cert, authType) -> true;
 
-        if (aaiIgnoreSSLCertificateErrors) {
+        if (aaiIgnoreSslCertificateErrors) {
             try {
                 logger.info("Setting SSL Context for AAI HTTP Client");
                 httpClientBuilder.setSSLContext(new SSLContextBuilder()

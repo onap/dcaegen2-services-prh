@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.prh.tasks;
 
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
@@ -40,7 +41,7 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Config prhAppConfig;
     private DmaapConsumerJsonParser dmaapConsumerJsonParser;
-    private DMaaPConsumerReactiveHttpClient dMaaPConsumerReactiveHttpClient;
+    private DMaaPConsumerReactiveHttpClient dmaaPConsumerReactiveHttpClient;
 
     @Autowired
     public DmaapConsumerTaskImpl(AppConfig prhAppConfig) {
@@ -61,9 +62,9 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
 
     @Override
     public Mono<ConsumerDmaapModel> execute(String object) {
-        dMaaPConsumerReactiveHttpClient = resolveClient();
+        dmaaPConsumerReactiveHttpClient = resolveClient();
         logger.trace("Method called with arg {}", object);
-        return consume((dMaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse()));
+        return consume((dmaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse()));
     }
 
     @Override
@@ -78,8 +79,8 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
 
     @Override
     DMaaPConsumerReactiveHttpClient resolveClient() {
-        return dMaaPConsumerReactiveHttpClient == null
+        return dmaaPConsumerReactiveHttpClient == null
             ? new DMaaPConsumerReactiveHttpClient(resolveConfiguration()).createDMaaPWebClient(buildWebClient())
-            : dMaaPConsumerReactiveHttpClient;
+            : dmaaPConsumerReactiveHttpClient;
     }
 }

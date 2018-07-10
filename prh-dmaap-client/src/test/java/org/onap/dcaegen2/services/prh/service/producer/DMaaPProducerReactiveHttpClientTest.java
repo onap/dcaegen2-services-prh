@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.prh.service.producer;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -29,7 +30,7 @@ import static org.springframework.web.reactive.function.client.ExchangeFilterFun
 import java.net.URI;
 import java.net.URISyntaxException;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
@@ -45,21 +46,20 @@ import reactor.test.StepVerifier;
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 7/4/18
  */
-public class DMaaPProducerReactiveHttpClientTest {
+class DMaaPProducerReactiveHttpClientTest {
 
-    private static DMaaPProducerReactiveHttpClient dMaaPProducerReactiveHttpClient;
+    private DMaaPProducerReactiveHttpClient dmaapProducerReactiveHttpClient;
 
-    private static DmaapPublisherConfiguration dmaapPublisherConfigurationMock = mock(
+    private DmaapPublisherConfiguration dmaapPublisherConfigurationMock = mock(
         DmaapPublisherConfiguration.class);
-    private static final Integer RESPONSE_SUCCESS = 200;
-    private static ConsumerDmaapModel consumerDmaapModel = new ConsumerDmaapModelForUnitTest();
-    private static WebClient webClient = mock(WebClient.class);
-    private static RequestBodyUriSpec requestBodyUriSpec;
-    private static ResponseSpec responseSpec;
+    private ConsumerDmaapModel consumerDmaapModel = new ConsumerDmaapModelForUnitTest();
+    private WebClient webClient = mock(WebClient.class);
+    private RequestBodyUriSpec requestBodyUriSpec;
+    private ResponseSpec responseSpec;
 
 
-    @BeforeAll
-    public static void setUp() {
+    @BeforeEach
+    void setUp() {
         when(dmaapPublisherConfigurationMock.dmaapHostName()).thenReturn("54.45.33.2");
         when(dmaapPublisherConfigurationMock.dmaapProtocol()).thenReturn("https");
         when(dmaapPublisherConfigurationMock.dmaapPortNumber()).thenReturn(1234);
@@ -68,7 +68,7 @@ public class DMaaPProducerReactiveHttpClientTest {
         when(dmaapPublisherConfigurationMock.dmaapContentType()).thenReturn("application/json");
         when(dmaapPublisherConfigurationMock.dmaapTopicName()).thenReturn("pnfReady");
 
-        dMaaPProducerReactiveHttpClient = new DMaaPProducerReactiveHttpClient(dmaapPublisherConfigurationMock);
+        dmaapProducerReactiveHttpClient = new DMaaPProducerReactiveHttpClient(dmaapPublisherConfigurationMock);
 
         webClient = spy(WebClient.builder()
             .defaultHeader(HttpHeaders.CONTENT_TYPE, dmaapPublisherConfigurationMock.dmaapContentType())
@@ -80,31 +80,32 @@ public class DMaaPProducerReactiveHttpClientTest {
     }
 
     @Test
-    public void getHttpResponse_Success() {
+    void getHttpResponse_Success() {
         //given
-        Mono<Integer> expectedResult = Mono.just(RESPONSE_SUCCESS);
+        Integer responseSuccess = 200;
+        Mono<Integer> expectedResult = Mono.just(responseSuccess);
 
         //when
         mockWebClientDependantObject();
         doReturn(expectedResult).when(responseSpec).bodyToMono(String.class);
-        dMaaPProducerReactiveHttpClient.createDMaaPWebClient(webClient);
-        Mono<String> response = dMaaPProducerReactiveHttpClient.getDMaaPProducerResponse(Mono.just(consumerDmaapModel));
+        dmaapProducerReactiveHttpClient.createDMaaPWebClient(webClient);
+        Mono<String> response = dmaapProducerReactiveHttpClient.getDMaaPProducerResponse(Mono.just(consumerDmaapModel));
 
         //then
         Assertions.assertEquals(response.block(), expectedResult.block());
     }
 
     @Test
-    public void getHttpResponse_whenURISyntaxExceptionHasBeenThrown() throws URISyntaxException {
+    void getHttpResponse_whenUriSyntaxExceptionHasBeenThrown() throws URISyntaxException {
         //given
-        dMaaPProducerReactiveHttpClient = spy(dMaaPProducerReactiveHttpClient);
+        dmaapProducerReactiveHttpClient = spy(dmaapProducerReactiveHttpClient);
         //when
         when(webClient.post()).thenReturn(requestBodyUriSpec);
-        dMaaPProducerReactiveHttpClient.createDMaaPWebClient(webClient);
-        when(dMaaPProducerReactiveHttpClient.getUri()).thenThrow(URISyntaxException.class);
+        dmaapProducerReactiveHttpClient.createDMaaPWebClient(webClient);
+        when(dmaapProducerReactiveHttpClient.getUri()).thenThrow(URISyntaxException.class);
 
         //then
-        StepVerifier.create(dMaaPProducerReactiveHttpClient.getDMaaPProducerResponse(any())).expectSubscription()
+        StepVerifier.create(dmaapProducerReactiveHttpClient.getDMaaPProducerResponse(any())).expectSubscription()
             .expectError(Exception.class).verify();
     }
 

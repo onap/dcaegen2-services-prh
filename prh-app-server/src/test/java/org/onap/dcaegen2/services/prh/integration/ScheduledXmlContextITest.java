@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PROJECT
  * ================================================================================
@@ -17,10 +17,10 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.IT;
+
+package org.onap.dcaegen2.services.prh.integration;
 
 import static org.mockito.Mockito.atLeast;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import java.util.concurrent.Executors;
@@ -28,12 +28,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.IT.junit5.mockito.MockitoExtension;
-import org.onap.dcaegen2.services.prh.configuration.PrhAppConfig;
+import org.onap.dcaegen2.services.prh.integration.junit5.mockito.MockitoExtension;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
@@ -63,20 +60,6 @@ class ScheduledXmlContextITest extends AbstractTestNGSpringContextTests {
 
     private void verifyDmaapConsumerTask() {
         verify(scheduledTask, atLeast(1)).scheduleMainPrhEventTask();
-    }
-}
-
-@Configuration
-class ServiceMockProvider {
-
-    @Bean
-    public PrhAppConfig getPrhAppConfig() {
-        return mock(PrhAppConfig.class);
-    }
-
-    @Bean
-    public ConsumerDmaapModel getRequestDetails() {
-        return mock(ConsumerDmaapModel.class);
     }
 }
 

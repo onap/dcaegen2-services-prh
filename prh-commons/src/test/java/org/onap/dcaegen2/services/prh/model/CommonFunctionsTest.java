@@ -20,27 +20,24 @@
 
 package org.onap.dcaegen2.services.prh.model;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
 class CommonFunctionsTest {
+
     // Given
     private ConsumerDmaapModel model = new ConsumerDmaapModelForUnitTest();
 
-    private final static HttpResponse httpResponseMock = mock(HttpResponse.class);
-    private final static HttpEntity httpEntityMock = mock(HttpEntity.class);
-    private final static StatusLine statusLineMock = mock(StatusLine.class);
+    private static final HttpResponse httpResponseMock = mock(HttpResponse.class);
+    private static final HttpEntity httpEntityMock = mock(HttpEntity.class);
+    private static final StatusLine statusLineMock = mock(StatusLine.class);
 
     @BeforeAll
     static void setup() {
@@ -50,7 +47,8 @@ class CommonFunctionsTest {
 
     @Test
     void createJsonBody_shouldReturnJsonInString() {
-        String expectedResult = "{\"pnf-name\":\"NOKnhfsadhff\",\"ipaddress-v4-oam\":\"256.22.33.155\",\"ipaddress-v6-oam\":\"2001:0db8:85a3:0000:0000:8a2e:0370:7334\"}";
+        String expectedResult = "{\"pnf-name\":\"NOKnhfsadhff\",\"ipaddress-v4-oam\":\"256.22.33.155\""
+            + ",\"ipaddress-v6-oam\":\"2001:0db8:85a3:0000:0000:8a2e:0370:7334\"}";
         assertEquals(expectedResult, CommonFunctions.createJsonBody(model));
     }
 }

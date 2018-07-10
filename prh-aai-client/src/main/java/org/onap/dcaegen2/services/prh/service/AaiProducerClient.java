@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -20,6 +20,14 @@
 
 package org.onap.dcaegen2.services.prh.service;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Base64;
+import java.util.Map;
+import java.util.Optional;
+
 import java.util.function.Predicate;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -29,22 +37,14 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
+import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.model.CommonFunctions;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.utils.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Base64;
-import java.util.Map;
-import java.util.Optional;
-
-public class AAIProducerClient implements AAIExtendedHttpClient {
+public class AaiProducerClient implements AaiExtendedHttpClient {
 
     private static final String EXCEPTION_MESSAGE = "Exception while executing http client: ";
     private static Predicate<String> isEmpty = String::isEmpty;
@@ -59,8 +59,8 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
     private final String aaiUserPassword;
 
 
-    public AAIProducerClient(AAIClientConfiguration aaiClientConfiguration) {
-        closeableHttpClient = new AAIClientImpl(aaiClientConfiguration).getAAIHttpClient();
+    public AaiProducerClient(AaiClientConfiguration aaiClientConfiguration) {
+        closeableHttpClient = new AaiClientImpl(aaiClientConfiguration).getAaiHttpClient();
         aaiHost = aaiClientConfiguration.aaiHost();
         aaiProtocol = aaiClientConfiguration.aaiProtocol();
         aaiHostPortNumber = aaiClientConfiguration.aaiHostPortNumber();
@@ -84,11 +84,11 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
     }
 
     private Optional<HttpRequestBase> createRequest(ConsumerDmaapModel consumerDmaapModel) throws URISyntaxException {
-        final URI extendedURI = createAAIExtendedURI(consumerDmaapModel.getPnfName());
-        return createHttpRequest(extendedURI, consumerDmaapModel);
+        final URI extendedUri = createAaiExtendedUri(consumerDmaapModel.getPnfName());
+        return createHttpRequest(extendedUri, consumerDmaapModel);
     }
 
-    private URI createAAIExtendedURI(final String pnfName) throws URISyntaxException {
+    private URI createAaiExtendedUri(final String pnfName) throws URISyntaxException {
         return new URIBuilder()
             .setScheme(aaiProtocol)
             .setHost(aaiHost)
@@ -96,12 +96,12 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
             .setPath(aaiPath + "/" + pnfName).build();
     }
 
-    Optional<HttpRequestBase> createHttpRequest(URI extendedURI, ConsumerDmaapModel consumerDmaapModel) {
+    private Optional<HttpRequestBase> createHttpRequest(URI extendedUri, ConsumerDmaapModel consumerDmaapModel) {
         return Optional.ofNullable(CommonFunctions.createJsonBody(consumerDmaapModel)).filter(isEmpty.negate())
             .flatMap(myJson -> {
                 try {
                     logger.info("AAI: sending json {}", myJson);
-                    return Optional.of(createHttpPatch(extendedURI, myJson));
+                    return Optional.of(createHttpPatch(extendedUri, myJson));
                 } catch (UnsupportedEncodingException e) {
                     logger.warn(EXCEPTION_MESSAGE, e);
                 }
@@ -109,8 +109,8 @@ public class AAIProducerClient implements AAIExtendedHttpClient {
             });
     }
 
-    HttpPatch createHttpPatch(URI extendedURI, String jsonBody) throws UnsupportedEncodingException {
-        HttpPatch httpPatch = new HttpPatch(extendedURI);
+    HttpPatch createHttpPatch(URI extendedUri, String jsonBody) throws UnsupportedEncodingException {
+        HttpPatch httpPatch = new HttpPatch(extendedUri);
         httpPatch.setEntity(new StringEntity(jsonBody));
         aaiHeaders.forEach(httpPatch::addHeader);
         httpPatch.addHeader("Content-Type", "application/merge-patch+json");

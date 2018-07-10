@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -20,14 +20,9 @@
 
 package org.onap.dcaegen2.services.prh.service;
 
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -35,21 +30,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 
-public class AAIConsumerClientTest {
+class AaiConsumerClientTest {
 
-    private static AAIConsumerClient testedObject;
-    private static AAIClientConfiguration aaiHttpClientConfigurationMock = mock(AAIClientConfiguration.class);
+    private static AaiConsumerClient testedObject;
+    private static AaiClientConfiguration aaiHttpClientConfigurationMock = mock(AaiClientConfiguration.class);
     private static CloseableHttpClient closeableHttpClientMock = mock(CloseableHttpClient.class);
-    private static final String JSON_MESSAGE = "{ \"pnf-id\": \"example-pnf-id-val-22343\", \"regional-resource-zone\":null, \"ipaddress-v4-oam\": \"11.22.33.44\" }";
-    private static ConsumerDmaapModel consumerDmaapModelMock =  mock(ConsumerDmaapModel.class);
+    private static final String JSON_MESSAGE = "{ \"pnf-id\": \"example-pnf-id-val-22343\", "
+        + "\"regional-resource-zone\":null, \"ipaddress-v4-oam\": \"11.22.33.44\" }";
+    private static ConsumerDmaapModel consumerDmaapModelMock = mock(ConsumerDmaapModel.class);
     private static final String PNF_NAME = "nokia-pnf-nhfsadhff";
 
     @BeforeAll
-    public static void setup() throws NoSuchFieldException, IllegalAccessException {
+    static void setup() throws NoSuchFieldException, IllegalAccessException {
 
         Map<String, String> aaiHeaders = new HashMap<>();
         aaiHeaders.put("X-FromAppId", "prh");
@@ -70,18 +71,18 @@ public class AAIConsumerClientTest {
 
         when(consumerDmaapModelMock.getPnfName()).thenReturn(PNF_NAME);
 
-        testedObject = new AAIConsumerClient(aaiHttpClientConfigurationMock);
+        testedObject = new AaiConsumerClient(aaiHttpClientConfigurationMock);
         setField();
     }
 
 
     @Test
-    public void getExtendedDetails_returnsSuccess() throws IOException {
+    void getExtendedDetails_returnsSuccess() throws IOException {
 
-        when(closeableHttpClientMock.execute(any(HttpGet.class), any(ResponseHandler.class))).
-                thenReturn(Optional.of(JSON_MESSAGE));
-        Optional<String>  actualResult = testedObject.getHttpResponse(consumerDmaapModelMock);
-        Assertions.assertEquals(Optional.of(JSON_MESSAGE),actualResult);
+        when(closeableHttpClientMock.execute(any(HttpGet.class), any(ResponseHandler.class)))
+            .thenReturn(Optional.of(JSON_MESSAGE));
+        Optional<String> actualResult = testedObject.getHttpResponse(consumerDmaapModelMock);
+        Assertions.assertEquals(Optional.of(JSON_MESSAGE), actualResult);
     }
 
 

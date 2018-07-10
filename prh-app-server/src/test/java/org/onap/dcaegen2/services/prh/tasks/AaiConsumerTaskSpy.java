@@ -1,6 +1,6 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
- * PNF-REGISTRATION-HANDLER
+ * PROJECT
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
@@ -20,16 +20,25 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import java.util.Optional;
-import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.service.AAIConsumerClient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
-public abstract class AAIConsumerTask {
+import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 
-    abstract Optional<String> consume(ConsumerDmaapModel message) throws AAINotFoundException;
+import org.onap.dcaegen2.services.prh.configuration.AppConfig;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
-    abstract AAIConsumerClient resolveClient();
+@Configuration
+public class AaiConsumerTaskSpy {
 
-    protected abstract String execute(ConsumerDmaapModel consumerDmaapModel) throws AAINotFoundException;
+    @Bean
+    @Primary
+    public AaiConsumerTask registerSimpleAaiPublisherTask() {
+        AppConfig appConfig = mock(AppConfig.class);
+        when(appConfig.getAaiClientConfiguration()).thenReturn(mock(AaiClientConfiguration.class));
+        return spy(new AaiConsumerTaskImpl(appConfig));
+    }
 }

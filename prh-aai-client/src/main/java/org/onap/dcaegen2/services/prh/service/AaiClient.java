@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -17,15 +17,13 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.prh.service;
 
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-
-import java.net.URISyntaxException;
-import java.util.Optional;
-
+import org.apache.http.impl.client.CloseableHttpClient;
 
 @FunctionalInterface
-public interface AAIExtendedHttpClient {
-    Optional<Integer> getHttpResponse(ConsumerDmaapModel consumerDmaapModel) throws URISyntaxException;
+public interface AaiClient {
+    CloseableHttpClient getAaiHttpClient();
 }
+

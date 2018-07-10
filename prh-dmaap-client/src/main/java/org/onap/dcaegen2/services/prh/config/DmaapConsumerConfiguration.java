@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.prh.config;
 
 import org.immutables.gson.Gson;
@@ -41,7 +42,7 @@ public abstract class DmaapConsumerConfiguration implements DmaapCustomConfig {
     public abstract String consumerGroup();
 
     @Value.Parameter
-    public abstract Integer timeoutMS();
+    public abstract Integer timeoutMs();
 
     @Value.Parameter
     public abstract Integer messageLimit();
@@ -54,7 +55,7 @@ public abstract class DmaapConsumerConfiguration implements DmaapCustomConfig {
 
         Builder consumerGroup(String consumerGroup);
 
-        Builder timeoutMS(Integer timeoutMS);
+        Builder timeoutMs(Integer timeoutMs);
 
         Builder messageLimit(Integer messageLimit);
     }

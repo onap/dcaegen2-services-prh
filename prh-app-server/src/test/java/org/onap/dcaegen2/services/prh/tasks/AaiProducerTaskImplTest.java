@@ -36,19 +36,22 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
-import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
-import org.onap.dcaegen2.services.prh.config.ImmutableAAIClientConfiguration;
+import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.config.ImmutableAaiClientConfiguration;
+
+import org.onap.dcaegen2.services.prh.configuration.AppConfig;
+import org.onap.dcaegen2.services.prh.exceptions.AaiNotFoundException;
+
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.configuration.AppConfig;
-import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
-import org.onap.dcaegen2.services.prh.service.AAIProducerClient;
+
+import org.onap.dcaegen2.services.prh.service.AaiProducerClient;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/14/18
  */
-class AAIProducerTaskImplTest {
+class AaiProducerTaskImplTest {
 
 
     private static final String AAI_HOST = "/aai/v11/network/pnfs/pnf/NOKQTFCOC540002E";
@@ -59,20 +62,20 @@ class AAIProducerTaskImplTest {
     private static final String PNF_PATH = "/network/pnfs/pnf";
 
     private static ConsumerDmaapModel consumerDmaapModel;
-    private static AAIProducerTaskImpl aaiProducerTask;
-    private static AAIClientConfiguration aaiClientConfiguration;
-    private static AAIProducerClient aaiProducerClient;
+    private static AaiProducerTaskImpl aaiProducerTask;
+    private static AaiClientConfiguration aaiClientConfiguration;
+    private static AaiProducerClient aaiProducerClient;
     private static AppConfig appConfig;
 
     @BeforeAll
-    public static void setUp() {
-        aaiClientConfiguration = new ImmutableAAIClientConfiguration.Builder()
+    static void setUp() {
+        aaiClientConfiguration = new ImmutableAaiClientConfiguration.Builder()
             .aaiHost(AAI_HOST)
             .aaiHostPortNumber(PORT)
             .aaiProtocol(PROTOCOL)
             .aaiUserName(USER_NAME_PASSWORD)
             .aaiUserPassword(USER_NAME_PASSWORD)
-            .aaiIgnoreSSLCertificateErrors(true)
+            .aaiIgnoreSslCertificateErrors(true)
             .aaiBasePath(BASE_PATH)
             .aaiPnfPath(PNF_PATH)
             .build();
@@ -84,10 +87,10 @@ class AAIProducerTaskImplTest {
     }
 
     @Test
-    public void whenPassedObjectDoesntFit_ThrowsPrhTaskException() {
+    void whenPassedObjectDoesntFit_ThrowsPrhTaskException() {
         //given/when/
-        when(appConfig.getAAIClientConfiguration()).thenReturn(aaiClientConfiguration);
-        aaiProducerTask = new AAIProducerTaskImpl(appConfig);
+        when(appConfig.getAaiClientConfiguration()).thenReturn(aaiClientConfiguration);
+        aaiProducerTask = new AaiProducerTaskImpl(appConfig);
         Executable executableCode = () -> aaiProducerTask.execute(null);
 
         //then
@@ -96,9 +99,9 @@ class AAIProducerTaskImplTest {
     }
 
     @Test
-    public void whenPassedObjectFits_ReturnsCorrectStatus() throws AAINotFoundException, URISyntaxException {
+    void whenPassedObjectFits_ReturnsCorrectStatus() throws AaiNotFoundException, URISyntaxException {
         //given/when
-        getAAIProducerTask_whenMockingResponseObject(200, false);
+        getAaiProducerTask_whenMockingResponseObject(200, false);
         ConsumerDmaapModel response = aaiProducerTask.execute(consumerDmaapModel);
 
         //then
@@ -110,9 +113,9 @@ class AAIProducerTaskImplTest {
 
 
     @Test
-    public void whenPassedObjectFits_butIncorrectResponseReturns() throws IOException, URISyntaxException {
+    void whenPassedObjectFits_butIncorrectResponseReturns() throws URISyntaxException {
         //given/when
-        getAAIProducerTask_whenMockingResponseObject(400, false);
+        getAaiProducerTask_whenMockingResponseObject(400, false);
         Executable executableCode = () -> aaiProducerTask.execute(consumerDmaapModel);
         Assertions
             .assertThrows(PrhTaskException.class, executableCode, "Incorrect status code in response message");
@@ -122,9 +125,9 @@ class AAIProducerTaskImplTest {
     }
 
     @Test
-    public void whenPassedObjectFits_butHTTPClientThrowsIOExceptionHandleIt() throws URISyntaxException {
+    void whenPassedObjectFits_butHttpClientThrowsIoExceptionHandleIt() throws URISyntaxException {
         //given/when
-        getAAIProducerTask_whenMockingResponseObject(0, true);
+        getAaiProducerTask_whenMockingResponseObject(0, true);
 
         Executable executableCode = () -> aaiProducerTask.execute(consumerDmaapModel);
         Assertions
@@ -135,17 +138,17 @@ class AAIProducerTaskImplTest {
     }
 
 
-    private static void getAAIProducerTask_whenMockingResponseObject(int statusCode, boolean throwsException)
+    private static void getAaiProducerTask_whenMockingResponseObject(int statusCode, boolean throwsException)
         throws URISyntaxException {
         //given
-        aaiProducerClient = mock(AAIProducerClient.class);
+        aaiProducerClient = mock(AaiProducerClient.class);
         if (throwsException) {
             when(aaiProducerClient.getHttpResponse(consumerDmaapModel)).thenThrow(URISyntaxException.class);
         } else {
             when(aaiProducerClient.getHttpResponse(consumerDmaapModel)).thenReturn(Optional.of(statusCode));
         }
-        when(appConfig.getAAIClientConfiguration()).thenReturn(aaiClientConfiguration);
-        aaiProducerTask = spy(new AAIProducerTaskImpl(appConfig));
+        when(appConfig.getAaiClientConfiguration()).thenReturn(aaiClientConfiguration);
+        aaiProducerTask = spy(new AaiProducerTaskImpl(appConfig));
         when(aaiProducerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
         doReturn(aaiProducerClient).when(aaiProducerTask).resolveClient();
     }

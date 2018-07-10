@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.prh.tasks;
 
 import java.util.Optional;
@@ -41,11 +42,11 @@ public class ScheduledTasks {
 
     private final DmaapConsumerTask dmaapConsumerTask;
     private final DmaapPublisherTask dmaapProducerTask;
-    private final AAIProducerTask aaiProducerTask;
+    private final AaiProducerTask aaiProducerTask;
 
     @Autowired
     public ScheduledTasks(DmaapConsumerTask dmaapConsumerTask, DmaapPublisherTask dmaapPublisherTask,
-        AAIProducerTask aaiPublisherTask) {
+        AaiProducerTask aaiPublisherTask) {
         this.dmaapConsumerTask = dmaapConsumerTask;
         this.dmaapProducerTask = dmaapPublisherTask;
         this.aaiProducerTask = aaiPublisherTask;
@@ -56,8 +57,8 @@ public class ScheduledTasks {
 
         Mono<String> dmaapProducerResponse = Mono.fromCallable(consumeFromDMaaPMessage())
             .doOnError(DmaapEmptyResponseException.class, error -> logger.warn("Nothing to consume from DMaaP"))
-            .map(this::publishToAAIConfiguration)
-            .flatMap(this::publishToDMaaPConfiguration)
+            .map(this::publishToAaiConfiguration)
+            .flatMap(this::publishToDmaapConfiguration)
             .subscribeOn(Schedulers.elastic());
 
         dmaapProducerResponse.subscribe(this::onSuccess, this::onError, this::onComplete);
@@ -78,14 +79,13 @@ public class ScheduledTasks {
     }
 
     private Callable<Mono<ConsumerDmaapModel>> consumeFromDMaaPMessage() {
-        return () ->
-        {
+        return () -> {
             dmaapConsumerTask.initConfigs();
             return dmaapConsumerTask.execute("");
         };
     }
 
-    private Mono<ConsumerDmaapModel> publishToAAIConfiguration(Mono<ConsumerDmaapModel> monoDMaaPModel) {
+    private Mono<ConsumerDmaapModel> publishToAaiConfiguration(Mono<ConsumerDmaapModel> monoDMaaPModel) {
         return monoDMaaPModel.flatMap(dmaapModel -> {
             try {
                 return Mono.just(aaiProducerTask.execute(dmaapModel));
@@ -95,9 +95,9 @@ public class ScheduledTasks {
         });
     }
 
-    private Mono<String> publishToDMaaPConfiguration(Mono<ConsumerDmaapModel> monoAAIModel) {
+    private Mono<String> publishToDmaapConfiguration(Mono<ConsumerDmaapModel> monoAaiModel) {
         try {
-            return dmaapProducerTask.execute(monoAAIModel);
+            return dmaapProducerTask.execute(monoAaiModel);
         } catch (PrhTaskException e) {
             return Mono.error(e);
         }

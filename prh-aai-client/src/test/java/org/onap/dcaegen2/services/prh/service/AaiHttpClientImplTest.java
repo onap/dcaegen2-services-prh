@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -17,40 +17,38 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.service;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
+package org.onap.dcaegen2.services.prh.service;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 
-public class AAIHttpClientImplTest {
+class AaiHttpClientImplTest {
 
-    private static AAIClientImpl testedObject;
-    private static AAIClientConfiguration aaiHttpClientConfigurationMock;
+    private static AaiClientImpl testedObject;
 
 
     @BeforeAll
     public static void setup() {
-        aaiHttpClientConfigurationMock = mock(AAIClientConfiguration.class);
+        AaiClientConfiguration aaiHttpClientConfigurationMock = mock(AaiClientConfiguration.class);
         when(aaiHttpClientConfigurationMock.aaiHost()).thenReturn("54.45.33.2");
         when(aaiHttpClientConfigurationMock.aaiProtocol()).thenReturn("https");
         when(aaiHttpClientConfigurationMock.aaiHostPortNumber()).thenReturn(1234);
         when(aaiHttpClientConfigurationMock.aaiUserName()).thenReturn("PNF");
         when(aaiHttpClientConfigurationMock.aaiUserPassword()).thenReturn("PNF");
-        when(aaiHttpClientConfigurationMock.aaiIgnoreSSLCertificateErrors()).thenReturn(true);
+        when(aaiHttpClientConfigurationMock.aaiIgnoreSslCertificateErrors()).thenReturn(true);
 
-        testedObject  = new AAIClientImpl(aaiHttpClientConfigurationMock);
+        testedObject  = new AaiClientImpl(aaiHttpClientConfigurationMock);
     }
 
     @Test
-    public void getAAIHttpClientObject_shouldNotBeNull() {
-        testedObject.getAAIHttpClient();
-        assertNotNull(testedObject.getAAIHttpClient());
+    public void getAaiHttpClientObject_shouldNotBeNull() {
+        assertNotNull(testedObject.getAaiHttpClient());
     }
 }
 

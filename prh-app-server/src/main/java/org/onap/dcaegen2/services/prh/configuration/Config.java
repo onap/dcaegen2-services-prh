@@ -17,9 +17,10 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.prh.configuration;
 
-import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
+import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 
@@ -30,7 +31,7 @@ public interface Config {
 
     DmaapConsumerConfiguration getDmaapConsumerConfiguration();
 
-    AAIClientConfiguration getAAIClientConfiguration();
+    AaiClientConfiguration getAaiClientConfiguration();
 
     DmaapPublisherConfiguration getDmaapPublisherConfiguration();
 

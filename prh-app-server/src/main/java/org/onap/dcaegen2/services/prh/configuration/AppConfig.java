@@ -17,15 +17,22 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.prh.configuration;
 
+import java.util.Optional;
+
 import java.util.function.Predicate;
-import org.onap.dcaegen2.services.prh.config.*;
+import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
+import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
+import org.onap.dcaegen2.services.prh.config.ImmutableAaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.config.ImmutableDmaapConsumerConfiguration;
+import org.onap.dcaegen2.services.prh.config.ImmutableDmaapPublisherConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/9/18
@@ -63,8 +70,8 @@ public class AppConfig extends PrhAppConfig {
     @Value("${dmaap.dmaapConsumerConfiguration.consumerGroup:}")
     public String consumerGroup;
 
-    @Value("${dmaap.dmaapConsumerConfiguration.timeoutMS:}")
-    public Integer consumerTimeoutMS;
+    @Value("${dmaap.dmaapConsumerConfiguration.timeoutMs:}")
+    public Integer consumerTimeoutMs;
 
     @Value("${dmaap.dmaapConsumerConfiguration.message-limit:}")
     public Integer consumerMessageLimit;
@@ -105,8 +112,8 @@ public class AppConfig extends PrhAppConfig {
     @Value("${aai.aaiClientConfiguration.aaiUserPassword:}")
     public String aaiUserPassword;
 
-    @Value("${aai.aaiClientConfiguration.aaiIgnoreSSLCertificateErrors:}")
-    public Boolean aaiIgnoreSSLCertificateErrors;
+    @Value("${aai.aaiClientConfiguration.aaiIgnoreSslCertificateErrors:}")
+    public Boolean aaiIgnoreSslCertificateErrors;
 
     @Value("${aai.aaiClientConfiguration.aaiBasePath:}")
     public String aaiBasePath;
@@ -141,8 +148,8 @@ public class AppConfig extends PrhAppConfig {
             .messageLimit(
                 Optional.ofNullable(consumerMessageLimit).filter(p -> !p.toString().isEmpty())
                     .orElse(dmaapConsumerConfiguration.messageLimit()))
-            .timeoutMS(Optional.ofNullable(consumerTimeoutMS).filter(p -> !p.toString().isEmpty())
-                .orElse(dmaapConsumerConfiguration.timeoutMS()))
+            .timeoutMs(Optional.ofNullable(consumerTimeoutMs).filter(p -> !p.toString().isEmpty())
+                .orElse(dmaapConsumerConfiguration.timeoutMs()))
             .consumerGroup(Optional.ofNullable(consumerGroup).filter(isEmpty.negate())
                 .orElse(dmaapConsumerConfiguration.consumerGroup()))
             .consumerId(Optional.ofNullable(consumerId).filter(isEmpty.negate())
@@ -151,15 +158,15 @@ public class AppConfig extends PrhAppConfig {
     }
 
     @Override
-    public AAIClientConfiguration getAAIClientConfiguration() {
-        return new ImmutableAAIClientConfiguration.Builder()
+    public AaiClientConfiguration getAaiClientConfiguration() {
+        return new ImmutableAaiClientConfiguration.Builder()
             .aaiHost(Optional.ofNullable(aaiHost).filter(isEmpty.negate()).orElse(aaiClientConfiguration.aaiHost()))
             .aaiHostPortNumber(
                 Optional.ofNullable(aaiHostPortNumber).filter(p -> !p.toString().isEmpty())
                     .orElse(aaiClientConfiguration.aaiHostPortNumber()))
-            .aaiIgnoreSSLCertificateErrors(
-                Optional.ofNullable(aaiIgnoreSSLCertificateErrors).filter(p -> !p.toString().isEmpty())
-                    .orElse(aaiClientConfiguration.aaiIgnoreSSLCertificateErrors()))
+            .aaiIgnoreSslCertificateErrors(
+                Optional.ofNullable(aaiIgnoreSslCertificateErrors).filter(p -> !p.toString().isEmpty())
+                    .orElse(aaiClientConfiguration.aaiIgnoreSslCertificateErrors()))
             .aaiProtocol(
                 Optional.ofNullable(aaiProtocol).filter(isEmpty.negate()).orElse(aaiClientConfiguration.aaiProtocol()))
             .aaiUserName(

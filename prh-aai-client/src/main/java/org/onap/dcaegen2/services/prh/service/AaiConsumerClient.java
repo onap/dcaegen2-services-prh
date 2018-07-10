@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -20,19 +20,6 @@
 
 package org.onap.dcaegen2.services.prh.service;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.util.EntityUtils;
-import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.model.utils.HttpUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -40,7 +27,21 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-public class AAIConsumerClient {
+import org.apache.http.HttpEntity;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.model.utils.HttpUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
+public class AaiConsumerClient {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -49,11 +50,15 @@ public class AAIConsumerClient {
     private final String aaiProtocol;
     private final Integer aaiHostPortNumber;
     private final String aaiPath;
-    private final Map<String,String> aaiHeaders;
+    private final Map<String, String> aaiHeaders;
 
-
-    public AAIConsumerClient(AAIClientConfiguration aaiClientConfiguration) {
-        closeableHttpClient = new AAIClientImpl(aaiClientConfiguration).getAAIHttpClient();
+    /**
+     * AAI client for consuming data.
+     *
+     * @param aaiClientConfiguration - client config
+     */
+    public AaiConsumerClient(AaiClientConfiguration aaiClientConfiguration) {
+        closeableHttpClient = new AaiClientImpl(aaiClientConfiguration).getAaiHttpClient();
         aaiHost = aaiClientConfiguration.aaiHost();
         aaiProtocol = aaiClientConfiguration.aaiProtocol();
         aaiHostPortNumber = aaiClientConfiguration.aaiHostPortNumber();
@@ -61,6 +66,13 @@ public class AAIConsumerClient {
         aaiHeaders = aaiClientConfiguration.aaiHeaders();
     }
 
+    /**
+     * Function which call http client for getting object from AAI.
+     *
+     * @param consumerDmaapModel - helper object for uri generation
+     * @return - status code of operation
+     * @throws IOException - Apache HTTP client exception
+     */
     public Optional<String> getHttpResponse(ConsumerDmaapModel consumerDmaapModel) throws IOException {
         Optional<HttpRequestBase> request = createRequest(consumerDmaapModel);
         try {
@@ -71,33 +83,33 @@ public class AAIConsumerClient {
         }
     }
 
-    private URI createAAIExtendedURI(String pnfName) {
+    private URI createAaiExtendedUri(String pnfName) {
 
-        URI extendedURI = null;
+        URI extendedUri = null;
 
         final URIBuilder uriBuilder = new URIBuilder()
-                .setScheme(aaiProtocol)
-                .setHost(aaiHost)
-                .setPort(aaiHostPortNumber)
-                .setPath(aaiPath + "/" + pnfName);
+            .setScheme(aaiProtocol)
+            .setHost(aaiHost)
+            .setPort(aaiHostPortNumber)
+            .setPath(aaiPath + "/" + pnfName);
 
         try {
-            extendedURI = uriBuilder.build();
-            logger.trace("Building extended URI: {}", extendedURI);
+            extendedUri = uriBuilder.build();
+            logger.trace("Building extended URI: {}", extendedUri);
         } catch (URISyntaxException e) {
             logger.warn("Exception while building extended URI: {}", e);
         }
 
-        return extendedURI;
+        return extendedUri;
     }
 
     private ResponseHandler<Optional<String>> aaiResponseHandler() {
-        return httpResponse ->  {
+        return httpResponse -> {
             final int responseCode = httpResponse.getStatusLine().getStatusCode();
             logger.info("Status code of operation: {}", responseCode);
             final HttpEntity responseEntity = httpResponse.getEntity();
 
-            if (HttpUtils.isSuccessfulResponseCode(responseCode) ) {
+            if (HttpUtils.isSuccessfulResponseCode(responseCode)) {
                 logger.trace("HTTP response successful.");
                 final String aaiResponse = EntityUtils.toString(responseEntity);
                 return Optional.of(aaiResponse);
@@ -109,17 +121,17 @@ public class AAIConsumerClient {
         };
     }
 
-    private HttpRequestBase createHttpRequest(URI extendedURI) {
-        return isExtendedURINotNull(extendedURI) ? new HttpGet(extendedURI) : null;
+    private HttpRequestBase createHttpRequest(URI extendedUri) {
+        return isExtendedUriNotNull(extendedUri) ? new HttpGet(extendedUri) : null;
     }
 
-    private Boolean isExtendedURINotNull(URI extendedURI) {
-        return extendedURI != null;
+    private Boolean isExtendedUriNotNull(URI extendedUri) {
+        return extendedUri != null;
     }
 
     private Optional<HttpRequestBase> createRequest(ConsumerDmaapModel consumerDmaapModel) {
-        final URI extendedURI = createAAIExtendedURI(consumerDmaapModel.getPnfName());
-        HttpRequestBase request = createHttpRequest(extendedURI);
+        final URI extendedUri = createAaiExtendedUri(consumerDmaapModel.getPnfName());
+        HttpRequestBase request = createHttpRequest(extendedUri);
         aaiHeaders.forEach(Objects.requireNonNull(request)::addHeader);
         Objects.requireNonNull(request).addHeader("Content-Type", "application/json");
         return Optional.of(request);

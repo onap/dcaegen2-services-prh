@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -25,11 +25,11 @@ import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.config.ImmutableDmaapPublisherConfiguration;
 
-public class DmaapPublisherConfigurationTest {
+class DmaapPublisherConfigurationTest {
 
 
     @Test
-    public void builder_shouldBuildConfigurationObject() {
+    void builder_shouldBuildConfigurationObject() {
 
         // Given
         DmaapPublisherConfiguration configuration;

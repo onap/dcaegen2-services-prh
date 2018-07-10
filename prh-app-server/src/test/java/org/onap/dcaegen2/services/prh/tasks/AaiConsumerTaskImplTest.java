@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.prh.tasks;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -34,22 +35,22 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
-import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
-import org.onap.dcaegen2.services.prh.config.ImmutableAAIClientConfiguration;
+import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.config.ImmutableAaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
-import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
+import org.onap.dcaegen2.services.prh.exceptions.AaiNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.service.AAIConsumerClient;
+import org.onap.dcaegen2.services.prh.service.AaiConsumerClient;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/17/18
  */
-class AAIConsumerTaskImplTest {
+class AaiConsumerTaskImplTest {
 
     private static ConsumerDmaapModel consumerDmaapModel;
-    private static AAIConsumerTaskImpl aaiConsumerTask;
+    private static AaiConsumerTaskImpl aaiConsumerTask;
 
     private static final String AAI_HOST = "/aai/v12/network/pnfs/pnf/NOKQTFCOC540002E";
     private static final Integer PORT = 1234;
@@ -58,19 +59,19 @@ class AAIConsumerTaskImplTest {
     private static final String BASE_PATH = "/aai/v12";
     private static final String PNF_PATH = "/network/pnfs/pnf";
 
-    private static AAIClientConfiguration aaiClientConfiguration;
-    private static AAIConsumerClient aaiConsumerClient;
+    private static AaiClientConfiguration aaiClientConfiguration;
+    private static AaiConsumerClient aaiConsumerClient;
     private static AppConfig appConfig;
 
     @BeforeAll
-    public static void setUp() {
-        aaiClientConfiguration = new ImmutableAAIClientConfiguration.Builder()
+    static void setUp() {
+        aaiClientConfiguration = new ImmutableAaiClientConfiguration.Builder()
             .aaiHost(AAI_HOST)
             .aaiHostPortNumber(PORT)
             .aaiProtocol(PROTOCOL)
             .aaiUserName(USER_NAME_PASSWORD)
             .aaiUserPassword(USER_NAME_PASSWORD)
-            .aaiIgnoreSSLCertificateErrors(true)
+            .aaiIgnoreSslCertificateErrors(true)
             .aaiBasePath(BASE_PATH)
             .aaiPnfPath(PNF_PATH)
             .build();
@@ -82,10 +83,10 @@ class AAIConsumerTaskImplTest {
     }
 
     @Test
-    public void whenPassedObjectDoesntFit_ThrowsPrhTaskException() {
+    void whenPassedObjectDoesntFit_ThrowsPrhTaskException() {
         //given/when
-        when(appConfig.getAAIClientConfiguration()).thenReturn(aaiClientConfiguration);
-        aaiConsumerTask = new AAIConsumerTaskImpl(appConfig);
+        when(appConfig.getAaiClientConfiguration()).thenReturn(aaiClientConfiguration);
+        aaiConsumerTask = new AaiConsumerTaskImpl(appConfig);
         Executable executableCode = () -> aaiConsumerTask.execute(null);
         //then
         Assertions
@@ -94,9 +95,9 @@ class AAIConsumerTaskImplTest {
     }
 
     @Test
-    public void whenPassedObjectFits_ReturnsCorrectStatus() throws PrhTaskException, IOException {
+    void whenPassedObjectFits_ReturnsCorrectStatus() throws PrhTaskException, IOException {
         //given/when
-        getAAIConsumerTask_WhenMockingHttpResponseCode("200", false);
+        getAaiConsumerTask_WhenMockingHttpResponseCode("200", false);
         String response = aaiConsumerTask.execute(consumerDmaapModel);
 
         //then
@@ -106,9 +107,9 @@ class AAIConsumerTaskImplTest {
     }
 
     @Test
-    public void whenPassedObjectFits_butIncorrectResponseReturns() throws IOException, AAINotFoundException {
+    void whenPassedObjectFits_butIncorrectResponseReturns() throws IOException, AaiNotFoundException {
         //given/when
-        getAAIConsumerTask_WhenMockingHttpResponseCode("400", false);
+        getAaiConsumerTask_WhenMockingHttpResponseCode("400", false);
         String response = aaiConsumerTask.execute(consumerDmaapModel);
 
         //then
@@ -118,9 +119,9 @@ class AAIConsumerTaskImplTest {
     }
 
     @Test
-    public void whenPassedObjectFits_ThrowsIOExceptionAndHandleIt() throws IOException {
+    void whenPassedObjectFits_ThrowsIoExceptionAndHandleIt() throws IOException {
         //given/when
-        getAAIConsumerTask_WhenMockingHttpResponseCode(null, true);
+        getAaiConsumerTask_WhenMockingHttpResponseCode(null, true);
         Executable executableCode = () -> aaiConsumerTask.execute(any(ConsumerDmaapModel.class));
         Assertions
             .assertThrows(PrhTaskException.class, executableCode, "HttpClient throws IOException");
@@ -130,16 +131,16 @@ class AAIConsumerTaskImplTest {
     }
 
 
-    private static void getAAIConsumerTask_WhenMockingHttpResponseCode(String httpResponseCode, boolean throwsException)
+    private static void getAaiConsumerTask_WhenMockingHttpResponseCode(String httpResponseCode, boolean throwsException)
         throws IOException {
-        aaiConsumerClient = mock(AAIConsumerClient.class);
+        aaiConsumerClient = mock(AaiConsumerClient.class);
         if (throwsException) {
             when(aaiConsumerClient.getHttpResponse(consumerDmaapModel)).thenThrow(IOException.class);
         } else {
             when(aaiConsumerClient.getHttpResponse(consumerDmaapModel)).thenReturn(Optional.of(httpResponseCode));
         }
-        when(appConfig.getAAIClientConfiguration()).thenReturn(aaiClientConfiguration);
-        aaiConsumerTask = spy(new AAIConsumerTaskImpl(appConfig));
+        when(appConfig.getAaiClientConfiguration()).thenReturn(aaiClientConfiguration);
+        aaiConsumerTask = spy(new AaiConsumerTaskImpl(appConfig));
         when(aaiConsumerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
         doReturn(aaiConsumerClient).when(aaiConsumerTask).resolveClient();
     }

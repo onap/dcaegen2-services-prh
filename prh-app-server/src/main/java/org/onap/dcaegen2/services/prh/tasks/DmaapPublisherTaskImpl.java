@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.prh.tasks;
 
 import java.util.Optional;
@@ -40,7 +41,7 @@ public class DmaapPublisherTaskImpl extends DmaapPublisherTask {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Config prhAppConfig;
-    private DMaaPProducerReactiveHttpClient dMaaPProducerReactiveHttpClient;
+    private DMaaPProducerReactiveHttpClient dmaapProducerReactiveHttpClient;
 
     @Autowired
     public DmaapPublisherTaskImpl(AppConfig prhAppConfig) {
@@ -51,14 +52,14 @@ public class DmaapPublisherTaskImpl extends DmaapPublisherTask {
     Mono<String> publish(Mono<ConsumerDmaapModel> consumerDmaapModel) {
         logger.info("Publishing on DMaaP topic {} object {}", resolveConfiguration().dmaapTopicName(),
             consumerDmaapModel);
-        return dMaaPProducerReactiveHttpClient.getDMaaPProducerResponse(consumerDmaapModel);
+        return dmaapProducerReactiveHttpClient.getDMaaPProducerResponse(consumerDmaapModel);
     }
 
     @Override
     public Mono<String> execute(Mono<ConsumerDmaapModel> consumerDmaapModel) throws DmaapNotFoundException {
         consumerDmaapModel = Optional.ofNullable(consumerDmaapModel)
             .orElseThrow(() -> new DmaapNotFoundException("Invoked null object to DMaaP task"));
-        dMaaPProducerReactiveHttpClient = resolveClient();
+        dmaapProducerReactiveHttpClient = resolveClient();
         logger.trace("Method called with arg {}", consumerDmaapModel);
         return publish(consumerDmaapModel);
     }
@@ -70,8 +71,8 @@ public class DmaapPublisherTaskImpl extends DmaapPublisherTask {
 
     @Override
     DMaaPProducerReactiveHttpClient resolveClient() {
-        return dMaaPProducerReactiveHttpClient == null
+        return dmaapProducerReactiveHttpClient == null
             ? new DMaaPProducerReactiveHttpClient(resolveConfiguration()).createDMaaPWebClient(buildWebClient())
-            : dMaaPProducerReactiveHttpClient;
+            : dmaapProducerReactiveHttpClient;
     }
 }

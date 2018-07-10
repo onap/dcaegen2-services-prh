@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.prh.service;
 
 import static org.springframework.web.reactive.function.client.ExchangeFilterFunctions.basicAuthentication;
@@ -36,21 +37,21 @@ public class DMaaPReactiveWebClient {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private String dMaaPContentType;
-    private String dMaaPUserName;
-    private String dMaaPUserPassword;
+    private String dmaaPContentType;
+    private String dmaaPUserName;
+    private String dmaaPUserPassword;
 
     public DMaaPReactiveWebClient fromConfiguration(DmaapCustomConfig dmaapCustomConfig) {
-        this.dMaaPUserName = dmaapCustomConfig.dmaapUserName();
-        this.dMaaPUserPassword = dmaapCustomConfig.dmaapUserPassword();
-        this.dMaaPContentType = dmaapCustomConfig.dmaapContentType();
+        this.dmaaPUserName = dmaapCustomConfig.dmaapUserName();
+        this.dmaaPUserPassword = dmaapCustomConfig.dmaapUserPassword();
+        this.dmaaPContentType = dmaapCustomConfig.dmaapContentType();
         return this;
     }
 
     public WebClient build() {
         return WebClient.builder()
-            .defaultHeader(HttpHeaders.CONTENT_TYPE, dMaaPContentType)
-            .filter(basicAuthentication(dMaaPUserName, dMaaPUserPassword))
+            .defaultHeader(HttpHeaders.CONTENT_TYPE, dmaaPContentType)
+            .filter(basicAuthentication(dmaaPUserName, dmaaPUserPassword))
             .filter(logRequest())
             .filter(logResponse())
             .build();

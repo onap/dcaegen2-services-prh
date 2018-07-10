@@ -17,60 +17,61 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.prh.tasks;
 
 import java.io.IOException;
 import java.util.Optional;
-import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
+import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
-import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
+import org.onap.dcaegen2.services.prh.exceptions.AaiNotFoundException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.service.AAIConsumerClient;
+import org.onap.dcaegen2.services.prh.service.AaiConsumerClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AAIConsumerTaskImpl extends AAIConsumerTask {
+public class AaiConsumerTaskImpl extends AaiConsumerTask {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final Config prhAppConfig;
-    private AAIConsumerClient aaiConsumerClient;
+    private AaiConsumerClient aaiConsumerClient;
 
     @Autowired
-    public AAIConsumerTaskImpl(AppConfig prhAppConfig) {
+    public AaiConsumerTaskImpl(AppConfig prhAppConfig) {
         this.prhAppConfig = prhAppConfig;
     }
 
     @Override
-    Optional<String> consume(ConsumerDmaapModel consumerDmaapModel) throws AAINotFoundException {
+    Optional<String> consume(ConsumerDmaapModel consumerDmaapModel) throws AaiNotFoundException {
         logger.trace("Method called with arg {}", consumerDmaapModel);
         try {
             return aaiConsumerClient.getHttpResponse(consumerDmaapModel);
         } catch (IOException e) {
             logger.warn("Get request not successful", e);
-            throw new AAINotFoundException("Get request not successful");
+            throw new AaiNotFoundException("Get request not successful");
         }
     }
 
     @Override
-    public String execute(ConsumerDmaapModel consumerDmaapModel) throws AAINotFoundException {
+    public String execute(ConsumerDmaapModel consumerDmaapModel) throws AaiNotFoundException {
         consumerDmaapModel = Optional.ofNullable(consumerDmaapModel)
-            .orElseThrow(() -> new AAINotFoundException("Invoked null object to AAI task"));
+            .orElseThrow(() -> new AaiNotFoundException("Invoked null object to AAI task"));
         logger.trace("Method called with arg {}", consumerDmaapModel);
         aaiConsumerClient = resolveClient();
-        return consume(consumerDmaapModel).orElseThrow(() -> new AAINotFoundException("Null response code"));
+        return consume(consumerDmaapModel).orElseThrow(() -> new AaiNotFoundException("Null response code"));
     }
 
-    protected AAIClientConfiguration resolveConfiguration() {
-        return prhAppConfig.getAAIClientConfiguration();
+    protected AaiClientConfiguration resolveConfiguration() {
+        return prhAppConfig.getAaiClientConfiguration();
     }
 
     @Override
-    AAIConsumerClient resolveClient() {
-        return Optional.ofNullable(aaiConsumerClient).orElseGet(() -> new AAIConsumerClient(resolveConfiguration()));
+    AaiConsumerClient resolveClient() {
+        return Optional.ofNullable(aaiConsumerClient).orElseGet(() -> new AaiConsumerClient(resolveConfiguration()));
     }
 }

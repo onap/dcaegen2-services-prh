@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.prh.controllers;
 
 import io.swagger.annotations.Api;
@@ -48,7 +49,7 @@ public class HeartbeatController {
         @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
         @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
         @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
-    }
+        }
     )
     public Mono<ResponseEntity<String>> heartbeat() {
         logger.trace("Receiving heartbeat request");

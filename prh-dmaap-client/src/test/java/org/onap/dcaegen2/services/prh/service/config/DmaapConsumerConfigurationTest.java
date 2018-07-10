@@ -25,10 +25,10 @@ import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.config.ImmutableDmaapConsumerConfiguration;
 
-public class DmaapConsumerConfigurationTest {
+class DmaapConsumerConfigurationTest {
 
     @Test
-    public void builder_shouldBuildConfigurationObject() {
+    void builder_shouldBuildConfigurationObject() {
 
         // Given
         DmaapConsumerConfiguration configuration;
@@ -55,7 +55,7 @@ public class DmaapConsumerConfigurationTest {
             .dmaapUserPassword(dmaapUserPassword)
             .dmaapContentType(dmaapContentType)
             .consumerGroup(consumerGroup)
-            .timeoutMS(timeoutMs)
+            .timeoutMs(timeoutMs)
             .messageLimit(messageLimit)
             .build();
 
@@ -69,7 +69,7 @@ public class DmaapConsumerConfigurationTest {
         Assertions.assertEquals(dmaapUserName, configuration.dmaapUserName());
         Assertions.assertEquals(dmaapUserPassword, configuration.dmaapUserPassword());
         Assertions.assertEquals(consumerGroup, configuration.consumerGroup());
-        Assertions.assertEquals(timeoutMs, configuration.timeoutMS());
+        Assertions.assertEquals(timeoutMs, configuration.timeoutMs());
         Assertions.assertEquals(messageLimit, configuration.messageLimit());
     }
 }

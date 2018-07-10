@@ -17,16 +17,22 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.response;
 
-import java.util.List;
+package org.onap.dcaegen2.services.prh.tasks;
+
+import org.onap.dcaegen2.services.prh.exceptions.AaiNotFoundException;
+import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.service.AaiProducerClient;
 
 /**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/17/18
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
-public interface DMaaPConsumerResponse extends DMaaPResponse {
+public abstract class AaiProducerTask {
 
+    abstract ConsumerDmaapModel publish(ConsumerDmaapModel message) throws AaiNotFoundException;
 
-    List<String> getFetchedMessages();
+    abstract AaiProducerClient resolveClient();
 
+    protected abstract ConsumerDmaapModel execute(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException;
 }

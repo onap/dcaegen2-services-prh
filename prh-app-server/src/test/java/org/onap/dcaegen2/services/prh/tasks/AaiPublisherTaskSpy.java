@@ -17,31 +17,34 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+
+import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
-import org.onap.dcaegen2.services.prh.service.AAIProducerClient;
+import org.onap.dcaegen2.services.prh.service.AaiProducerClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-
-import static org.mockito.Mockito.*;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
 @Configuration
-public class AAIPublisherTaskSpy {
+public class AaiPublisherTaskSpy {
 
     @Bean
     @Primary
-    public AAIProducerTask registerSimpleAAIPublisherTask() {
+    public AaiProducerTask registerSimpleAaiPublisherTask() {
         AppConfig appConfig = spy(AppConfig.class);
-        doReturn(mock(AAIClientConfiguration.class)).when(appConfig).getAAIClientConfiguration();
-        AAIProducerTaskImpl aaiProducerTask = spy(new AAIProducerTaskImpl(appConfig));
-        AAIProducerClient aaiProducerClient = mock(AAIProducerClient.class);
-        doReturn(mock(AAIClientConfiguration.class)).when(aaiProducerTask).resolveConfiguration();
+        doReturn(mock(AaiClientConfiguration.class)).when(appConfig).getAaiClientConfiguration();
+        AaiProducerTaskImpl aaiProducerTask = spy(new AaiProducerTaskImpl(appConfig));
+        AaiProducerClient aaiProducerClient = mock(AaiProducerClient.class);
+        doReturn(mock(AaiClientConfiguration.class)).when(aaiProducerTask).resolveConfiguration();
         doReturn(aaiProducerClient).when(aaiProducerTask).resolveClient();
         return aaiProducerTask;
     }

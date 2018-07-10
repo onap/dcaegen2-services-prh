@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.prh.tasks;
 
 import static org.mockito.Mockito.spy;
@@ -39,7 +40,7 @@ public class ScheduleControllerSpy {
     private DmaapPublisherTask dmaapPublisherTaskImplSpy;
 
     @Autowired
-    private AAIProducerTask aaiPublisherTaskImplSpy;
+    private AaiProducerTask aaiPublisherTaskImplSpy;
 
     @Bean
     @Primary

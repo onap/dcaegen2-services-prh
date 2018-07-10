@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.prh.service;
 
 import static org.mockito.Mockito.mock;
@@ -30,28 +31,27 @@ import org.springframework.web.reactive.function.client.WebClient;
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 7/5/18
  */
-public class DMaaPReactiveWebClientTest {
+class DMaaPReactiveWebClientTest {
 
 
     @Test
-    public void builder_shouldBuildDMaaPReactiveWebClient() {
+    void builder_shouldBuildDMaaPReactiveWebClient() {
         //given
         DmaapConsumerConfiguration dmaapConsumerConfiguration = mock(DmaapConsumerConfiguration.class);
-        WebClient dMaaPReactiveWebClient;
-        String dMaaPContentType = "*/*";
-        String dMaaPUserName = "DMaaP";
-        String dMaaPUserPassword = "DMaaP";
+        String dmaaPContentType = "*/*";
+        String dmaaPUserName = "DMaaP";
+        String dmaaPUserPassword = "DMaaP";
 
         //when
-        when(dmaapConsumerConfiguration.dmaapContentType()).thenReturn(dMaaPContentType);
-        when(dmaapConsumerConfiguration.dmaapUserName()).thenReturn(dMaaPUserName);
-        when(dmaapConsumerConfiguration.dmaapUserPassword()).thenReturn(dMaaPUserPassword);
-        dMaaPReactiveWebClient = new DMaaPReactiveWebClient()
+        when(dmaapConsumerConfiguration.dmaapContentType()).thenReturn(dmaaPContentType);
+        when(dmaapConsumerConfiguration.dmaapUserName()).thenReturn(dmaaPUserName);
+        when(dmaapConsumerConfiguration.dmaapUserPassword()).thenReturn(dmaaPUserPassword);
+        WebClient dmaapreactiveWebClient = new DMaaPReactiveWebClient()
             .fromConfiguration(dmaapConsumerConfiguration)
             .build();
 
         //then
-        Assertions.assertNotNull(dMaaPReactiveWebClient);
+        Assertions.assertNotNull(dmaapreactiveWebClient);
 
     }
 }

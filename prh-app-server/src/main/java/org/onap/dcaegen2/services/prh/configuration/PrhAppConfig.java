@@ -17,10 +17,27 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.prh.configuration;
 
-import com.google.gson.*;
-import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.TypeAdapterFactory;
+
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import java.util.ServiceLoader;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.slf4j.Logger;
@@ -28,11 +45,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import java.io.*;
-import java.util.ServiceLoader;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/9/18
@@ -51,7 +63,7 @@ public abstract class PrhAppConfig implements Config {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    AAIClientConfiguration aaiClientConfiguration;
+    AaiClientConfiguration aaiClientConfiguration;
 
     DmaapConsumerConfiguration dmaapConsumerConfiguration;
 
@@ -67,7 +79,7 @@ public abstract class PrhAppConfig implements Config {
     }
 
     @Override
-    public AAIClientConfiguration getAAIClientConfiguration() {
+    public AaiClientConfiguration getAaiClientConfiguration() {
         return aaiClientConfiguration;
     }
 
@@ -89,7 +101,7 @@ public abstract class PrhAppConfig implements Config {
                 jsonObject = rootElement.getAsJsonObject();
                 aaiClientConfiguration = deserializeType(gsonBuilder,
                     jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(AAI).getAsJsonObject(AAI_CONFIG),
-                    AAIClientConfiguration.class);
+                    AaiClientConfiguration.class);
 
                 dmaapConsumerConfiguration = deserializeType(gsonBuilder,
                     jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(DMAAP).getAsJsonObject(DMAAP_CONSUMER),

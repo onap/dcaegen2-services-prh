@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -20,8 +20,8 @@
 
 package org.onap.dcaegen2.services.prh.config;
 
-
 import java.io.Serializable;
+
 import java.util.Map;
 
 import org.immutables.gson.Gson;
@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
 @Value.Immutable(prehash = true)
 @Value.Style(builder = "new")
 @Gson.TypeAdapters
-public abstract class AAIClientConfiguration implements Serializable {
+public abstract class AaiClientConfiguration implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -53,7 +53,7 @@ public abstract class AAIClientConfiguration implements Serializable {
     public abstract String aaiUserPassword();
 
     @Value.Parameter
-    public abstract Boolean aaiIgnoreSSLCertificateErrors();
+    public abstract Boolean aaiIgnoreSslCertificateErrors();
 
     @Value.Parameter
     public abstract String aaiBasePath();
@@ -62,6 +62,6 @@ public abstract class AAIClientConfiguration implements Serializable {
     public abstract String aaiPnfPath();
 
     @Value.Parameter
-    public abstract Map<String,String> aaiHeaders();
+    public abstract Map<String, String> aaiHeaders();
 
 }

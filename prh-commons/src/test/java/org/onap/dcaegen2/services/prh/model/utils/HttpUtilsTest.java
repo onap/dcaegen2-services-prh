@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -20,22 +20,21 @@
 
 package org.onap.dcaegen2.services.prh.model.utils;
 
-import org.apache.http.HttpStatus;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.apache.http.HttpStatus;
+import org.junit.jupiter.api.Test;
 
-public class HttpUtilsTest {
+class HttpUtilsTest {
 
     @Test
-    public void isSuccessfulResponseCode_shouldReturnTrue() {
+    void isSuccessfulResponseCode_shouldReturnTrue() {
         assertTrue(HttpUtils.isSuccessfulResponseCode(HttpUtils.SC_ACCEPTED));
     }
 
     @Test
-    public void isSuccessfulResponseCode_shouldReturnFalse() {
+    void isSuccessfulResponseCode_shouldReturnFalse() {
         assertFalse(HttpUtils.isSuccessfulResponseCode(HttpStatus.SC_BAD_GATEWAY));
     }
 }

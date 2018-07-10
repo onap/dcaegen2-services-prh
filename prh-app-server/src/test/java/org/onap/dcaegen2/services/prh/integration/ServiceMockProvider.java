@@ -1,6 +1,6 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
- * PNF-REGISTRATION-HANDLER
+ * PROJECT
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
@@ -18,12 +18,28 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.service;
+package org.onap.dcaegen2.services.prh.integration;
 
-import org.apache.http.impl.client.CloseableHttpClient;
+import static org.mockito.Mockito.mock;
 
-@FunctionalInterface
-public interface AAIClient {
-    CloseableHttpClient getAAIHttpClient();
+import org.onap.dcaegen2.services.prh.configuration.PrhAppConfig;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+/**
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 7/10/18
+ */
+@Configuration
+class ServiceMockProvider {
+
+    @Bean
+    public PrhAppConfig getPrhAppConfig() {
+        return mock(PrhAppConfig.class);
+    }
+
+    @Bean
+    public ConsumerDmaapModel getRequestDetails() {
+        return mock(ConsumerDmaapModel.class);
+    }
 }
-

@@ -17,21 +17,17 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
-import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
+package org.onap.dcaegen2.services.prh.service;
+
+import java.net.URISyntaxException;
+import java.util.Optional;
+
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.service.AAIProducerClient;
 
-/**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
- */
-public abstract class AAIProducerTask {
 
-    abstract ConsumerDmaapModel publish(ConsumerDmaapModel message) throws AAINotFoundException;
+@FunctionalInterface
+public interface AaiExtendedHttpClient {
 
-    abstract AAIProducerClient resolveClient();
-
-    protected abstract ConsumerDmaapModel execute(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException;
+    Optional<Integer> getHttpResponse(ConsumerDmaapModel consumerDmaapModel) throws URISyntaxException;
 }

@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.prh.tasks;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -56,7 +57,7 @@ class DmaapPublisherTaskImplTest {
     private static DmaapPublisherConfiguration dmaapPublisherConfiguration;
 
     @BeforeAll
-    public static void setUp() {
+    static void setUp() {
         dmaapPublisherConfiguration = new ImmutableDmaapPublisherConfiguration.Builder()
             .dmaapContentType("application/json").dmaapHostName("54.45.33.2").dmaapPortNumber(1234)
             .dmaapProtocol("https").dmaapUserName("PRH").dmaapUserPassword("PRH")
@@ -68,7 +69,7 @@ class DmaapPublisherTaskImplTest {
     }
 
     @Test
-    public void whenPassedObjectDoesntFit_ThrowsPrhTaskException() {
+    void whenPassedObjectDoesntFit_ThrowsPrhTaskException() {
         //given
         when(appConfig.getDmaapPublisherConfiguration()).thenReturn(dmaapPublisherConfiguration);
         dmaapPublisherTask = new DmaapPublisherTaskImpl(appConfig);
@@ -81,7 +82,7 @@ class DmaapPublisherTaskImplTest {
     }
 
     @Test
-    public void whenPassedObjectFits_ReturnsCorrectStatus() throws PrhTaskException {
+    void whenPassedObjectFits_ReturnsCorrectStatus() throws PrhTaskException {
         //given
         prepareMocksForTests(HttpStatus.OK.value());
 
@@ -97,7 +98,7 @@ class DmaapPublisherTaskImplTest {
 
 
     @Test
-    public void whenPassedObjectFits_butIncorrectResponseReturns() throws DmaapNotFoundException {
+    void whenPassedObjectFits_butIncorrectResponseReturns() throws DmaapNotFoundException {
         //given
         prepareMocksForTests(HttpStatus.UNAUTHORIZED.value());
 

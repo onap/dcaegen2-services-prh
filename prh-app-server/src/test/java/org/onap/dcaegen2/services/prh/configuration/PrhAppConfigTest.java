@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.prh.configuration;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -39,7 +40,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.onap.dcaegen2.services.prh.IT.junit5.mockito.MockitoExtension;
+import org.onap.dcaegen2.services.prh.integration.junit5.mockito.MockitoExtension;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/9/18
@@ -48,8 +49,30 @@ import org.onap.dcaegen2.services.prh.IT.junit5.mockito.MockitoExtension;
 class PrhAppConfigTest {
 
     private static final String PRH_ENDPOINTS = "prh_endpoints.json";
-    private static final String jsonString = "{\"configs\":{\"aai\":{\"aaiClientConfiguration\":{\"aaiHost\":\"localhost\",\"aaiHostPortNumber\":8080,\"aaiIgnoreSSLCertificateErrors\":true,\"aaiProtocol\":\"https\",\"aaiUserName\":\"admin\",\"aaiUserPassword\":\"admin\",\"aaiBasePath\":\"/aai/v11\",\"aaiPnfPath\":\"/network/pnfs/pnf\",\"aaiHeaders\":{\"X-FromAppId\":\"prh\",\"X-TransactionId\":\"9999\",\"Accept\":\"application/json\",\"Real-Time\":\"true\",\"Authorization\":\"Basic QUFJOkFBSQ==\"}}},\"dmaap\":{\"dmaapConsumerConfiguration\":{\"consumerGroup\":\"other\",\"consumerId\":\"1\",\"dmaapContentType\":\"application/json\",\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2222,\"dmaapProtocol\":\"http\",\"dmaapTopicName\":\"temp\",\"dmaapUserName\":\"admin\",\"dmaapUserPassword\":\"admin\",\"messageLimit\":1000,\"timeoutMS\":1000},\"dmaapProducerConfiguration\":{\"dmaapContentType\":\"application/json\",\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2223,\"dmaapProtocol\":\"http\",\"dmaapTopicName\":\"temp\",\"dmaapUserName\":\"admin\",\"dmaapUserPassword\":\"admin\"}}}}";
-    private static final String incorrectJsonString = "{\"configs\":{\"aai\":{\"aaiClientConfiguration\":{\"aaiHost\":\"localhost\",\"aaiHostPortNumber\":8080,\"aaiIgnoreSSLCertificateErrors\":true,\"aaiProtocol\":\"https\",\"aaiUserName\":\"admin\",\"aaiUserPassword\":\"admin\",\"aaiBasePath\":\"/aai/v11\",\"aaiPnfPath\":\"/network/pnfs/pnf\",\"aaiHeaders\":{\"X-FromAppId\":\"prh\",\"X-TransactionId\":\"9999\",\"Accept\":\"application/json\",\"Real-Time\":\"true\",\"Authorization\":\"Basic QUFJOkFBSQ==\"}}},\"dmaap\":{\"dmaapConsumerConfiguration\":{\"consumerGroup\":\"other\",\"consumerId\":\"1\",\"dmaapContentType\":\"application/json\",\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2222,\"dmaapProtocol\":\"http\",\"dmaapTopicName\":\"temp\",\"dmaapUserName\":\"admin\",\"dmaapUserPassword\":\"admin\",\"messageLimit\":1000,\"timeoutMS\":1000},\"dmaapProducerConfiguration\":{\"dmaapContentType\":\"application/json\",\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2223,\"dmaapProtocol\":\"http\",\"dmaaptopicName\":\"temp\",\"dmaapuserName\":\"admin\",\"dmaapuserPassword\":\"admin\"}}}}";
+    private static final String jsonString = "{\"configs\":{\"aai\":{\"aaiClientConfiguration\":{\"aaiHost\":"
+        + "\"localhost\",\"aaiHostPortNumber\":8080,\"aaiIgnoreSslCertificateErrors\":true,\"aaiProtocol\":"
+        + "\"https\",\"aaiUserName\":\"admin\",\"aaiUserPassword\":\"admin\",\"aaiBasePath\":\"/aai/v11\","
+        + "\"aaiPnfPath\":\"/network/pnfs/pnf\",\"aaiHeaders\":{\"X-FromAppId\":\"prh\",\"X-TransactionId\":\"9999\","
+        + "\"Accept\":\"application/json\",\"Real-Time\":\"true\",\"Authorization\":\"Basic QUFJOkFBSQ==\"}}},"
+        + "\"dmaap\":{\"dmaapConsumerConfiguration\":{\"consumerGroup\":\"other\",\"consumerId\":\"1\","
+        + "\"dmaapContentType\":\"application/json\",\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2222,"
+        + "\"dmaapProtocol\":\"http\",\"dmaapTopicName\":\"temp\",\"dmaapUserName\":\"admin\",\"dmaapUserPassword\""
+        + ":\"admin\",\"messageLimit\":1000,\"timeoutMs\":1000},\"dmaapProducerConfiguration\":{\"dmaapContentType\":"
+        + "\"application/json\",\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2223,\"dmaapProtocol\":\"http\","
+        + "\"dmaapTopicName\":\"temp\",\"dmaapUserName\":\"admin\",\"dmaapUserPassword\":\"admin\"}}}}";
+
+    private static final String incorrectJsonString = "{\"configs\":{\"aai\":{\"aaiClientConfiguration\":{\"aaiHost\":"
+        + "\"localhost\",\"aaiHostPortNumber\":8080,\"aaiIgnoreSslCertificateErrors\":true,\"aaiProtocol\":\"https\","
+        + "\"aaiUserName\":\"admin\",\"aaiUserPassword\":\"admin\",\"aaiBasePath\":\"/aai/v11\",\"aaiPnfPath\":"
+        + "\"/network/pnfs/pnf\",\"aaiHeaders\":{\"X-FromAppId\":\"prh\",\"X-TransactionId\":\"9999\",\"Accept\":"
+        + "\"application/json\",\"Real-Time\":\"true\",\"Authorization\":\"Basic QUFJOkFBSQ==\"}}},\"dmaap\""
+        + ":{\"dmaapConsumerConfiguration\":{\"consumerGroup\":\"other\",\"consumerId\":\"1\",\"dmaapContentType\""
+        + ":\"application/json\",\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2222,\"dmaapProtocol\":\"http\""
+        + ",\"dmaapTopicName\":\"temp\",\"dmaapUserName\":\"admin\",\"dmaapUserPassword\":\"admin\",\"messageLimit\""
+        + ":1000,\"timeoutMs\":1000},\"dmaapProducerConfiguration\":{\"dmaapContentType\":\"application/json\","
+        + "\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2223,\"dmaapProtocol\":\"http\",\"dmaaptopicName\""
+        + ":\"temp\",\"dmaapuserName\":\"admin\",\"dmaapuserPassword\":\"admin\"}}}}";
+
     private static PrhAppConfig prhAppConfig;
     private static AppConfig appConfig;
 
@@ -57,13 +80,13 @@ class PrhAppConfigTest {
         .requireNonNull(PrhAppConfigTest.class.getClassLoader().getResource(PRH_ENDPOINTS)).getFile();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         prhAppConfig = spy(PrhAppConfig.class);
         appConfig = spy(new AppConfig());
     }
 
     @Test
-    public void whenApplicationWasStarted_FilePathIsSet() {
+    void whenApplicationWasStarted_FilePathIsSet() {
         //
         // When
         //
@@ -77,7 +100,7 @@ class PrhAppConfigTest {
     }
 
     @Test
-    public void whenTheConfigurationFits_GetAaiAndDmaapObjectRepresentationConfiguration()
+    void whenTheConfigurationFits_GetAaiAndDmaapObjectRepresentationConfiguration()
         throws IOException {
         //
         // Given
@@ -92,13 +115,13 @@ class PrhAppConfigTest {
         prhAppConfig.initFileStreamReader();
         appConfig.dmaapConsumerConfiguration = prhAppConfig.getDmaapConsumerConfiguration();
         appConfig.dmaapPublisherConfiguration = prhAppConfig.getDmaapPublisherConfiguration();
-        appConfig.aaiClientConfiguration = prhAppConfig.getAAIClientConfiguration();
+        appConfig.aaiClientConfiguration = prhAppConfig.getAaiClientConfiguration();
         //
         // Then
         //
         verify(prhAppConfig, times(1)).setFilepath(anyString());
         verify(prhAppConfig, times(1)).initFileStreamReader();
-        Assertions.assertNotNull(prhAppConfig.getAAIClientConfiguration());
+        Assertions.assertNotNull(prhAppConfig.getAaiClientConfiguration());
         Assertions.assertNotNull(prhAppConfig.getDmaapConsumerConfiguration());
         Assertions.assertNotNull(prhAppConfig.getDmaapPublisherConfiguration());
         Assertions
@@ -106,12 +129,12 @@ class PrhAppConfigTest {
         Assertions
             .assertEquals(appConfig.getDmaapConsumerConfiguration(), prhAppConfig.getDmaapConsumerConfiguration());
         Assertions
-            .assertEquals(appConfig.getAAIClientConfiguration(), prhAppConfig.getAAIClientConfiguration());
+            .assertEquals(appConfig.getAaiClientConfiguration(), prhAppConfig.getAaiClientConfiguration());
 
     }
 
     @Test
-    public void whenFileIsNotExist_ThrowIOException() {
+    void whenFileIsNotExist_ThrowIoException() {
         //
         // Given
         //
@@ -126,14 +149,14 @@ class PrhAppConfigTest {
         //
         verify(prhAppConfig, times(1)).setFilepath(anyString());
         verify(prhAppConfig, times(1)).initFileStreamReader();
-        Assertions.assertNull(prhAppConfig.getAAIClientConfiguration());
+        Assertions.assertNull(prhAppConfig.getAaiClientConfiguration());
         Assertions.assertNull(prhAppConfig.getDmaapConsumerConfiguration());
         Assertions.assertNull(prhAppConfig.getDmaapPublisherConfiguration());
 
     }
 
     @Test
-    public void whenFileIsExistsButJsonIsIncorrect() throws IOException {
+    void whenFileIsExistsButJsonIsIncorrect() throws IOException {
         //
         // Given
         //
@@ -151,7 +174,7 @@ class PrhAppConfigTest {
         //
         verify(prhAppConfig, times(1)).setFilepath(anyString());
         verify(prhAppConfig, times(1)).initFileStreamReader();
-        Assertions.assertNotNull(prhAppConfig.getAAIClientConfiguration());
+        Assertions.assertNotNull(prhAppConfig.getAaiClientConfiguration());
         Assertions.assertNotNull(prhAppConfig.getDmaapConsumerConfiguration());
         Assertions.assertNull(prhAppConfig.getDmaapPublisherConfiguration());
 
@@ -159,7 +182,7 @@ class PrhAppConfigTest {
 
 
     @Test
-    public void whenTheConfigurationFits_ButRootElementIsNotAJsonObject()
+    void whenTheConfigurationFits_ButRootElementIsNotAJsonObject()
         throws IOException {
         // Given
         InputStream inputStream = new ByteArrayInputStream((jsonString.getBytes(
@@ -173,12 +196,12 @@ class PrhAppConfigTest {
         prhAppConfig.initFileStreamReader();
         appConfig.dmaapConsumerConfiguration = prhAppConfig.getDmaapConsumerConfiguration();
         appConfig.dmaapPublisherConfiguration = prhAppConfig.getDmaapPublisherConfiguration();
-        appConfig.aaiClientConfiguration = prhAppConfig.getAAIClientConfiguration();
+        appConfig.aaiClientConfiguration = prhAppConfig.getAaiClientConfiguration();
 
         // Then
         verify(prhAppConfig, times(1)).setFilepath(anyString());
         verify(prhAppConfig, times(1)).initFileStreamReader();
-        Assertions.assertNull(prhAppConfig.getAAIClientConfiguration());
+        Assertions.assertNull(prhAppConfig.getAaiClientConfiguration());
         Assertions.assertNull(prhAppConfig.getDmaapConsumerConfiguration());
         Assertions.assertNull(prhAppConfig.getDmaapPublisherConfiguration());
     }

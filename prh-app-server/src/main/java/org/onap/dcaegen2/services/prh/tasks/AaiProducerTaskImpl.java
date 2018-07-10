@@ -17,17 +17,18 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.prh.tasks;
 
 import java.net.URISyntaxException;
 import java.util.Optional;
-import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
+import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
-import org.onap.dcaegen2.services.prh.exceptions.AAINotFoundException;
+import org.onap.dcaegen2.services.prh.exceptions.AaiNotFoundException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.utils.HttpUtils;
-import org.onap.dcaegen2.services.prh.service.AAIProducerClient;
+import org.onap.dcaegen2.services.prh.service.AaiProducerClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,47 +38,47 @@ import org.springframework.stereotype.Component;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
 @Component
-public class AAIProducerTaskImpl extends
-    AAIProducerTask {
+public class AaiProducerTaskImpl extends
+    AaiProducerTask {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final Config prhAppConfig;
-    private AAIProducerClient aaiProducerClient;
+    private AaiProducerClient aaiProducerClient;
 
     @Autowired
-    public AAIProducerTaskImpl(AppConfig prhAppConfig) {
+    public AaiProducerTaskImpl(AppConfig prhAppConfig) {
         this.prhAppConfig = prhAppConfig;
     }
 
     @Override
-    ConsumerDmaapModel publish(ConsumerDmaapModel consumerDmaapModel) throws AAINotFoundException {
+    ConsumerDmaapModel publish(ConsumerDmaapModel consumerDmaapModel) throws AaiNotFoundException {
         logger.info("Sending PNF model to AAI {}", consumerDmaapModel);
         try {
             return aaiProducerClient.getHttpResponse(consumerDmaapModel)
                 .filter(HttpUtils::isSuccessfulResponseCode).map(response -> consumerDmaapModel).orElseThrow(() ->
-                    new AAINotFoundException("Incorrect response code for continuation of tasks workflow"));
+                    new AaiNotFoundException("Incorrect response code for continuation of tasks workflow"));
         } catch (URISyntaxException e) {
             logger.warn("Patch request not successful", e);
-            throw new AAINotFoundException("Patch request not successful");
+            throw new AaiNotFoundException("Patch request not successful");
         }
     }
 
     @Override
-    public ConsumerDmaapModel execute(ConsumerDmaapModel consumerDmaapModel) throws AAINotFoundException {
+    public ConsumerDmaapModel execute(ConsumerDmaapModel consumerDmaapModel) throws AaiNotFoundException {
         consumerDmaapModel = Optional.ofNullable(consumerDmaapModel)
-            .orElseThrow(() -> new AAINotFoundException("Invoked null object to AAI task"));
+            .orElseThrow(() -> new AaiNotFoundException("Invoked null object to AAI task"));
         logger.trace("Method called with arg {}", consumerDmaapModel);
         aaiProducerClient = resolveClient();
         return publish(consumerDmaapModel);
     }
 
-    protected AAIClientConfiguration resolveConfiguration() {
-        return prhAppConfig.getAAIClientConfiguration();
+    protected AaiClientConfiguration resolveConfiguration() {
+        return prhAppConfig.getAaiClientConfiguration();
     }
 
     @Override
-    AAIProducerClient resolveClient() {
-        return Optional.ofNullable(aaiProducerClient).orElseGet(() -> new AAIProducerClient(resolveConfiguration()));
+    AaiProducerClient resolveClient() {
+        return Optional.ofNullable(aaiProducerClient).orElseGet(() -> new AaiProducerClient(resolveConfiguration()));
     }
 }

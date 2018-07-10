@@ -18,15 +18,18 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.response;
+package org.onap.dcaegen2.services.prh.tasks;
 
-/**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/17/18
- */
-public interface DMaaPResponse {
+import java.util.Optional;
+import org.onap.dcaegen2.services.prh.exceptions.AaiNotFoundException;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.service.AaiConsumerClient;
 
-    Integer getResponseCode();
+public abstract class AaiConsumerTask {
 
+    abstract Optional<String> consume(ConsumerDmaapModel message) throws AaiNotFoundException;
 
-    String getResponseMessage();
+    abstract AaiConsumerClient resolveClient();
+
+    protected abstract String execute(ConsumerDmaapModel consumerDmaapModel) throws AaiNotFoundException;
 }

@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.prh.tasks;
 
 import static org.mockito.Mockito.doReturn;
@@ -42,10 +43,10 @@ public class DmaapConsumerTaskSpy {
         AppConfig appConfig = spy(AppConfig.class);
         doReturn(mock(DmaapConsumerConfiguration.class)).when(appConfig).getDmaapConsumerConfiguration();
         DmaapConsumerTaskImpl dmaapConsumerTask = spy(new DmaapConsumerTaskImpl(appConfig));
-        DMaaPConsumerReactiveHttpClient DMaaPConsumerReactiveHttpClient = mock(
+        DMaaPConsumerReactiveHttpClient dmaapConsumerReactiveHttpClient = mock(
             DMaaPConsumerReactiveHttpClient.class);
         doReturn(mock(DmaapConsumerConfiguration.class)).when(dmaapConsumerTask).resolveConfiguration();
-        doReturn(DMaaPConsumerReactiveHttpClient).when(dmaapConsumerTask).resolveClient();
+        doReturn(dmaapConsumerReactiveHttpClient).when(dmaapConsumerTask).resolveClient();
         return dmaapConsumerTask;
     }
 }

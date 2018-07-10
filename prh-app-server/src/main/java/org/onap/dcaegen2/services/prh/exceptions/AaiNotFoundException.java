@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
@@ -17,14 +17,15 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.dcaegen2.services.prh.exceptions;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
-public class AAINotFoundException extends PrhTaskException {
+public class AaiNotFoundException extends PrhTaskException {
 
-    public AAINotFoundException(String message) {
+    public AaiNotFoundException(String message) {
         super(message);
     }
 }

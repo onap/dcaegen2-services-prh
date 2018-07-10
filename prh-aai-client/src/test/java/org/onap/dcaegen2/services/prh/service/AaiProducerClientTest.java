@@ -20,19 +20,11 @@
 
 package org.onap.dcaegen2.services.prh.service;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpPatch;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.onap.dcaegen2.services.prh.config.AAIClientConfiguration;
-import org.onap.dcaegen2.services.prh.model.CommonFunctions;
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModelForUnitTest;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -43,25 +35,30 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpPatch;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModelForUnitTest;
 
-class AAIProducerClientTest {
+class AaiProducerClientTest {
 
     private static final Integer SUCCESS = 200;
-    private static AAIProducerClient testedObject;
-    private static AAIClientConfiguration aaiHttpClientConfigurationMock = mock(AAIClientConfiguration.class);
+    private static final HttpResponse httpResponseMock = mock(HttpResponse.class);
+    private static final HttpEntity httpEntityMock = mock(HttpEntity.class);
+    private static final StatusLine statusLineMock = mock(StatusLine.class);
+
+    private static AaiProducerClient testedObject;
+    private static AaiClientConfiguration aaiHttpClientConfigurationMock = mock(AaiClientConfiguration.class);
     private static CloseableHttpClient closeableHttpClientMock = mock(CloseableHttpClient.class);
     private static ConsumerDmaapModel consumerDmaapModel = new ConsumerDmaapModelForUnitTest();
-
-    private final static HttpResponse httpResponseMock = mock(HttpResponse.class);
-    private final static HttpEntity httpEntityMock = mock(HttpEntity.class);
-    private final static StatusLine statusLineMock = mock(StatusLine.class);
-
-
 
     @BeforeAll
     static void setup() throws NoSuchFieldException, IllegalAccessException {
@@ -74,7 +71,7 @@ class AAIProducerClientTest {
         when(aaiHttpClientConfigurationMock.aaiPnfPath()).thenReturn("/network/pnfs/pnf");
         when(aaiHttpClientConfigurationMock.aaiHeaders()).thenReturn(setupHeaders());
 
-        testedObject = new AAIProducerClient(aaiHttpClientConfigurationMock);
+        testedObject = new AaiProducerClient(aaiHttpClientConfigurationMock);
         setField();
     }
 
@@ -82,19 +79,18 @@ class AAIProducerClientTest {
     void getHttpResponse_shouldReturnSuccessStatusCode() throws IOException, URISyntaxException {
         // when
         when(closeableHttpClientMock.execute(any(HttpPatch.class), any(ResponseHandler.class)))
-                .thenReturn(Optional.of(SUCCESS));
+            .thenReturn(Optional.of(SUCCESS));
         Optional<Integer> actualResult = testedObject.getHttpResponse(consumerDmaapModel);
         // then
         assertEquals(SUCCESS, actualResult.get());
     }
 
     @Test
-    void getHttpResponse_shouldHandleIOException() throws IOException, URISyntaxException {
+    void getHttpResponse_shouldHandleIoException() throws IOException, URISyntaxException {
         // when
         when(closeableHttpClientMock.execute(any(HttpPatch.class), any(ResponseHandler.class)))
-                .thenThrow(new IOException("Error occur"));
+            .thenThrow(new IOException("Error occur"));
 
-        testedObject.getHttpResponse(consumerDmaapModel);
         // then
         assertNotNull(testedObject.getHttpResponse(consumerDmaapModel));
     }
@@ -103,8 +99,7 @@ class AAIProducerClientTest {
     void createHttpRequest_shouldCatchUnsupportedEncodingException() throws URISyntaxException, IOException {
         // when
         when(closeableHttpClientMock.execute(any(HttpPatch.class), any(ResponseHandler.class)))
-                .thenThrow(new UnsupportedEncodingException("A new Error"));
-        testedObject.getHttpResponse(consumerDmaapModel);
+            .thenThrow(new UnsupportedEncodingException("A new Error"));
         // then
         assertNotNull(testedObject.getHttpResponse(consumerDmaapModel));
     }
@@ -158,7 +153,7 @@ class AAIProducerClientTest {
         field.set(testedObject, closeableHttpClientMock);
     }
 
-    private static Map<String,String> setupHeaders() {
+    private static Map<String, String> setupHeaders() {
         Map<String, String> aaiHeaders = new HashMap<>();
         aaiHeaders.put("X-FromAppId", "prh");
         aaiHeaders.put("X-TransactionId", "vv-temp");

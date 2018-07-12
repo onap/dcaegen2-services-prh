@@ -3,7 +3,7 @@
     "aai": {
       "aaiClientConfiguration": {
         "aaiHost": "localhost",
-        "aaiHostPortNumber": 8080,
+        "aaiPort": 8080,
         "aaiIgnoreSSLCertificateErrors": true,
         "aaiProtocol": "https",
         "aaiUserName": "AAI",
@@ -14,7 +14,8 @@
           "X-FromAppId": "prh",
           "X-TransactionId": "9999",
           "Accept": "application/json",
-          "Real-Time": "true"
+          "Real-Time": "true",
+          "Content-Type":"application/merge-patch+json"
         }
       }
     },

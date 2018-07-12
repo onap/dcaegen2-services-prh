@@ -67,7 +67,7 @@ public class AaiProducerClient implements AaiExtendedHttpClient {
         closeableHttpClient = new AaiClientImpl(aaiClientConfiguration).getAaiHttpClient();
         aaiHost = aaiClientConfiguration.aaiHost();
         aaiProtocol = aaiClientConfiguration.aaiProtocol();
-        aaiHostPortNumber = aaiClientConfiguration.aaiHostPortNumber();
+        aaiHostPortNumber = aaiClientConfiguration.aaiPort();
         aaiPath = aaiClientConfiguration.aaiBasePath() + aaiClientConfiguration.aaiPnfPath();
         aaiHeaders = aaiClientConfiguration.aaiHeaders();
         aaiUserName = aaiClientConfiguration.aaiUserName();

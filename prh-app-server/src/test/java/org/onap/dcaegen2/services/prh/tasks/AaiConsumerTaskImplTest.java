@@ -67,7 +67,7 @@ class AaiConsumerTaskImplTest {
     static void setUp() {
         aaiClientConfiguration = new ImmutableAaiClientConfiguration.Builder()
             .aaiHost(AAI_HOST)
-            .aaiHostPortNumber(PORT)
+            .aaiPort(PORT)
             .aaiProtocol(PROTOCOL)
             .aaiUserName(USER_NAME_PASSWORD)
             .aaiUserPassword(USER_NAME_PASSWORD)

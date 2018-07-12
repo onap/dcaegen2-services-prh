@@ -50,10 +50,10 @@ class PrhAppConfigTest {
 
     private static final String PRH_ENDPOINTS = "prh_endpoints.json";
     private static final String jsonString = "{\"configs\":{\"aai\":{\"aaiClientConfiguration\":{\"aaiHost\":"
-        + "\"localhost\",\"aaiHostPortNumber\":8080,\"aaiIgnoreSslCertificateErrors\":true,\"aaiProtocol\":"
+        + "\"localhost\",\"aaiPort\":8080,\"aaiIgnoreSslCertificateErrors\":true,\"aaiProtocol\":"
         + "\"https\",\"aaiUserName\":\"admin\",\"aaiUserPassword\":\"admin\",\"aaiBasePath\":\"/aai/v11\","
         + "\"aaiPnfPath\":\"/network/pnfs/pnf\",\"aaiHeaders\":{\"X-FromAppId\":\"prh\",\"X-TransactionId\":\"9999\","
-        + "\"Accept\":\"application/json\",\"Real-Time\":\"true\",\"Authorization\":\"Basic QUFJOkFBSQ==\"}}},"
+        + "\"Accept\":\"application/json\",\"Real-Time\":\"true\",\"Content-Type\":\"application/merge-patch+json\",\"Authorization\":\"Basic QUFJOkFBSQ==\"}}},"
         + "\"dmaap\":{\"dmaapConsumerConfiguration\":{\"consumerGroup\":\"other\",\"consumerId\":\"1\","
         + "\"dmaapContentType\":\"application/json\",\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2222,"
         + "\"dmaapProtocol\":\"http\",\"dmaapTopicName\":\"temp\",\"dmaapUserName\":\"admin\",\"dmaapUserPassword\""
@@ -62,10 +62,10 @@ class PrhAppConfigTest {
         + "\"dmaapTopicName\":\"temp\",\"dmaapUserName\":\"admin\",\"dmaapUserPassword\":\"admin\"}}}}";
 
     private static final String incorrectJsonString = "{\"configs\":{\"aai\":{\"aaiClientConfiguration\":{\"aaiHost\":"
-        + "\"localhost\",\"aaiHostPortNumber\":8080,\"aaiIgnoreSslCertificateErrors\":true,\"aaiProtocol\":\"https\","
+        + "\"localhost\",\"aaiPort\":8080,\"aaiIgnoreSslCertificateErrors\":true,\"aaiProtocol\":\"https\","
         + "\"aaiUserName\":\"admin\",\"aaiUserPassword\":\"admin\",\"aaiBasePath\":\"/aai/v11\",\"aaiPnfPath\":"
         + "\"/network/pnfs/pnf\",\"aaiHeaders\":{\"X-FromAppId\":\"prh\",\"X-TransactionId\":\"9999\",\"Accept\":"
-        + "\"application/json\",\"Real-Time\":\"true\",\"Authorization\":\"Basic QUFJOkFBSQ==\"}}},\"dmaap\""
+        + "\"application/json\",\"Real-Time\":\"true\",\"Content-Type\":\"application/merge-patch+json\",\"Authorization\":\"Basic QUFJOkFBSQ==\"}}},\"dmaap\""
         + ":{\"dmaapConsumerConfiguration\":{\"consumerGroup\":\"other\",\"consumerId\":\"1\",\"dmaapContentType\""
         + ":\"application/json\",\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2222,\"dmaapProtocol\":\"http\""
         + ",\"dmaapTopicName\":\"temp\",\"dmaapUserName\":\"admin\",\"dmaapUserPassword\":\"admin\",\"messageLimit\""

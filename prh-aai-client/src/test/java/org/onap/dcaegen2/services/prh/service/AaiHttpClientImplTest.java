@@ -38,7 +38,7 @@ class AaiHttpClientImplTest {
         AaiClientConfiguration aaiHttpClientConfigurationMock = mock(AaiClientConfiguration.class);
         when(aaiHttpClientConfigurationMock.aaiHost()).thenReturn("54.45.33.2");
         when(aaiHttpClientConfigurationMock.aaiProtocol()).thenReturn("https");
-        when(aaiHttpClientConfigurationMock.aaiHostPortNumber()).thenReturn(1234);
+        when(aaiHttpClientConfigurationMock.aaiPort()).thenReturn(1234);
         when(aaiHttpClientConfigurationMock.aaiUserName()).thenReturn("PNF");
         when(aaiHttpClientConfigurationMock.aaiUserPassword()).thenReturn("PNF");
         when(aaiHttpClientConfigurationMock.aaiIgnoreSslCertificateErrors()).thenReturn(true);

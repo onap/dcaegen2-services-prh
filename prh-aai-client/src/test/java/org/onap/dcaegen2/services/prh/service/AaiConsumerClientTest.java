@@ -62,7 +62,7 @@ class AaiConsumerClientTest {
 
         when(aaiHttpClientConfigurationMock.aaiHost()).thenReturn("54.45.33.2");
         when(aaiHttpClientConfigurationMock.aaiProtocol()).thenReturn("https");
-        when(aaiHttpClientConfigurationMock.aaiHostPortNumber()).thenReturn(1234);
+        when(aaiHttpClientConfigurationMock.aaiPort()).thenReturn(1234);
         when(aaiHttpClientConfigurationMock.aaiUserName()).thenReturn("PRH");
         when(aaiHttpClientConfigurationMock.aaiUserPassword()).thenReturn("PRH");
         when(aaiHttpClientConfigurationMock.aaiBasePath()).thenReturn("/aai/v11");

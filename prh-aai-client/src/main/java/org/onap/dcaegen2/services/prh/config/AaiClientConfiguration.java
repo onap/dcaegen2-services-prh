@@ -41,7 +41,7 @@ public abstract class AaiClientConfiguration implements Serializable {
     public abstract String aaiHost();
 
     @Value.Parameter
-    public abstract Integer aaiHostPortNumber();
+    public abstract Integer aaiPort();
 
     @Value.Parameter
     public abstract String aaiProtocol();

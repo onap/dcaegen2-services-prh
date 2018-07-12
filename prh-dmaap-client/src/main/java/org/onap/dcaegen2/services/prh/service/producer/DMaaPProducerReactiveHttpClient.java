@@ -60,7 +60,7 @@ public class DMaaPProducerReactiveHttpClient {
     /**
      * Function for calling DMaaP HTTP producer - post request to DMaaP.
      *
-     * @param consumerDmaapModelMono - object which will be sended to DMaaP
+     * @param consumerDmaapModelMono - object which will be sent to DMaaP
      * @return status code of operation
      */
     public Mono<String> getDMaaPProducerResponse(Mono<ConsumerDmaapModel> consumerDmaapModelMono) {

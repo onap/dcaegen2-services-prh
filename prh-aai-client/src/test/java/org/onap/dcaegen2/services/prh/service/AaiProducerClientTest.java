@@ -64,7 +64,7 @@ class AaiProducerClientTest {
     static void setup() throws NoSuchFieldException, IllegalAccessException {
         when(aaiHttpClientConfigurationMock.aaiHost()).thenReturn("eucalyptus.es-si-eu-dhn-20.eecloud.nsn-net.net");
         when(aaiHttpClientConfigurationMock.aaiProtocol()).thenReturn("https");
-        when(aaiHttpClientConfigurationMock.aaiHostPortNumber()).thenReturn(1234);
+        when(aaiHttpClientConfigurationMock.aaiPort()).thenReturn(1234);
         when(aaiHttpClientConfigurationMock.aaiUserName()).thenReturn("PRH");
         when(aaiHttpClientConfigurationMock.aaiUserPassword()).thenReturn("PRH");
         when(aaiHttpClientConfigurationMock.aaiBasePath()).thenReturn("/aai/v11");

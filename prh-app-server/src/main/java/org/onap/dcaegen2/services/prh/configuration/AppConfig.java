@@ -101,7 +101,7 @@ public class AppConfig extends PrhAppConfig {
     public String aaiHost;
 
     @Value("${aai.aaiClientConfiguration.aaiHostPortNumber:}")
-    public Integer aaiHostPortNumber;
+    public Integer aaiPort;
 
     @Value("${aai.aaiClientConfiguration.aaiProtocol:}")
     public String aaiProtocol;
@@ -161,9 +161,9 @@ public class AppConfig extends PrhAppConfig {
     public AaiClientConfiguration getAaiClientConfiguration() {
         return new ImmutableAaiClientConfiguration.Builder()
             .aaiHost(Optional.ofNullable(aaiHost).filter(isEmpty.negate()).orElse(aaiClientConfiguration.aaiHost()))
-            .aaiHostPortNumber(
-                Optional.ofNullable(aaiHostPortNumber).filter(p -> !p.toString().isEmpty())
-                    .orElse(aaiClientConfiguration.aaiHostPortNumber()))
+            .aaiPort(
+                Optional.ofNullable(aaiPort).filter(p -> !p.toString().isEmpty())
+                    .orElse(aaiClientConfiguration.aaiPort()))
             .aaiIgnoreSslCertificateErrors(
                 Optional.ofNullable(aaiIgnoreSslCertificateErrors).filter(p -> !p.toString().isEmpty())
                     .orElse(aaiClientConfiguration.aaiIgnoreSslCertificateErrors()))

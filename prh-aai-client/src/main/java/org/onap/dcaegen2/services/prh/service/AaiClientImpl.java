@@ -79,7 +79,7 @@ public class AaiClientImpl implements AaiClient {
 
         if (aaiUserName != null) {
             final String aaiHost = aaiClientConfig.aaiHost();
-            final Integer aaiHostPortNumber = aaiClientConfig.aaiHostPortNumber();
+            final Integer aaiHostPortNumber = aaiClientConfig.aaiPort();
             final String aaiUserPassword = aaiClientConfig.aaiUserPassword();
             final AuthScope aaiHostPortAuthScope = new AuthScope(aaiHost, aaiHostPortNumber);
             final Credentials aaiCredentials = new UsernamePasswordCredentials(aaiUserName, aaiUserPassword);

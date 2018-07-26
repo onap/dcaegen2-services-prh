@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da7095c5_06beedff",
+        "filename": "INFO.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2018-07-26T22:17:44Z",
+      "side": 1,
+      "message": "only repo with all committer listed here have access",
+      "range": {
+        "startLine": 39,
+        "startChar": 2,
+        "endLine": 39,
+        "endChar": 34
+      },
+      "revId": "47194e6d1037bc9ba74d0e3f288fe461a2f56ec1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_26bbf10f",
+        "filename": "INFO.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2018-07-26T22:17:44Z",
+      "side": 1,
+      "message": "only repo with all committer listed here have access",
+      "range": {
+        "startLine": 56,
+        "startChar": 4,
+        "endLine": 56,
+        "endChar": 29
+      },
+      "revId": "47194e6d1037bc9ba74d0e3f288fe461a2f56ec1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

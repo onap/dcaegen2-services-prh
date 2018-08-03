@@ -1,0 +1,9 @@
+Code-Review+1: Marcin Migdal <marcin.migdal@nokia.com>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: xinhuili <lxinhui@vmware.com>
+Code-Review+2: Vijay Venkatesh Kumar <vv770d@att.com>
+Submitted-by: Vijay Venkatesh Kumar <vv770d@att.com>
+Submitted-at: Fri, 03 Aug 2018 21:35:23 +0000
+Reviewed-on: https://gerrit.onap.org/r/58385
+Project: dcaegen2/services/prh
+Branch: refs/heads/master

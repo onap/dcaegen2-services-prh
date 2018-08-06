@@ -19,7 +19,7 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
+import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.producer.ExtendedDmaapProducerHttpClientImpl;
 
@@ -28,9 +28,9 @@ import org.onap.dcaegen2.services.prh.service.producer.ExtendedDmaapProducerHttp
  */
 abstract class DmaapPublisherTask {
 
-    abstract Integer publish(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException;
+    abstract Integer publish(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException;
 
     abstract ExtendedDmaapProducerHttpClientImpl resolveClient();
 
-    abstract protected Integer execute(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException;
+    protected abstract Integer execute(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException;
 }

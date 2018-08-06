@@ -39,7 +39,7 @@ public class DmaapProducerTaskSpy {
 
     @Bean
     @Primary
-    public Task registerSimpleDmaapPublisherTask() {
+    public DmaapPublisherTask registerSimpleDmaapPublisherTask() {
         AppConfig appConfig = spy(AppConfig.class);
         doReturn(mock(DmaapPublisherConfiguration.class)).when(appConfig).getDmaapPublisherConfiguration();
         DmaapPublisherTaskImpl dmaapPublisherTask = spy(new DmaapPublisherTaskImpl(appConfig));

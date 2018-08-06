@@ -23,7 +23,6 @@ import java.util.Optional;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
-import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
@@ -38,8 +37,7 @@ import org.springframework.stereotype.Component;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
 @Component
-public class DmaapConsumerTaskImpl extends
-    DmaapConsumerTask<String, ConsumerDmaapModel, DmaapConsumerConfiguration> {
+public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Config prhAppConfig;
@@ -67,20 +65,6 @@ public class DmaapConsumerTaskImpl extends
     }
 
     @Override
-    protected void receiveRequest(String body) throws PrhTaskException {
-        try {
-            ConsumerDmaapModel response = execute(body);
-            if (taskProcess != null && response != null) {
-                taskProcess.receiveRequest(response);
-            }
-        } catch (DmaapEmptyResponseException e) {
-            logger.warn("Nothing to consume from DmaaP {} topic.",
-                resolveConfiguration().dmaapTopicName());
-        }
-
-    }
-
-    @Override
     public ConsumerDmaapModel execute(String object) throws PrhTaskException {
         extendedDmaapConsumerHttpClient = resolveClient();
         logger.trace("Method called with arg {}", object);
@@ -93,7 +77,6 @@ public class DmaapConsumerTaskImpl extends
         prhAppConfig.initFileStreamReader();
     }
 
-    @Override
     protected DmaapConsumerConfiguration resolveConfiguration() {
         return prhAppConfig.getDmaapConsumerConfiguration();
     }

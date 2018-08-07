@@ -20,7 +20,6 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import java.util.Optional;
 import java.util.concurrent.Callable;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;

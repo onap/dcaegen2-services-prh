@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ServiceLoader;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -119,7 +120,7 @@ public abstract class PrhAppConfig implements Config {
     }
 
     JsonElement getJsonElement(JsonParser parser, InputStream inputStream) {
-        return parser.parse(new InputStreamReader(inputStream));
+        return parser.parse(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
     }
 
     private <T> T deserializeType(@NotNull GsonBuilder gsonBuilder, @NotNull JsonObject jsonObject,

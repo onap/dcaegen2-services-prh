@@ -40,7 +40,7 @@ public class AaiReactiveWebClient {
     private Map<String, String> aaiHeaders;
 
     /**
-     * Creating AaiReactiveWebClient
+     * Creating AaiReactiveWebClient.
      * @param configuration - configuration object
      * @return AaiReactiveWebClient
      */

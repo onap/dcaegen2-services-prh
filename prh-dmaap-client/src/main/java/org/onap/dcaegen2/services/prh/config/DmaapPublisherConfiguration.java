@@ -40,5 +40,5 @@ public abstract class DmaapPublisherConfiguration implements DmaapCustomConfig {
 
     public static DmaapPublisherConfiguration.Builder builder() {
         return ImmutableDmaapPublisherConfiguration.builder();
-    }
+    }su
 }

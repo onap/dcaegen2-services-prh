@@ -43,7 +43,6 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 
-
 class AaiProducerReactiveHttpClientTest {
 
     private static AaiProducerReactiveHttpClient aaiProducerReactiveHttpClient;
@@ -75,9 +74,9 @@ class AaiProducerReactiveHttpClientTest {
         aaiProducerReactiveHttpClient = new AaiProducerReactiveHttpClient(aaiConfigurationMock);
 
         webClient = spy(WebClient.builder()
-                .defaultHeaders(httpHeaders -> httpHeaders.setAll(aaiHeaders))
-                .filter(basicAuthentication(aaiConfigurationMock.aaiUserName(), aaiConfigurationMock.aaiUserPassword()))
-                .build());
+            .defaultHeaders(httpHeaders -> httpHeaders.setAll(aaiHeaders))
+            .filter(basicAuthentication(aaiConfigurationMock.aaiUserName(), aaiConfigurationMock.aaiUserPassword()))
+            .build());
 
         requestBodyUriSpec = mock(WebClient.RequestBodyUriSpec.class);
         responseSpec = mock(ResponseSpec.class);
@@ -97,10 +96,10 @@ class AaiProducerReactiveHttpClientTest {
 
         //then
         StepVerifier.create(response).expectSubscription()
-                .expectNextMatches(results -> {
-                    Assertions.assertEquals(results, expectedResult.block());
-                    return true;
-                }).verifyComplete();
+            .expectNextMatches(results -> {
+                Assertions.assertEquals(results, expectedResult.block());
+                return true;
+            }).verifyComplete();
     }
 
     @Test
@@ -113,8 +112,10 @@ class AaiProducerReactiveHttpClientTest {
         when(aaiProducerReactiveHttpClient.getUri("pnfName")).thenThrow(URISyntaxException.class);
 
         //then
-        StepVerifier.create(aaiProducerReactiveHttpClient.getAaiProducerResponse(Mono.just(dmaapModel))).expectSubscription()
-                .expectError(Exception.class).verify();
+        StepVerifier.create(
+            aaiProducerReactiveHttpClient.getAaiProducerResponse(
+                Mono.just(dmaapModel)
+            )).expectSubscription().expectError(Exception.class).verify();
     }
 
 

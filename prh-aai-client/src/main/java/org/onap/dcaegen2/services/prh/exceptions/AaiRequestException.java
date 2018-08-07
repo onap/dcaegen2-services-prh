@@ -21,9 +21,6 @@
 package org.onap.dcaegen2.services.prh.exceptions;
 
 public class AaiRequestException extends Exception {
-    public AaiRequestException() {
-        super();
-    }
 
     public AaiRequestException(String message) {
         super(message);

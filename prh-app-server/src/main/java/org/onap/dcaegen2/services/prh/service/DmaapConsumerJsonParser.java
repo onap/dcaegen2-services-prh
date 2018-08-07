@@ -119,11 +119,11 @@ public class DmaapConsumerJsonParser {
 
     private String printMessage(String pnfVendorName, String pnfSerialNumber, String pnfOamIpv4Address,
         String pnfOamIpv6Address) {
-        return String.format("\n{"
+        return String.format("%n{"
             + "\"pnfVendorName\" : \"%s\","
             + "\"pnfSerialNumber\": \"%s\","
             + "\"pnfOamIpv4Address\": \"%s\","
             + "\"pnfOamIpv6Address\": \"%s\""
-            + "\n}", pnfVendorName, pnfSerialNumber, pnfOamIpv4Address, pnfOamIpv6Address);
+            + "%n}", pnfVendorName, pnfSerialNumber, pnfOamIpv4Address, pnfOamIpv6Address);
     }
 }

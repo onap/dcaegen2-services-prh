@@ -43,7 +43,7 @@ public class AaiProducerReactiveHttpClient {
 
 
     /**
-     * Constructor
+     * Constructor of AaiProducerReactiveHttpClient.
      *
      * @param configuration - AAI producer configuration object
      */
@@ -55,7 +55,7 @@ public class AaiProducerReactiveHttpClient {
     }
 
     /**
-     * Function for calling AAI Http producer - patch request to AAI database
+     * Function for calling AAI Http producer - patch request to AAI database.
      *
      * @param consumerDmaapModelMono - object which will be sent to AAI database
      * @return status code of operation
@@ -72,12 +72,16 @@ public class AaiProducerReactiveHttpClient {
     private Mono<Integer> patchAaiRequest(ConsumerDmaapModel dmaapModel) {
         try {
             return webClient.patch()
-                    .uri(getUri(dmaapModel.getPnfName()))
-                    .body(BodyInserters.fromObject(dmaapModel))
-                    .retrieve()
-                    .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new AaiRequestException("HTTP 400")))
-                    .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(new AaiRequestException("HTTP 500")))
-                    .bodyToMono(Integer.class);
+                .uri(getUri(dmaapModel.getPnfName()))
+                .body(BodyInserters.fromObject(dmaapModel))
+                .retrieve()
+                .onStatus(
+                    HttpStatus::is4xxClientError,
+                    clientResponse -> Mono.error(new AaiRequestException("HTTP 400"))
+                )
+                .onStatus(HttpStatus::is5xxServerError,
+                    clientResponse -> Mono.error(new AaiRequestException("HTTP 500")))
+                .bodyToMono(Integer.class);
         } catch (URISyntaxException e) {
             return Mono.error(e);
         }
@@ -85,10 +89,10 @@ public class AaiProducerReactiveHttpClient {
 
     URI getUri(String pnfName) throws URISyntaxException {
         return new URIBuilder()
-                .setScheme(aaiProtocol)
-                .setHost(aaiHost)
-                .setPort(aaiHostPortNumber)
-                .setPath(aaiBasePath + "/" + pnfName)
-                .build();
+            .setScheme(aaiProtocol)
+            .setHost(aaiHost)
+            .setPort(aaiHostPortNumber)
+            .setPath(aaiBasePath + "/" + pnfName)
+            .build();
     }
 }

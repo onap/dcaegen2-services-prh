@@ -29,24 +29,19 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.config.ImmutableAaiClientConfiguration;
-
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
-import org.onap.dcaegen2.services.prh.exceptions.AaiNotFoundException;
-
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
-
-import org.onap.dcaegen2.services.prh.service.AaiProducerClient;
+import org.onap.dcaegen2.services.prh.service.producer.AaiProducerReactiveHttpClient;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/14/18
@@ -64,7 +59,7 @@ class AaiProducerTaskImplTest {
     private static ConsumerDmaapModel consumerDmaapModel;
     private static AaiProducerTaskImpl aaiProducerTask;
     private static AaiClientConfiguration aaiClientConfiguration;
-    private static AaiProducerClient aaiProducerClient;
+    private static AaiProducerReactiveHttpClient aaiProducerReactiveHttpClient;
     private static AppConfig appConfig;
 
     @BeforeAll
@@ -99,57 +94,38 @@ class AaiProducerTaskImplTest {
     }
 
     @Test
-    void whenPassedObjectFits_ReturnsCorrectStatus() throws AaiNotFoundException, URISyntaxException {
+    void whenPassedObjectFits_ReturnsCorrectStatus() throws PrhTaskException {
         //given/when
-        getAaiProducerTask_whenMockingResponseObject(200, false);
-        ConsumerDmaapModel response = aaiProducerTask.execute(consumerDmaapModel);
+        getAaiProducerTask_whenMockingResponseObject(200);
+        Mono<ConsumerDmaapModel> response = aaiProducerTask.execute(Mono.just(consumerDmaapModel));
 
         //then
-        verify(aaiProducerClient, times(1)).getHttpResponse(any(ConsumerDmaapModel.class));
-        verifyNoMoreInteractions(aaiProducerClient);
-        Assertions.assertEquals(consumerDmaapModel, response);
+        verify(aaiProducerReactiveHttpClient, times(1)).getAaiProducerResponse(any());
+        verifyNoMoreInteractions(aaiProducerReactiveHttpClient);
+        Assertions.assertEquals(consumerDmaapModel, response.block());
 
     }
 
 
     @Test
-    void whenPassedObjectFits_butIncorrectResponseReturns() throws URISyntaxException {
+    void whenPassedObjectFits_butIncorrectResponseReturns() throws PrhTaskException {
         //given/when
-        getAaiProducerTask_whenMockingResponseObject(400, false);
-        Executable executableCode = () -> aaiProducerTask.execute(consumerDmaapModel);
-        Assertions
-            .assertThrows(PrhTaskException.class, executableCode, "Incorrect status code in response message");
+        getAaiProducerTask_whenMockingResponseObject(400);
+        StepVerifier.create(aaiProducerTask.execute(Mono.just(consumerDmaapModel))).expectSubscription()
+            .expectError(PrhTaskException.class).verify();
         //then
-        verify(aaiProducerClient, times(1)).getHttpResponse(any(ConsumerDmaapModel.class));
-        verifyNoMoreInteractions(aaiProducerClient);
+        verify(aaiProducerReactiveHttpClient, times(1)).getAaiProducerResponse(any());
+        verifyNoMoreInteractions(aaiProducerReactiveHttpClient);
     }
 
-    @Test
-    void whenPassedObjectFits_butHttpClientThrowsIoExceptionHandleIt() throws URISyntaxException {
-        //given/when
-        getAaiProducerTask_whenMockingResponseObject(0, true);
-
-        Executable executableCode = () -> aaiProducerTask.execute(consumerDmaapModel);
-        Assertions
-            .assertThrows(PrhTaskException.class, executableCode, "");
-        //then
-        verify(aaiProducerClient, times(1)).getHttpResponse(any(ConsumerDmaapModel.class));
-        verifyNoMoreInteractions(aaiProducerClient);
-    }
-
-
-    private static void getAaiProducerTask_whenMockingResponseObject(int statusCode, boolean throwsException)
-        throws URISyntaxException {
+    private static void getAaiProducerTask_whenMockingResponseObject(Integer statusCode) {
         //given
-        aaiProducerClient = mock(AaiProducerClient.class);
-        if (throwsException) {
-            when(aaiProducerClient.getHttpResponse(consumerDmaapModel)).thenThrow(URISyntaxException.class);
-        } else {
-            when(aaiProducerClient.getHttpResponse(consumerDmaapModel)).thenReturn(Optional.of(statusCode));
-        }
+        aaiProducerReactiveHttpClient = mock(AaiProducerReactiveHttpClient.class);
+        when(aaiProducerReactiveHttpClient.getAaiProducerResponse(any()))
+            .thenReturn(Mono.just(statusCode));
         when(appConfig.getAaiClientConfiguration()).thenReturn(aaiClientConfiguration);
         aaiProducerTask = spy(new AaiProducerTaskImpl(appConfig));
         when(aaiProducerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
-        doReturn(aaiProducerClient).when(aaiProducerTask).resolveClient();
+        doReturn(aaiProducerReactiveHttpClient).when(aaiProducerTask).resolveClient();
     }
 }

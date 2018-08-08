@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_5d1d940e",
+        "filename": "prh-dmaap-client/src/test/java/org/onap/dcaegen2/services/prh/service/consumer/DmaapConsumerReactiveHttpClientTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 2807
+      },
+      "writtenOn": "2018-08-08T08:51:01Z",
+      "side": 1,
+      "message": "Can be deleted in the next commit.",
+      "range": {
+        "startLine": 54,
+        "startChar": 41,
+        "endLine": 54,
+        "endChar": 62
+      },
+      "revId": "79984d737c71d3c92f3cd283eaf2b9b6157c2ce2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

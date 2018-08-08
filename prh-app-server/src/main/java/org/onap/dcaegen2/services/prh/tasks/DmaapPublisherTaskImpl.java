@@ -57,8 +57,9 @@ public class DmaapPublisherTaskImpl extends DmaapPublisherTask {
 
     @Override
     public Mono<String> execute(Mono<ConsumerDmaapModel> consumerDmaapModel) throws DmaapNotFoundException {
-        consumerDmaapModel = Optional.ofNullable(consumerDmaapModel)
-            .orElseThrow(() -> new DmaapNotFoundException("Invoked null object to DMaaP task"));
+        if (consumerDmaapModel == null) {
+            throw new DmaapNotFoundException("Invoked null object to DMaaP task");
+        }
         dmaapProducerReactiveHttpClient = resolveClient();
         logger.trace("Method called with arg {}", consumerDmaapModel);
         return publish(consumerDmaapModel);

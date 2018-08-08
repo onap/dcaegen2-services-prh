@@ -50,7 +50,7 @@ class DMaaPConsumerReactiveHttpClientTest {
     private DmaapConsumerConfiguration consumerConfigurationMock = mock(DmaapConsumerConfiguration.class);
     private static final String JSON_MESSAGE = "{ \"responseFromDmaap\": \"Success\"}";
     private Mono<String> expectedResult = Mono.empty();
-    private WebClient webClient = mock(WebClient.class);
+    private WebClient webClient;
     private RequestHeadersUriSpec requestHeadersSpec;
     private ResponseSpec responseSpec;
 

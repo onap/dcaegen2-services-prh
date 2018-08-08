@@ -95,13 +95,11 @@ public class ScheduledTasks {
     }
 
     private Mono<ConsumerDmaapModel> publishToAaiConfiguration(Mono<ConsumerDmaapModel> monoDMaaPModel) {
-        return monoDMaaPModel.flatMap(dmaapModel -> {
-            try {
-                return Mono.just(aaiProducerTask.execute(dmaapModel));
-            } catch (PrhTaskException e) {
-                return Mono.error(e);
-            }
-        });
+        try {
+            return aaiProducerTask.execute(monoDMaaPModel);
+        } catch (PrhTaskException e) {
+            return Mono.error(e);
+        }
     }
 
     private Mono<String> publishToDmaapConfiguration(Mono<ConsumerDmaapModel> monoAaiModel) {

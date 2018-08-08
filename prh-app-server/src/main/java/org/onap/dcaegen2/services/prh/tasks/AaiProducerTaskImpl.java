@@ -20,19 +20,20 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import java.net.URISyntaxException;
 import java.util.Optional;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.AaiNotFoundException;
+import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.utils.HttpUtils;
-import org.onap.dcaegen2.services.prh.service.AaiProducerClient;
+import org.onap.dcaegen2.services.prh.service.producer.AaiProducerReactiveHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
@@ -44,7 +45,7 @@ public class AaiProducerTaskImpl extends
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final Config prhAppConfig;
-    private AaiProducerClient aaiProducerClient;
+    private AaiProducerReactiveHttpClient aaiProducerReactiveHttpClient;
 
     @Autowired
     public AaiProducerTaskImpl(AppConfig prhAppConfig) {
@@ -52,33 +53,36 @@ public class AaiProducerTaskImpl extends
     }
 
     @Override
-    ConsumerDmaapModel publish(ConsumerDmaapModel consumerDmaapModel) throws AaiNotFoundException {
+    Mono<ConsumerDmaapModel> publish(Mono<ConsumerDmaapModel> consumerDmaapModel) {
         logger.info("Sending PNF model to AAI {}", consumerDmaapModel);
-        try {
-            return aaiProducerClient.getHttpResponse(consumerDmaapModel)
-                .filter(HttpUtils::isSuccessfulResponseCode).map(response -> consumerDmaapModel).orElseThrow(() ->
-                    new AaiNotFoundException("Incorrect response code for continuation of tasks workflow"));
-        } catch (URISyntaxException e) {
-            logger.warn("Patch request not successful", e);
-            throw new AaiNotFoundException("Patch request not successful");
-        }
+        return aaiProducerReactiveHttpClient.getAaiProducerResponse(consumerDmaapModel)
+            .flatMap(response -> {
+                if (HttpUtils.isSuccessfulResponseCode(response)) {
+                    return consumerDmaapModel;
+                }
+                return Mono
+                    .error(new AaiNotFoundException("Incorrect response code for continuation of tasks workflow"));
+            });
     }
 
     @Override
-    public ConsumerDmaapModel execute(ConsumerDmaapModel consumerDmaapModel) throws AaiNotFoundException {
-        consumerDmaapModel = Optional.ofNullable(consumerDmaapModel)
-            .orElseThrow(() -> new AaiNotFoundException("Invoked null object to AAI task"));
-        logger.trace("Method called with arg {}", consumerDmaapModel);
-        aaiProducerClient = resolveClient();
-        return publish(consumerDmaapModel);
+    AaiProducerReactiveHttpClient resolveClient() {
+        return aaiProducerReactiveHttpClient == null ? new AaiProducerReactiveHttpClient(resolveConfiguration())
+            .createAaiWebClient(buildWebClient()) : aaiProducerReactiveHttpClient;
     }
 
+    @Override
     protected AaiClientConfiguration resolveConfiguration() {
         return prhAppConfig.getAaiClientConfiguration();
     }
 
     @Override
-    AaiProducerClient resolveClient() {
-        return Optional.ofNullable(aaiProducerClient).orElseGet(() -> new AaiProducerClient(resolveConfiguration()));
+    protected Mono<ConsumerDmaapModel> execute(Mono<ConsumerDmaapModel> consumerDmaapModel) throws PrhTaskException {
+        consumerDmaapModel = Optional.ofNullable(consumerDmaapModel)
+            .orElseThrow(() -> new AaiNotFoundException("Invoked null object to AAI task"));
+        aaiProducerReactiveHttpClient = resolveClient();
+        logger.trace("Method called with arg {}", consumerDmaapModel);
+        return publish(consumerDmaapModel);
+
     }
 }

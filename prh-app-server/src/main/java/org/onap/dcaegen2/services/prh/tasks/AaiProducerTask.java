@@ -20,19 +20,30 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
+import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.exceptions.AaiNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.service.AaiProducerClient;
+import org.onap.dcaegen2.services.prh.service.AaiReactiveWebClient;
+import org.onap.dcaegen2.services.prh.service.producer.AaiProducerReactiveHttpClient;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
 public abstract class AaiProducerTask {
 
-    abstract ConsumerDmaapModel publish(ConsumerDmaapModel message) throws AaiNotFoundException;
+    abstract Mono<ConsumerDmaapModel> publish(Mono<ConsumerDmaapModel> message) throws AaiNotFoundException;
 
-    abstract AaiProducerClient resolveClient();
+    abstract AaiProducerReactiveHttpClient resolveClient();
 
-    protected abstract ConsumerDmaapModel execute(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException;
+    protected abstract AaiClientConfiguration resolveConfiguration();
+
+    protected abstract Mono<ConsumerDmaapModel> execute(Mono<ConsumerDmaapModel> consumerDmaapModel)
+        throws PrhTaskException;
+
+    WebClient buildWebClient() {
+        return new AaiReactiveWebClient().fromConfiguration(resolveConfiguration()).build();
+    }
 }

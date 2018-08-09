@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_3adbf91c",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/IT/ScheduledXmlContextITest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2018-08-09T02:45:43Z",
+      "side": 1,
+      "message": "I suppothis will either used in su",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 83,
+        "endChar": 2
+      },
+      "revId": "8b1502fb0f1af5d00ec26e712e57b792fbd16bd8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

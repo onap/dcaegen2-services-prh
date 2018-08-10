@@ -21,7 +21,6 @@
 package org.onap.dcaegen2.services.prh.tasks;
 
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
-import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
@@ -29,6 +28,7 @@ import org.onap.dcaegen2.services.prh.service.producer.DMaaPProducerReactiveHttp
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -39,12 +39,12 @@ import reactor.core.publisher.Mono;
 public class DmaapPublisherTaskImpl extends DmaapPublisherTask {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final Config prhAppConfig;
+    private final Config config;
     private DMaaPProducerReactiveHttpClient dmaapProducerReactiveHttpClient;
 
     @Autowired
-    public DmaapPublisherTaskImpl(AppConfig prhAppConfig) {
-        this.prhAppConfig = prhAppConfig;
+    public DmaapPublisherTaskImpl(@Qualifier("cloudConfiguration") Config config) {
+        this.config = config;
     }
 
     @Override
@@ -66,7 +66,7 @@ public class DmaapPublisherTaskImpl extends DmaapPublisherTask {
 
     @Override
     protected DmaapPublisherConfiguration resolveConfiguration() {
-        return prhAppConfig.getDmaapPublisherConfiguration();
+        return config.getDmaapPublisherConfiguration();
     }
 
     @Override

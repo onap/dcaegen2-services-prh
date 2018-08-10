@@ -21,17 +21,23 @@
 package org.onap.dcaegen2.services.prh.configuration;
 
 import io.swagger.annotations.ApiOperation;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import javax.annotation.PostConstruct;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
+import org.springframework.scheduling.support.PeriodicTrigger;
 import reactor.core.publisher.Mono;
 
 /**
@@ -39,17 +45,19 @@ import reactor.core.publisher.Mono;
  */
 @Configuration
 @EnableScheduling
-public class SchedulerConfig extends PrhAppConfig {
+public class SchedulerConfig extends CloudConfiguration {
 
-    private static final int SCHEDULING_DELAY = 2000;
-    private static volatile List<ScheduledFuture> scheduledFutureList = new ArrayList<>();
+    private static final int SCHEDULING_DELAY_FOR_PRH_TASKS = 2000;
+    private static final int SCHEDULING_REQUEST_FOR_CONFIGURATION_DELAY = 1;
+    private static volatile List<ScheduledFuture> scheduledPrgTaskFutureList = new ArrayList<>();
 
-    private final TaskScheduler taskScheduler;
+    private final ConcurrentTaskScheduler taskScheduler;
     private final ScheduledTasks scheduledTask;
 
     @Autowired
-    public SchedulerConfig(TaskScheduler taskScheduler, ScheduledTasks scheduledTask) {
-        this.taskScheduler = taskScheduler;
+    public SchedulerConfig(@Qualifier("concurrentTaskScheduler") ConcurrentTaskScheduler concurrentTaskScheduler,
+        ScheduledTasks scheduledTask) {
+        this.taskScheduler = concurrentTaskScheduler;
         this.scheduledTask = scheduledTask;
     }
 
@@ -60,8 +68,8 @@ public class SchedulerConfig extends PrhAppConfig {
      */
     @ApiOperation(value = "Get response on stopping task execution")
     public synchronized Mono<ResponseEntity<String>> getResponseFromCancellationOfTasks() {
-        scheduledFutureList.forEach(x -> x.cancel(false));
-        scheduledFutureList.clear();
+        scheduledPrgTaskFutureList.forEach(x -> x.cancel(false));
+        scheduledPrgTaskFutureList.clear();
         return Mono.defer(() ->
             Mono.just(new ResponseEntity<>("PRH Service has already been stopped!", HttpStatus.CREATED))
         );
@@ -72,16 +80,20 @@ public class SchedulerConfig extends PrhAppConfig {
      *
      * @return status of operation execution: true - started, false - not started
      */
+
     @PostConstruct
     @ApiOperation(value = "Start task if possible")
     public synchronized boolean tryToStartTask() {
-        if (scheduledFutureList.isEmpty()) {
-            scheduledFutureList.add(taskScheduler
-                .scheduleWithFixedDelay(scheduledTask::scheduleMainPrhEventTask, SCHEDULING_DELAY));
+        if (scheduledPrgTaskFutureList.isEmpty()) {
+            scheduledPrgTaskFutureList.add(cloudTaskScheduler
+                .scheduleAtFixedRate(super::runTask, Instant.now(),
+                    Duration.ofMinutes(SCHEDULING_REQUEST_FOR_CONFIGURATION_DELAY)));
+            scheduledPrgTaskFutureList.add(taskScheduler
+                .scheduleWithFixedDelay(scheduledTask::scheduleMainPrhEventTask, SCHEDULING_DELAY_FOR_PRH_TASKS));
             return true;
         } else {
             return false;
         }
-
     }
+
 }

@@ -23,7 +23,6 @@ package org.onap.dcaegen2.services.prh.tasks;
 import java.io.IOException;
 import java.util.Optional;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
-import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.AaiNotFoundException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
@@ -31,6 +30,7 @@ import org.onap.dcaegen2.services.prh.service.AaiConsumerClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -38,12 +38,12 @@ public class AaiConsumerTaskImpl extends AaiConsumerTask {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final Config prhAppConfig;
+    private final Config config;
     private AaiConsumerClient aaiConsumerClient;
 
     @Autowired
-    public AaiConsumerTaskImpl(AppConfig prhAppConfig) {
-        this.prhAppConfig = prhAppConfig;
+    public AaiConsumerTaskImpl(@Qualifier("cloudConfiguration") Config config) {
+        this.config = config;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class AaiConsumerTaskImpl extends AaiConsumerTask {
     }
 
     protected AaiClientConfiguration resolveConfiguration() {
-        return prhAppConfig.getAaiClientConfiguration();
+        return config.getAaiClientConfiguration();
     }
 
     @Override

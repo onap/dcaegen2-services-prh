@@ -29,6 +29,7 @@ import org.onap.dcaegen2.services.prh.service.consumer.DMaaPConsumerReactiveHttp
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -39,18 +40,18 @@ import reactor.core.publisher.Mono;
 public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final Config prhAppConfig;
+    private final Config config;
     private DmaapConsumerJsonParser dmaapConsumerJsonParser;
     private DMaaPConsumerReactiveHttpClient dmaaPConsumerReactiveHttpClient;
 
     @Autowired
-    public DmaapConsumerTaskImpl(AppConfig prhAppConfig) {
-        this.prhAppConfig = prhAppConfig;
+    public DmaapConsumerTaskImpl(@Qualifier("cloudConfiguration") Config config) {
+        this.config = config;
         this.dmaapConsumerJsonParser = new DmaapConsumerJsonParser();
     }
 
     DmaapConsumerTaskImpl(AppConfig prhAppConfig, DmaapConsumerJsonParser dmaapConsumerJsonParser) {
-        this.prhAppConfig = prhAppConfig;
+        this.config = prhAppConfig;
         this.dmaapConsumerJsonParser = dmaapConsumerJsonParser;
     }
 
@@ -69,12 +70,12 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
 
     @Override
     void initConfigs() {
-        prhAppConfig.initFileStreamReader();
+        config.initFileStreamReader();
     }
 
     @Override
     protected DmaapConsumerConfiguration resolveConfiguration() {
-        return prhAppConfig.getDmaapConsumerConfiguration();
+        return config.getDmaapConsumerConfiguration();
     }
 
     @Override

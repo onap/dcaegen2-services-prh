@@ -30,6 +30,7 @@ import org.onap.dcaegen2.services.prh.config.ImmutableAaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.config.ImmutableDmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.config.ImmutableDmaapPublisherConfiguration;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
@@ -38,8 +39,8 @@ import org.springframework.stereotype.Component;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/9/18
  */
 
-@Component
 @Configuration
+@EnableConfigurationProperties
 public class AppConfig extends PrhAppConfig {
 
     private static Predicate<String> isEmpty = String::isEmpty;

@@ -30,6 +30,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
@@ -46,7 +47,17 @@ public class MainApp {
     }
 
     @Bean
-    TaskScheduler taskScheduler() {
+    ConcurrentTaskScheduler concurrentTaskScheduler() {
         return new ConcurrentTaskScheduler();
+    }
+
+    @Bean
+    ThreadPoolTaskScheduler threadPoolTaskScheduler() {
+        ThreadPoolTaskScheduler threadPoolTaskScheduler
+            = new ThreadPoolTaskScheduler();
+        threadPoolTaskScheduler.setPoolSize(5);
+        threadPoolTaskScheduler.setThreadNamePrefix(
+            "CloudThreadPoolTaskScheduler");
+        return threadPoolTaskScheduler;
     }
 }

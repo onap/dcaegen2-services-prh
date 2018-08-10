@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START=======================================================
- * PROJECT
+ * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
@@ -20,59 +20,58 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
+import java.io.IOException;
+import java.util.Optional;
+import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.Config;
-import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
+import org.onap.dcaegen2.services.prh.exceptions.AaiNotFoundException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.service.producer.DMaaPProducerReactiveHttpClient;
+import org.onap.dcaegen2.services.prh.service.AaiConsumerClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
 
-/**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
- */
 @Component
-public class DmaapPublisherTaskImpl extends DmaapPublisherTask {
+public class AaiConsumerTaskImpl extends AaiConsumerTask {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private final Config config;
-    private DMaaPProducerReactiveHttpClient dmaapProducerReactiveHttpClient;
+    private AaiConsumerClient aaiConsumerClient;
 
     @Autowired
-    public DmaapPublisherTaskImpl(@Qualifier("cloudConfiguration") Config config) {
+    public AaiConsumerTaskImpl(@Qualifier("cloudConfiguration") Config config) {
         this.config = config;
     }
 
     @Override
-    Mono<String> publish(Mono<ConsumerDmaapModel> consumerDmaapModel) {
-        logger.info("Publishing on DMaaP topic {} object {}", resolveConfiguration().dmaapTopicName(),
-            consumerDmaapModel);
-        return dmaapProducerReactiveHttpClient.getDMaaPProducerResponse(consumerDmaapModel);
-    }
-
-    @Override
-    public Mono<String> execute(Mono<ConsumerDmaapModel> consumerDmaapModel) throws DmaapNotFoundException {
-        if (consumerDmaapModel == null) {
-            throw new DmaapNotFoundException("Invoked null object to DMaaP task");
-        }
-        dmaapProducerReactiveHttpClient = resolveClient();
+    Optional<String> consume(ConsumerDmaapModel consumerDmaapModel) throws AaiNotFoundException {
         logger.trace("Method called with arg {}", consumerDmaapModel);
-        return publish(consumerDmaapModel);
+        try {
+            return aaiConsumerClient.getHttpResponse(consumerDmaapModel);
+        } catch (IOException e) {
+            logger.warn("Get request not successful", e);
+            throw new AaiNotFoundException("Get request not successful");
+        }
     }
 
     @Override
-    protected DmaapPublisherConfiguration resolveConfiguration() {
-        return config.getDmaapPublisherConfiguration();
+    public String execute(ConsumerDmaapModel consumerDmaapModel) throws AaiNotFoundException {
+        consumerDmaapModel = Optional.ofNullable(consumerDmaapModel)
+            .orElseThrow(() -> new AaiNotFoundException("Invoked null object to AAI task"));
+        logger.trace("Method called with arg {}", consumerDmaapModel);
+        aaiConsumerClient = resolveClient();
+        return consume(consumerDmaapModel).orElseThrow(() -> new AaiNotFoundException("Null response code"));
+    }
+
+    protected AaiClientConfiguration resolveConfiguration() {
+        return config.getAaiClientConfiguration();
     }
 
     @Override
-    DMaaPProducerReactiveHttpClient resolveClient() {
-        return dmaapProducerReactiveHttpClient == null
-            ? new DMaaPProducerReactiveHttpClient(resolveConfiguration()).createDMaaPWebClient(buildWebClient())
-            : dmaapProducerReactiveHttpClient;
+    AaiConsumerClient resolveClient() {
+        return Optional.ofNullable(aaiConsumerClient).orElseGet(() -> new AaiConsumerClient(resolveConfiguration()));
     }
 }

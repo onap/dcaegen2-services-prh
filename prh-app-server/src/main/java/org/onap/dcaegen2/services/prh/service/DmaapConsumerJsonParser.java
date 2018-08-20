@@ -37,12 +37,11 @@ import reactor.core.publisher.Mono;
  */
 public class DmaapConsumerJsonParser {
 
-    private static final String EVENT = "event";
-    private static final String OTHER_FIELDS = "otherFields";
-    private static final String PNF_OAM_IPV_4_ADDRESS = "pnfOamIpv4Address";
-    private static final String PNF_OAM_IPV_6_ADDRESS = "pnfOamIpv6Address";
-    private static final String PNF_VENDOR_NAME = "pnfVendorName";
-    private static final String PNF_SERIAL_NUMBER = "pnfSerialNumber";
+    private static final String PNF_REGISTRATION_FIELDS = "pnfRegistrationFields";
+    private static final String OAM_IPV_4_ADDRESS = "oamV4IpAddress";
+    private static final String OAM_IPV_6_ADDRESS = "oamV6IpAddress";
+    private static final String VENDOR_NAME = "vendorName";
+    private static final String SERIAL_NUMBER = "serialNumber";
 
     /**
      * Extract info from string and create @see {@link org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel}.
@@ -85,11 +84,11 @@ public class DmaapConsumerJsonParser {
     }
 
     private Mono<ConsumerDmaapModel> transform(JsonObject monoJsonP) {
-        monoJsonP = monoJsonP.getAsJsonObject(EVENT).getAsJsonObject(OTHER_FIELDS);
-        String pnfVendorName = getValueFromJson(monoJsonP, PNF_VENDOR_NAME);
-        String pnfSerialNumber = getValueFromJson(monoJsonP, PNF_SERIAL_NUMBER);
-        String pnfOamIpv4Address = getValueFromJson(monoJsonP, PNF_OAM_IPV_4_ADDRESS);
-        String pnfOamIpv6Address = getValueFromJson(monoJsonP, PNF_OAM_IPV_6_ADDRESS);
+        monoJsonP = monoJsonP.getAsJsonObject(PNF_REGISTRATION_FIELDS);
+        String pnfVendorName = getValueFromJson(monoJsonP, VENDOR_NAME);
+        String pnfSerialNumber = getValueFromJson(monoJsonP, SERIAL_NUMBER);
+        String pnfOamIpv4Address = getValueFromJson(monoJsonP, OAM_IPV_4_ADDRESS);
+        String pnfOamIpv6Address = getValueFromJson(monoJsonP, OAM_IPV_6_ADDRESS);
         return
             (!vendorAndSerialNotEmpty(pnfSerialNumber, pnfVendorName) || !ipPropertiesNotEmpty(pnfOamIpv4Address,
                 pnfOamIpv6Address))
@@ -114,16 +113,15 @@ public class DmaapConsumerJsonParser {
     }
 
     private boolean containsHeader(JsonObject jsonObject) {
-        return jsonObject.has(EVENT) && jsonObject.getAsJsonObject(EVENT).has(OTHER_FIELDS);
+        return jsonObject.has(PNF_REGISTRATION_FIELDS);
     }
 
-    private String printMessage(String pnfVendorName, String pnfSerialNumber, String pnfOamIpv4Address,
-        String pnfOamIpv6Address) {
+    private String printMessage(String vendorName, String serialNumber, String oamIpv4Address, String oamIpv6Address) {
         return String.format("%n{"
-            + "\"pnfVendorName\" : \"%s\","
-            + "\"pnfSerialNumber\": \"%s\","
-            + "\"pnfOamIpv4Address\": \"%s\","
-            + "\"pnfOamIpv6Address\": \"%s\""
-            + "%n}", pnfVendorName, pnfSerialNumber, pnfOamIpv4Address, pnfOamIpv6Address);
+            + "\"" + VENDOR_NAME + " : \"%s\","
+            + "\"" + SERIAL_NUMBER + "\": \"%s\","
+            + "\"" + OAM_IPV_4_ADDRESS + "\": \"%s\","
+            + "\"" + OAM_IPV_6_ADDRESS + "\": \"%s\""
+            + "%n}", vendorName, serialNumber, oamIpv4Address, oamIpv6Address);
     }
 }

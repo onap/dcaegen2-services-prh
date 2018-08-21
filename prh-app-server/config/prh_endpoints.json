@@ -31,7 +31,7 @@
         "aaiProtocol": "https",
         "aaiUserName": "AAI",
         "aaiUserPassword": "AAI",
-        "aaiIgnoreSSLCertificateErrors": true,
+        "aaiIgnoreSslCertificateErrors": true,
         "aaiBasePath": "/aai/v12",
         "aaiPnfPath": "/network/pnfs/pnf",
         "aaiHeaders": {

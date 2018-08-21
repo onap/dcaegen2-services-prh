@@ -20,7 +20,12 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
+import com.google.gson.JsonObject;
+import java.util.Optional;
 import java.util.Properties;
+import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
+import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.model.EnvProperties;
 import org.onap.dcaegen2.services.prh.service.HttpClientExecutorService;
 import org.slf4j.Logger;
@@ -46,6 +51,10 @@ public class CloudConfiguration extends AppConfig {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private HttpClientExecutorService httpClientExecutorService;
 
+    private AaiClientConfiguration aaiClientCloudConfiguration;
+    private DmaapPublisherConfiguration dmaapPublisherCloudConfiguration;
+    private DmaapConsumerConfiguration dmaapConsumerCloudConfiguration;
+
     TaskScheduler cloudTaskScheduler;
 
     @Value("#{systemEnvironment}")
@@ -62,17 +71,45 @@ public class CloudConfiguration extends AppConfig {
     protected void runTask() {
         Flux.defer(() -> EnvironmentProcessor.evaluate(systemEnvironment))
             .subscribeOn(Schedulers.parallel())
-            .subscribe(this::doOnSucces, this::doOnError);
+            .subscribe(this::parsingConfigSuccess, this::parsingConfigError);
     }
 
-    private void doOnError(Throwable throwable) {
-        logger.warn("Error in case of processing system environment.%nMore details below:%n ", throwable);
+    private void parsingConfigError(Throwable throwable) {
+        logger.warn("Error in case of processing system environment, more details below: ", throwable);
     }
 
-    private void doOnSucces(EnvProperties envProperties) {
+    private void cloudConfigError(Throwable throwable) {
+        logger.warn("Exception during getting configuration from CONSUL/CONFIG_BINDING_SERVICE ", throwable);
+    }
+
+    private void parsingConfigSuccess(EnvProperties envProperties) {
         logger.info("Fetching PRH configuration from ConfigBindingService/Consul");
         Flux.just(httpClientExecutorService.callConsulForConfigBindingServiceEndpoint(envProperties))
-            .flatMap(configBindingServiceUri -> httpClientExecutorService.callConfigBindingServiceForPrhConfiguration(envProperties,
-                configBindingServiceUri)).subscribe();
+            .flatMap(configBindingServiceUri -> httpClientExecutorService
+                .callConfigBindingServiceForPrhConfiguration(envProperties,
+                    configBindingServiceUri)).subscribe(this::parseCloudConfig, this::cloudConfigError);
+    }
+
+    private void parseCloudConfig(JsonObject jsonObject) {
+        logger.info("Received application configuration: {}", jsonObject);
+        CloudConfigParser cloudConfigParser = new CloudConfigParser(jsonObject);
+        dmaapPublisherCloudConfiguration = cloudConfigParser.getDmaapPublisherConfig();
+        aaiClientCloudConfiguration = cloudConfigParser.getAaiClientConfig();
+        dmaapConsumerCloudConfiguration = cloudConfigParser.getDmaapConsumerConfig();
+    }
+
+    @Override
+    public DmaapPublisherConfiguration getDmaapPublisherConfiguration() {
+        return Optional.ofNullable(dmaapPublisherCloudConfiguration).orElse(super.getDmaapPublisherConfiguration());
+    }
+
+    @Override
+    public AaiClientConfiguration getAaiClientConfiguration() {
+        return Optional.ofNullable(aaiClientCloudConfiguration).orElse(super.getAaiClientConfiguration());
+    }
+
+    @Override
+    public DmaapConsumerConfiguration getDmaapConsumerConfiguration() {
+        return Optional.ofNullable(dmaapConsumerCloudConfiguration).orElse(super.getDmaapConsumerConfiguration());
     }
 }

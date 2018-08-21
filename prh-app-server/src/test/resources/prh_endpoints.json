@@ -31,7 +31,7 @@
         "dmaapUserName": "admin",
         "dmaapUserPassword": "admin",
         "messageLimit": 1000,
-        "timeoutMS": 1000
+        "timeoutMs": 1000
       },
       "dmaapProducerConfiguration": {
         "dmaapContentType": "application/json",

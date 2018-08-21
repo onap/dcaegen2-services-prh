@@ -26,7 +26,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 import javax.annotation.PostConstruct;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +33,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
-import org.springframework.scheduling.support.PeriodicTrigger;
 import reactor.core.publisher.Mono;
 
 /**
@@ -49,7 +46,7 @@ public class SchedulerConfig extends CloudConfiguration {
 
     private static final int SCHEDULING_DELAY_FOR_PRH_TASKS = 2000;
     private static final int SCHEDULING_REQUEST_FOR_CONFIGURATION_DELAY = 1;
-    private static volatile List<ScheduledFuture> scheduledPrgTaskFutureList = new ArrayList<>();
+    private static volatile List<ScheduledFuture> scheduledPrhTaskFutureList = new ArrayList<>();
 
     private final ConcurrentTaskScheduler taskScheduler;
     private final ScheduledTasks scheduledTask;
@@ -68,8 +65,8 @@ public class SchedulerConfig extends CloudConfiguration {
      */
     @ApiOperation(value = "Get response on stopping task execution")
     public synchronized Mono<ResponseEntity<String>> getResponseFromCancellationOfTasks() {
-        scheduledPrgTaskFutureList.forEach(x -> x.cancel(false));
-        scheduledPrgTaskFutureList.clear();
+        scheduledPrhTaskFutureList.forEach(x -> x.cancel(false));
+        scheduledPrhTaskFutureList.clear();
         return Mono.defer(() ->
             Mono.just(new ResponseEntity<>("PRH Service has already been stopped!", HttpStatus.CREATED))
         );
@@ -84,11 +81,11 @@ public class SchedulerConfig extends CloudConfiguration {
     @PostConstruct
     @ApiOperation(value = "Start task if possible")
     public synchronized boolean tryToStartTask() {
-        if (scheduledPrgTaskFutureList.isEmpty()) {
-            scheduledPrgTaskFutureList.add(cloudTaskScheduler
+        if (scheduledPrhTaskFutureList.isEmpty()) {
+            scheduledPrhTaskFutureList.add(cloudTaskScheduler
                 .scheduleAtFixedRate(super::runTask, Instant.now(),
                     Duration.ofMinutes(SCHEDULING_REQUEST_FOR_CONFIGURATION_DELAY)));
-            scheduledPrgTaskFutureList.add(taskScheduler
+            scheduledPrhTaskFutureList.add(taskScheduler
                 .scheduleWithFixedDelay(scheduledTask::scheduleMainPrhEventTask, SCHEDULING_DELAY_FOR_PRH_TASKS));
             return true;
         } else {

@@ -71,7 +71,7 @@ public class DMaaPProducerReactiveHttpClient {
                 .body(BodyInserters.fromObject(consumerDmaapModelMono))
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, clientResponse ->
-                    Mono.error(new Exception("HTTP 400"))
+                     Mono.error(new Exception("HTTP 400"))
                 )
                 .onStatus(HttpStatus::is5xxServerError, clientResponse ->
                     Mono.error(new Exception("HTTP 500")))

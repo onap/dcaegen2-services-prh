@@ -21,7 +21,6 @@
 package org.onap.dcaegen2.services.prh.configuration;
 
 import java.util.Optional;
-
 import java.util.function.Predicate;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
@@ -32,7 +31,6 @@ import org.onap.dcaegen2.services.prh.config.ImmutableDmaapPublisherConfiguratio
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 
 /**

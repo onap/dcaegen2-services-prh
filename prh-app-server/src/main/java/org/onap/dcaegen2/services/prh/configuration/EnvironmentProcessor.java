@@ -34,13 +34,14 @@ import reactor.core.publisher.Flux;
  */
 class EnvironmentProcessor {
 
+    private static final int DEFAULT_CONSUL_PORT = 8500;
     private static Logger logger = LoggerFactory.getLogger(EnvironmentProcessor.class);
 
     private EnvironmentProcessor() {
     }
 
     static Flux<EnvProperties> evaluate(Properties systemEnvironment) {
-        logger.info("Loading configuration from system environment variables");
+        logger.info("Loading configuration from system environment variables {}", systemEnvironment);
         EnvProperties envProperties;
         try {
             envProperties = ImmutableEnvProperties.builder().consulHost(getConsulHost(systemEnvironment))
@@ -78,8 +79,8 @@ class EnvironmentProcessor {
 
     private static Integer getDefaultPortOfConsul() {
         logger.warn("$CONSUL_PORT environment has not been defined");
-        logger.warn("$CONSUL_PORT variable will be set to default port {}", 8500);
-        return 8500;
+        logger.warn("$CONSUL_PORT variable will be set to default port {}", DEFAULT_CONSUL_PORT);
+        return DEFAULT_CONSUL_PORT;
     }
 }
 

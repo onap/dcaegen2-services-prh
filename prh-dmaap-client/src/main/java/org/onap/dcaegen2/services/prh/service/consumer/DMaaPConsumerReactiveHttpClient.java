@@ -71,10 +71,10 @@ public class DMaaPConsumerReactiveHttpClient {
                 .uri(getUri())
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, clientResponse ->
-                    Mono.error(new Exception("HTTP 400"))
+                    Mono.error(new Exception("DmaaPConsumer HTTP " + clientResponse.statusCode()))
                 )
                 .onStatus(HttpStatus::is5xxServerError, clientResponse ->
-                    Mono.error(new Exception("HTTP 500")))
+                    Mono.error(new Exception("DmaaPConsumer HTTP " + clientResponse.statusCode())))
                 .bodyToMono(String.class);
         } catch (URISyntaxException e) {
             logger.warn("Exception while evaluating URI ");

@@ -92,7 +92,7 @@ class DmaapPublisherTaskImplTest {
 
         //then
         verify(dMaaPProducerReactiveHttpClient, times(1))
-            .getDMaaPProducerResponse(any(Mono.class));
+            .getDMaaPProducerResponse(any());
         verifyNoMoreInteractions(dMaaPProducerReactiveHttpClient);
     }
 
@@ -107,14 +107,14 @@ class DmaapPublisherTaskImplTest {
             .expectNext(String.valueOf(HttpStatus.UNAUTHORIZED.value())).verifyComplete();
 
         //then
-        verify(dMaaPProducerReactiveHttpClient, times(1)).getDMaaPProducerResponse(any(Mono.class));
+        verify(dMaaPProducerReactiveHttpClient, times(1)).getDMaaPProducerResponse(any());
         verifyNoMoreInteractions(dMaaPProducerReactiveHttpClient);
     }
 
 
     private void prepareMocksForTests(Integer httpResponseCode) {
         dMaaPProducerReactiveHttpClient = mock(DMaaPProducerReactiveHttpClient.class);
-        when(dMaaPProducerReactiveHttpClient.getDMaaPProducerResponse(any(Mono.class)))
+        when(dMaaPProducerReactiveHttpClient.getDMaaPProducerResponse(any()))
             .thenReturn(Mono.just(httpResponseCode.toString()));
         dmaapPublisherTask = spy(new DmaapPublisherTaskImpl(appConfig));
         when(dmaapPublisherTask.resolveConfiguration()).thenReturn(dmaapPublisherConfiguration);

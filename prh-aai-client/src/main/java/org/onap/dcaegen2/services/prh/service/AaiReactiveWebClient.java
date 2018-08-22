@@ -41,6 +41,7 @@ public class AaiReactiveWebClient {
 
     /**
      * Creating AaiReactiveWebClient.
+     *
      * @param configuration - configuration object
      * @return AaiReactiveWebClient
      */
@@ -58,18 +59,18 @@ public class AaiReactiveWebClient {
      */
     public WebClient build() {
         return WebClient.builder()
-                .defaultHeaders(httpHeaders -> httpHeaders.setAll(aaiHeaders))
-                .filter(basicAuthentication(aaiUserName, aaiUserPassword))
-                .filter(logRequest())
-                .filter(logResponse())
-                .build();
+            .defaultHeaders(httpHeaders -> httpHeaders.setAll(aaiHeaders))
+            .filter(basicAuthentication(aaiUserName, aaiUserPassword))
+            .filter(logRequest())
+            .filter(logResponse())
+            .build();
     }
 
     private ExchangeFilterFunction logRequest() {
         return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
             logger.info("Request: {} {}", clientRequest.method(), clientRequest.url());
             clientRequest.headers()
-                    .forEach((name, values) -> values.forEach(value -> logger.info("{}={}",name, value)));
+                .forEach((name, values) -> values.forEach(value -> logger.info("{}={}", name, value)));
             return Mono.just(clientRequest);
         });
     }

@@ -49,9 +49,11 @@ public class DmaapPublisherTaskImpl extends DmaapPublisherTask {
 
     @Override
     Mono<String> publish(Mono<ConsumerDmaapModel> consumerDmaapModel) {
-        logger.info("Publishing on DMaaP topic {} object {}", resolveConfiguration().dmaapTopicName(),
-            consumerDmaapModel);
-        return dmaapProducerReactiveHttpClient.getDMaaPProducerResponse(consumerDmaapModel);
+        return consumerDmaapModel.flatMap(dmaapModel -> {
+            logger.info("Publishing on DMaaP topic {} object {}", resolveConfiguration().dmaapTopicName(),
+                dmaapModel);
+            return dmaapProducerReactiveHttpClient.getDMaaPProducerResponse(dmaapModel);
+        });
     }
 
     @Override

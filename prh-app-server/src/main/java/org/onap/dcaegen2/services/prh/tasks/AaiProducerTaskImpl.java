@@ -54,7 +54,7 @@ public class AaiProducerTaskImpl extends
 
     @Override
     Mono<ConsumerDmaapModel> publish(Mono<ConsumerDmaapModel> consumerDmaapModel) {
-        logger.info("Sending PNF model to AAI {}", consumerDmaapModel);
+
         return aaiProducerReactiveHttpClient.getAaiProducerResponse(consumerDmaapModel)
             .flatMap(response -> {
                 if (HttpUtils.isSuccessfulResponseCode(response)) {

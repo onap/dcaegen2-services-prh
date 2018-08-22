@@ -4,7 +4,7 @@
       "dmaapConsumerConfiguration": {
         "dmaapHostName": "localhost",
         "dmaapPortNumber": 2222,
-        "dmaapTopicName": "/events/unauthenticated.SEC_OTHER_OUTPUT",
+        "dmaapTopicName": "/events/unauthenticated.VES_PNFREG_OUTPUT",
         "dmaapProtocol": "http",
         "dmaapUserName": "admin",
         "dmaapUserPassword": "admin",

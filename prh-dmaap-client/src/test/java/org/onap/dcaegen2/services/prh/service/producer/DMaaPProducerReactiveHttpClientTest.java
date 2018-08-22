@@ -89,7 +89,7 @@ class DMaaPProducerReactiveHttpClientTest {
         mockWebClientDependantObject();
         doReturn(expectedResult).when(responseSpec).bodyToMono(String.class);
         dmaapProducerReactiveHttpClient.createDMaaPWebClient(webClient);
-        Mono<String> response = dmaapProducerReactiveHttpClient.getDMaaPProducerResponse(Mono.just(consumerDmaapModel));
+        Mono<String> response = dmaapProducerReactiveHttpClient.getDMaaPProducerResponse(consumerDmaapModel);
 
         //then
         Assertions.assertEquals(response.block(), expectedResult.block());

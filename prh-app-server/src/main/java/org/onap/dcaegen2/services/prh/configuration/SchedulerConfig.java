@@ -44,8 +44,8 @@ import reactor.core.publisher.Mono;
 @EnableScheduling
 public class SchedulerConfig extends CloudConfiguration {
 
-    private static final int SCHEDULING_DELAY_FOR_PRH_TASKS = 2000;
-    private static final int SCHEDULING_REQUEST_FOR_CONFIGURATION_DELAY = 1;
+    private static final int SCHEDULING_DELAY_FOR_PRH_TASKS = 5;
+    private static final int SCHEDULING_REQUEST_FOR_CONFIGURATION_DELAY = 5;
     private static volatile List<ScheduledFuture> scheduledPrhTaskFutureList = new ArrayList<>();
 
     private final ConcurrentTaskScheduler taskScheduler;
@@ -86,7 +86,8 @@ public class SchedulerConfig extends CloudConfiguration {
                 .scheduleAtFixedRate(super::runTask, Instant.now(),
                     Duration.ofMinutes(SCHEDULING_REQUEST_FOR_CONFIGURATION_DELAY)));
             scheduledPrhTaskFutureList.add(taskScheduler
-                .scheduleWithFixedDelay(scheduledTask::scheduleMainPrhEventTask, SCHEDULING_DELAY_FOR_PRH_TASKS));
+                .scheduleWithFixedDelay(scheduledTask::scheduleMainPrhEventTask,
+                    Duration.ofSeconds(SCHEDULING_DELAY_FOR_PRH_TASKS)));
             return true;
         } else {
             return false;

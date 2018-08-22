@@ -57,7 +57,6 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
 
     @Override
     Mono<ConsumerDmaapModel> consume(Mono<String> message) {
-        logger.info("Consumed model from DMaaP: {}", message);
         return dmaapConsumerJsonParser.getJsonObject(message);
     }
 

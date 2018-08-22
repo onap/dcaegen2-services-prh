@@ -29,6 +29,8 @@ import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Mono;
 
@@ -43,6 +45,8 @@ public class DmaapConsumerJsonParser {
     private static final String VENDOR_NAME = "vendorName";
     private static final String SERIAL_NUMBER = "serialNumber";
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     /**
      * Extract info from string and create @see {@link org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel}.
      *
@@ -51,6 +55,7 @@ public class DmaapConsumerJsonParser {
      */
     public Mono<ConsumerDmaapModel> getJsonObject(Mono<String> monoMessage) {
         return monoMessage
+            .doOnNext(message -> logger.info("Consumed message from DmaaP: {}", message))
             .flatMap(this::getJsonParserMessage)
             .flatMap(this::createJsonConsumerModel);
     }

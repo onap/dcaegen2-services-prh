@@ -27,6 +27,8 @@ import org.apache.http.client.utils.URIBuilder;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.exceptions.AaiRequestException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -40,6 +42,7 @@ public class AaiProducerReactiveHttpClient {
     private final String aaiProtocol;
     private final Integer aaiHostPortNumber;
     private final String aaiBasePath;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
     /**
@@ -61,7 +64,9 @@ public class AaiProducerReactiveHttpClient {
      * @return status code of operation
      */
     public Mono<Integer> getAaiProducerResponse(Mono<ConsumerDmaapModel> consumerDmaapModelMono) {
-        return consumerDmaapModelMono.flatMap(this::patchAaiRequest);
+        return consumerDmaapModelMono
+            .doOnNext(consumerDmaapModel -> logger.info("Sending PNF model to AAI {}", consumerDmaapModel))
+            .flatMap(this::patchAaiRequest);
     }
 
     public AaiProducerReactiveHttpClient createAaiWebClient(WebClient webClient) {
@@ -77,10 +82,12 @@ public class AaiProducerReactiveHttpClient {
                 .retrieve()
                 .onStatus(
                     HttpStatus::is4xxClientError,
-                    clientResponse -> Mono.error(new AaiRequestException("HTTP 400"))
+                    clientResponse -> Mono
+                        .error(new AaiRequestException("AaiProducer HTTP " + clientResponse.statusCode()))
                 )
                 .onStatus(HttpStatus::is5xxServerError,
-                    clientResponse -> Mono.error(new AaiRequestException("HTTP 500")))
+                    clientResponse -> Mono
+                        .error(new AaiRequestException("AaiProducer HTTP " + clientResponse.statusCode())))
                 .bodyToMono(Integer.class);
         } catch (URISyntaxException e) {
             return Mono.error(e);

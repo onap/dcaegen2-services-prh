@@ -62,7 +62,6 @@ public class DMaaPReactiveWebClient {
     public WebClient build() {
         return WebClient.builder()
             .defaultHeader(HttpHeaders.CONTENT_TYPE, dmaaPContentType)
-            .filter(basicAuthentication(dmaaPUserName, dmaaPUserPassword))
             .filter(logRequest())
             .filter(logResponse())
             .build();

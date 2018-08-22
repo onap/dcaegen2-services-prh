@@ -63,7 +63,7 @@ public class DMaaPProducerReactiveHttpClient {
      * @param consumerDmaapModelMono - object which will be sent to DMaaP
      * @return status code of operation
      */
-    public Mono<String> getDMaaPProducerResponse(Mono<ConsumerDmaapModel> consumerDmaapModelMono) {
+    public Mono<String> getDMaaPProducerResponse(ConsumerDmaapModel consumerDmaapModelMono) {
         try {
             return webClient
                 .post()
@@ -71,10 +71,10 @@ public class DMaaPProducerReactiveHttpClient {
                 .body(BodyInserters.fromObject(consumerDmaapModelMono))
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, clientResponse ->
-                     Mono.error(new Exception("HTTP 400"))
+                    Mono.error(new Exception("DmaapProducer HTTP" + clientResponse.statusCode()))
                 )
                 .onStatus(HttpStatus::is5xxServerError, clientResponse ->
-                    Mono.error(new Exception("HTTP 500")))
+                    Mono.error(new Exception("DmaapProducer HTTP " + clientResponse.statusCode())))
                 .bodyToMono(String.class);
         } catch (URISyntaxException e) {
             logger.warn("Exception while evaluating URI");

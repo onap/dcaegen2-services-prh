@@ -1,22 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
   <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-  <property name="LOG_FILE"
-    value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/}spring.log}"/>
+  <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}"/>
+  <property name="FILE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN}"/>
+  <Property name="outputFilename" value="prh-app-server_output"/>
+  <Property name="log-path" value="/var/log/ONAP/prh/prh-app-server"/>
+  <Property name="archive" value="/var/log/ONAP/prh/prh-app-server/archive"/>
+  <property name="maxFileSize" value="50MB"/>
+  <property name="maxHistory" value="30"/>
+  <property name="totalSizeCap" value="10GB"/>
 
   <springProfile name="dev">
-    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
-    <appender name="ROLLING-FILE"
-      class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="CONSOLE" target="SYSTEM_OUT" class="ch.qos.logback.core.ConsoleAppender">
+      <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+        <Pattern>%nopexception%logger
+          |%date{yyyy-MM-dd'T'HH:mm:ss.SSSXXX,UTC}
+          |%level
+          |%replace(%replace(%message){'\t','\\\\t'}){'\n','\\\\n'}
+          |%replace(%replace(%mdc){'\t','\\\\t'}){'\n','\\\\n'}
+          |%replace(%replace(%rootException){'\t','\\\\t'}){'\n','\\\\n'}
+          |%replace(%replace(%marker){'\t','\\\\t'}){'\n','\\\\n'}
+          |%thread
+          |%n</Pattern>
+      </encoder>
+    </appender>
+    <appender name="ROLLING-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
       <encoder>
-        <pattern>${FILE_LOG_PATTERN}</pattern>
+        <pattern>%nopexception%logger
+          |%date{yyyy-MM-dd'T'HH:mm:ss.SSSXXX,UTC}
+          |%level
+          |%replace(%replace(%message){'\t','\\\\t'}){'\n','\\\\n'}
+          |%replace(%replace(%mdc){'\t','\\\\t'}){'\n','\\\\n'}
+          |%replace(%replace(%rootException){'\t','\\\\t'}){'\n','\\\\n'}
+          |%replace(%replace(%marker){'\t','\\\\t'}){'\n','\\\\n'}
+          |%thread
+          |%n</pattern>
       </encoder>
       <file>${LOG_FILE}</file>
       <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-        <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-        <maxFileSize>50MB</maxFileSize>
-        <maxHistory>30</maxHistory>
-        <totalSizeCap>10GB</totalSizeCap>
+        <FileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.%i.log.zip</FileNamePattern>
+        <MaxFileSize>${maxFileSize}</MaxFileSize>
+        <MaxHistory>${maxHistory}</MaxHistory>
+        <TotalSizeCap>${totalSizeCap}</TotalSizeCap>
       </rollingPolicy>
     </appender>
     <root level="ERROR">
@@ -26,20 +51,26 @@
   </springProfile>
 
   <springProfile name="prod">
-    <appender name="ROLLING-FILE"
-      class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="ROLLING-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
       <encoder>
-        <pattern>${FILE_LOG_PATTERN}</pattern>
+        <pattern>%nopexception%logger
+          |%date{yyyy-MM-dd'T'HH:mm:ss.SSSXXX,UTC}
+          |%level
+          |%replace(%replace(%message){'\t','\\\\t'}){'\n','\\\\n'}
+          |%replace(%replace(%mdc){'\t','\\\\t'}){'\n','\\\\n'}
+          |%replace(%replace(%rootException){'\t','\\\\t'}){'\n','\\\\n'}
+          |%replace(%replace(%marker){'\t','\\\\t'}){'\n','\\\\n'}
+          |%thread
+          |%n</pattern>
       </encoder>
-      <file>${LOG_FILE}</file>
+      <File>${log-path}/${outputFilename}.log</File>
       <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-        <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
-        <maxFileSize>50MB</maxFileSize>
-        <maxHistory>30</maxHistory>
-        <totalSizeCap>10GB</totalSizeCap>
+        <FileNamePattern>${archive}/${outputFilename}.%d{yyyy-MM-dd}.%i.log.zip</FileNamePattern>
+        <MaxFileSize>${maxFileSize}</MaxFileSize>
+        <MaxHistory>${maxHistory}</MaxHistory>
+        <TotalSizeCap>${totalSizeCap}</TotalSizeCap>
       </rollingPolicy>
     </appender>
-
     <root level="ERROR">
       <appender-ref ref="ROLLING-FILE"/>
     </root>

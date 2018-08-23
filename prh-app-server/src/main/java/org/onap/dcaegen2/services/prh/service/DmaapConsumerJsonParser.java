@@ -39,6 +39,7 @@ import reactor.core.publisher.Mono;
  */
 public class DmaapConsumerJsonParser {
 
+    private static final String EVENT = "event";
     private static final String PNF_REGISTRATION_FIELDS = "pnfRegistrationFields";
     private static final String OAM_IPV_4_ADDRESS = "oamV4IpAddress";
     private static final String OAM_IPV_6_ADDRESS = "oamV6IpAddress";
@@ -89,7 +90,7 @@ public class DmaapConsumerJsonParser {
     }
 
     private Mono<ConsumerDmaapModel> transform(JsonObject monoJsonP) {
-        monoJsonP = monoJsonP.getAsJsonObject(PNF_REGISTRATION_FIELDS);
+        monoJsonP = monoJsonP.getAsJsonObject(EVENT).getAsJsonObject(PNF_REGISTRATION_FIELDS);
         String pnfVendorName = getValueFromJson(monoJsonP, VENDOR_NAME);
         String pnfSerialNumber = getValueFromJson(monoJsonP, SERIAL_NUMBER);
         String pnfOamIpv4Address = getValueFromJson(monoJsonP, OAM_IPV_4_ADDRESS);
@@ -118,7 +119,7 @@ public class DmaapConsumerJsonParser {
     }
 
     private boolean containsHeader(JsonObject jsonObject) {
-        return jsonObject.has(PNF_REGISTRATION_FIELDS);
+        return jsonObject.has(EVENT) && jsonObject.getAsJsonObject(EVENT).has(PNF_REGISTRATION_FIELDS);
     }
 
     private String printMessage(String vendorName, String serialNumber, String oamIpv4Address, String oamIpv6Address) {

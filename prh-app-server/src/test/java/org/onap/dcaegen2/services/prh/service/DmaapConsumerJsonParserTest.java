@@ -42,36 +42,33 @@ class DmaapConsumerJsonParserTest {
     @Test
     void whenPassingCorrectJson_validationNotThrowingAnException() {
         //given
+        String message = "[{\"event\": {\"pnfRegistrationFields\": {"
+                + " \"unitType\": \"AirScale\","
+                + " \"serialNumber\": \"QTFCOC540002E\","
+                + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+                + " \"manufactureDate\": \"1535014037024\","
+                + " \"modelNumber\": \"7BEA\",\n"
+                + " \"lastServiceDate\": \"1535014037024\","
+                + " \"unitFamily\": \"BBU\","
+                + " \"vendorName\": \"Nokia\","
+                + " \"oamV4IpAddress\": \"10.16.123.234\","
+                + " \"softwareVersion\": \"v4.5.0.1\","
+                + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
+                + "}}}]";
 
-        String message = "[{\"pnfRegistrationFields\":{"
-                + "\"lastServiceDate\":\"1517206400\","
-                + "\"macAddress\":\"FFFF:0A10:7BEA\","
-                + "\"manufactureDate\":\"1517206400\","
-                + "\"modelNumber\":\"7BEA\","
-                + "\"oamV4IpAddress\":\"10.16.123.234\","
-                + "\"oamV6IpAddress\":\"0:0:0:0:0:FFFF:0A10:7BEA\","
-                + "\"pnfRegistrationFieldsVersion\":\"1517206400\","
-                + "\"serialNumber\":\"QTFCOC540002E\","
-                + "\"softwareVersion\":\"v4.5.0.1\","
-                + "\"unitFamily\":\"BBU\","
-                + "\"unitType\":\"AirScale\","
-                + "\"vendorName\":\"Nokia\""
-                + "}}]";
-
-        String parsed = "{\"pnfRegistrationFields\":{"
-                + "\"lastServiceDate\":\"1517206400\","
-                + "\"macAddress\":\"FFFF:0A10:7BEA\","
-                + "\"manufactureDate\":\"1517206400\","
-                + "\"modelNumber\":\"7BEA\","
-                + "\"oamV4IpAddress\":\"10.16.123.234\","
-                + "\"oamV6IpAddress\":\"0:0:0:0:0:FFFF:0A10:7BEA\","
-                + "\"pnfRegistrationFieldsVersion\":\"1517206400\","
-                + "\"serialNumber\":\"QTFCOC540002E\","
-                + "\"softwareVersion\":\"v4.5.0.1\","
-                + "\"unitFamily\":\"BBU\","
-                + "\"unitType\":\"AirScale\","
-                + "\"vendorName\":\"Nokia\""
-                + "}}";
+        String parsed = "{\"event\": {\"pnfRegistrationFields\": {"
+                + " \"unitType\": \"AirScale\","
+                + " \"serialNumber\": \"QTFCOC540002E\","
+                + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+                + " \"manufactureDate\": \"1535014037024\","
+                + " \"modelNumber\": \"7BEA\",\n"
+                + " \"lastServiceDate\": \"1535014037024\","
+                + " \"unitFamily\": \"BBU\","
+                + " \"vendorName\": \"Nokia\","
+                + " \"oamV4IpAddress\": \"10.16.123.234\","
+                + " \"softwareVersion\": \"v4.5.0.1\","
+                + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
+                + "}}}";
 
         ConsumerDmaapModel expectedObject = ImmutableConsumerDmaapModel.builder().ipv4("10.16.123.234")
             .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
@@ -91,31 +88,31 @@ class DmaapConsumerJsonParserTest {
     @Test
     void whenPassingCorrectJsonWithoutIpv4_validationNotThrowingAnException() {
         //given
-        String message = "[{\"pnfRegistrationFields\":{"
-                + "\"lastServiceDate\":\"1517206400\","
-                + "\"macAddress\":\"FFFF:0A10:7BEA\","
-                + "\"manufactureDate\":\"1517206400\",\"modelNumber\":\"7BEA\","
-                + "\"oamV6IpAddress\":\"0:0:0:0:0:FFFF:0A10:7BEA\","
-                + "\"pnfRegistrationFieldsVersion\":\"1517206400\","
-                + "\"serialNumber\":\"QTFCOC540002E\","
-                + "\"softwareVersion\":\"1517206400\","
-                + "\"unitFamily\":\"BBU\","
-                + "\"unitType\":\"AirScale\",\"vendorName\":\"Nokia\""
-                +  "}}]";
+        String message = "[{\"event\": {\"pnfRegistrationFields\": {"
+                + " \"unitType\": \"AirScale\","
+                + " \"serialNumber\": \"QTFCOC540002E\","
+                + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+                + " \"manufactureDate\": \"1535014037024\","
+                + " \"modelNumber\": \"7BEA\",\n"
+                + " \"lastServiceDate\": \"1535014037024\","
+                + " \"unitFamily\": \"BBU\","
+                + " \"vendorName\": \"Nokia\","
+                + " \"softwareVersion\": \"v4.5.0.1\","
+                + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
+                + "}}}]";
 
-        String parsed = "{\"pnfRegistrationFields\":{"
-                + "\"lastServiceDate\":\"1517206400\","
-                + "\"macAddress\":\"FFFF:0A10:7BEA\","
-                + "\"manufactureDate\":\"1517206400\","
-                + "\"modelNumber\":\"7BEA\","
-                + "\"oamV6IpAddress\":\"0:0:0:0:0:FFFF:0A10:7BEA\","
-                + "\"pnfRegistrationFieldsVersion\":\"1517206400\","
-                + "\"serialNumber\":\"QTFCOC540002E\","
-                + "\"softwareVersion\":\"1517206400\","
-                + "\"unitFamily\":\"BBU\","
-                + "\"unitType\":\"AirScale\","
-                + "\"vendorName\":\"Nokia\""
-                +  "}}";
+        String parsed = "{\"event\": {\"pnfRegistrationFields\": {"
+                + " \"unitType\": \"AirScale\","
+                + " \"serialNumber\": \"QTFCOC540002E\","
+                + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+                + " \"manufactureDate\": \"1535014037024\","
+                + " \"modelNumber\": \"7BEA\",\n"
+                + " \"lastServiceDate\": \"1535014037024\","
+                + " \"unitFamily\": \"BBU\","
+                + " \"vendorName\": \"Nokia\","
+                + " \"softwareVersion\": \"v4.5.0.1\","
+                + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
+                + "}}}";
 
         //when
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
@@ -136,33 +133,31 @@ class DmaapConsumerJsonParserTest {
     @Test
     void whenPassingCorrectJsonWithoutIpv6_validationNotThrowingAnException() {
         //given
-        String message = "[{\"pnfRegistrationFields\":{"
-                        + "\"lastServiceDate\":\"1517206400\","
-                        + "\"macAddress\":\"FFFF:0A10:7BEA\","
-                        + "\"manufactureDate\":\"1517206400\","
-                        + "\"modelNumber\":\"7BEA\","
-                        + "\"oamV4IpAddress\":\"10.16.123.234\","
-                        + "\"pnfRegistrationFieldsVersion\":\"1517206400\","
-                        + "\"serialNumber\":\"QTFCOC540002E\","
-                        + "\"softwareVersion\":\"1517206400\","
-                        + "\"unitFamily\":\"BBU\","
-                        + "\"unitType\":\"AirScale\","
-                        + "\"vendorName\":\"Nokia\""
-                        +  "}}]";
+        String message = "[{\"event\": {\"pnfRegistrationFields\": {"
+                + " \"unitType\": \"AirScale\","
+                + " \"serialNumber\": \"QTFCOC540002E\","
+                + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+                + " \"manufactureDate\": \"1535014037024\","
+                + " \"modelNumber\": \"7BEA\",\n"
+                + " \"lastServiceDate\": \"1535014037024\","
+                + " \"unitFamily\": \"BBU\","
+                + " \"vendorName\": \"Nokia\","
+                + " \"oamV4IpAddress\": \"10.16.123.234\","
+                + " \"softwareVersion\": \"v4.5.0.1\""
+                + "}}}]";
 
-        String parsed = "{\"pnfRegistrationFields\":{"
-                        + "\"lastServiceDate\":\"1517206400\","
-                        + "\"macAddress\":\"FFFF:0A10:7BEA\","
-                        + "\"manufactureDate\":\"1517206400\","
-                        + "\"modelNumber\":\"7BEA\","
-                        + "\"oamV4IpAddress\":\"10.16.123.234\","
-                        + "\"pnfRegistrationFieldsVersion\":\"1517206400\","
-                        + "\"serialNumber\":\"QTFCOC540002E\","
-                        + "\"softwareVersion\":\"1517206400\","
-                        + "\"unitFamily\":\"BBU\","
-                        + "\"unitType\":\"AirScale\","
-                        + "\"vendorName\":\"Nokia\""
-                        +  "}}";
+        String parsed = "{\"event\": {\"pnfRegistrationFields\": {"
+                + " \"unitType\": \"AirScale\","
+                + " \"serialNumber\": \"QTFCOC540002E\","
+                + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+                + " \"manufactureDate\": \"1535014037024\","
+                + " \"modelNumber\": \"7BEA\",\n"
+                + " \"lastServiceDate\": \"1535014037024\","
+                + " \"unitFamily\": \"BBU\","
+                + " \"vendorName\": \"Nokia\","
+                + " \"oamV4IpAddress\": \"10.16.123.234\","
+                + " \"softwareVersion\": \"v4.5.0.1\""
+                + "}}}";
 
         ConsumerDmaapModel expectedObject = ImmutableConsumerDmaapModel.builder().ipv4("10.16.123.234").ipv6("")
             .pnfName("NOKQTFCOC540002E").build();
@@ -180,31 +175,29 @@ class DmaapConsumerJsonParserTest {
 
     @Test
     void whenPassingCorrectJsonWithoutIpv4andIpv6_validationThrowingAnException() {
-        String message = "[{\"pnfRegistrationFields\":{"
-                        + "\"lastServiceDate\":\"1517206400\","
-                        + "\"macAddress\":\"FFFF:0A10:7BEA\","
-                        + "\"manufactureDate\":\"1517206400\","
-                        + "\"modelNumber\":\"7BEA\","
-                        + "\"pnfRegistrationFieldsVersion\":\"1517206400\","
-                        + "\"serialNumber\":\"QTFCOC540002E\","
-                        + "\"softwareVersion\":\"1517206400\","
-                        + "\"unitFamily\":\"BBU\","
-                        + "\"unitType\":\"AirScale\","
-                        + "\"vendorName\":\"Nokia\""
-                        + "}}]";
+        String message = "[{\"event\": {\"pnfRegistrationFields\": {"
+                + " \"unitType\": \"AirScale\","
+                + " \"serialNumber\": \"QTFCOC540002E\","
+                + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+                + " \"manufactureDate\": \"1535014037024\","
+                + " \"modelNumber\": \"7BEA\",\n"
+                + " \"lastServiceDate\": \"1535014037024\","
+                + " \"unitFamily\": \"BBU\","
+                + " \"vendorName\": \"Nokia\","
+                + " \"softwareVersion\": \"v4.5.0.1\""
+                + "}}}]";
 
-        String parsed = "{\"pnfRegistrationFields\":{"
-                        + "\"lastServiceDate\":\"1517206400\","
-                        + "\"macAddress\":\"FFFF:0A10:7BEA\","
-                        + "\"manufactureDate\":\"1517206400\","
-                        + "\"modelNumber\":\"7BEA\","
-                        + "\"pnfRegistrationFieldsVersion\":\"1517206400\","
-                        + "\"serialNumber\":\"QTFCOC540002E\","
-                        + "\"softwareVersion\":\"1517206400\","
-                        + "\"unitFamily\":\"BBU\","
-                        + "\"unitType\":\"AirScale\","
-                        + "\"vendorName\":\"Nokia\""
-                        + "}}";
+        String parsed = "{\"event\": {\"pnfRegistrationFields\": {"
+                + " \"unitType\": \"AirScale\","
+                + " \"serialNumber\": \"QTFCOC540002E\","
+                + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+                + " \"manufactureDate\": \"1535014037024\","
+                + " \"modelNumber\": \"7BEA\",\n"
+                + " \"lastServiceDate\": \"1535014037024\","
+                + " \"unitFamily\": \"BBU\","
+                + " \"vendorName\": \"Nokia\","
+                + " \"softwareVersion\": \"v4.5.0.1\""
+                + "}}}";
 
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
         JsonElement jsonElement = new JsonParser().parse(parsed);
@@ -217,69 +210,63 @@ class DmaapConsumerJsonParserTest {
 
     @Test
     void whenPassingJsonWithoutMandatoryHeaderInformation_validationThrowingAnException() {
-        String parsed = "{\"pnfRegistrationFields\":{"
-                + "\"lastServiceDate\":\"1517206400\","
-                + "\"macAddress\":\"FFFF:0A10:7BEA\","
-                + "\"manufactureDate\":\"1517206400\","
-                + "\"modelNumber\":\"7BEA\","
-                + "\"pnfRegistrationFieldsVersion\":\"1517206400\","
-                + "\"serialNumber\":\"QTFCOC540002E\","
-                + "\"softwareVersion\":\"1517206400\","
-                + "\"unitFamily\":\"BBU\","
-                + "\"unitType\":\"AirScale\""
-                + "}}";
+        String parsed = "{\"event\": {\"pnfRegistrationFields\": {"
+                + " \"unitType\": \"AirScale\","
+                + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+                + " \"manufactureDate\": \"1535014037024\","
+                + " \"modelNumber\": \"7BEA\",\n"
+                + " \"lastServiceDate\": \"1535014037024\","
+                + " \"unitFamily\": \"BBU\","
+                + " \"softwareVersion\": \"v4.5.0.1\""
+                + "}}}";
 
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
-        String incorrectMessage = "[{\"pnfRegistrationFields\":{"
-                + "\"lastServiceDate\":\"1517206400\","
-                + "\"macAddress\":\"FFFF:0A10:7BEA\","
-                + "\"manufactureDate\":\"1517206400\","
-                + "\"modelNumber\":\"7BEA\","
-                + "\"pnfRegistrationFieldsVersion\":\"1517206400\","
-                + "\"serialNumber\":\"QTFCOC540002E\","
-                + "\"softwareVersion\":\"1517206400\","
-                + "\"unitFamily\":\"BBU\","
-                + "\"unitType\":\"AirScale\""
-                +  "}}]";
+        String incorrectMessage = "[{\"event\": {\"pnfRegistrationFields\": {"
+                + " \"unitType\": \"AirScale\","
+                + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+                + " \"manufactureDate\": \"1535014037024\","
+                + " \"modelNumber\": \"7BEA\",\n"
+                + " \"lastServiceDate\": \"1535014037024\","
+                + " \"unitFamily\": \"BBU\","
+                + " \"softwareVersion\": \"v4.5.0.1\""
+                + "}}}]";
         StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(incorrectMessage)))
             .expectSubscription().expectError(DmaapNotFoundException.class).verify();
     }
 
     @Test
     void whenPassingJsonWithoutSerialNumberOrVendorName_validationThrowingAnException() {
-        String parsed = "{\"pnfRegistrationFields\":{"
-                        + "\"lastServiceDate\":\"1517206400\","
-                        + "\"macAddress\":\"FFFF:0A10:7BEA\","
-                        + "\"manufactureDate\":\"1517206400\","
-                        + "\"modelNumber\":\"7BEA\","
-                        + "\"oamV4IpAddress\":\"10.16.123.234\","
-                        + "\"oamV6IpAddress\":\"0:0:0:0:0:FFFF:0A10:7BEA\","
-                        + "\"pnfRegistrationFieldsVersion\":\"1517206400\","
-                        + "\"softwareVersion\":\"v4.5.0.1\","
-                        + "\"unitFamily\":\"BBU\","
-                        + "\"unitType\":\"AirScale\""
-                        + "}}";
+        String parsed = "{\"event\": {\"pnfRegistrationFields\": {"
+                + " \"unitType\": \"AirScale\","
+                + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+                + " \"manufactureDate\": \"1535014037024\","
+                + " \"modelNumber\": \"7BEA\",\n"
+                + " \"lastServiceDate\": \"1535014037024\","
+                + " \"unitFamily\": \"BBU\","
+                + " \"oamV4IpAddress\": \"10.16.123.234\","
+                + " \"softwareVersion\": \"v4.5.0.1\","
+                + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
+                + "}}}";
 
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
         String jsonWithoutVendorAndSerialNumber =
-                "[{\"pnfRegistrationFields\":{"
-                        + "\"lastServiceDate\":\"1517206400\","
-                        + "\"macAddress\":\"FFFF:0A10:7BEA\","
-                        + "\"manufactureDate\":\"1517206400\","
-                        + "\"modelNumber\":\"7BEA\","
-                        + "\"oamV4IpAddress\":\"10.16.123.234\","
-                        + "\"oamV6IpAddress\":\"0:0:0:0:0:FFFF:0A10:7BEA\","
-                        + "\"pnfRegistrationFieldsVersion\":\"1517206400\","
-                        + "\"softwareVersion\":\"v4.5.0.1\","
-                        + "\"unitFamily\":\"BBU\","
-                        + "\"unitType\":\"AirScale\""
-                        + "}}]";
+                "[{\"event\": {\"pnfRegistrationFields\": {"
+                        + " \"unitType\": \"AirScale\","
+                        + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+                        + " \"manufactureDate\": \"1535014037024\","
+                        + " \"modelNumber\": \"7BEA\",\n"
+                        + " \"lastServiceDate\": \"1535014037024\","
+                        + " \"unitFamily\": \"BBU\","
+                        + " \"oamV4IpAddress\": \"10.16.123.234\","
+                        + " \"softwareVersion\": \"v4.5.0.1\","
+                        + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
+                        + "}}}]";
         StepVerifier
             .create(dmaapConsumerJsonParser.getJsonObject(Mono.just(jsonWithoutVendorAndSerialNumber)))
             .expectSubscription().expectError(DmaapNotFoundException.class).verify();
@@ -288,36 +275,34 @@ class DmaapConsumerJsonParserTest {
     @Test
     void whenPassingJsonWithoutIpInformation_validationThrowingAnException() {
         String parsed =
-                "{\"pnfRegistrationFields\":{"
-                        + "\"lastServiceDate\":\"1517206400\","
-                        + "\"macAddress\":\"FFFF:0A10:7BEA\","
-                        + "\"manufactureDate\":\"1517206400\","
-                        + "\"modelNumber\":\"7BEA\","
-                        + "\"pnfRegistrationFieldsVersion\":\"1517206400\","
-                        + "\"serialNumber\":\"QTFCOC540002E\","
-                        + "\"softwareVersion\":\"v4.5.0.1\","
-                        + "\"unitFamily\":\"BBU\","
-                        + "\"unitType\":\"AirScale\","
-                        + "\"vendorName\":\"Nokia\""
-                        + "}}";
+                "{\"event\": {\"pnfRegistrationFields\": {"
+                        + " \"unitType\": \"AirScale\","
+                        + " \"serialNumber\": \"QTFCOC540002E\","
+                        + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+                        + " \"manufactureDate\": \"1535014037024\","
+                        + " \"modelNumber\": \"7BEA\",\n"
+                        + " \"lastServiceDate\": \"1535014037024\","
+                        + " \"unitFamily\": \"BBU\","
+                        + " \"vendorName\": \"Nokia\","
+                        + " \"softwareVersion\": \"v4.5.0.1\""
+                        + "}}}";
 
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
         String jsonWithoutIpInformation =
-                "[{\"pnfRegistrationFields\":{"
-                        + "\"lastServiceDate\":\"1517206400\","
-                        + "\"macAddress\":\"FFFF:0A10:7BEA\","
-                        + "\"manufactureDate\":\"1517206400\","
-                        + "\"modelNumber\":\"7BEA\","
-                        + "\"pnfRegistrationFieldsVersion\":\"1517206400\","
-                        + "\"serialNumber\":\"QTFCOC540002E\","
-                        + "\"softwareVersion\":\"v4.5.0.1\","
-                        + "\"unitFamily\":\"BBU\","
-                        + "\"unitType\":\"AirScale\","
-                        + "\"vendorName\":\"Nokia\""
-                        + "}}]";
+                "[{\"event\": {\"pnfRegistrationFields\": {"
+                        + " \"unitType\": \"AirScale\","
+                        + " \"serialNumber\": \"QTFCOC540002E\","
+                        + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+                        + " \"manufactureDate\": \"1535014037024\","
+                        + " \"modelNumber\": \"7BEA\",\n"
+                        + " \"lastServiceDate\": \"1535014037024\","
+                        + " \"unitFamily\": \"BBU\","
+                        + " \"vendorName\": \"Nokia\","
+                        + " \"softwareVersion\": \"v4.5.0.1\""
+                        + "}}}]";
         StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(jsonWithoutIpInformation)))
             .expectSubscription().expectError(DmaapNotFoundException.class).verify();
     }

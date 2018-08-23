@@ -70,35 +70,33 @@ class DmaapConsumerTaskImplTest {
             .pnfName("NOKQTFCOC540002E").build();
         appConfig = mock(AppConfig.class);
 
-        message = "[{\"pnfRegistrationFields\":{"
-                        + "\"lastServiceDate\":\"1517206400\","
-                        + "\"macAddress\":\"FFFF:0A10:7BEA\","
-                        + "\"manufactureDate\":\"1517206400\","
-                        + "\"modelNumber\":\"7BEA\","
-                        + "\"oamV4IpAddress\":\"10.16.123.234\","
-                        + "\"oamV6IpAddress\":\"0:0:0:0:0:FFFF:0A10:7BEA\","
-                        + "\"pnfRegistrationFieldsVersion\":\"1517206400\","
-                        + "\"serialNumber\":\"QTFCOC540002E\","
-                        + "\"softwareVersion\":\"v4.5.0.1\","
-                        + "\"unitFamily\":\"BBU\","
-                        + "\"unitType\":\"AirScale\","
-                        + "\"vendorName\":\"Nokia\""
-                        + "}}]";
+        message = "[{\"event\": {\"pnfRegistrationFields\": {"
+                + " \"unitType\": \"AirScale\","
+                + " \"serialNumber\": \"QTFCOC540002E\","
+                + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+                + " \"manufactureDate\": \"1535014037024\","
+                + " \"modelNumber\": \"7BEA\",\n"
+                + " \"lastServiceDate\": \"1535014037024\","
+                + " \"unitFamily\": \"BBU\","
+                + " \"vendorName\": \"Nokia\","
+                + " \"oamV4IpAddress\": \"10.16.123.234\","
+                + " \"softwareVersion\": \"v4.5.0.1\","
+                + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
+                + "}}}]";
 
-        parsed = "{\"pnfRegistrationFields\":{"
-                        + "\"lastServiceDate\":\"1517206400\","
-                        + "\"macAddress\":\"FFFF:0A10:7BEA\","
-                        + "\"manufactureDate\":\"1517206400\","
-                        + "\"modelNumber\":\"7BEA\","
-                        + "\"oamV4IpAddress\":\"10.16.123.234\","
-                        + "\"oamV6IpAddress\":\"0:0:0:0:0:FFFF:0A10:7BEA\","
-                        + "\"pnfRegistrationFieldsVersion\":\"1517206400\","
-                        + "\"serialNumber\":\"QTFCOC540002E\","
-                        + "\"softwareVersion\":\"v4.5.0.1\","
-                        + "\"unitFamily\":\"BBU\","
-                        + "\"unitType\":\"AirScale\","
-                        + "\"vendorName\":\"Nokia\""
-                        + "}}";
+        parsed = "{\"event\": {\"pnfRegistrationFields\": {"
+                + " \"unitType\": \"AirScale\","
+                + " \"serialNumber\": \"QTFCOC540002E\","
+                + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+                + " \"manufactureDate\": \"1535014037024\","
+                + " \"modelNumber\": \"7BEA\",\n"
+                + " \"lastServiceDate\": \"1535014037024\","
+                + " \"unitFamily\": \"BBU\","
+                + " \"vendorName\": \"Nokia\","
+                + " \"oamV4IpAddress\": \"10.16.123.234\","
+                + " \"softwareVersion\": \"v4.5.0.1\","
+                + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
+                + "}}}";
     }
 
     @Test

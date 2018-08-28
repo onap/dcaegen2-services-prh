@@ -34,10 +34,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
-@SpringBootApplication
+@SpringBootApplication(exclude = {JacksonAutoConfiguration.class})
 @Configuration
-@ComponentScan
-@EnableAutoConfiguration(exclude = {JacksonAutoConfiguration.class})
 @EnableScheduling
 public class MainApp {
 

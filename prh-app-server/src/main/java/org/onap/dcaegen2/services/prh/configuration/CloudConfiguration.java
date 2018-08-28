@@ -21,13 +21,11 @@
 package org.onap.dcaegen2.services.prh.configuration;
 
 import com.google.gson.JsonObject;
-import java.util.Optional;
-import java.util.Properties;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.model.EnvProperties;
-import org.onap.dcaegen2.services.prh.service.HttpClientExecutorService;
+import org.onap.dcaegen2.services.prh.service.PrhConfigurationProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +38,9 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
 
+import java.util.Optional;
+import java.util.Properties;
+
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 8/9/18
  */
@@ -49,7 +50,7 @@ import reactor.core.scheduler.Schedulers;
 public class CloudConfiguration extends AppConfig {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    private HttpClientExecutorService httpClientExecutorService;
+    private PrhConfigurationProvider prhConfigurationProvider;
 
     private AaiClientConfiguration aaiClientCloudConfiguration;
     private DmaapPublisherConfiguration dmaapPublisherCloudConfiguration;
@@ -63,9 +64,9 @@ public class CloudConfiguration extends AppConfig {
 
     @Autowired
     public void setThreadPoolTaskScheduler(ThreadPoolTaskScheduler threadPoolTaskScheduler,
-        HttpClientExecutorService httpClientExecutorService) {
+        PrhConfigurationProvider prhConfigurationProvider) {
         this.cloudTaskScheduler = threadPoolTaskScheduler;
-        this.httpClientExecutorService = httpClientExecutorService;
+        this.prhConfigurationProvider = prhConfigurationProvider;
     }
 
     protected void runTask() {
@@ -84,10 +85,8 @@ public class CloudConfiguration extends AppConfig {
 
     private void parsingConfigSuccess(EnvProperties envProperties) {
         logger.info("Fetching PRH configuration from ConfigBindingService/Consul");
-        Flux.just(httpClientExecutorService.callConsulForConfigBindingServiceEndpoint(envProperties))
-            .flatMap(configBindingServiceUri -> httpClientExecutorService
-                .callConfigBindingServiceForPrhConfiguration(envProperties,
-                    configBindingServiceUri)).subscribe(this::parseCloudConfig, this::cloudConfigError);
+        prhConfigurationProvider.callForPrhConfiguration(envProperties)
+            .subscribe(this::parseCloudConfig, this::cloudConfigError);
     }
 
     private void parseCloudConfig(JsonObject jsonObject) {

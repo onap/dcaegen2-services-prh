@@ -20,6 +20,7 @@
 
 package org.onap.dcaegen2.services.prh.service;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -34,6 +35,8 @@ import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
+
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 8/10/18
  */
@@ -42,26 +45,26 @@ import reactor.core.publisher.Mono;
 public class HttpClientExecutorService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Gson gson = new Gson();
 
     public Mono<String> callConsulForConfigBindingServiceEndpoint(EnvProperties envProperties) {
 
         return HttpGetClient.callHttpGet(
-            envProperties.consulHost() + ":" + envProperties.consulPort() + "/v1/catalog/service/" + envProperties
+            "http://" + envProperties.consulHost() + ":" + envProperties.consulPort() + "/v1/catalog/service/" + envProperties
                 .cbsName())
             .flatMap(this::getJsonArrayFromRequest)
-            .flatMap(jsonArray -> Mono.just(jsonArray.get(0)))
             .flatMap(this::createConfigBindingServiceURL);
-
     }
 
     public Publisher<JsonObject> callConfigBindingServiceForPrhConfiguration(EnvProperties envProperties,
         Mono<String> configBindingServiceUri) {
-        return HttpGetClient.callHttpGet(configBindingServiceUri + "/service_component/" + envProperties.appName())
+        return configBindingServiceUri
+            .flatMap(uri -> HttpGetClient.callHttpGet("http://" + uri + "/service_component/" + envProperties.appName()))
             .flatMap(this::getJsonConfiguration);
     }
 
     private Mono<? extends JsonObject> getJsonConfiguration(String body) {
-        JsonElement jsonElement = new Gson().toJsonTree(body);
+        JsonElement jsonElement = parseJson(body, JsonElement.class);
         try {
             return Mono.just(jsonElement.getAsJsonObject());
         } catch (IllegalStateException e) {
@@ -69,25 +72,31 @@ public class HttpClientExecutorService {
         }
     }
 
-    private Mono<String> createConfigBindingServiceURL(JsonElement jsonElement) {
+    private Mono<String> createConfigBindingServiceURL(JsonArray jsonArray) {
         JsonObject jsonObject;
         try {
-            jsonObject = jsonElement.getAsJsonObject();
+            Optional<JsonElement> node = Lists.newArrayList(jsonArray.iterator()).stream().filter(element ->
+                "dev-consul-server-1".equals(element.getAsJsonObject().get("Node").getAsString())
+            ).findFirst();
+            jsonObject = node.get().getAsJsonObject();
         } catch (IllegalStateException e) {
             return Mono.error(e);
         }
-        return Mono.just(jsonObject.get("ServiceAddress").toString() + ":" + jsonObject.get("ServicePort").toString());
+        return Mono.just(jsonObject.get("ServiceAddress").getAsString().replaceAll("\"","") + ":" + jsonObject.get("ServicePort").getAsInt());
     }
 
 
     private Mono<? extends JsonArray> getJsonArrayFromRequest(String body) {
-        JsonElement jsonElement = new Gson().toJsonTree(body);
         try {
-            return Mono.just(jsonElement.getAsJsonArray());
+            return Mono.just(parseJson(body, JsonArray.class));
         } catch (IllegalStateException e) {
             logger.warn("Converting string to jsonArray threw error: " + e);
             return Mono.error(e);
         }
+    }
+
+    private <T> T  parseJson(String body, Class<T> tClass){
+        return gson.fromJson(body, tClass);
     }
 
     private static class HttpGetClient {

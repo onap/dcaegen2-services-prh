@@ -31,7 +31,6 @@ import org.onap.dcaegen2.services.prh.service.producer.AaiProducerReactiveHttpCl
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -48,7 +47,7 @@ public class AaiProducerTaskImpl extends
     private AaiProducerReactiveHttpClient aaiProducerReactiveHttpClient;
 
     @Autowired
-    public AaiProducerTaskImpl(@Qualifier("cloudConfiguration") Config config) {
+    public AaiProducerTaskImpl(Config config) {
         this.config = config;
     }
 
@@ -67,8 +66,7 @@ public class AaiProducerTaskImpl extends
 
     @Override
     AaiProducerReactiveHttpClient resolveClient() {
-        return aaiProducerReactiveHttpClient == null ? new AaiProducerReactiveHttpClient(resolveConfiguration())
-            .createAaiWebClient(buildWebClient()) : aaiProducerReactiveHttpClient;
+        return new AaiProducerReactiveHttpClient(resolveConfiguration());
     }
 
     @Override

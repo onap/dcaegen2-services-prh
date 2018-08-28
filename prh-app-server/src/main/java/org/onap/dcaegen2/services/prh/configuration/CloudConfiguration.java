@@ -27,18 +27,18 @@ import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.model.EnvProperties;
-import org.onap.dcaegen2.services.prh.service.HttpClientExecutorService;
+import org.onap.dcaegen2.services.prh.service.PrhConfigurationProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.TaskScheduler;
+import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
+
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 8/9/18
@@ -46,26 +46,23 @@ import reactor.core.scheduler.Schedulers;
 @Configuration
 @EnableConfigurationProperties
 @EnableScheduling
+@Primary
 public class CloudConfiguration extends AppConfig {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    private HttpClientExecutorService httpClientExecutorService;
+    private PrhConfigurationProvider prhConfigurationProvider;
 
     private AaiClientConfiguration aaiClientCloudConfiguration;
     private DmaapPublisherConfiguration dmaapPublisherCloudConfiguration;
     private DmaapConsumerConfiguration dmaapConsumerCloudConfiguration;
-
-    TaskScheduler cloudTaskScheduler;
 
     @Value("#{systemEnvironment}")
     private Properties systemEnvironment;
 
 
     @Autowired
-    public void setThreadPoolTaskScheduler(ThreadPoolTaskScheduler threadPoolTaskScheduler,
-        HttpClientExecutorService httpClientExecutorService) {
-        this.cloudTaskScheduler = threadPoolTaskScheduler;
-        this.httpClientExecutorService = httpClientExecutorService;
+    public void setThreadPoolTaskScheduler(PrhConfigurationProvider prhConfigurationProvider) {
+        this.prhConfigurationProvider = prhConfigurationProvider;
     }
 
     protected void runTask() {
@@ -84,10 +81,8 @@ public class CloudConfiguration extends AppConfig {
 
     private void parsingConfigSuccess(EnvProperties envProperties) {
         logger.info("Fetching PRH configuration from ConfigBindingService/Consul");
-        Flux.just(httpClientExecutorService.callConsulForConfigBindingServiceEndpoint(envProperties))
-            .flatMap(configBindingServiceUri -> httpClientExecutorService
-                .callConfigBindingServiceForPrhConfiguration(envProperties,
-                    configBindingServiceUri)).subscribe(this::parseCloudConfig, this::cloudConfigError);
+        prhConfigurationProvider.callForPrhConfiguration(envProperties)
+            .subscribe(this::parseCloudConfig, this::cloudConfigError);
     }
 
     private void parseCloudConfig(JsonObject jsonObject) {

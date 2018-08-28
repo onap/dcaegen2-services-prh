@@ -29,7 +29,6 @@ import org.onap.dcaegen2.services.prh.service.consumer.DMaaPConsumerReactiveHttp
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -45,7 +44,7 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
     private DMaaPConsumerReactiveHttpClient dmaaPConsumerReactiveHttpClient;
 
     @Autowired
-    public DmaapConsumerTaskImpl(@Qualifier("cloudConfiguration") Config config) {
+    public DmaapConsumerTaskImpl(Config config) {
         this.config = config;
         this.dmaapConsumerJsonParser = new DmaapConsumerJsonParser();
     }
@@ -79,8 +78,6 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
 
     @Override
     DMaaPConsumerReactiveHttpClient resolveClient() {
-        return dmaaPConsumerReactiveHttpClient == null
-            ? new DMaaPConsumerReactiveHttpClient(resolveConfiguration()).createDMaaPWebClient(buildWebClient())
-            : dmaaPConsumerReactiveHttpClient;
+        return new DMaaPConsumerReactiveHttpClient(resolveConfiguration()).createDMaaPWebClient(buildWebClient());
     }
 }

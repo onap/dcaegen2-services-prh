@@ -28,7 +28,6 @@ import org.onap.dcaegen2.services.prh.service.producer.DMaaPProducerReactiveHttp
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -43,7 +42,7 @@ public class DmaapPublisherTaskImpl extends DmaapPublisherTask {
     private DMaaPProducerReactiveHttpClient dmaapProducerReactiveHttpClient;
 
     @Autowired
-    public DmaapPublisherTaskImpl(@Qualifier("cloudConfiguration") Config config) {
+    public DmaapPublisherTaskImpl(Config config) {
         this.config = config;
     }
 
@@ -73,8 +72,6 @@ public class DmaapPublisherTaskImpl extends DmaapPublisherTask {
 
     @Override
     DMaaPProducerReactiveHttpClient resolveClient() {
-        return dmaapProducerReactiveHttpClient == null
-            ? new DMaaPProducerReactiveHttpClient(resolveConfiguration()).createDMaaPWebClient(buildWebClient())
-            : dmaapProducerReactiveHttpClient;
+        return new DMaaPProducerReactiveHttpClient(resolveConfiguration()).createDMaaPWebClient(buildWebClient());
     }
 }

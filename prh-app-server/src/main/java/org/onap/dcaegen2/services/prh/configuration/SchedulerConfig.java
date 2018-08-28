@@ -33,8 +33,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import reactor.core.publisher.Mono;
 
 /**
@@ -42,7 +44,7 @@ import reactor.core.publisher.Mono;
  */
 @Configuration
 @EnableScheduling
-public class SchedulerConfig extends CloudConfiguration {
+public class SchedulerConfig {
 
     private static final int SCHEDULING_DELAY_FOR_PRH_TASKS = 5;
     private static final int SCHEDULING_REQUEST_FOR_CONFIGURATION_DELAY = 5;
@@ -50,12 +52,17 @@ public class SchedulerConfig extends CloudConfiguration {
 
     private final ConcurrentTaskScheduler taskScheduler;
     private final ScheduledTasks scheduledTask;
+    private final TaskScheduler cloudTaskScheduler;
+    private final CloudConfiguration cloudConfiguration;
 
     @Autowired
     public SchedulerConfig(@Qualifier("concurrentTaskScheduler") ConcurrentTaskScheduler concurrentTaskScheduler,
-        ScheduledTasks scheduledTask) {
+        ScheduledTasks scheduledTask, ThreadPoolTaskScheduler cloudTaskScheduler,
+        CloudConfiguration cloudConfiguration) {
         this.taskScheduler = concurrentTaskScheduler;
         this.scheduledTask = scheduledTask;
+        this.cloudTaskScheduler = cloudTaskScheduler;
+        this.cloudConfiguration = cloudConfiguration;
     }
 
     /**
@@ -83,7 +90,7 @@ public class SchedulerConfig extends CloudConfiguration {
     public synchronized boolean tryToStartTask() {
         if (scheduledPrhTaskFutureList.isEmpty()) {
             scheduledPrhTaskFutureList.add(cloudTaskScheduler
-                .scheduleAtFixedRate(super::runTask, Instant.now(),
+                .scheduleAtFixedRate(cloudConfiguration::runTask, Instant.now(),
                     Duration.ofMinutes(SCHEDULING_REQUEST_FOR_CONFIGURATION_DELAY)));
             scheduledPrhTaskFutureList.add(taskScheduler
                 .scheduleWithFixedDelay(scheduledTask::scheduleMainPrhEventTask,

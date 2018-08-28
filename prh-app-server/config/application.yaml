@@ -1,8 +1,6 @@
 spring:
   profiles:
     active: prod
-  main:
-    web-application-type: none
 server:
   port: 8433
   ssl:

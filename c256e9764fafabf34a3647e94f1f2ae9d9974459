@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_9df510cd",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/configuration/CloudConfigParserTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-08-28T09:18:21Z",
+      "side": 1,
+      "message": "Null checking is not giving us information that object was in appropriate form. This inform us only that object is not null but u can mock them etc. Please correct this.",
+      "range": {
+        "startLine": 69,
+        "startChar": 8,
+        "endLine": 69,
+        "endChar": 48
+      },
+      "revId": "c256e9764fafabf34a3647e94f1f2ae9d9974459",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_3d04fcbe",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/configuration/CloudConfigParserTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-08-28T09:18:21Z",
+      "side": 1,
+      "message": "The same as above",
+      "range": {
+        "startLine": 79,
+        "startChar": 8,
+        "endLine": 79,
+        "endChar": 52
+      },
+      "revId": "c256e9764fafabf34a3647e94f1f2ae9d9974459",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_1d3100a2",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/configuration/CloudConfigParserTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-08-28T09:18:21Z",
+      "side": 1,
+      "message": "The same as above",
+      "range": {
+        "startLine": 89,
+        "startChar": 8,
+        "endLine": 89,
+        "endChar": 53
+      },
+      "revId": "c256e9764fafabf34a3647e94f1f2ae9d9974459",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_5f276812",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/HttpGetClient.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 2831
+      },
+      "writtenOn": "2018-08-29T09:55:05Z",
+      "side": 1,
+      "message": "1. throw RuntimeException instead of Exception\n\n2. please log exact response code - you are catching everything ~4XX, but logging it as 400 which is misleading",
+      "revId": "529d3a85d721341e1a55b9c94cba42132eaf6d99",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_7f226402",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/HttpGetClient.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 2831
+      },
+      "writtenOn": "2018-08-29T09:55:05Z",
+      "side": 1,
+      "message": "same as above",
+      "revId": "529d3a85d721341e1a55b9c94cba42132eaf6d99",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_ff7d14e8",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/HttpGetClient.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 2831
+      },
+      "writtenOn": "2018-08-29T09:55:05Z",
+      "side": 1,
+      "message": "do we really want those responses / request to be logged on \u0027info\u0027 severity?",
+      "revId": "529d3a85d721341e1a55b9c94cba42132eaf6d99",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_9f8420d5",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/HttpGetClient.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 2831
+      },
+      "writtenOn": "2018-08-29T09:55:05Z",
+      "side": 1,
+      "message": "same as above",
+      "revId": "529d3a85d721341e1a55b9c94cba42132eaf6d99",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_9f5bc086",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/PrhConfigurationProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 2831
+      },
+      "writtenOn": "2018-08-29T09:55:05Z",
+      "side": 1,
+      "message": "from where ... ? Would be useful to log more details",
+      "revId": "529d3a85d721341e1a55b9c94cba42132eaf6d99",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_df61383a",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/PrhConfigurationProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 2831
+      },
+      "writtenOn": "2018-08-29T09:55:05Z",
+      "side": 1,
+      "message": "use String.format() for more readable code :)",
+      "revId": "529d3a85d721341e1a55b9c94cba42132eaf6d99",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_5f55284e",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/PrhConfigurationProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 2831
+      },
+      "writtenOn": "2018-08-29T09:55:05Z",
+      "side": 1,
+      "message": "use String.format() for more readable code :)",
+      "revId": "529d3a85d721341e1a55b9c94cba42132eaf6d99",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

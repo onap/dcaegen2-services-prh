@@ -104,6 +104,24 @@
     },
     {
       "key": {
+        "uuid": "1a76adc5_bf71dce1",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/PrhConfigurationProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-08-29T10:33:28Z",
+      "side": 1,
+      "message": "I think URI class validation of url will be better here",
+      "parentUuid": "1a76adc5_df61383a",
+      "revId": "529d3a85d721341e1a55b9c94cba42132eaf6d99",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a76adc5_5f55284e",
         "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/PrhConfigurationProvider.java",
         "patchSetId": 4
@@ -115,6 +133,24 @@
       "writtenOn": "2018-08-29T09:55:05Z",
       "side": 1,
       "message": "use String.format() for more readable code :)",
+      "revId": "529d3a85d721341e1a55b9c94cba42132eaf6d99",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_5f78c8c3",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/PrhConfigurationProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-08-29T10:33:28Z",
+      "side": 1,
+      "message": "URI class",
+      "parentUuid": "1a76adc5_5f55284e",
       "revId": "529d3a85d721341e1a55b9c94cba42132eaf6d99",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false

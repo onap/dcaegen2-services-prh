@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_3f72ac49",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/service/HttpGetClientTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-08-29T09:16:15Z",
+      "side": 1,
+      "message": "Missing test case for failure response",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 23
+      },
+      "revId": "6996784e33af8c6954319272603e1ffd157a207e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

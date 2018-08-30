@@ -20,17 +20,14 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import java.util.Map;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.model.logging.MDCVariables;
 import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
 import org.onap.dcaegen2.services.prh.service.consumer.DMaaPConsumerReactiveHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,11 +40,11 @@ import reactor.core.publisher.Mono;
 @Component
 public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
 
+    private static final Marker INVOKE = MarkerFactory.getMarker("INVOKE");
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final Marker INVOKE = MarkerFactory.getMarker("INVOKE");
     private final Config config;
     private DmaapConsumerJsonParser dmaapConsumerJsonParser;
-    private DMaaPConsumerReactiveHttpClient dmaaPConsumerReactiveHttpClient;
 
     @Autowired
     public DmaapConsumerTaskImpl(Config config) {
@@ -67,7 +64,7 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
 
     @Override
     public Mono<ConsumerDmaapModel> execute(String object) {
-        dmaaPConsumerReactiveHttpClient = resolveClient();
+        DMaaPConsumerReactiveHttpClient dmaaPConsumerReactiveHttpClient = resolveClient();
         logger.info(INVOKE, "Method called with arg {}", object);
         return consume(dmaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse());
     }

@@ -12,8 +12,10 @@ server:
 logging:
   level:
     ROOT: ERROR
+    org.onap.dcaegen2.services.prh: INFO
+    reactor.ipc.netty.http.client: WARN
     org.springframework: ERROR
     org.springframework.data: ERROR
-    org.onap.dcaegen2.services.prh: INFO
+    org.springframework.web.reactive: WARN
 app:
   filepath: config/prh_endpoints.json

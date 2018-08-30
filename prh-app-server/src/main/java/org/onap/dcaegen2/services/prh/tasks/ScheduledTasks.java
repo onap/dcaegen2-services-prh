@@ -20,16 +20,17 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
+import javax.net.ssl.SSLException;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
@@ -62,23 +63,33 @@ public class ScheduledTasks {
      * Main function for scheduling prhWorkflow.
      */
     public void scheduleMainPrhEventTask() {
-        logger.trace("Execution of tasks was registered");
+        try {
+            logger.trace("Execution of tasks was registered");
+            CountDownLatch mainCountDownLatch = new CountDownLatch(1);
+            consumeFromDMaaPMessage()
+                .doOnError(DmaapEmptyResponseException.class, error ->
+                    logger.warn("Nothing to consume from DMaaP")
+                )
+                .flatMap(this::publishToAaiConfiguration)
+                .flatMap(this::publishToDmaapConfiguration)
+                .doOnTerminate(mainCountDownLatch::countDown)
+                .subscribe(this::onSuccess, this::onError, this::onComplete);
 
-        Mono<String> dmaapProducerResponse = Mono.fromCallable(consumeFromDMaaPMessage())
-            .doOnError(DmaapEmptyResponseException.class, error -> logger.warn("Nothing to consume from DMaaP"))
-            .map(this::publishToAaiConfiguration)
-            .flatMap(this::publishToDmaapConfiguration)
-            .subscribeOn(Schedulers.elastic());
+            mainCountDownLatch.await();
+        } catch (InterruptedException e) {
+            logger.warn("Interruption problem on countDownLatch ", e);
+            throw new RuntimeException(e);
+        }
+    }
 
-        dmaapProducerResponse.subscribe(this::onSuccess, this::onError, this::onComplete);
+
+    private void onSuccess(ResponseEntity<String> responseCode) {
+        logger
+            .info("Prh consumed tasks successfully. HTTP Response code from DMaaPProducer {}", responseCode.getStatusCode().value());
     }
 
     private void onComplete() {
         logger.info("PRH tasks have been completed");
-    }
-
-    private void onSuccess(String responseCode) {
-        logger.info("Prh consumed tasks. HTTP Response code {}", responseCode);
     }
 
     private void onError(Throwable throwable) {
@@ -87,22 +98,23 @@ public class ScheduledTasks {
         }
     }
 
-    private Callable<Mono<ConsumerDmaapModel>> consumeFromDMaaPMessage() {
-        return () -> {
+    private Mono<ConsumerDmaapModel> consumeFromDMaaPMessage() {
+        return Mono.defer(() -> {
+            logger.info("Init configs");
             dmaapConsumerTask.initConfigs();
             return dmaapConsumerTask.execute("");
-        };
+        });
     }
 
-    private Mono<ConsumerDmaapModel> publishToAaiConfiguration(Mono<ConsumerDmaapModel> monoDMaaPModel) {
+    private Mono<ConsumerDmaapModel> publishToAaiConfiguration(ConsumerDmaapModel monoDMaaPModel) {
         try {
             return aaiProducerTask.execute(monoDMaaPModel);
-        } catch (PrhTaskException e) {
+        } catch (PrhTaskException | SSLException e) {
             return Mono.error(e);
         }
     }
 
-    private Mono<String> publishToDmaapConfiguration(Mono<ConsumerDmaapModel> monoAaiModel) {
+    private Mono<ResponseEntity<String>> publishToDmaapConfiguration(ConsumerDmaapModel monoAaiModel) {
         try {
             return dmaapProducerTask.execute(monoAaiModel);
         } catch (PrhTaskException e) {

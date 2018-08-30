@@ -20,6 +20,7 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
+import javax.net.ssl.SSLException;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.exceptions.AaiNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
@@ -34,16 +35,16 @@ import reactor.core.publisher.Mono;
  */
 public abstract class AaiProducerTask {
 
-    abstract Mono<ConsumerDmaapModel> publish(Mono<ConsumerDmaapModel> message) throws AaiNotFoundException;
+    abstract Mono<ConsumerDmaapModel> publish(ConsumerDmaapModel message) throws AaiNotFoundException;
 
-    abstract AaiProducerReactiveHttpClient resolveClient();
+    abstract AaiProducerReactiveHttpClient resolveClient() throws SSLException;
 
     protected abstract AaiClientConfiguration resolveConfiguration();
 
-    protected abstract Mono<ConsumerDmaapModel> execute(Mono<ConsumerDmaapModel> consumerDmaapModel)
-        throws PrhTaskException;
+    protected abstract Mono<ConsumerDmaapModel> execute(ConsumerDmaapModel consumerDmaapModel)
+        throws PrhTaskException, SSLException;
 
-    WebClient buildWebClient() {
+    WebClient buildWebClient() throws SSLException {
         return new AaiReactiveWebClient().fromConfiguration(resolveConfiguration()).build();
     }
 }

@@ -26,8 +26,6 @@ import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
 import org.onap.dcaegen2.services.prh.service.consumer.DMaaPConsumerReactiveHttpClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -38,7 +36,6 @@ import reactor.core.publisher.Mono;
 @Component
 public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Config config;
     private DmaapConsumerJsonParser dmaapConsumerJsonParser;
     private DMaaPConsumerReactiveHttpClient dmaaPConsumerReactiveHttpClient;
@@ -62,7 +59,6 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
     @Override
     public Mono<ConsumerDmaapModel> execute(String object) {
         dmaaPConsumerReactiveHttpClient = resolveClient();
-        logger.trace("Method called with arg {}", object);
         return consume((dmaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse()));
     }
 

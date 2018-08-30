@@ -20,17 +20,16 @@
 
 package org.onap.dcaegen2.services.prh.service.producer;
 
+import static org.onap.dcaegen2.services.prh.model.CommonFunctions.createJsonBody;
+
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import org.apache.http.client.utils.URIBuilder;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
-import org.onap.dcaegen2.services.prh.exceptions.AaiRequestException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -42,8 +41,8 @@ public class AaiProducerReactiveHttpClient {
     private final String aaiProtocol;
     private final Integer aaiHostPortNumber;
     private final String aaiBasePath;
+    private final String aaiPnfPath;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
 
     /**
      * Constructor of AaiProducerReactiveHttpClient.
@@ -55,6 +54,7 @@ public class AaiProducerReactiveHttpClient {
         this.aaiProtocol = configuration.aaiProtocol();
         this.aaiHostPortNumber = configuration.aaiPort();
         this.aaiBasePath = configuration.aaiBasePath();
+        this.aaiPnfPath = configuration.aaiPnfPath();
     }
 
     /**
@@ -63,10 +63,12 @@ public class AaiProducerReactiveHttpClient {
      * @param consumerDmaapModelMono - object which will be sent to AAI database
      * @return status code of operation
      */
-    public Mono<Integer> getAaiProducerResponse(Mono<ConsumerDmaapModel> consumerDmaapModelMono) {
-        return consumerDmaapModelMono
-            .doOnNext(consumerDmaapModel -> logger.info("Sending PNF model to AAI {}", consumerDmaapModel))
-            .flatMap(this::patchAaiRequest);
+    public Mono<ClientResponse> getAaiProducerResponse(ConsumerDmaapModel consumerDmaapModelMono) {
+        try {
+            return patchAaiRequest(consumerDmaapModelMono);
+        } catch (URISyntaxException e) {
+            return Mono.error(e);
+        }
     }
 
     public AaiProducerReactiveHttpClient createAaiWebClient(WebClient webClient) {
@@ -74,24 +76,13 @@ public class AaiProducerReactiveHttpClient {
         return this;
     }
 
-    private Mono<Integer> patchAaiRequest(ConsumerDmaapModel dmaapModel) {
-        try {
-            return webClient.patch()
+    private Mono<ClientResponse> patchAaiRequest(ConsumerDmaapModel dmaapModel) throws URISyntaxException {
+        logger.info("Sending PNF model to AAI {}", createJsonBody(dmaapModel));
+        return
+            webClient.patch()
                 .uri(getUri(dmaapModel.getSourceName()))
-                .body(BodyInserters.fromObject(dmaapModel))
-                .retrieve()
-                .onStatus(
-                    HttpStatus::is4xxClientError,
-                    clientResponse -> Mono
-                        .error(new AaiRequestException("AaiProducer HTTP " + clientResponse.statusCode()))
-                )
-                .onStatus(HttpStatus::is5xxServerError,
-                    clientResponse -> Mono
-                        .error(new AaiRequestException("AaiProducer HTTP " + clientResponse.statusCode())))
-                .bodyToMono(Integer.class);
-        } catch (URISyntaxException e) {
-            return Mono.error(e);
-        }
+                .body(Mono.just(createJsonBody(dmaapModel)), String.class)
+                .exchange();
     }
 
     URI getUri(String pnfName) throws URISyntaxException {
@@ -99,7 +90,7 @@ public class AaiProducerReactiveHttpClient {
             .setScheme(aaiProtocol)
             .setHost(aaiHost)
             .setPort(aaiHostPortNumber)
-            .setPath(aaiBasePath + "/" + pnfName)
+            .setPath(aaiBasePath + aaiPnfPath + "/" + pnfName)
             .build();
     }
 }

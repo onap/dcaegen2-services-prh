@@ -26,6 +26,7 @@ import org.apache.http.client.utils.URIBuilder;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -44,6 +45,7 @@ public class DMaaPConsumerReactiveHttpClient {
     private final String dmaapTopicName;
     private final String consumerGroup;
     private final String consumerId;
+    private final String contentType;
 
     /**
      * Constructor of DMaaPConsumerReactiveHttpClient.
@@ -57,6 +59,7 @@ public class DMaaPConsumerReactiveHttpClient {
         this.dmaapTopicName = consumerConfiguration.dmaapTopicName();
         this.consumerGroup = consumerConfiguration.consumerGroup();
         this.consumerId = consumerConfiguration.consumerId();
+        this.contentType = consumerConfiguration.dmaapContentType();
     }
 
     /**
@@ -69,6 +72,7 @@ public class DMaaPConsumerReactiveHttpClient {
             return webClient
                 .get()
                 .uri(getUri())
+                .header(HttpHeaders.CONTENT_TYPE, contentType)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, clientResponse ->
                     Mono.error(new Exception("DmaaPConsumer HTTP " + clientResponse.statusCode()))

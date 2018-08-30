@@ -27,7 +27,7 @@ import org.onap.dcaegen2.services.prh.model.EnvProperties;
 import org.onap.dcaegen2.services.prh.model.ImmutableEnvProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 8/10/18
@@ -40,7 +40,7 @@ class EnvironmentProcessor {
     private EnvironmentProcessor() {
     }
 
-    static Flux<EnvProperties> evaluate(Properties systemEnvironment) {
+    static Mono<EnvProperties> evaluate(Properties systemEnvironment) {
         logger.info("Loading configuration from system environment variables {}", systemEnvironment);
         EnvProperties envProperties;
         try {
@@ -48,10 +48,10 @@ class EnvironmentProcessor {
                 .consulPort(getConsultPort(systemEnvironment)).cbsName(getConfigBindingService(systemEnvironment))
                 .appName(getService(systemEnvironment)).build();
         } catch (EnvironmentLoaderException e) {
-            return Flux.error(e);
+            return Mono.error(e);
         }
         logger.info("Evaluated environment system variables {}", envProperties);
-        return Flux.just(envProperties);
+        return Mono.just(envProperties);
     }
 
     private static String getConsulHost(Properties systemEnvironments) throws EnvironmentLoaderException {

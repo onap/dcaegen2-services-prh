@@ -28,7 +28,9 @@ import org.onap.dcaegen2.services.prh.service.producer.DMaaPProducerReactiveHttp
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 import reactor.core.publisher.Mono;
 
 /**
@@ -47,22 +49,23 @@ public class DmaapPublisherTaskImpl extends DmaapPublisherTask {
     }
 
     @Override
-    Mono<String> publish(Mono<ConsumerDmaapModel> consumerDmaapModel) {
-        return consumerDmaapModel.flatMap(dmaapModel -> {
-            logger.info("Publishing on DMaaP topic {} object {}", resolveConfiguration().dmaapTopicName(),
-                dmaapModel);
-            return dmaapProducerReactiveHttpClient.getDMaaPProducerResponse(dmaapModel);
-        });
+    Mono<ResponseEntity<String>> publish(ConsumerDmaapModel consumerDmaapModel) {
+        return dmaapProducerReactiveHttpClient.getDMaaPProducerResponse(consumerDmaapModel);
     }
 
     @Override
-    public Mono<String> execute(Mono<ConsumerDmaapModel> consumerDmaapModel) throws DmaapNotFoundException {
+    public Mono<ResponseEntity<String>> execute(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException {
         if (consumerDmaapModel == null) {
             throw new DmaapNotFoundException("Invoked null object to DMaaP task");
         }
         dmaapProducerReactiveHttpClient = resolveClient();
         logger.trace("Method called with arg {}", consumerDmaapModel);
         return publish(consumerDmaapModel);
+    }
+
+    @Override
+    RestTemplate buildWebClient() {
+        return new RestTemplate();
     }
 
     @Override

@@ -2,6 +2,63 @@
   "comments": [
     {
       "key": {
+        "uuid": "1a76adc5_4cb49e34",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/producer/AaiProducerReactiveHttpClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-08-30T13:02:55Z",
+      "side": 1,
+      "message": "I think that this log is useless",
+      "revId": "bf46403bce55801a5f16f99fd50594d45e96dd4c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_ac7a1275",
+        "filename": "prh-app-server/config/application.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-08-30T13:02:55Z",
+      "side": 1,
+      "message": "this log can help with debugging on the server side (http headers, body...), the logging level of this could be change to WARN/ERROR",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 43
+      },
+      "revId": "bf46403bce55801a5f16f99fd50594d45e96dd4c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_0cf1c601",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AaiProducerTaskImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-08-30T13:02:55Z",
+      "side": 1,
+      "message": "useless log",
+      "revId": "bf46403bce55801a5f16f99fd50594d45e96dd4c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a76adc5_588bf9c2",
         "filename": "prh-app-server/src/main/resources/application.properties",
         "patchSetId": 3
@@ -13,6 +70,47 @@
       "writtenOn": "2018-08-30T12:23:38Z",
       "side": 1,
       "message": "Shall we use DEBUG logging level in production?",
+      "revId": "bf46403bce55801a5f16f99fd50594d45e96dd4c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_cccd0eb9",
+        "filename": "prh-app-server/src/main/resources/application.properties",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-08-30T13:02:55Z",
+      "side": 1,
+      "message": "this log can help with debugging on the server side (http headers, body...), the logging level should be change to WARN/ERROR. What do you think @Damian?",
+      "parentUuid": "1a76adc5_588bf9c2",
+      "revId": "bf46403bce55801a5f16f99fd50594d45e96dd4c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_aca3f2fe",
+        "filename": "prh-dmaap-client/src/main/java/org/onap/dcaegen2/services/prh/service/consumer/DMaaPConsumerReactiveHttpClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-08-30T13:02:55Z",
+      "side": 1,
+      "message": "this code should throw RuntimeException against Exception",
+      "range": {
+        "startLine": 77,
+        "startChar": 1,
+        "endLine": 81,
+        "endChar": 99
+      },
       "revId": "bf46403bce55801a5f16f99fd50594d45e96dd4c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false

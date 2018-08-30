@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_45b47134",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/producer/AaiProducerReactiveHttpClient.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-08-30T19:16:54Z",
+      "side": 1,
+      "message": "Could you define this headers in Appconfig.class? If no, please define this as headers map and update headers map, because we have got other headers in aai",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 87,
+        "endChar": 70
+      },
+      "revId": "6fd8c7770fbea30ad2ec6e3f7645b8baab5a49a1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

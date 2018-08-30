@@ -38,7 +38,7 @@ public abstract class DmaapPublisherConfiguration implements DmaapCustomConfig {
     }
 
     interface Builder extends
-        DmaapCustomConfig.Builder<DmaapPublisherConfiguration, DmaapPublisherConfiguration.Builder> {
+            DmaapCustomConfig.Builder<DmaapPublisherConfiguration, DmaapPublisherConfiguration.Builder> {
 
     }
 }

@@ -20,13 +20,10 @@
 
 package org.onap.dcaegen2.services.prh.service;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.onap.dcaegen2.services.prh.config.DmaapCustomConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -40,7 +37,6 @@ public class DMaaPReactiveWebClient {
 
     private String dmaaPUserName;
     private String dmaaPUserPassword;
-    private String dmaaPContentType;
 
     /**
      * Creating DMaaPReactiveWebClient passing to them basic DMaaPConfig.
@@ -51,8 +47,6 @@ public class DMaaPReactiveWebClient {
     public DMaaPReactiveWebClient fromConfiguration(DmaapCustomConfig dmaapCustomConfig) {
         this.dmaaPUserName = dmaapCustomConfig.dmaapUserName();
         this.dmaaPUserPassword = dmaapCustomConfig.dmaapUserPassword();
-        this.dmaaPContentType = dmaapCustomConfig.dmaapContentType();
-
         return this;
     }
 
@@ -63,10 +57,9 @@ public class DMaaPReactiveWebClient {
      */
     public WebClient build() {
         return WebClient.builder()
-            .defaultHeader(HttpHeaders.CONTENT_TYPE, dmaaPContentType)
-            .filter(logRequest())
-            .filter(logResponse())
-            .build();
+                .filter(logRequest())
+                .filter(logResponse())
+                .build();
     }
 
     private ExchangeFilterFunction logResponse() {
@@ -82,7 +75,7 @@ public class DMaaPReactiveWebClient {
             MDC.put("ServiceName", String.valueOf(clientRequest.url()));
             logger.info("Request: {} {}", clientRequest.method(), clientRequest.url());
             clientRequest.headers()
-                .forEach((name, values) -> values.forEach(value -> logger.info("{}={}", name, value)));
+                    .forEach((name, values) -> values.forEach(value -> logger.info("{}={}", name, value)));
             return Mono.just(clientRequest);
         });
     }

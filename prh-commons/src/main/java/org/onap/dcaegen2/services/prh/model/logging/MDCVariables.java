@@ -20,8 +20,9 @@
 
 package org.onap.dcaegen2.services.prh.model.logging;
 
-import java.util.Map;
 import org.slf4j.MDC;
+
+import java.util.Map;
 
 public final class MDCVariables {
 
@@ -33,11 +34,11 @@ public final class MDCVariables {
     public static final String RESPONSE_CODE = "ResponseCode";
     public static final String SERVICE_NAME = "ServiceName";
 
-    public static void setMdcContextMap(Map<String,String> mdcContextMap) {
-        if(mdcContextMap != null)
-            MDC.setContextMap(mdcContextMap);
+    private MDCVariables() {
     }
 
-    private MDCVariables() {
+    public static void setMdcContextMap(Map<String, String> mdcContextMap) {
+        if (mdcContextMap != null)
+            MDC.setContextMap(mdcContextMap);
     }
 }

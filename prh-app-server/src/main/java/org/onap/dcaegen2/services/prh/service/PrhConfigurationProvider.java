@@ -52,14 +52,14 @@ public class PrhConfigurationProvider {
 
     public Mono<JsonObject> callForPrhConfiguration(EnvProperties envProperties) {
         return callConsulForConfigBindingServiceEndpoint(envProperties)
-            .flatMap(this::callConfigBindingServiceForPrhConfiguration);
+                .flatMap(this::callConfigBindingServiceForPrhConfiguration);
     }
 
     private Mono<String> callConsulForConfigBindingServiceEndpoint(EnvProperties envProperties) {
         logger.info("Retrieving Config Binding Service endpoint from Consul");
         try {
             return httpGetClient.callHttpGet(getConsulUrl(envProperties), JsonArray.class)
-                .flatMap(jsonArray -> this.createConfigBindingServiceURL(jsonArray, envProperties.appName()));
+                    .flatMap(jsonArray -> this.createConfigBindingServiceURL(jsonArray, envProperties.appName()));
         } catch (URISyntaxException e) {
             logger.warn("Malformed Consul uri", e);
             return Mono.error(e);
@@ -68,7 +68,7 @@ public class PrhConfigurationProvider {
 
     private String getConsulUrl(EnvProperties envProperties) throws URISyntaxException {
         return getUri(envProperties.consulHost(), envProperties.consulPort(), "/v1/catalog/service",
-            envProperties.cbsName());
+                envProperties.cbsName());
     }
 
     private Mono<JsonObject> callConfigBindingServiceForPrhConfiguration(String configBindingServiceUri) {
@@ -84,7 +84,7 @@ public class PrhConfigurationProvider {
     private Mono<String> buildConfigBindingServiceURL(JsonObject jsonObject, String appName) {
         try {
             return Mono.just(getUri(jsonObject.get("ServiceAddress").getAsString(),
-                jsonObject.get("ServicePort").getAsInt(), "/service_component", appName));
+                    jsonObject.get("ServicePort").getAsInt(), "/service_component", appName));
         } catch (URISyntaxException e) {
             logger.warn("Malformed Config Binding Service uri", e);
             return Mono.error(e);
@@ -106,10 +106,10 @@ public class PrhConfigurationProvider {
 
     private String getUri(String host, Integer port, String... paths) throws URISyntaxException {
         return new URIBuilder()
-            .setScheme("http")
-            .setHost(host)
-            .setPort(port)
-            .setPath(String.join("/", paths))
-            .build().toString();
+                .setScheme("http")
+                .setHost(host)
+                .setPort(port)
+                .setPath(String.join("/", paths))
+                .build().toString();
     }
 }

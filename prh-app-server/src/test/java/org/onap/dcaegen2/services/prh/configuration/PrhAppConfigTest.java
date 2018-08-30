@@ -20,27 +20,23 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.dcaegen2.services.prh.integration.junit5.mockito.MockitoExtension;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/9/18
@@ -50,36 +46,36 @@ class PrhAppConfigTest {
 
     private static final String PRH_ENDPOINTS = "prh_endpoints.json";
     private static final String jsonString = "{\"configs\":{\"aai\":{\"aaiClientConfiguration\":{\"aaiHost\":"
-        + "\"localhost\",\"aaiPort\":8080,\"aaiIgnoreSslCertificateErrors\":true,\"aaiProtocol\":"
-        + "\"https\",\"aaiUserName\":\"admin\",\"aaiUserPassword\":\"admin\",\"aaiBasePath\":\"/aai/v11\","
-        + "\"aaiPnfPath\":\"/network/pnfs/pnf\",\"aaiHeaders\":{\"X-FromAppId\":\"prh\",\"X-TransactionId\":\"9999\","
-        + "\"Accept\":\"application/json\",\"Real-Time\":\"true\",\"Content-Type\":\"application/merge-patch+json\","
-        + "\"Authorization\":\"Basic QUFJOkFBSQ==\"}}},"
-        + "\"dmaap\":{\"dmaapConsumerConfiguration\":{\"consumerGroup\":\"other\",\"consumerId\":\"1\","
-        + "\"dmaapContentType\":\"application/json\",\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2222,"
-        + "\"dmaapProtocol\":\"http\",\"dmaapTopicName\":\"temp\",\"dmaapUserName\":\"admin\",\"dmaapUserPassword\""
-        + ":\"admin\",\"messageLimit\":1000,\"timeoutMs\":1000},\"dmaapProducerConfiguration\":{\"dmaapContentType\":"
-        + "\"application/json\",\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2223,\"dmaapProtocol\":\"http\","
-        + "\"dmaapTopicName\":\"temp\",\"dmaapUserName\":\"admin\",\"dmaapUserPassword\":\"admin\"}}}}";
+            + "\"localhost\",\"aaiPort\":8080,\"aaiIgnoreSslCertificateErrors\":true,\"aaiProtocol\":"
+            + "\"https\",\"aaiUserName\":\"admin\",\"aaiUserPassword\":\"admin\",\"aaiBasePath\":\"/aai/v11\","
+            + "\"aaiPnfPath\":\"/network/pnfs/pnf\",\"aaiHeaders\":{\"X-FromAppId\":\"prh\",\"X-TransactionId\":\"9999\","
+            + "\"Accept\":\"application/json\",\"Real-Time\":\"true\",\"Content-Type\":\"application/merge-patch+json\","
+            + "\"Authorization\":\"Basic QUFJOkFBSQ==\"}}},"
+            + "\"dmaap\":{\"dmaapConsumerConfiguration\":{\"consumerGroup\":\"other\",\"consumerId\":\"1\","
+            + "\"dmaapContentType\":\"application/json\",\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2222,"
+            + "\"dmaapProtocol\":\"http\",\"dmaapTopicName\":\"temp\",\"dmaapUserName\":\"admin\",\"dmaapUserPassword\""
+            + ":\"admin\",\"messageLimit\":1000,\"timeoutMs\":1000},\"dmaapProducerConfiguration\":{\"dmaapContentType\":"
+            + "\"application/json\",\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2223,\"dmaapProtocol\":\"http\","
+            + "\"dmaapTopicName\":\"temp\",\"dmaapUserName\":\"admin\",\"dmaapUserPassword\":\"admin\"}}}}";
 
     private static final String incorrectJsonString = "{\"configs\":{\"aai\":{\"aaiClientConfiguration\":{\"aaiHost\":"
-        + "\"localhost\",\"aaiPort\":8080,\"aaiIgnoreSslCertificateErrors\":true,\"aaiProtocol\":\"https\","
-        + "\"aaiUserName\":\"admin\",\"aaiUserPassword\":\"admin\",\"aaiBasePath\":\"/aai/v11\",\"aaiPnfPath\":"
-        + "\"/network/pnfs/pnf\",\"aaiHeaders\":{\"X-FromAppId\":\"prh\",\"X-TransactionId\":\"9999\",\"Accept\":"
-        + "\"application/json\",\"Real-Time\":\"true\",\"Content-Type\":\"application/merge-patch+json\","
-        + "\"Authorization\":\"Basic QUFJOkFBSQ==\"}}},\"dmaap\""
-        + ":{\"dmaapConsumerConfiguration\":{\"consumerGroup\":\"other\",\"consumerId\":\"1\",\"dmaapContentType\""
-        + ":\"application/json\",\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2222,\"dmaapProtocol\":\"http\""
-        + ",\"dmaapTopicName\":\"temp\",\"dmaapUserName\":\"admin\",\"dmaapUserPassword\":\"admin\",\"messageLimit\""
-        + ":1000,\"timeoutMs\":1000},\"dmaapProducerConfiguration\":{\"dmaapContentType\":\"application/json\","
-        + "\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2223,\"dmaapProtocol\":\"http\",\"dmaaptopicName\""
-        + ":\"temp\",\"dmaapuserName\":\"admin\",\"dmaapuserPassword\":\"admin\"}}}}";
+            + "\"localhost\",\"aaiPort\":8080,\"aaiIgnoreSslCertificateErrors\":true,\"aaiProtocol\":\"https\","
+            + "\"aaiUserName\":\"admin\",\"aaiUserPassword\":\"admin\",\"aaiBasePath\":\"/aai/v11\",\"aaiPnfPath\":"
+            + "\"/network/pnfs/pnf\",\"aaiHeaders\":{\"X-FromAppId\":\"prh\",\"X-TransactionId\":\"9999\",\"Accept\":"
+            + "\"application/json\",\"Real-Time\":\"true\",\"Content-Type\":\"application/merge-patch+json\","
+            + "\"Authorization\":\"Basic QUFJOkFBSQ==\"}}},\"dmaap\""
+            + ":{\"dmaapConsumerConfiguration\":{\"consumerGroup\":\"other\",\"consumerId\":\"1\",\"dmaapContentType\""
+            + ":\"application/json\",\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2222,\"dmaapProtocol\":\"http\""
+            + ",\"dmaapTopicName\":\"temp\",\"dmaapUserName\":\"admin\",\"dmaapUserPassword\":\"admin\",\"messageLimit\""
+            + ":1000,\"timeoutMs\":1000},\"dmaapProducerConfiguration\":{\"dmaapContentType\":\"application/json\","
+            + "\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2223,\"dmaapProtocol\":\"http\",\"dmaaptopicName\""
+            + ":\"temp\",\"dmaapuserName\":\"admin\",\"dmaapuserPassword\":\"admin\"}}}}";
 
     private static PrhAppConfig prhAppConfig;
     private static AppConfig appConfig;
 
     private static String filePath = Objects
-        .requireNonNull(PrhAppConfigTest.class.getClassLoader().getResource(PRH_ENDPOINTS)).getFile();
+            .requireNonNull(PrhAppConfigTest.class.getClassLoader().getResource(PRH_ENDPOINTS)).getFile();
 
     @BeforeEach
     void setUp() {
@@ -103,12 +99,12 @@ class PrhAppConfigTest {
 
     @Test
     void whenTheConfigurationFits_GetAaiAndDmaapObjectRepresentationConfiguration()
-        throws IOException {
+            throws IOException {
         //
         // Given
         //
         InputStream inputStream = new ByteArrayInputStream((jsonString.getBytes(
-            StandardCharsets.UTF_8)));
+                StandardCharsets.UTF_8)));
         //
         // When
         //
@@ -127,11 +123,11 @@ class PrhAppConfigTest {
         Assertions.assertNotNull(prhAppConfig.getDmaapConsumerConfiguration());
         Assertions.assertNotNull(prhAppConfig.getDmaapPublisherConfiguration());
         Assertions
-            .assertEquals(appConfig.getDmaapPublisherConfiguration(), prhAppConfig.getDmaapPublisherConfiguration());
+                .assertEquals(appConfig.getDmaapPublisherConfiguration(), prhAppConfig.getDmaapPublisherConfiguration());
         Assertions
-            .assertEquals(appConfig.getDmaapConsumerConfiguration(), prhAppConfig.getDmaapConsumerConfiguration());
+                .assertEquals(appConfig.getDmaapConsumerConfiguration(), prhAppConfig.getDmaapConsumerConfiguration());
         Assertions
-            .assertEquals(appConfig.getAaiClientConfiguration(), prhAppConfig.getAaiClientConfiguration());
+                .assertEquals(appConfig.getAaiClientConfiguration(), prhAppConfig.getAaiClientConfiguration());
 
     }
 
@@ -163,7 +159,7 @@ class PrhAppConfigTest {
         // Given
         //
         InputStream inputStream = new ByteArrayInputStream((incorrectJsonString.getBytes(
-            StandardCharsets.UTF_8)));
+                StandardCharsets.UTF_8)));
         //
         // When
         //
@@ -185,10 +181,10 @@ class PrhAppConfigTest {
 
     @Test
     void whenTheConfigurationFits_ButRootElementIsNotAJsonObject()
-        throws IOException {
+            throws IOException {
         // Given
         InputStream inputStream = new ByteArrayInputStream((jsonString.getBytes(
-            StandardCharsets.UTF_8)));
+                StandardCharsets.UTF_8)));
         // When
         prhAppConfig.setFilepath(filePath);
         doReturn(inputStream).when(prhAppConfig).getInputStream(any());

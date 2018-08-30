@@ -21,27 +21,25 @@
 package org.onap.dcaegen2.services.prh.configuration;
 
 import io.swagger.annotations.ApiOperation;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ScheduledFuture;
-import javax.annotation.PostConstruct;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import reactor.core.publisher.Mono;
+
+import javax.annotation.PostConstruct;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ScheduledFuture;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 6/13/18
@@ -50,24 +48,22 @@ import reactor.core.publisher.Mono;
 @EnableScheduling
 public class SchedulerConfig {
 
-    private static final int SCHEDULING_DELAY_FOR_PRH_TASKS = 5;
+    private static final int SCHEDULING_DELAY_FOR_PRH_TASKS = 10;
     private static final int SCHEDULING_REQUEST_FOR_CONFIGURATION_DELAY = 5;
+    private static final Logger LOGGER = LoggerFactory.getLogger(SchedulerConfig.class);
+    private static final Marker ENTRY = MarkerFactory.getMarker("ENTRY");
     private static volatile List<ScheduledFuture> scheduledPrhTaskFutureList = new ArrayList<>();
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final Marker ENTRY = MarkerFactory.getMarker("ENRTY");
 
-    private final ConcurrentTaskScheduler taskScheduler;
+    private final TaskScheduler taskScheduler;
     private final ScheduledTasks scheduledTask;
-    private final TaskScheduler cloudTaskScheduler;
     private final CloudConfiguration cloudConfiguration;
 
     @Autowired
-    public SchedulerConfig(@Qualifier("concurrentTaskScheduler") ConcurrentTaskScheduler concurrentTaskScheduler,
-        ScheduledTasks scheduledTask, ThreadPoolTaskScheduler cloudTaskScheduler,
-        CloudConfiguration cloudConfiguration) {
-        this.taskScheduler = concurrentTaskScheduler;
+    public SchedulerConfig(TaskScheduler taskScheduler,
+                           ScheduledTasks scheduledTask,
+                           CloudConfiguration cloudConfiguration) {
+        this.taskScheduler = taskScheduler;
         this.scheduledTask = scheduledTask;
-        this.cloudTaskScheduler = cloudTaskScheduler;
         this.cloudConfiguration = cloudConfiguration;
     }
 
@@ -81,7 +77,7 @@ public class SchedulerConfig {
         scheduledPrhTaskFutureList.forEach(x -> x.cancel(false));
         scheduledPrhTaskFutureList.clear();
         return Mono.defer(() ->
-            Mono.just(new ResponseEntity<>("PRH Service has already been stopped!", HttpStatus.CREATED))
+                Mono.just(new ResponseEntity<>("PRH Service has already been stopped!", HttpStatus.CREATED))
         );
     }
 
@@ -94,14 +90,14 @@ public class SchedulerConfig {
     @PostConstruct
     @ApiOperation(value = "Start task if possible")
     public synchronized boolean tryToStartTask() {
-        logger.info(ENTRY,"Start scheduling PRH workflow");
+        LOGGER.info(ENTRY, "Start scheduling PRH workflow");
         if (scheduledPrhTaskFutureList.isEmpty()) {
-            scheduledPrhTaskFutureList.add(cloudTaskScheduler
-                .scheduleAtFixedRate(cloudConfiguration::runTask, Instant.now(),
-                    Duration.ofMinutes(SCHEDULING_REQUEST_FOR_CONFIGURATION_DELAY)));
             scheduledPrhTaskFutureList.add(taskScheduler
-                .scheduleWithFixedDelay(scheduledTask::scheduleMainPrhEventTask,
-                    Duration.ofSeconds(SCHEDULING_DELAY_FOR_PRH_TASKS)));
+                    .scheduleAtFixedRate(cloudConfiguration::runTask, Instant.now(),
+                            Duration.ofMinutes(SCHEDULING_REQUEST_FOR_CONFIGURATION_DELAY)));
+            scheduledPrhTaskFutureList.add(taskScheduler
+                    .scheduleWithFixedDelay(scheduledTask::scheduleMainPrhEventTask,
+                            Duration.ofSeconds(SCHEDULING_DELAY_FOR_PRH_TASKS)));
             return true;
         } else {
             return false;

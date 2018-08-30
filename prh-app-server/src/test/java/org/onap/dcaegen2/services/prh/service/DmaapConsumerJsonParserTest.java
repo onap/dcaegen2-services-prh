@@ -20,11 +20,8 @@
 
 package org.onap.dcaegen2.services.prh.service;
 
-import static org.mockito.Mockito.spy;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -33,6 +30,10 @@ import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import java.util.Optional;
+
+import static org.mockito.Mockito.spy;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/8/18
@@ -75,15 +76,15 @@ class DmaapConsumerJsonParserTest {
                 + "}}}";
 
         ConsumerDmaapModel expectedObject = ImmutableConsumerDmaapModel.builder().ipv4("10.16.123.234")
-            .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
-            .sourceName("NOKQTFCOC540002E").build();
+                .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
+                .sourceName("NOKQTFCOC540002E").build();
         //when
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
-            .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
+                .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
         ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser
-            .getJsonObject(Mono.just((message))).block();
+                .getJsonObject(Mono.just((message))).block();
         //then
         Assertions.assertNotNull(consumerDmaapModel);
         Assertions.assertEquals(expectedObject, consumerDmaapModel);
@@ -126,14 +127,14 @@ class DmaapConsumerJsonParserTest {
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
-            .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
+                .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
         dmaapConsumerJsonParser.getJsonObject(Mono.just((message)));
         ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser.getJsonObject(Mono.just((message)))
-            .block();
+                .block();
         //then
         ConsumerDmaapModel expectedObject = ImmutableConsumerDmaapModel.builder().ipv4("")
-            .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
-            .sourceName("NOKQTFCOC540002E").build();
+                .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
+                .sourceName("NOKQTFCOC540002E").build();
         Assertions.assertNotNull(consumerDmaapModel);
         Assertions.assertEquals(expectedObject, consumerDmaapModel);
     }
@@ -172,14 +173,14 @@ class DmaapConsumerJsonParserTest {
                 + "}}}";
 
         ConsumerDmaapModel expectedObject = ImmutableConsumerDmaapModel.builder().ipv4("10.16.123.234").ipv6("")
-            .sourceName("NOKQTFCOC540002E").build();
+                .sourceName("NOKQTFCOC540002E").build();
         //when
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
-            .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
+                .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
         ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser.getJsonObject(Mono.just((message)))
-            .block();
+                .block();
         //then
         Assertions.assertNotNull(consumerDmaapModel);
         Assertions.assertEquals(expectedObject, consumerDmaapModel);
@@ -219,9 +220,9 @@ class DmaapConsumerJsonParserTest {
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
-            .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
+                .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
         StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(message)))
-            .expectSubscription().expectError(DmaapNotFoundException.class).verify();
+                .expectSubscription().expectError(DmaapNotFoundException.class).verify();
 
     }
 
@@ -244,7 +245,7 @@ class DmaapConsumerJsonParserTest {
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
-            .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
+                .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
         String incorrectMessage = "[{\"event\": {"
                 + "\"commonEventHeader\": {},"
                 + "\"pnfRegistrationFields\": {"
@@ -259,7 +260,7 @@ class DmaapConsumerJsonParserTest {
                 + " \"softwareVersion\": \"v4.5.0.1\""
                 + "}}}]";
         StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(incorrectMessage)))
-            .expectSubscription().expectError(DmaapNotFoundException.class).verify();
+                .expectSubscription().expectError(DmaapNotFoundException.class).verify();
     }
 
     @Test
@@ -282,7 +283,7 @@ class DmaapConsumerJsonParserTest {
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
-            .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
+                .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
         String jsonWithoutSourceName =
                 "[{\"event\": {"
                         + "\"commonEventHeader\": {},"
@@ -299,8 +300,8 @@ class DmaapConsumerJsonParserTest {
                         + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
                         + "}}}]";
         StepVerifier
-            .create(dmaapConsumerJsonParser.getJsonObject(Mono.just(jsonWithoutSourceName)))
-            .expectSubscription().expectError(DmaapNotFoundException.class).verify();
+                .create(dmaapConsumerJsonParser.getJsonObject(Mono.just(jsonWithoutSourceName)))
+                .expectSubscription().expectError(DmaapNotFoundException.class).verify();
     }
 
     @Test
@@ -325,7 +326,7 @@ class DmaapConsumerJsonParserTest {
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
-            .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
+                .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
         String jsonWithoutIpInformation =
                 "[{\"event\": {"
                         + "\"commonEventHeader\": {\"sourceName\": \"NOKQTFCOC540002E\"},"
@@ -343,7 +344,7 @@ class DmaapConsumerJsonParserTest {
                         + " \"oamV6IpAddress\": \"\""
                         + "}}}]";
         StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(jsonWithoutIpInformation)))
-            .expectSubscription().expectError(DmaapNotFoundException.class).verify();
+                .expectSubscription().expectError(DmaapNotFoundException.class).verify();
     }
 
     @Test

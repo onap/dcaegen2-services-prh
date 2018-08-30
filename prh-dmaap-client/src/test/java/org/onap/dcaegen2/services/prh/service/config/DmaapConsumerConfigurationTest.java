@@ -46,18 +46,18 @@ class DmaapConsumerConfigurationTest {
 
         // When
         configuration = new ImmutableDmaapConsumerConfiguration.Builder()
-            .consumerId(consumerId)
-            .dmaapHostName(dmaapHostName)
-            .dmaapPortNumber(dmaapPortNumber)
-            .dmaapTopicName(dmaapTopicName)
-            .dmaapProtocol(dmaapProtocol)
-            .dmaapUserName(dmaapUserName)
-            .dmaapUserPassword(dmaapUserPassword)
-            .dmaapContentType(dmaapContentType)
-            .consumerGroup(consumerGroup)
-            .timeoutMs(timeoutMs)
-            .messageLimit(messageLimit)
-            .build();
+                .consumerId(consumerId)
+                .dmaapHostName(dmaapHostName)
+                .dmaapPortNumber(dmaapPortNumber)
+                .dmaapTopicName(dmaapTopicName)
+                .dmaapProtocol(dmaapProtocol)
+                .dmaapUserName(dmaapUserName)
+                .dmaapUserPassword(dmaapUserPassword)
+                .dmaapContentType(dmaapContentType)
+                .consumerGroup(consumerGroup)
+                .timeoutMs(timeoutMs)
+                .messageLimit(messageLimit)
+                .build();
 
         // Then
         Assertions.assertNotNull(configuration);

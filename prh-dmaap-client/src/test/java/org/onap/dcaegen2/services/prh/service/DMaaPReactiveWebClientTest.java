@@ -20,13 +20,13 @@
 
 package org.onap.dcaegen2.services.prh.service;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 7/5/18
@@ -47,8 +47,8 @@ class DMaaPReactiveWebClientTest {
         when(dmaapConsumerConfiguration.dmaapUserName()).thenReturn(dmaaPUserName);
         when(dmaapConsumerConfiguration.dmaapUserPassword()).thenReturn(dmaaPUserPassword);
         WebClient dmaapreactiveWebClient = new DMaaPReactiveWebClient()
-            .fromConfiguration(dmaapConsumerConfiguration)
-            .build();
+                .fromConfiguration(dmaapConsumerConfiguration)
+                .build();
 
         //then
         Assertions.assertNotNull(dmaapreactiveWebClient);

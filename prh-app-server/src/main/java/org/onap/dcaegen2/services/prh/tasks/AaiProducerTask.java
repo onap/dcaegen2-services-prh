@@ -29,21 +29,23 @@ import org.onap.dcaegen2.services.prh.service.producer.AaiProducerReactiveHttpCl
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import javax.net.ssl.SSLException;
+
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
 public abstract class AaiProducerTask {
 
-    abstract Mono<ConsumerDmaapModel> publish(Mono<ConsumerDmaapModel> message) throws AaiNotFoundException;
+    abstract Mono<ConsumerDmaapModel> publish(ConsumerDmaapModel message) throws AaiNotFoundException;
 
-    abstract AaiProducerReactiveHttpClient resolveClient();
+    abstract AaiProducerReactiveHttpClient resolveClient() throws SSLException;
 
     protected abstract AaiClientConfiguration resolveConfiguration();
 
-    protected abstract Mono<ConsumerDmaapModel> execute(Mono<ConsumerDmaapModel> consumerDmaapModel)
-        throws PrhTaskException;
+    protected abstract Mono<ConsumerDmaapModel> execute(ConsumerDmaapModel consumerDmaapModel)
+            throws PrhTaskException, SSLException;
 
-    WebClient buildWebClient() {
+    WebClient buildWebClient() throws SSLException {
         return new AaiReactiveWebClient().fromConfiguration(resolveConfiguration()).build();
     }
 }

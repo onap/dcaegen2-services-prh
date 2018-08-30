@@ -22,6 +22,7 @@ package org.onap.dcaegen2.services.prh.model;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapterFactory;
+
 import java.util.ServiceLoader;
 
 
@@ -40,6 +41,6 @@ public class CommonFunctions {
         GsonBuilder gsonBuilder = new GsonBuilder();
         ServiceLoader.load(TypeAdapterFactory.class).forEach(gsonBuilder::registerTypeAdapterFactory);
         return gsonBuilder.create().toJson(ImmutableConsumerDmaapModel.builder().ipv4(consumerDmaapModel.getIpv4())
-            .ipv6(consumerDmaapModel.getIpv6()).sourceName(consumerDmaapModel.getSourceName()).build());
+                .ipv6(consumerDmaapModel.getIpv6()).sourceName(consumerDmaapModel.getSourceName()).build());
     }
 }

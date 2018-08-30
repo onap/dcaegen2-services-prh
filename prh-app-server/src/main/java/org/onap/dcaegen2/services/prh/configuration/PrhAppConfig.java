@@ -20,24 +20,7 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
-import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.INVOCATION_ID;
-import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.REQUEST_ID;
-
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.TypeAdapterFactory;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.ServiceLoader;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import com.google.gson.*;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
@@ -47,6 +30,15 @@ import org.slf4j.MDC;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ServiceLoader;
+
+import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.INVOCATION_ID;
+import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.REQUEST_ID;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/9/18
@@ -102,16 +94,16 @@ public abstract class PrhAppConfig implements Config {
             if (rootElement.isJsonObject()) {
                 jsonObject = rootElement.getAsJsonObject();
                 aaiClientConfiguration = deserializeType(gsonBuilder,
-                    jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(AAI).getAsJsonObject(AAI_CONFIG),
-                    AaiClientConfiguration.class);
+                        jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(AAI).getAsJsonObject(AAI_CONFIG),
+                        AaiClientConfiguration.class);
 
                 dmaapConsumerConfiguration = deserializeType(gsonBuilder,
-                    jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(DMAAP).getAsJsonObject(DMAAP_CONSUMER),
-                    DmaapConsumerConfiguration.class);
+                        jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(DMAAP).getAsJsonObject(DMAAP_CONSUMER),
+                        DmaapConsumerConfiguration.class);
 
                 dmaapPublisherConfiguration = deserializeType(gsonBuilder,
-                    jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(DMAAP).getAsJsonObject(DMAAP_PRODUCER),
-                    DmaapPublisherConfiguration.class);
+                        jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(DMAAP).getAsJsonObject(DMAAP_PRODUCER),
+                        DmaapPublisherConfiguration.class);
             }
         } catch (IOException e) {
             logger.warn("Problem with file loading, file: {}", filepath, e);
@@ -125,7 +117,7 @@ public abstract class PrhAppConfig implements Config {
     }
 
     private <T> T deserializeType(@NotNull GsonBuilder gsonBuilder, @NotNull JsonObject jsonObject,
-        @NotNull Class<T> type) {
+                                  @NotNull Class<T> type) {
         return gsonBuilder.create().fromJson(jsonObject, type);
     }
 

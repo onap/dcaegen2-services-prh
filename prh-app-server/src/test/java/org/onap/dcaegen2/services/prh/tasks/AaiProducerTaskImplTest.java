@@ -20,17 +20,8 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
@@ -40,8 +31,15 @@ import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.producer.AaiProducerReactiveHttpClient;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.reactive.function.client.ClientResponse;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import javax.net.ssl.SSLException;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/14/18
@@ -56,40 +54,31 @@ class AaiProducerTaskImplTest {
     private static final String BASE_PATH = "/aai/v11";
     private static final String PNF_PATH = "/network/pnfs/pnf";
 
-    private static ConsumerDmaapModel consumerDmaapModel;
-    private static AaiProducerTaskImpl aaiProducerTask;
-    private static AaiClientConfiguration aaiClientConfiguration;
-    private static AaiProducerReactiveHttpClient aaiProducerReactiveHttpClient;
-    private static AppConfig appConfig;
+    private ConsumerDmaapModel consumerDmaapModel;
+    private AaiProducerTaskImpl aaiProducerTask;
+    private AaiClientConfiguration aaiClientConfiguration;
+    private AaiProducerReactiveHttpClient aaiProducerReactiveHttpClient;
+    private AppConfig appConfig;
+    private ClientResponse clientResponse;
 
-    @BeforeAll
-    static void setUp() {
+    @BeforeEach
+    void setUp() {
+        clientResponse = mock(ClientResponse.class);
         aaiClientConfiguration = new ImmutableAaiClientConfiguration.Builder()
-            .aaiHost(AAI_HOST)
-            .aaiPort(PORT)
-            .aaiProtocol(PROTOCOL)
-            .aaiUserName(USER_NAME_PASSWORD)
-            .aaiUserPassword(USER_NAME_PASSWORD)
-            .aaiIgnoreSslCertificateErrors(true)
-            .aaiBasePath(BASE_PATH)
-            .aaiPnfPath(PNF_PATH)
-            .build();
+                .aaiHost(AAI_HOST)
+                .aaiPort(PORT)
+                .aaiProtocol(PROTOCOL)
+                .aaiUserName(USER_NAME_PASSWORD)
+                .aaiUserPassword(USER_NAME_PASSWORD)
+                .aaiIgnoreSslCertificateErrors(true)
+                .aaiBasePath(BASE_PATH)
+                .aaiPnfPath(PNF_PATH)
+                .build();
         consumerDmaapModel = ImmutableConsumerDmaapModel.builder().ipv4("10.16.123.234")
-            .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
-            .sourceName("NOKQTFCOC540002E").build();
+                .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
+                .sourceName("NOKQTFCOC540002E").build();
         appConfig = mock(AppConfig.class);
 
-    }
-
-    private static void getAaiProducerTask_whenMockingResponseObject(Integer statusCode) {
-        //given
-        aaiProducerReactiveHttpClient = mock(AaiProducerReactiveHttpClient.class);
-        when(aaiProducerReactiveHttpClient.getAaiProducerResponse(any()))
-            .thenReturn(Mono.just(statusCode));
-        when(appConfig.getAaiClientConfiguration()).thenReturn(aaiClientConfiguration);
-        aaiProducerTask = spy(new AaiProducerTaskImpl(appConfig));
-        when(aaiProducerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
-        doReturn(aaiProducerReactiveHttpClient).when(aaiProducerTask).resolveClient();
     }
 
     @Test
@@ -101,14 +90,14 @@ class AaiProducerTaskImplTest {
 
         //then
         Assertions
-            .assertThrows(PrhTaskException.class, executableCode, "Passing wrong object type to execute function");
+                .assertThrows(PrhTaskException.class, executableCode, "Passing wrong object type to execute function");
     }
 
     @Test
-    void whenPassedObjectFits_ReturnsCorrectStatus() throws PrhTaskException {
+    void whenPassedObjectFits_ReturnsCorrectStatus() throws PrhTaskException, SSLException {
         //given/when
         getAaiProducerTask_whenMockingResponseObject(200);
-        Mono<ConsumerDmaapModel> response = aaiProducerTask.execute(Mono.just(consumerDmaapModel));
+        Mono<ConsumerDmaapModel> response = aaiProducerTask.execute(consumerDmaapModel);
 
         //then
         verify(aaiProducerReactiveHttpClient, times(1)).getAaiProducerResponse(any());
@@ -118,13 +107,26 @@ class AaiProducerTaskImplTest {
     }
 
     @Test
-    void whenPassedObjectFits_butIncorrectResponseReturns() throws PrhTaskException {
+    void whenPassedObjectFits_butIncorrectResponseReturns() throws PrhTaskException, SSLException {
         //given/when
         getAaiProducerTask_whenMockingResponseObject(400);
-        StepVerifier.create(aaiProducerTask.execute(Mono.just(consumerDmaapModel))).expectSubscription()
-            .expectError(PrhTaskException.class).verify();
+        StepVerifier.create(aaiProducerTask.execute(consumerDmaapModel)).expectSubscription()
+                .expectError(PrhTaskException.class).verify();
         //then
         verify(aaiProducerReactiveHttpClient, times(1)).getAaiProducerResponse(any());
         verifyNoMoreInteractions(aaiProducerReactiveHttpClient);
+    }
+
+    private void getAaiProducerTask_whenMockingResponseObject(int statusCode) throws SSLException {
+        //given
+        doReturn(HttpStatus.valueOf(statusCode)).when(clientResponse).statusCode();
+        Mono<ClientResponse> clientResponseMono = Mono.just(clientResponse);
+        aaiProducerReactiveHttpClient = mock(AaiProducerReactiveHttpClient.class);
+        when(aaiProducerReactiveHttpClient.getAaiProducerResponse(any()))
+                .thenReturn(clientResponseMono);
+        when(appConfig.getAaiClientConfiguration()).thenReturn(aaiClientConfiguration);
+        aaiProducerTask = spy(new AaiProducerTaskImpl(appConfig));
+        when(aaiProducerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
+        doReturn(aaiProducerReactiveHttpClient).when(aaiProducerTask).resolveClient();
     }
 }

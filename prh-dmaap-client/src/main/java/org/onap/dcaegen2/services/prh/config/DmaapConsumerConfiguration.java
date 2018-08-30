@@ -52,7 +52,7 @@ public abstract class DmaapConsumerConfiguration implements DmaapCustomConfig {
     public abstract Integer messageLimit();
 
     public interface Builder extends
-        DmaapCustomConfig.Builder<DmaapConsumerConfiguration, DmaapConsumerConfiguration.Builder> {
+            DmaapCustomConfig.Builder<DmaapConsumerConfiguration, DmaapConsumerConfiguration.Builder> {
 
         Builder consumerId(String consumerId);
 

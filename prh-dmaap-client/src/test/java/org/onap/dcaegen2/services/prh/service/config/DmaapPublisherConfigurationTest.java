@@ -43,14 +43,14 @@ class DmaapPublisherConfigurationTest {
 
         // When
         configuration = new ImmutableDmaapPublisherConfiguration.Builder()
-            .dmaapHostName(dmaapHostName)
-            .dmaapPortNumber(dmaapPortNumber)
-            .dmaapTopicName(dmaapTopicName)
-            .dmaapProtocol(dmaapProtocol)
-            .dmaapUserName(dmaapUserName)
-            .dmaapUserPassword(dmaapUserPassword)
-            .dmaapContentType(dmaapContentType)
-            .build();
+                .dmaapHostName(dmaapHostName)
+                .dmaapPortNumber(dmaapPortNumber)
+                .dmaapTopicName(dmaapTopicName)
+                .dmaapProtocol(dmaapProtocol)
+                .dmaapUserName(dmaapUserName)
+                .dmaapUserPassword(dmaapUserPassword)
+                .dmaapContentType(dmaapContentType)
+                .build();
 
         // Then
         Assertions.assertNotNull(configuration);

@@ -21,8 +21,6 @@
 package org.onap.dcaegen2.services.prh.configuration;
 
 import com.google.gson.JsonObject;
-import java.util.Optional;
-import java.util.Properties;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
@@ -36,9 +34,11 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
+
+import java.util.Optional;
+import java.util.Properties;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 8/9/18
@@ -67,8 +67,8 @@ public class CloudConfiguration extends AppConfig {
 
     protected void runTask() {
         Flux.defer(() -> EnvironmentProcessor.evaluate(systemEnvironment))
-            .subscribeOn(Schedulers.parallel())
-            .subscribe(this::parsingConfigSuccess, this::parsingConfigError);
+                .subscribeOn(Schedulers.parallel())
+                .subscribe(this::parsingConfigSuccess, this::parsingConfigError);
     }
 
     private void parsingConfigError(Throwable throwable) {
@@ -82,7 +82,7 @@ public class CloudConfiguration extends AppConfig {
     private void parsingConfigSuccess(EnvProperties envProperties) {
         logger.info("Fetching PRH configuration from ConfigBindingService/Consul");
         prhConfigurationProvider.callForPrhConfiguration(envProperties)
-            .subscribe(this::parseCloudConfig, this::cloudConfigError);
+                .subscribe(this::parseCloudConfig, this::cloudConfigError);
     }
 
     private void parseCloudConfig(JsonObject jsonObject) {

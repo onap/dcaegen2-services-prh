@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_588bf9c2",
+        "filename": "prh-app-server/src/main/resources/application.properties",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3987
+      },
+      "writtenOn": "2018-08-30T12:23:38Z",
+      "side": 1,
+      "message": "Shall we use DEBUG logging level in production?",
+      "revId": "bf46403bce55801a5f16f99fd50594d45e96dd4c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

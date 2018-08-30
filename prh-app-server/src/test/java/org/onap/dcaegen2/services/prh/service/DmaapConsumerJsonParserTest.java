@@ -42,7 +42,9 @@ class DmaapConsumerJsonParserTest {
     @Test
     void whenPassingCorrectJson_validationNotThrowingAnException() {
         //given
-        String message = "[{\"event\": {\"pnfRegistrationFields\": {"
+        String message = "[{\"event\": {"
+                + "\"commonEventHeader\": { \"sourceName\":\"NOKQTFCOC540002E\"},"
+                + "\"pnfRegistrationFields\": {"
                 + " \"unitType\": \"AirScale\","
                 + " \"serialNumber\": \"QTFCOC540002E\","
                 + " \"pnfRegistrationFieldsVersion\": \"2.0\","
@@ -56,7 +58,9 @@ class DmaapConsumerJsonParserTest {
                 + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
                 + "}}}]";
 
-        String parsed = "{\"event\": {\"pnfRegistrationFields\": {"
+        String parsed = "{\"event\": {"
+                + "\"commonEventHeader\": { \"sourceName\":\"NOKQTFCOC540002E\"},"
+                + "\"pnfRegistrationFields\": {"
                 + " \"unitType\": \"AirScale\","
                 + " \"serialNumber\": \"QTFCOC540002E\","
                 + " \"pnfRegistrationFieldsVersion\": \"2.0\","
@@ -72,7 +76,7 @@ class DmaapConsumerJsonParserTest {
 
         ConsumerDmaapModel expectedObject = ImmutableConsumerDmaapModel.builder().ipv4("10.16.123.234")
             .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
-            .pnfName("NOKQTFCOC540002E").build();
+            .sourceName("NOKQTFCOC540002E").build();
         //when
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
         JsonElement jsonElement = new JsonParser().parse(parsed);
@@ -88,7 +92,9 @@ class DmaapConsumerJsonParserTest {
     @Test
     void whenPassingCorrectJsonWithoutIpv4_validationNotThrowingAnException() {
         //given
-        String message = "[{\"event\": {\"pnfRegistrationFields\": {"
+        String message = "[{\"event\": {"
+                + "\"commonEventHeader\": { \"sourceName\":\"NOKQTFCOC540002E\"},"
+                + "\"pnfRegistrationFields\": {"
                 + " \"unitType\": \"AirScale\","
                 + " \"serialNumber\": \"QTFCOC540002E\","
                 + " \"pnfRegistrationFieldsVersion\": \"2.0\","
@@ -101,7 +107,9 @@ class DmaapConsumerJsonParserTest {
                 + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
                 + "}}}]";
 
-        String parsed = "{\"event\": {\"pnfRegistrationFields\": {"
+        String parsed = "{\"event\": {"
+                + "\"commonEventHeader\": { \"sourceName\":\"NOKQTFCOC540002E\"},"
+                + "\"pnfRegistrationFields\": {"
                 + " \"unitType\": \"AirScale\","
                 + " \"serialNumber\": \"QTFCOC540002E\","
                 + " \"pnfRegistrationFieldsVersion\": \"2.0\","
@@ -125,7 +133,7 @@ class DmaapConsumerJsonParserTest {
         //then
         ConsumerDmaapModel expectedObject = ImmutableConsumerDmaapModel.builder().ipv4("")
             .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
-            .pnfName("NOKQTFCOC540002E").build();
+            .sourceName("NOKQTFCOC540002E").build();
         Assertions.assertNotNull(consumerDmaapModel);
         Assertions.assertEquals(expectedObject, consumerDmaapModel);
     }
@@ -133,7 +141,9 @@ class DmaapConsumerJsonParserTest {
     @Test
     void whenPassingCorrectJsonWithoutIpv6_validationNotThrowingAnException() {
         //given
-        String message = "[{\"event\": {\"pnfRegistrationFields\": {"
+        String message = "[{\"event\": {"
+                + "\"commonEventHeader\": { \"sourceName\":\"NOKQTFCOC540002E\"},"
+                + "\"pnfRegistrationFields\": {"
                 + " \"unitType\": \"AirScale\","
                 + " \"serialNumber\": \"QTFCOC540002E\","
                 + " \"pnfRegistrationFieldsVersion\": \"2.0\","
@@ -146,7 +156,9 @@ class DmaapConsumerJsonParserTest {
                 + " \"softwareVersion\": \"v4.5.0.1\""
                 + "}}}]";
 
-        String parsed = "{\"event\": {\"pnfRegistrationFields\": {"
+        String parsed = "{\"event\": {"
+                + "\"commonEventHeader\": { \"sourceName\":\"NOKQTFCOC540002E\"},"
+                + "\"pnfRegistrationFields\": {"
                 + " \"unitType\": \"AirScale\","
                 + " \"serialNumber\": \"QTFCOC540002E\","
                 + " \"pnfRegistrationFieldsVersion\": \"2.0\","
@@ -160,7 +172,7 @@ class DmaapConsumerJsonParserTest {
                 + "}}}";
 
         ConsumerDmaapModel expectedObject = ImmutableConsumerDmaapModel.builder().ipv4("10.16.123.234").ipv6("")
-            .pnfName("NOKQTFCOC540002E").build();
+            .sourceName("NOKQTFCOC540002E").build();
         //when
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
         JsonElement jsonElement = new JsonParser().parse(parsed);
@@ -175,7 +187,10 @@ class DmaapConsumerJsonParserTest {
 
     @Test
     void whenPassingCorrectJsonWithoutIpv4andIpv6_validationThrowingAnException() {
-        String message = "[{\"event\": {\"pnfRegistrationFields\": {"
+        //given
+        String message = "[{\"event\": {"
+                + "\"commonEventHeader\": { \"sourceName\":\"NOKQTFCOC540002E\"},"
+                + "\"pnfRegistrationFields\": {"
                 + " \"unitType\": \"AirScale\","
                 + " \"serialNumber\": \"QTFCOC540002E\","
                 + " \"pnfRegistrationFieldsVersion\": \"2.0\","
@@ -187,7 +202,9 @@ class DmaapConsumerJsonParserTest {
                 + " \"softwareVersion\": \"v4.5.0.1\""
                 + "}}}]";
 
-        String parsed = "{\"event\": {\"pnfRegistrationFields\": {"
+        String parsed = "{\"event\": {"
+                + "\"commonEventHeader\": { \"sourceName\":\"NOKQTFCOC540002E\"},"
+                + "\"pnfRegistrationFields\": {"
                 + " \"unitType\": \"AirScale\","
                 + " \"serialNumber\": \"QTFCOC540002E\","
                 + " \"pnfRegistrationFieldsVersion\": \"2.0\","
@@ -210,13 +227,17 @@ class DmaapConsumerJsonParserTest {
 
     @Test
     void whenPassingJsonWithoutMandatoryHeaderInformation_validationThrowingAnException() {
-        String parsed = "{\"event\": {\"pnfRegistrationFields\": {"
+        String parsed = "{\"event\": {"
+                + "\"commonEventHeader\": {},"
+                + "\"pnfRegistrationFields\": {"
                 + " \"unitType\": \"AirScale\","
+                + " \"serialNumber\": \"QTFCOC540002E\","
                 + " \"pnfRegistrationFieldsVersion\": \"2.0\","
                 + " \"manufactureDate\": \"1535014037024\","
                 + " \"modelNumber\": \"7BEA\",\n"
                 + " \"lastServiceDate\": \"1535014037024\","
                 + " \"unitFamily\": \"BBU\","
+                + " \"vendorName\": \"Nokia\","
                 + " \"softwareVersion\": \"v4.5.0.1\""
                 + "}}}";
 
@@ -224,13 +245,17 @@ class DmaapConsumerJsonParserTest {
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
-        String incorrectMessage = "[{\"event\": {\"pnfRegistrationFields\": {"
+        String incorrectMessage = "[{\"event\": {"
+                + "\"commonEventHeader\": {},"
+                + "\"pnfRegistrationFields\": {"
                 + " \"unitType\": \"AirScale\","
+                + " \"serialNumber\": \"QTFCOC540002E\","
                 + " \"pnfRegistrationFieldsVersion\": \"2.0\","
                 + " \"manufactureDate\": \"1535014037024\","
                 + " \"modelNumber\": \"7BEA\",\n"
                 + " \"lastServiceDate\": \"1535014037024\","
                 + " \"unitFamily\": \"BBU\","
+                + " \"vendorName\": \"Nokia\","
                 + " \"softwareVersion\": \"v4.5.0.1\""
                 + "}}}]";
         StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(incorrectMessage)))
@@ -238,15 +263,18 @@ class DmaapConsumerJsonParserTest {
     }
 
     @Test
-    void whenPassingJsonWithoutSerialNumberOrVendorName_validationThrowingAnException() {
-        String parsed = "{\"event\": {\"pnfRegistrationFields\": {"
+    void whenPassingJsonWithoutSourceName_validationThrowingAnException() {
+        String parsed = "{\"event\": {"
+                + "\"commonEventHeader\": {},"
+                + "\"pnfRegistrationFields\": {"
                 + " \"unitType\": \"AirScale\","
+                + " \"serialNumber\": \"QTFCOC540002E\","
                 + " \"pnfRegistrationFieldsVersion\": \"2.0\","
                 + " \"manufactureDate\": \"1535014037024\","
                 + " \"modelNumber\": \"7BEA\",\n"
                 + " \"lastServiceDate\": \"1535014037024\","
                 + " \"unitFamily\": \"BBU\","
-                + " \"oamV4IpAddress\": \"10.16.123.234\","
+                + " \"vendorName\": \"Nokia\","
                 + " \"softwareVersion\": \"v4.5.0.1\","
                 + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
                 + "}}}";
@@ -255,27 +283,10 @@ class DmaapConsumerJsonParserTest {
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
-        String jsonWithoutVendorAndSerialNumber =
-                "[{\"event\": {\"pnfRegistrationFields\": {"
-                        + " \"unitType\": \"AirScale\","
-                        + " \"pnfRegistrationFieldsVersion\": \"2.0\","
-                        + " \"manufactureDate\": \"1535014037024\","
-                        + " \"modelNumber\": \"7BEA\",\n"
-                        + " \"lastServiceDate\": \"1535014037024\","
-                        + " \"unitFamily\": \"BBU\","
-                        + " \"oamV4IpAddress\": \"10.16.123.234\","
-                        + " \"softwareVersion\": \"v4.5.0.1\","
-                        + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
-                        + "}}}]";
-        StepVerifier
-            .create(dmaapConsumerJsonParser.getJsonObject(Mono.just(jsonWithoutVendorAndSerialNumber)))
-            .expectSubscription().expectError(DmaapNotFoundException.class).verify();
-    }
-
-    @Test
-    void whenPassingJsonWithoutIpInformation_validationThrowingAnException() {
-        String parsed =
-                "{\"event\": {\"pnfRegistrationFields\": {"
+        String jsonWithoutSourceName =
+                "[{\"event\": {"
+                        + "\"commonEventHeader\": {},"
+                        + "\"pnfRegistrationFields\": {"
                         + " \"unitType\": \"AirScale\","
                         + " \"serialNumber\": \"QTFCOC540002E\","
                         + " \"pnfRegistrationFieldsVersion\": \"2.0\","
@@ -284,7 +295,31 @@ class DmaapConsumerJsonParserTest {
                         + " \"lastServiceDate\": \"1535014037024\","
                         + " \"unitFamily\": \"BBU\","
                         + " \"vendorName\": \"Nokia\","
-                        + " \"softwareVersion\": \"v4.5.0.1\""
+                        + " \"softwareVersion\": \"v4.5.0.1\","
+                        + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
+                        + "}}}]";
+        StepVerifier
+            .create(dmaapConsumerJsonParser.getJsonObject(Mono.just(jsonWithoutSourceName)))
+            .expectSubscription().expectError(DmaapNotFoundException.class).verify();
+    }
+
+    @Test
+    void whenPassingJsonWithoutIpInformation_validationThrowingAnException() {
+        String parsed =
+                "{\"event\": {"
+                        + "\"commonEventHeader\": {\"sourceName\": \"NOKQTFCOC540002E\"},"
+                        + "\"pnfRegistrationFields\": {"
+                        + " \"unitType\": \"AirScale\","
+                        + " \"serialNumber\": \"QTFCOC540002E\","
+                        + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+                        + " \"manufactureDate\": \"1535014037024\","
+                        + " \"modelNumber\": \"7BEA\",\n"
+                        + " \"lastServiceDate\": \"1535014037024\","
+                        + " \"unitFamily\": \"BBU\","
+                        + " \"vendorName\": \"Nokia\","
+                        + " \"softwareVersion\": \"v4.5.0.1\","
+                        + " \"oamV4IpAddress\": \"\","
+                        + " \"oamV6IpAddress\": \"\""
                         + "}}}";
 
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
@@ -292,7 +327,9 @@ class DmaapConsumerJsonParserTest {
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
         String jsonWithoutIpInformation =
-                "[{\"event\": {\"pnfRegistrationFields\": {"
+                "[{\"event\": {"
+                        + "\"commonEventHeader\": {\"sourceName\": \"NOKQTFCOC540002E\"},"
+                        + "\"pnfRegistrationFields\": {"
                         + " \"unitType\": \"AirScale\","
                         + " \"serialNumber\": \"QTFCOC540002E\","
                         + " \"pnfRegistrationFieldsVersion\": \"2.0\","
@@ -301,9 +338,54 @@ class DmaapConsumerJsonParserTest {
                         + " \"lastServiceDate\": \"1535014037024\","
                         + " \"unitFamily\": \"BBU\","
                         + " \"vendorName\": \"Nokia\","
-                        + " \"softwareVersion\": \"v4.5.0.1\""
+                        + " \"softwareVersion\": \"v4.5.0.1\","
+                        + " \"oamV4IpAddress\": \"\","
+                        + " \"oamV6IpAddress\": \"\""
                         + "}}}]";
         StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(jsonWithoutIpInformation)))
             .expectSubscription().expectError(DmaapNotFoundException.class).verify();
+    }
+
+    @Test
+    void whenPassingJsonWithoutSourceNameValue_validationThrowingAnException() {
+        String parsed =
+                "{\"event\": {"
+                        + "\"commonEventHeader\": {\"sourceName\": \"\"},"
+                        + "\"pnfRegistrationFields\": {"
+                        + " \"unitType\": \"AirScale\","
+                        + " \"serialNumber\": \"QTFCOC540002E\","
+                        + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+                        + " \"manufactureDate\": \"1535014037024\","
+                        + " \"modelNumber\": \"7BEA\",\n"
+                        + " \"lastServiceDate\": \"1535014037024\","
+                        + " \"unitFamily\": \"BBU\","
+                        + " \"vendorName\": \"Nokia\","
+                        + " \"softwareVersion\": \"v4.5.0.1\","
+                        + " \"oamV4IpAddress\": \"10.16.123.234\","
+                        + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
+                        + "}}}";
+
+        DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
+        JsonElement jsonElement = new JsonParser().parse(parsed);
+        Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
+                .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
+        String jsonWithoutIpInformation =
+                "[{\"event\": {"
+                        + "\"commonEventHeader\": {\"sourceName\": \"\"},"
+                        + "\"pnfRegistrationFields\": {"
+                        + " \"unitType\": \"AirScale\","
+                        + " \"serialNumber\": \"QTFCOC540002E\","
+                        + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+                        + " \"manufactureDate\": \"1535014037024\","
+                        + " \"modelNumber\": \"7BEA\",\n"
+                        + " \"lastServiceDate\": \"1535014037024\","
+                        + " \"unitFamily\": \"BBU\","
+                        + " \"vendorName\": \"Nokia\","
+                        + " \"softwareVersion\": \"v4.5.0.1\","
+                        + " \"oamV4IpAddress\": \"10.16.123.234\","
+                        + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
+                        + "}}}]";
+        StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(jsonWithoutIpInformation)))
+                .expectSubscription().expectError(DmaapNotFoundException.class).verify();
     }
 }

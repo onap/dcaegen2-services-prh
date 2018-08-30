@@ -20,6 +20,7 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
+import javax.net.ssl.SSLException;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.AaiNotFoundException;
@@ -41,7 +42,7 @@ import reactor.core.publisher.Mono;
 public class AaiProducerTaskImpl extends
     AaiProducerTask {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger logger = LoggerFactory.getLogger(AaiProducerTaskImpl.class);
 
     private final Config config;
     private AaiProducerReactiveHttpClient aaiProducerReactiveHttpClient;
@@ -52,12 +53,13 @@ public class AaiProducerTaskImpl extends
     }
 
     @Override
-    Mono<ConsumerDmaapModel> publish(Mono<ConsumerDmaapModel> consumerDmaapModel) {
-
+    Mono<ConsumerDmaapModel> publish(ConsumerDmaapModel consumerDmaapModel) {
+        logger.info("Publish to AAI DmaapModel");
         return aaiProducerReactiveHttpClient.getAaiProducerResponse(consumerDmaapModel)
             .flatMap(response -> {
-                if (HttpUtils.isSuccessfulResponseCode(response)) {
-                    return consumerDmaapModel;
+                if (HttpUtils.isSuccessfulResponseCode(response.statusCode().value())) {
+                    logger.info("Returned aaiConsumerDmaapModel to dmaap {}", response);
+                    return Mono.just(consumerDmaapModel);
                 }
                 return Mono
                     .error(new AaiNotFoundException("Incorrect response code for continuation of tasks workflow"));
@@ -65,8 +67,9 @@ public class AaiProducerTaskImpl extends
     }
 
     @Override
-    AaiProducerReactiveHttpClient resolveClient() {
-        return new AaiProducerReactiveHttpClient(resolveConfiguration());
+    AaiProducerReactiveHttpClient resolveClient() throws SSLException {
+        return new AaiProducerReactiveHttpClient(resolveConfiguration()).createAaiWebClient(buildWebClient());
+
     }
 
     @Override
@@ -75,12 +78,13 @@ public class AaiProducerTaskImpl extends
     }
 
     @Override
-    protected Mono<ConsumerDmaapModel> execute(Mono<ConsumerDmaapModel> consumerDmaapModel) throws PrhTaskException {
+    protected Mono<ConsumerDmaapModel> execute(ConsumerDmaapModel consumerDmaapModel)
+        throws PrhTaskException, SSLException {
         if (consumerDmaapModel == null) {
             throw new DmaapNotFoundException("Invoked null object to DMaaP task");
         }
         aaiProducerReactiveHttpClient = resolveClient();
-        logger.trace("Method called with arg {}", consumerDmaapModel);
+
         return publish(consumerDmaapModel);
 
     }

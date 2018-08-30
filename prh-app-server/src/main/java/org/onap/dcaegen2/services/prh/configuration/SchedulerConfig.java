@@ -29,14 +29,11 @@ import java.util.concurrent.ScheduledFuture;
 import javax.annotation.PostConstruct;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import reactor.core.publisher.Mono;
 
 /**
@@ -46,22 +43,20 @@ import reactor.core.publisher.Mono;
 @EnableScheduling
 public class SchedulerConfig {
 
-    private static final int SCHEDULING_DELAY_FOR_PRH_TASKS = 5;
+    private static final int SCHEDULING_DELAY_FOR_PRH_TASKS = 10;
     private static final int SCHEDULING_REQUEST_FOR_CONFIGURATION_DELAY = 5;
     private static volatile List<ScheduledFuture> scheduledPrhTaskFutureList = new ArrayList<>();
 
-    private final ConcurrentTaskScheduler taskScheduler;
+    private final TaskScheduler taskScheduler;
     private final ScheduledTasks scheduledTask;
-    private final TaskScheduler cloudTaskScheduler;
     private final CloudConfiguration cloudConfiguration;
 
     @Autowired
-    public SchedulerConfig(@Qualifier("concurrentTaskScheduler") ConcurrentTaskScheduler concurrentTaskScheduler,
-        ScheduledTasks scheduledTask, ThreadPoolTaskScheduler cloudTaskScheduler,
+    public SchedulerConfig(TaskScheduler taskScheduler,
+        ScheduledTasks scheduledTask,
         CloudConfiguration cloudConfiguration) {
-        this.taskScheduler = concurrentTaskScheduler;
+        this.taskScheduler = taskScheduler;
         this.scheduledTask = scheduledTask;
-        this.cloudTaskScheduler = cloudTaskScheduler;
         this.cloudConfiguration = cloudConfiguration;
     }
 
@@ -89,7 +84,7 @@ public class SchedulerConfig {
     @ApiOperation(value = "Start task if possible")
     public synchronized boolean tryToStartTask() {
         if (scheduledPrhTaskFutureList.isEmpty()) {
-            scheduledPrhTaskFutureList.add(cloudTaskScheduler
+            scheduledPrhTaskFutureList.add(taskScheduler
                 .scheduleAtFixedRate(cloudConfiguration::runTask, Instant.now(),
                     Duration.ofMinutes(SCHEDULING_REQUEST_FOR_CONFIGURATION_DELAY)));
             scheduledPrhTaskFutureList.add(taskScheduler

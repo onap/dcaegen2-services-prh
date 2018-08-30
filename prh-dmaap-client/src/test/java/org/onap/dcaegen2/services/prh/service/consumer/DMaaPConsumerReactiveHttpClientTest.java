@@ -111,9 +111,16 @@ class DMaaPConsumerReactiveHttpClientTest {
             .expectError(Exception.class).verify();
     }
 
+    @Test
+    void getAppropriateUri_whenPassingCorrectedPathForPnf() throws URISyntaxException {
+        Assertions.assertEquals(dmaapConsumerReactiveHttpClient.getUri(),
+            URI.create("https://54.45.33.2:1234/unauthenticated.SEC_OTHER_OUTPUT/OpenDCAE-c12/c12"));
+    }
+
     private void mockDependantObjects() {
         when(webClient.get()).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.uri((URI) any())).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.header(any(),any())).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         doReturn(responseSpec).when(responseSpec).onStatus(any(), any());
     }

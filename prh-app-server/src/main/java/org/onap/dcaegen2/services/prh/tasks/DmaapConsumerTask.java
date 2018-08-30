@@ -33,7 +33,7 @@ import reactor.core.publisher.Mono;
  */
 abstract class DmaapConsumerTask {
 
-    abstract Mono<ConsumerDmaapModel> consume(Mono<String> message) throws PrhTaskException;
+    abstract Mono<ConsumerDmaapModel> consume(Mono<String> message);
 
     abstract DMaaPConsumerReactiveHttpClient resolveClient();
 
@@ -41,7 +41,7 @@ abstract class DmaapConsumerTask {
 
     protected abstract DmaapConsumerConfiguration resolveConfiguration();
 
-    protected abstract Mono<ConsumerDmaapModel> execute(String object) throws PrhTaskException;
+    protected abstract Mono<ConsumerDmaapModel> execute(String object);
 
     WebClient buildWebClient() {
         return new DMaaPReactiveWebClient().fromConfiguration(resolveConfiguration()).build();

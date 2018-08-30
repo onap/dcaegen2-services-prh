@@ -29,8 +29,6 @@ import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Mono;
 
@@ -46,8 +44,6 @@ public class DmaapConsumerJsonParser {
     private static final String OAM_IPV_6_ADDRESS = "oamV6IpAddress";
     private static final String SOURCE_NAME = "sourceName";
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     /**
      * Extract info from string and create @see {@link org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel}.
      *
@@ -56,19 +52,18 @@ public class DmaapConsumerJsonParser {
      */
     public Mono<ConsumerDmaapModel> getJsonObject(Mono<String> monoMessage) {
         return monoMessage
-            .doOnNext(message -> logger.info("Consumed message from DmaaP: {}", message))
             .flatMap(this::getJsonParserMessage)
             .flatMap(this::createJsonConsumerModel);
     }
 
     private Mono<JsonElement> getJsonParserMessage(String message) {
         return StringUtils.isEmpty(message) ? Mono.error(new DmaapEmptyResponseException())
-            : Mono.fromSupplier(() -> new JsonParser().parse(message));
+            : Mono.fromCallable(() -> new JsonParser().parse(message));
     }
 
     private Mono<ConsumerDmaapModel> createJsonConsumerModel(JsonElement jsonElement) {
         return jsonElement.isJsonObject()
-            ? create(Mono.fromSupplier(jsonElement::getAsJsonObject))
+            ? create(Mono.fromCallable(jsonElement::getAsJsonObject))
             : getConsumerDmaapModelFromJsonArray(jsonElement);
     }
 

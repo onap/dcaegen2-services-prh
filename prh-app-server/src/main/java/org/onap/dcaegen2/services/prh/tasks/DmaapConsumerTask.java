@@ -21,7 +21,6 @@
 package org.onap.dcaegen2.services.prh.tasks;
 
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.DMaaPReactiveWebClient;
 import org.onap.dcaegen2.services.prh.service.consumer.DMaaPConsumerReactiveHttpClient;
@@ -33,7 +32,7 @@ import reactor.core.publisher.Mono;
  */
 abstract class DmaapConsumerTask {
 
-    abstract Mono<ConsumerDmaapModel> consume(Mono<String> message) throws PrhTaskException;
+    abstract Mono<ConsumerDmaapModel> consume(Mono<String> message);
 
     abstract DMaaPConsumerReactiveHttpClient resolveClient();
 
@@ -41,7 +40,7 @@ abstract class DmaapConsumerTask {
 
     protected abstract DmaapConsumerConfiguration resolveConfiguration();
 
-    protected abstract Mono<ConsumerDmaapModel> execute(String object) throws PrhTaskException;
+    protected abstract Mono<ConsumerDmaapModel> execute(String object);
 
     WebClient buildWebClient() {
         return new DMaaPReactiveWebClient().fromConfiguration(resolveConfiguration()).build();

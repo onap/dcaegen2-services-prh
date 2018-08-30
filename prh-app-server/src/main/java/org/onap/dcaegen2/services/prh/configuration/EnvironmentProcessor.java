@@ -20,14 +20,15 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
-import java.util.Optional;
-import java.util.Properties;
 import org.onap.dcaegen2.services.prh.exceptions.EnvironmentLoaderException;
 import org.onap.dcaegen2.services.prh.model.EnvProperties;
 import org.onap.dcaegen2.services.prh.model.ImmutableEnvProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import java.util.Optional;
+import java.util.Properties;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 8/10/18
@@ -35,23 +36,23 @@ import reactor.core.publisher.Flux;
 class EnvironmentProcessor {
 
     private static final int DEFAULT_CONSUL_PORT = 8500;
-    private static Logger logger = LoggerFactory.getLogger(EnvironmentProcessor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EnvironmentProcessor.class);
 
     private EnvironmentProcessor() {
     }
 
-    static Flux<EnvProperties> evaluate(Properties systemEnvironment) {
-        logger.info("Loading configuration from system environment variables {}", systemEnvironment);
+    static Mono<EnvProperties> evaluate(Properties systemEnvironment) {
+        LOGGER.info("Loading configuration from system environment variables");
         EnvProperties envProperties;
         try {
             envProperties = ImmutableEnvProperties.builder().consulHost(getConsulHost(systemEnvironment))
                 .consulPort(getConsultPort(systemEnvironment)).cbsName(getConfigBindingService(systemEnvironment))
                 .appName(getService(systemEnvironment)).build();
         } catch (EnvironmentLoaderException e) {
-            return Flux.error(e);
+            return Mono.error(e);
         }
-        logger.info("Evaluated environment system variables {}", envProperties);
-        return Flux.just(envProperties);
+        LOGGER.info("Evaluated environment system variables {}", envProperties);
+        return Mono.just(envProperties);
     }
 
     private static String getConsulHost(Properties systemEnvironments) throws EnvironmentLoaderException {
@@ -78,8 +79,8 @@ class EnvironmentProcessor {
     }
 
     private static Integer getDefaultPortOfConsul() {
-        logger.warn("$CONSUL_PORT environment has not been defined");
-        logger.warn("$CONSUL_PORT variable will be set to default port {}", DEFAULT_CONSUL_PORT);
+        LOGGER.warn("$CONSUL_PORT environment has not been defined");
+        LOGGER.warn("$CONSUL_PORT variable will be set to default port {}", DEFAULT_CONSUL_PORT);
         return DEFAULT_CONSUL_PORT;
     }
 }

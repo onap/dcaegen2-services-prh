@@ -63,7 +63,7 @@ public abstract class PrhAppConfig implements Config {
     private static final String DMAAP_PRODUCER = "dmaapProducerConfiguration";
     private static final String DMAAP_CONSUMER = "dmaapConsumerConfiguration";
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(PrhAppConfig.class);
 
     AaiClientConfiguration aaiClientConfiguration;
 
@@ -114,9 +114,9 @@ public abstract class PrhAppConfig implements Config {
                     DmaapPublisherConfiguration.class);
             }
         } catch (IOException e) {
-            logger.warn("Problem with file loading, file: {}", filepath, e);
+            LOGGER.warn("Problem with file loading, file: {}", filepath, e);
         } catch (JsonSyntaxException e) {
-            logger.warn("Problem with Json deserialization", e);
+            LOGGER.warn("Problem with Json deserialization", e);
         }
     }
 

@@ -32,12 +32,11 @@ import org.junit.jupiter.api.Test;
 
 class CommonFunctionsTest {
 
-    // Given
-    private ConsumerDmaapModel model = new ConsumerDmaapModelForUnitTest();
-
     private static final HttpResponse httpResponseMock = mock(HttpResponse.class);
     private static final HttpEntity httpEntityMock = mock(HttpEntity.class);
     private static final StatusLine statusLineMock = mock(StatusLine.class);
+    // Given
+    private ConsumerDmaapModel model = new ConsumerDmaapModelForUnitTest();
 
     @BeforeAll
     static void setup() {

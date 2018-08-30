@@ -18,8 +18,8 @@
   -->
 <configuration debug="false">
   <include resource="org/springframework/boot/logging/logback/base.xml"/>
-  <logger name="org.onap.dcaegen2.services.prh" level="DEBUG"/>
-  <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+  <logger level="DEBUG" name="org.onap.dcaegen2.services.prh"/>
+  <appender class="ch.qos.logback.core.ConsoleAppender" name="Console">
     <encoder>
       <pattern>%d{ISO8601} - %-5p [%t:%C{1}@%L] - %m%n</pattern>
     </encoder>

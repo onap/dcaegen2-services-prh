@@ -20,12 +20,21 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
+import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.INSTANCE_UUID;
+import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.RESPONSE_CODE;
+
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.model.logging.MDCVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -38,10 +47,10 @@ import reactor.core.scheduler.Schedulers;
 public class ScheduledTasks {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     private final DmaapConsumerTask dmaapConsumerTask;
     private final DmaapPublisherTask dmaapProducerTask;
     private final AaiProducerTask aaiProducerTask;
+    private Map<String, String> contextMap = MDC.getCopyOfContextMap();
 
     /**
      * Constructor for tasks registration in PRHWorkflow.
@@ -62,6 +71,7 @@ public class ScheduledTasks {
      * Main function for scheduling prhWorkflow.
      */
     public void scheduleMainPrhEventTask() {
+        MDCVariables.setMdcContextMap(contextMap);
         logger.trace("Execution of tasks was registered");
 
         Mono<String> dmaapProducerResponse = Mono.fromCallable(consumeFromDMaaPMessage())
@@ -78,6 +88,7 @@ public class ScheduledTasks {
     }
 
     private void onSuccess(String responseCode) {
+        MDC.put(RESPONSE_CODE, responseCode);
         logger.info("Prh consumed tasks. HTTP Response code {}", responseCode);
     }
 
@@ -89,6 +100,8 @@ public class ScheduledTasks {
 
     private Callable<Mono<ConsumerDmaapModel>> consumeFromDMaaPMessage() {
         return () -> {
+            MDCVariables.setMdcContextMap(contextMap);
+            MDC.put(INSTANCE_UUID, UUID.randomUUID().toString());
             dmaapConsumerTask.initConfigs();
             return dmaapConsumerTask.execute("");
         };

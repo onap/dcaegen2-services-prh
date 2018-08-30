@@ -50,6 +50,7 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
 
     /**
      * Swagger configuration function for hosting it next to spring http website.
+     *
      * @return Docket
      */
     @Bean

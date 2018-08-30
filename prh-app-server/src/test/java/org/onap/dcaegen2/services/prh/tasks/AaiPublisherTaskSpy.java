@@ -20,16 +20,16 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.service.producer.AaiProducerReactiveHttpClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+
+import javax.net.ssl.SSLException;
+
+import static org.mockito.Mockito.*;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
@@ -44,7 +44,7 @@ public class AaiPublisherTaskSpy {
      */
     @Bean
     @Primary
-    public AaiProducerTask registerSimpleAaiPublisherTask() {
+    public AaiProducerTask registerSimpleAaiPublisherTask() throws SSLException {
         AppConfig appConfig = spy(AppConfig.class);
         doReturn(mock(AaiClientConfiguration.class)).when(appConfig).getAaiClientConfiguration();
         AaiProducerTaskImpl aaiProducerTask = spy(new AaiProducerTaskImpl(appConfig));

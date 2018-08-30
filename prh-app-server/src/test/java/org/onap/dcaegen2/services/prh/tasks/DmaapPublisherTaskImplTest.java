@@ -42,6 +42,7 @@ import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.producer.DMaaPProducerReactiveHttpClient;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -84,15 +85,16 @@ class DmaapPublisherTaskImplTest {
     @Test
     void whenPassedObjectFits_ReturnsCorrectStatus() throws PrhTaskException {
         //given
-        prepareMocksForTests(HttpStatus.OK.value());
+        ResponseEntity<String> responseEntity = prepareMocksForTests(HttpStatus.OK.value());
 
         //when
-        StepVerifier.create(dmaapPublisherTask.execute(Mono.just(consumerDmaapModel))).expectSubscription()
-            .expectNext(HttpStatus.OK.toString()).verifyComplete();
+        when(responseEntity.getStatusCode()).thenReturn(HttpStatus.OK);
+        StepVerifier.create(dmaapPublisherTask.execute(consumerDmaapModel)).expectSubscription()
+            .expectNext(responseEntity).verifyComplete();
 
         //then
         verify(dMaaPProducerReactiveHttpClient, times(1))
-            .getDMaaPProducerResponse(any());
+            .getDMaaPProducerResponse(consumerDmaapModel);
         verifyNoMoreInteractions(dMaaPProducerReactiveHttpClient);
     }
 
@@ -100,24 +102,30 @@ class DmaapPublisherTaskImplTest {
     @Test
     void whenPassedObjectFits_butIncorrectResponseReturns() throws DmaapNotFoundException {
         //given
-        prepareMocksForTests(HttpStatus.UNAUTHORIZED.value());
+        ResponseEntity<String> responseEntity = prepareMocksForTests(HttpStatus.UNAUTHORIZED.value());
 
         //when
-        StepVerifier.create(dmaapPublisherTask.execute(Mono.just(consumerDmaapModel))).expectSubscription()
-            .expectNext(String.valueOf(HttpStatus.UNAUTHORIZED.value())).verifyComplete();
+        when(responseEntity.getStatusCode()).thenReturn(HttpStatus.UNAUTHORIZED);
+        StepVerifier.create(dmaapPublisherTask.execute(consumerDmaapModel)).expectSubscription()
+            .expectNext(responseEntity).verifyComplete();
 
         //then
-        verify(dMaaPProducerReactiveHttpClient, times(1)).getDMaaPProducerResponse(any());
+        verify(dMaaPProducerReactiveHttpClient, times(1))
+            .getDMaaPProducerResponse(consumerDmaapModel);
         verifyNoMoreInteractions(dMaaPProducerReactiveHttpClient);
     }
 
 
-    private void prepareMocksForTests(Integer httpResponseCode) {
+    private ResponseEntity<String> prepareMocksForTests(Integer httpResponseCode) {
+        ResponseEntity<String> responseEntity = mock(ResponseEntity.class);
+        //when
+        when(responseEntity.getStatusCode()).thenReturn(HttpStatus.valueOf(httpResponseCode));
         dMaaPProducerReactiveHttpClient = mock(DMaaPProducerReactiveHttpClient.class);
         when(dMaaPProducerReactiveHttpClient.getDMaaPProducerResponse(any()))
-            .thenReturn(Mono.just(httpResponseCode.toString()));
+            .thenReturn(Mono.just(responseEntity));
         dmaapPublisherTask = spy(new DmaapPublisherTaskImpl(appConfig));
         when(dmaapPublisherTask.resolveConfiguration()).thenReturn(dmaapPublisherConfiguration);
         doReturn(dMaaPProducerReactiveHttpClient).when(dmaapPublisherTask).resolveClient();
+        return responseEntity;
     }
 }

@@ -14,7 +14,8 @@ logging:
     ROOT: ERROR
     org.springframework: ERROR
     org.springframework.data: ERROR
-    org.onap.dcaegen2.services.prh: INFO
-  file: opt/log/application.log
+    reactor.ipc.netty.http.client: DEBUG
+    org.springframework.web.reactive: DEBUG
+    org.onap.dcaegen2.services.prh: DEBUG
 app:
   filepath: config/prh_endpoints.json

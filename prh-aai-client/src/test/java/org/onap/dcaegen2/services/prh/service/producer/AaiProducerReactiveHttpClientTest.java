@@ -20,28 +20,26 @@
 
 package org.onap.dcaegen2.services.prh.service.producer;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
-import static org.springframework.web.reactive.function.client.ExchangeFilterFunctions.basicAuthentication;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModelForUnitTest;
+import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClient.ResponseSpec;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.web.reactive.function.client.ExchangeFilterFunctions.basicAuthentication;
 
 class AaiProducerReactiveHttpClientTest {
 
@@ -50,16 +48,21 @@ class AaiProducerReactiveHttpClientTest {
     private static AaiClientConfiguration aaiConfigurationMock = mock(AaiClientConfiguration.class);
     private static WebClient webClient = mock(WebClient.class);
 
-    private static ConsumerDmaapModel dmaapModel = new ConsumerDmaapModelForUnitTest();
-    private static WebClient.RequestBodyUriSpec requestBodyUriSpec;
-    private static ResponseSpec responseSpec;
 
-    private static Map<String, String> aaiHeaders;
+    private ConsumerDmaapModel dmaapModel = spy(new ConsumerDmaapModelForUnitTest());
+    private WebClient.RequestBodyUriSpec requestBodyUriSpec;
+    private ResponseSpec responseSpec;
 
-    @BeforeAll
-    static void setUp() {
+    private Map<String, String> aaiHeaders;
+    private ClientResponse clientResponse;
+    private Mono<ClientResponse> clientResponseMono;
+
+    @BeforeEach
+    void setUp() {
         setupHeaders();
-
+        clientResponse = mock(ClientResponse.class);
+        clientResponseMono = Mono.just(clientResponse);
+        when(dmaapModel.getSourceName()).thenReturn("NOKnhfsadhff");
         when(aaiConfigurationMock.aaiHost()).thenReturn("54.45.33.2");
         when(aaiConfigurationMock.aaiProtocol()).thenReturn("https");
         when(aaiConfigurationMock.aaiPort()).thenReturn(1234);
@@ -72,21 +75,12 @@ class AaiProducerReactiveHttpClientTest {
         aaiProducerReactiveHttpClient = new AaiProducerReactiveHttpClient(aaiConfigurationMock);
 
         webClient = spy(WebClient.builder()
-            .defaultHeaders(httpHeaders -> httpHeaders.setAll(aaiHeaders))
-            .filter(basicAuthentication(aaiConfigurationMock.aaiUserName(), aaiConfigurationMock.aaiUserPassword()))
-            .build());
+                .defaultHeaders(httpHeaders -> httpHeaders.setAll(aaiHeaders))
+                .filter(basicAuthentication(aaiConfigurationMock.aaiUserName(), aaiConfigurationMock.aaiUserPassword()))
+                .build());
 
         requestBodyUriSpec = mock(WebClient.RequestBodyUriSpec.class);
         responseSpec = mock(ResponseSpec.class);
-    }
-
-    private static void setupHeaders() {
-        aaiHeaders = new HashMap<>();
-        aaiHeaders.put("X-FromAppId", "PRH");
-        aaiHeaders.put("X-TransactionId", "vv-temp");
-        aaiHeaders.put("Accept", "application/json");
-        aaiHeaders.put("Real-Time", "true");
-        aaiHeaders.put("Content-Type", "application/merge-patch+json");
     }
 
     @Test
@@ -98,14 +92,13 @@ class AaiProducerReactiveHttpClientTest {
         mockWebClientDependantObject();
         doReturn(expectedResult).when(responseSpec).bodyToMono(Integer.class);
         aaiProducerReactiveHttpClient.createAaiWebClient(webClient);
-        Mono<Integer> response = aaiProducerReactiveHttpClient.getAaiProducerResponse(Mono.just(dmaapModel));
 
         //then
-        StepVerifier.create(response).expectSubscription()
-            .expectNextMatches(results -> {
-                Assertions.assertEquals(results, expectedResult.block());
-                return true;
-            }).verifyComplete();
+        StepVerifier.create(aaiProducerReactiveHttpClient.getAaiProducerResponse(dmaapModel)).expectSubscription()
+                .expectNextMatches(results -> {
+                    Assertions.assertEquals(results, clientResponse);
+                    return true;
+                }).verifyComplete();
     }
 
     @Test
@@ -115,13 +108,28 @@ class AaiProducerReactiveHttpClientTest {
         //when
         when(webClient.patch()).thenReturn(requestBodyUriSpec);
         aaiProducerReactiveHttpClient.createAaiWebClient(webClient);
-        when(aaiProducerReactiveHttpClient.getUri("pnfName")).thenThrow(URISyntaxException.class);
-
+        doThrow(URISyntaxException.class).when(aaiProducerReactiveHttpClient).getUri(any());
         //then
         StepVerifier.create(
-            aaiProducerReactiveHttpClient.getAaiProducerResponse(
-                Mono.just(dmaapModel)
-            )).expectSubscription().expectError(Exception.class).verify();
+                aaiProducerReactiveHttpClient.getAaiProducerResponse(
+                        dmaapModel
+                )).expectSubscription().expectError(Exception.class).verify();
+    }
+
+    @Test
+    void getAppropriateUri_whenPassingCorrectedPathForPnf() throws URISyntaxException {
+        Assertions.assertEquals(aaiProducerReactiveHttpClient.getUri("NOKnhfsadhff"),
+                URI.create("https://54.45.33.2:1234/aai/v11/network/pnfs/pnf/NOKnhfsadhff"));
+    }
+
+
+    private void setupHeaders() {
+        aaiHeaders = new HashMap<>();
+        aaiHeaders.put("X-FromAppId", "PRH");
+        aaiHeaders.put("X-TransactionId", "vv-temp");
+        aaiHeaders.put("Accept", "application/json");
+        aaiHeaders.put("Real-Time", "true");
+        aaiHeaders.put("Content-Type", "application/merge-patch+json");
     }
 
     private void mockWebClientDependantObject() {
@@ -129,10 +137,8 @@ class AaiProducerReactiveHttpClientTest {
         when(webClient.patch()).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.uri((URI) any())).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.header(any(), any())).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.body(any())).thenReturn(requestHeadersSpec);
-        doReturn(responseSpec).when(requestHeadersSpec).retrieve();
-        doReturn(responseSpec).when(responseSpec).onStatus(any(), any());
+        when(requestBodyUriSpec.body(any(), (Class<Object>) any())).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.exchange()).thenReturn(clientResponseMono);
     }
-
 }
 

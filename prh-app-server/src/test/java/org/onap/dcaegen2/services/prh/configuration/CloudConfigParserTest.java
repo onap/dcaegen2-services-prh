@@ -20,87 +20,82 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.Test;
-import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
-import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
-import org.onap.dcaegen2.services.prh.config.ImmutableAaiClientConfiguration;
-import org.onap.dcaegen2.services.prh.config.ImmutableDmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.prh.config.ImmutableDmaapPublisherConfiguration;
+import org.onap.dcaegen2.services.prh.config.*;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CloudConfigParserTest {
 
     private static final String correctJson =
-        "{\"aai.aaiClientConfiguration.aaiIgnoreSslCertificateErrors\": true, "
-            + "\"dmaap.dmaapProducerConfiguration.dmaapTopicName\": \"/events/unauthenticated.PNF_READY\", "
-            + "\"dmaap.dmaapConsumerCon"
-            + "figuration.timeoutMs\": -1, \"dmaap.dmaapConsumerConfiguration.dmaapHostName\": "
-            + "\"message-router.onap.svc.cluster.local\", \"aai.aaiClientConfiguration.aaiPnfPath\": "
-            + "\"/network/pnfs/pnf\", \"aai.aaiClientConfiguration.aai"
-            + "UserPassword\": \"AAI\", \"dmaap.dmaapConsumerConfiguration.dmaapUserName\": \"admin\", "
-            + "\"aai.aaiClientConfiguration.aaiBasePath\": \"/aai/v12\", "
-            + "\"dmaap.dmaapProducerConfiguration.dmaapPortNumber\": 3904, \"aai.aaiClientConf"
-            + "iguration.aaiHost\": \"aai.onap.svc.cluster.local\", "
-            + "\"dmaap.dmaapConsumerConfiguration.dmaapUserPassword\": \"admin\", "
-            + "\"dmaap.dmaapProducerConfiguration.dmaapProtocol\": \"http\", \"dmaap.dmaapProducerConfiguration.dmaapC"
-            + "ontentType\": \"application/json\", "
-            + "\"dmaap.dmaapConsumerConfiguration.dmaapTopicName\": \"/events/unauthenticated.SEC_OTHER_OUTPUT\", "
-            + "\"dmaap.dmaapConsumerConfiguration.dmaapPortNumber\": 3904, \"dmaap.dmaapConsumerConfi"
-            + "guration.dmaapContentType\": \"application/json\", \"dmaap.dmaapConsumerConfiguration.messageLimit\": "
-            + "-1, \"dmaap.dmaapConsumerConfiguration.dmaapProtocol\": \"http\", "
-            + "\"aai.aaiClientConfiguration.aaiUserName\": \"AAI\", \"dm"
-            + "aap.dmaapConsumerConfiguration.consumerId\": \"c12\", \"dmaap.dmaapProducerConfiguration.dmaapHostName\""
-            + ": \"message-router.onap.svc.cluster.local\", \"aai.aaiClientConfiguration.aaiHostPortNumber\": "
-            + "8443, \"dmaap.dmaapConsumerConfiguration.consumerGroup\": \"OpenDCAE-c12\", "
-            + "\"aai.aaiClientConfiguration.aaiProtocol\": \"https\", "
-            + "\"dmaap.dmaapProducerConfiguration.dmaapUserName\": \"admin\", "
-            + "\"dmaap.dmaapProducerConfiguration.dmaapUserPasswor"
-            + "d\": \"admin\"}";
+            "{\"aai.aaiClientConfiguration.aaiIgnoreSslCertificateErrors\": true, "
+                    + "\"dmaap.dmaapProducerConfiguration.dmaapTopicName\": \"/events/unauthenticated.PNF_READY\", "
+                    + "\"dmaap.dmaapConsumerCon"
+                    + "figuration.timeoutMs\": -1, \"dmaap.dmaapConsumerConfiguration.dmaapHostName\": "
+                    + "\"message-router.onap.svc.cluster.local\", \"aai.aaiClientConfiguration.aaiPnfPath\": "
+                    + "\"/network/pnfs/pnf\", \"aai.aaiClientConfiguration.aai"
+                    + "UserPassword\": \"AAI\", \"dmaap.dmaapConsumerConfiguration.dmaapUserName\": \"admin\", "
+                    + "\"aai.aaiClientConfiguration.aaiBasePath\": \"/aai/v12\", "
+                    + "\"dmaap.dmaapProducerConfiguration.dmaapPortNumber\": 3904, \"aai.aaiClientConf"
+                    + "iguration.aaiHost\": \"aai.onap.svc.cluster.local\", "
+                    + "\"dmaap.dmaapConsumerConfiguration.dmaapUserPassword\": \"admin\", "
+                    + "\"dmaap.dmaapProducerConfiguration.dmaapProtocol\": \"http\", \"dmaap.dmaapProducerConfiguration.dmaapC"
+                    + "ontentType\": \"application/json\", "
+                    + "\"dmaap.dmaapConsumerConfiguration.dmaapTopicName\": \"/events/unauthenticated.SEC_OTHER_OUTPUT\", "
+                    + "\"dmaap.dmaapConsumerConfiguration.dmaapPortNumber\": 3904, \"dmaap.dmaapConsumerConfi"
+                    + "guration.dmaapContentType\": \"application/json\", \"dmaap.dmaapConsumerConfiguration.messageLimit\": "
+                    + "-1, \"dmaap.dmaapConsumerConfiguration.dmaapProtocol\": \"http\", "
+                    + "\"aai.aaiClientConfiguration.aaiUserName\": \"AAI\", \"dm"
+                    + "aap.dmaapConsumerConfiguration.consumerId\": \"c12\", \"dmaap.dmaapProducerConfiguration.dmaapHostName\""
+                    + ": \"message-router.onap.svc.cluster.local\", \"aai.aaiClientConfiguration.aaiHostPortNumber\": "
+                    + "8443, \"dmaap.dmaapConsumerConfiguration.consumerGroup\": \"OpenDCAE-c12\", "
+                    + "\"aai.aaiClientConfiguration.aaiProtocol\": \"https\", "
+                    + "\"dmaap.dmaapProducerConfiguration.dmaapUserName\": \"admin\", "
+                    + "\"dmaap.dmaapProducerConfiguration.dmaapUserPasswor"
+                    + "d\": \"admin\"}";
 
     private static final ImmutableAaiClientConfiguration correctAaiClientConfig =
-        new ImmutableAaiClientConfiguration.Builder()
-            .aaiHost("aai.onap.svc.cluster.local")
-            .aaiPort(8443)
-            .aaiUserName("AAI")
-            .aaiPnfPath("/network/pnfs/pnf")
-            .aaiIgnoreSslCertificateErrors(true)
-            .aaiUserPassword("AAI")
-            .aaiProtocol("https")
-            .aaiBasePath("/aai/v12")
-            .build();
+            new ImmutableAaiClientConfiguration.Builder()
+                    .aaiHost("aai.onap.svc.cluster.local")
+                    .aaiPort(8443)
+                    .aaiUserName("AAI")
+                    .aaiPnfPath("/network/pnfs/pnf")
+                    .aaiIgnoreSslCertificateErrors(true)
+                    .aaiUserPassword("AAI")
+                    .aaiProtocol("https")
+                    .aaiBasePath("/aai/v12")
+                    .build();
 
     private static final ImmutableDmaapConsumerConfiguration correctDmaapConsumerConfig =
-        new ImmutableDmaapConsumerConfiguration.Builder()
-            .timeoutMs(-1)
-            .dmaapHostName("message-router.onap.svc.cluster.local")
-            .dmaapUserName("admin")
-            .dmaapUserPassword("admin")
-            .dmaapTopicName("/events/unauthenticated.SEC_OTHER_OUTPUT")
-            .dmaapPortNumber(3904)
-            .dmaapContentType("application/json")
-            .messageLimit(-1)
-            .dmaapProtocol("http")
-            .consumerId("c12")
-            .consumerGroup("OpenDCAE-c12")
-            .build();
+            new ImmutableDmaapConsumerConfiguration.Builder()
+                    .timeoutMs(-1)
+                    .dmaapHostName("message-router.onap.svc.cluster.local")
+                    .dmaapUserName("admin")
+                    .dmaapUserPassword("admin")
+                    .dmaapTopicName("/events/unauthenticated.SEC_OTHER_OUTPUT")
+                    .dmaapPortNumber(3904)
+                    .dmaapContentType("application/json")
+                    .messageLimit(-1)
+                    .dmaapProtocol("http")
+                    .consumerId("c12")
+                    .consumerGroup("OpenDCAE-c12")
+                    .build();
 
     private static final ImmutableDmaapPublisherConfiguration correctDmaapPublisherConfig =
-        new ImmutableDmaapPublisherConfiguration.Builder()
-            .dmaapTopicName("/events/unauthenticated.PNF_READY")
-            .dmaapUserPassword("admin")
-            .dmaapPortNumber(3904)
-            .dmaapProtocol("http")
-            .dmaapContentType("application/json")
-            .dmaapHostName("message-router.onap.svc.cluster.local")
-            .dmaapUserName("admin")
-            .build();
+            new ImmutableDmaapPublisherConfiguration.Builder()
+                    .dmaapTopicName("/events/unauthenticated.PNF_READY")
+                    .dmaapUserPassword("admin")
+                    .dmaapPortNumber(3904)
+                    .dmaapProtocol("http")
+                    .dmaapContentType("application/json")
+                    .dmaapHostName("message-router.onap.svc.cluster.local")
+                    .dmaapUserName("admin")
+                    .build();
 
     private CloudConfigParser cloudConfigParser = new CloudConfigParser(
-        new Gson().fromJson(correctJson, JsonObject.class));
+            new Gson().fromJson(correctJson, JsonObject.class));
 
 
     @Test

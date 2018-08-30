@@ -23,7 +23,6 @@ package org.onap.dcaegen2.services.prh.service;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -71,7 +70,6 @@ class HttpGetClientTest {
         assertThat(jsonObjectMono).isNotNull();
         assertThrows(JsonSyntaxException.class, jsonObjectMono::block);
     }
-
 
 
     private void mockWebClientDependantObject() {

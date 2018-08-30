@@ -56,28 +56,28 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
-            .apiInfo(apiInfo())
-            .select()
-            .apis(RequestHandlerSelectors.basePackage(PACKAGE_PATH))
-            .paths(PathSelectors.any())
-            .build();
+                .apiInfo(apiInfo())
+                .select()
+                .apis(RequestHandlerSelectors.basePackage(PACKAGE_PATH))
+                .paths(PathSelectors.any())
+                .build();
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-            .title(API_TITLE)
-            .description(DESCRIPTION)
-            .version(VERSION)
-            .build();
+                .title(API_TITLE)
+                .description(DESCRIPTION)
+                .version(VERSION)
+                .build();
     }
 
 
     @Override
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler(SWAGGER_UI)
-            .addResourceLocations(RESOURCES_PATH);
+                .addResourceLocations(RESOURCES_PATH);
 
         registry.addResourceHandler(WEBJARS)
-            .addResourceLocations(WEBJARS_PATH);
+                .addResourceLocations(WEBJARS_PATH);
     }
 }

@@ -20,18 +20,24 @@
 
 package org.onap.dcaegen2.services.prh.service;
 
-import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.RESPONSE_CODE;
-import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.SERVICE_NAME;
-import static org.springframework.web.reactive.function.client.ExchangeFilterFunctions.basicAuthentication;
-
-import java.util.Map;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import javax.net.ssl.SSLException;
+import java.util.Map;
+
+import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.RESPONSE_CODE;
+import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.SERVICE_NAME;
+import static org.springframework.web.reactive.function.client.ExchangeFilterFunctions.basicAuthentication;
 
 
 public class AaiReactiveWebClient {
@@ -60,13 +66,24 @@ public class AaiReactiveWebClient {
      *
      * @return WebClient
      */
-    public WebClient build() {
+    public WebClient build() throws SSLException {
+        SslContext sslContext;
+        sslContext = SslContextBuilder
+                .forClient()
+                .trustManager(InsecureTrustManagerFactory.INSTANCE)
+                .build();
+        logger.debug("Setting ssl context");
+
         return WebClient.builder()
-            .defaultHeaders(httpHeaders -> httpHeaders.setAll(aaiHeaders))
-            .filter(basicAuthentication(aaiUserName, aaiUserPassword))
-            .filter(logRequest())
-            .filter(logResponse())
-            .build();
+                .clientConnector(new ReactorClientHttpConnector(clientOptions -> {
+                    clientOptions.sslContext(sslContext);
+                    clientOptions.disablePool();
+                }))
+                .defaultHeaders(httpHeaders -> httpHeaders.setAll(aaiHeaders))
+                .filter(basicAuthentication(aaiUserName, aaiUserPassword))
+                .filter(logRequest())
+                .filter(logResponse())
+                .build();
     }
 
     private ExchangeFilterFunction logRequest() {
@@ -74,7 +91,7 @@ public class AaiReactiveWebClient {
             MDC.put(SERVICE_NAME, String.valueOf(clientRequest.url()));
             logger.info("Request: {} {}", clientRequest.method(), clientRequest.url());
             clientRequest.headers()
-                .forEach((name, values) -> values.forEach(value -> logger.info("{}={}", name, value)));
+                    .forEach((name, values) -> values.forEach(value -> logger.info("{}={}", name, value)));
             return Mono.just(clientRequest);
         });
     }

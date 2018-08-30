@@ -20,12 +20,12 @@
 
 package org.onap.dcaegen2.services.prh.integration;
 
-import static org.mockito.Mockito.mock;
-
 import org.onap.dcaegen2.services.prh.configuration.PrhAppConfig;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import static org.mockito.Mockito.mock;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 7/10/18

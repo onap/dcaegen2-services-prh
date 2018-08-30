@@ -20,16 +20,14 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.service.consumer.DMaaPConsumerReactiveHttpClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+
+import static org.mockito.Mockito.*;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/27/18
@@ -49,7 +47,7 @@ public class DmaapConsumerTaskSpy {
         doReturn(mock(DmaapConsumerConfiguration.class)).when(appConfig).getDmaapConsumerConfiguration();
         DmaapConsumerTaskImpl dmaapConsumerTask = spy(new DmaapConsumerTaskImpl(appConfig));
         DMaaPConsumerReactiveHttpClient dmaapConsumerReactiveHttpClient = mock(
-            DMaaPConsumerReactiveHttpClient.class);
+                DMaaPConsumerReactiveHttpClient.class);
         doReturn(mock(DmaapConsumerConfiguration.class)).when(dmaapConsumerTask).resolveConfiguration();
         doReturn(dmaapConsumerReactiveHttpClient).when(dmaapConsumerTask).resolveClient();
         return dmaapConsumerTask;

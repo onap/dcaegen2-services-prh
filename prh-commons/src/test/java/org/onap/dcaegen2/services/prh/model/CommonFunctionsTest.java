@@ -20,15 +20,15 @@
 
 package org.onap.dcaegen2.services.prh.model;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class CommonFunctionsTest {
 
@@ -47,7 +47,7 @@ class CommonFunctionsTest {
     @Test
     void createJsonBody_shouldReturnJsonInString() {
         String expectedResult = "{\"sourceName\":\"NOKnhfsadhff\",\"ipaddress-v4-oam\":\"256.22.33.155\""
-            + ",\"ipaddress-v6-oam\":\"2001:0db8:85a3:0000:0000:8a2e:0370:7334\"}";
+                + ",\"ipaddress-v6-oam\":\"2001:0db8:85a3:0000:0000:8a2e:0370:7334\"}";
         assertEquals(expectedResult, CommonFunctions.createJsonBody(model));
     }
 }

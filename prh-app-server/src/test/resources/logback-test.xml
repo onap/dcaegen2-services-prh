@@ -17,17 +17,17 @@
   ~  ============================LICENSE_END===========================================
   -->
 <configuration debug="false">
-  <include resource="org/springframework/boot/logging/logback/base.xml"/>
-  <logger level="DEBUG" name="org.onap.dcaegen2.services.prh"/>
-  <appender class="ch.qos.logback.core.ConsoleAppender" name="Console">
-    <encoder>
-      <pattern>%d{ISO8601} - %-5p [%t:%C{1}@%L] - %m%n</pattern>
-    </encoder>
-  </appender>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <logger level="DEBUG" name="org.onap.dcaegen2.services.prh"/>
+    <appender class="ch.qos.logback.core.ConsoleAppender" name="Console">
+        <encoder>
+            <pattern>%d{ISO8601} - %-5p [%t:%C{1}@%L] - %m%n</pattern>
+        </encoder>
+    </appender>
 
-  <root level="ERROR">
-    <appender-ref ref="Console"/>
-  </root>
+    <root level="ERROR">
+        <appender-ref ref="Console"/>
+    </root>
 
 
 </configuration>

@@ -20,15 +20,6 @@
 
 package org.onap.dcaegen2.services.prh.service.consumer;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
-import static org.springframework.web.reactive.function.client.ExchangeFilterFunctions.basicAuthentication;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,6 +30,13 @@ import org.springframework.web.reactive.function.client.WebClient.RequestHeaders
 import org.springframework.web.reactive.function.client.WebClient.ResponseSpec;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.web.reactive.function.client.ExchangeFilterFunctions.basicAuthentication;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 6/27/18
@@ -68,10 +66,10 @@ class DMaaPConsumerReactiveHttpClientTest {
 
         dmaapConsumerReactiveHttpClient = new DMaaPConsumerReactiveHttpClient(consumerConfigurationMock);
         webClient = spy(WebClient.builder()
-            .defaultHeader(HttpHeaders.CONTENT_TYPE, consumerConfigurationMock.dmaapContentType())
-            .filter(basicAuthentication(consumerConfigurationMock.dmaapUserName(),
-                consumerConfigurationMock.dmaapUserPassword()))
-            .build());
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, consumerConfigurationMock.dmaapContentType())
+                .filter(basicAuthentication(consumerConfigurationMock.dmaapUserName(),
+                        consumerConfigurationMock.dmaapUserPassword()))
+                .build());
         requestHeadersSpec = mock(RequestHeadersUriSpec.class);
         responseSpec = mock(ResponseSpec.class);
     }
@@ -90,10 +88,10 @@ class DMaaPConsumerReactiveHttpClientTest {
 
         //then
         StepVerifier.create(response).expectSubscription()
-            .expectNextMatches(results -> {
-                Assertions.assertEquals(results, expectedResult.block());
-                return true;
-            }).verifyComplete();
+                .expectNextMatches(results -> {
+                    Assertions.assertEquals(results, expectedResult.block());
+                    return true;
+                }).verifyComplete();
     }
 
     @Test
@@ -107,7 +105,13 @@ class DMaaPConsumerReactiveHttpClientTest {
 
         //then
         StepVerifier.create(dmaapConsumerReactiveHttpClient.getDMaaPConsumerResponse()).expectSubscription()
-            .expectError(Exception.class).verify();
+                .expectError(Exception.class).verify();
+    }
+
+    @Test
+    void getAppropriateUri_whenPassingCorrectedPathForPnf() throws URISyntaxException {
+        Assertions.assertEquals(dmaapConsumerReactiveHttpClient.getUri(),
+                URI.create("https://54.45.33.2:1234/unauthenticated.SEC_OTHER_OUTPUT/OpenDCAE-c12/c12"));
     }
 
     private void mockDependantObjects() {

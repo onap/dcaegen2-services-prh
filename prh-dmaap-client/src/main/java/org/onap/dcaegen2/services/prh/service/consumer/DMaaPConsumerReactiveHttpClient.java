@@ -20,34 +20,32 @@
 
 package org.onap.dcaegen2.services.prh.service.consumer;
 
-import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.REQUEST_ID;
-import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.X_INVOCATION_ID;
-import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.X_ONAP_REQUEST_ID;
+import org.apache.http.client.utils.URIBuilder;
+import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
+import org.slf4j.MDC;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
-import org.apache.http.client.utils.URIBuilder;
-import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
+
+import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.*;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 6/26/18
  */
 public class DMaaPConsumerReactiveHttpClient {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final String dmaapHostName;
     private final String dmaapProtocol;
     private final Integer dmaapPortNumber;
     private final String dmaapTopicName;
     private final String consumerGroup;
     private final String consumerId;
+    private final String contentType;
     private WebClient webClient;
 
     /**
@@ -62,6 +60,7 @@ public class DMaaPConsumerReactiveHttpClient {
         this.dmaapTopicName = consumerConfiguration.dmaapTopicName();
         this.consumerGroup = consumerConfiguration.consumerGroup();
         this.consumerId = consumerConfiguration.consumerId();
+        this.contentType = consumerConfiguration.dmaapContentType();
     }
 
     /**
@@ -72,19 +71,19 @@ public class DMaaPConsumerReactiveHttpClient {
     public Mono<String> getDMaaPConsumerResponse() {
         try {
             return webClient
-                .get()
-                .uri(getUri())
-                .header(X_ONAP_REQUEST_ID, MDC.get(REQUEST_ID))
-                .header(X_INVOCATION_ID, UUID.randomUUID().toString())
-                .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, clientResponse ->
-                    Mono.error(new Exception("DmaaPConsumer HTTP " + clientResponse.statusCode()))
-                )
-                .onStatus(HttpStatus::is5xxServerError, clientResponse ->
-                    Mono.error(new Exception("DmaaPConsumer HTTP " + clientResponse.statusCode())))
-                .bodyToMono(String.class);
+                    .get()
+                    .uri(getUri())
+                    .header(X_ONAP_REQUEST_ID, MDC.get(REQUEST_ID))
+                    .header(X_INVOCATION_ID, UUID.randomUUID().toString())
+                    .header(HttpHeaders.CONTENT_TYPE, contentType)
+                    .retrieve()
+                    .onStatus(HttpStatus::is4xxClientError, clientResponse ->
+                            Mono.error(new RuntimeException("DmaaPConsumer HTTP " + clientResponse.statusCode()))
+                    )
+                    .onStatus(HttpStatus::is5xxServerError, clientResponse ->
+                            Mono.error(new RuntimeException("DmaaPConsumer HTTP " + clientResponse.statusCode())))
+                    .bodyToMono(String.class);
         } catch (URISyntaxException e) {
-            logger.warn("Exception while evaluating URI ");
             return Mono.error(e);
         }
     }
@@ -100,6 +99,6 @@ public class DMaaPConsumerReactiveHttpClient {
 
     URI getUri() throws URISyntaxException {
         return new URIBuilder().setScheme(dmaapProtocol).setHost(dmaapHostName).setPort(dmaapPortNumber)
-            .setPath(createRequestPath()).build();
+                .setPath(createRequestPath()).build();
     }
 }

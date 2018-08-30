@@ -30,7 +30,7 @@ import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-public class HttpGetClient {
+class HttpGetClient {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpGetClient.class);
 
@@ -41,38 +41,9 @@ public class HttpGetClient {
         this(WebClient.builder().filter(logRequest()).filter(logResponse()).build());
     }
 
-    HttpGetClient(WebClient webClient){
+    HttpGetClient(WebClient webClient) {
         this.webClient = webClient;
         this.gson = new Gson();
-    }
-
-    public <T> Mono<T> callHttpGet(String url, Class<T> tClass) {
-        return webClient
-            .get()
-            .uri(url)
-            .retrieve()
-            .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(getException(response)))
-            .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(getException(response)))
-            .bodyToMono(String.class)
-            .flatMap(body->getJsonFromRequest(body,tClass));
-    }
-
-    private RuntimeException getException(ClientResponse response) {
-        return new RuntimeException(String.format("Request for cloud config failed: HTTP %d",
-            response.statusCode().value()));
-    }
-
-    private <T> Mono<T> getJsonFromRequest(String body, Class<T> tClass) {
-        try {
-            return Mono.just(parseJson(body, tClass));
-        } catch (JsonSyntaxException | IllegalStateException e) {
-            logger.warn("Converting string to json threw error ", e);
-            return Mono.error(e);
-        }
-    }
-
-    private <T> T  parseJson(String body, Class<T> tClass){
-        return gson.fromJson(body, tClass);
     }
 
     private static ExchangeFilterFunction logResponse() {
@@ -86,8 +57,36 @@ public class HttpGetClient {
         return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
             logger.info("Request: {} {}", clientRequest.method(), clientRequest.url());
             clientRequest.headers()
-                .forEach((name, values) -> values.forEach(value -> logger.info("{}={}", name, value)));
+                    .forEach((name, values) -> values.forEach(value -> logger.info("{}={}", name, value)));
             return Mono.just(clientRequest);
         });
+    }
+
+    <T> Mono<T> callHttpGet(String url, Class<T> tClass) {
+        return webClient
+                .get()
+                .uri(url)
+                .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(getException(response)))
+                .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(getException(response)))
+                .bodyToMono(String.class)
+                .flatMap(body -> getJsonFromRequest(body, tClass));
+    }
+
+    private RuntimeException getException(ClientResponse response) {
+        return new RuntimeException(String.format("Request for cloud config failed: HTTP %d",
+                response.statusCode().value()));
+    }
+
+    private <T> Mono<T> getJsonFromRequest(String body, Class<T> tClass) {
+        try {
+            return Mono.just(parseJson(body, tClass));
+        } catch (JsonSyntaxException | IllegalStateException e) {
+            return Mono.error(e);
+        }
+    }
+
+    private <T> T parseJson(String body, Class<T> tClass) {
+        return gson.fromJson(body, tClass);
     }
 }

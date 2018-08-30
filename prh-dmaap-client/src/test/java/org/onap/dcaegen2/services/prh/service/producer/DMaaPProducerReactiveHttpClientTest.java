@@ -20,42 +20,36 @@
 
 package org.onap.dcaegen2.services.prh.service.producer;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
-import static org.springframework.web.reactive.function.client.ExchangeFilterFunctions.basicAuthentication;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModelForUnitTest;
-import org.springframework.http.HttpHeaders;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClient.RequestBodyUriSpec;
-import org.springframework.web.reactive.function.client.WebClient.RequestHeadersSpec;
-import org.springframework.web.reactive.function.client.WebClient.ResponseSpec;
-import reactor.core.publisher.Mono;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 import reactor.test.StepVerifier;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 7/4/18
  */
+
 class DMaaPProducerReactiveHttpClientTest {
 
     private DMaaPProducerReactiveHttpClient dmaapProducerReactiveHttpClient;
 
     private DmaapPublisherConfiguration dmaapPublisherConfigurationMock = mock(
-        DmaapPublisherConfiguration.class);
+            DmaapPublisherConfiguration.class);
     private ConsumerDmaapModel consumerDmaapModel = new ConsumerDmaapModelForUnitTest();
-    private WebClient webClient = mock(WebClient.class);
-    private RequestBodyUriSpec requestBodyUriSpec;
-    private ResponseSpec responseSpec;
 
 
     @BeforeEach
@@ -66,33 +60,26 @@ class DMaaPProducerReactiveHttpClientTest {
         when(dmaapPublisherConfigurationMock.dmaapUserName()).thenReturn("PRH");
         when(dmaapPublisherConfigurationMock.dmaapUserPassword()).thenReturn("PRH");
         when(dmaapPublisherConfigurationMock.dmaapContentType()).thenReturn("application/json");
-        when(dmaapPublisherConfigurationMock.dmaapTopicName()).thenReturn("pnfReady");
-
+        when(dmaapPublisherConfigurationMock.dmaapTopicName()).thenReturn("unauthenticated.PNF_READY");
         dmaapProducerReactiveHttpClient = new DMaaPProducerReactiveHttpClient(dmaapPublisherConfigurationMock);
 
-        webClient = spy(WebClient.builder()
-            .defaultHeader(HttpHeaders.CONTENT_TYPE, dmaapPublisherConfigurationMock.dmaapContentType())
-            .filter(basicAuthentication(dmaapPublisherConfigurationMock.dmaapUserName(),
-                dmaapPublisherConfigurationMock.dmaapUserPassword()))
-            .build());
-        requestBodyUriSpec = mock(RequestBodyUriSpec.class);
-        responseSpec = mock(ResponseSpec.class);
     }
 
     @Test
     void getHttpResponse_Success() {
         //given
-        Integer responseSuccess = 200;
-        Mono<Integer> expectedResult = Mono.just(responseSuccess);
-
+        int responseSuccess = 200;
+        ResponseEntity<String> mockedResponseEntity = mock(ResponseEntity.class);
+        RestTemplate restTemplate = mock(RestTemplate.class);
         //when
-        mockWebClientDependantObject();
-        doReturn(expectedResult).when(responseSpec).bodyToMono(String.class);
-        dmaapProducerReactiveHttpClient.createDMaaPWebClient(webClient);
-        Mono<String> response = dmaapProducerReactiveHttpClient.getDMaaPProducerResponse(consumerDmaapModel);
+        when(mockedResponseEntity.getStatusCode()).thenReturn(HttpStatus.valueOf(responseSuccess));
+        doReturn(mockedResponseEntity).when(restTemplate)
+                .exchange(any(URI.class), any(HttpMethod.class), any(HttpEntity.class), (Class<Object>) any());
+        dmaapProducerReactiveHttpClient.createDMaaPWebClient(restTemplate);
 
         //then
-        Assertions.assertEquals(response.block(), expectedResult.block());
+        StepVerifier.create(dmaapProducerReactiveHttpClient.getDMaaPProducerResponse(consumerDmaapModel))
+                .expectSubscription().expectNext(mockedResponseEntity).verifyComplete();
     }
 
     @Test
@@ -100,22 +87,16 @@ class DMaaPProducerReactiveHttpClientTest {
         //given
         dmaapProducerReactiveHttpClient = spy(dmaapProducerReactiveHttpClient);
         //when
-        when(webClient.post()).thenReturn(requestBodyUriSpec);
-        dmaapProducerReactiveHttpClient.createDMaaPWebClient(webClient);
         when(dmaapProducerReactiveHttpClient.getUri()).thenThrow(URISyntaxException.class);
 
         //then
         StepVerifier.create(dmaapProducerReactiveHttpClient.getDMaaPProducerResponse(any())).expectSubscription()
-            .expectError(Exception.class).verify();
+                .expectError(Exception.class).verify();
     }
 
-    private void mockWebClientDependantObject() {
-        RequestHeadersSpec requestHeadersSpec = mock(RequestHeadersSpec.class);
-        when(webClient.post()).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.uri((URI) any())).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.header(any(), any())).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.body(any())).thenReturn(requestHeadersSpec);
-        doReturn(responseSpec).when(requestHeadersSpec).retrieve();
-        doReturn(responseSpec).when(responseSpec).onStatus(any(), any());
+    @Test
+    void getAppropriateUri_whenPassingCorrectedPathForPnf() throws URISyntaxException {
+        Assertions.assertEquals(dmaapProducerReactiveHttpClient.getUri(),
+                URI.create("https://54.45.33.2:1234/unauthenticated.PNF_READY"));
     }
 }

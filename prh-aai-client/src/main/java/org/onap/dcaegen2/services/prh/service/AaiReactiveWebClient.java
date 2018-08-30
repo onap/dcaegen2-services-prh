@@ -24,11 +24,18 @@ import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.RESPONSE
 import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.SERVICE_NAME;
 import static org.springframework.web.reactive.function.client.ExchangeFilterFunctions.basicAuthentication;
 
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+
 import java.util.Map;
+import javax.net.ssl.SSLException;
+
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -60,8 +67,19 @@ public class AaiReactiveWebClient {
      *
      * @return WebClient
      */
-    public WebClient build() {
+    public WebClient build() throws SSLException {
+        SslContext sslContext;
+        sslContext = SslContextBuilder
+            .forClient()
+            .trustManager(InsecureTrustManagerFactory.INSTANCE)
+            .build();
+        logger.debug("Setting ssl context");
+
         return WebClient.builder()
+            .clientConnector(new ReactorClientHttpConnector(clientOptions -> {
+                clientOptions.sslContext(sslContext);
+                clientOptions.disablePool();
+            }))
             .defaultHeaders(httpHeaders -> httpHeaders.setAll(aaiHeaders))
             .filter(basicAuthentication(aaiUserName, aaiUserPassword))
             .filter(logRequest())

@@ -30,7 +30,7 @@ import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-public class HttpGetClient {
+class HttpGetClient {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpGetClient.class);
 
@@ -41,12 +41,12 @@ public class HttpGetClient {
         this(WebClient.builder().filter(logRequest()).filter(logResponse()).build());
     }
 
-    HttpGetClient(WebClient webClient){
+    HttpGetClient(WebClient webClient) {
         this.webClient = webClient;
         this.gson = new Gson();
     }
 
-    public <T> Mono<T> callHttpGet(String url, Class<T> tClass) {
+    <T> Mono<T> callHttpGet(String url, Class<T> tClass) {
         return webClient
             .get()
             .uri(url)
@@ -54,7 +54,7 @@ public class HttpGetClient {
             .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(getException(response)))
             .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(getException(response)))
             .bodyToMono(String.class)
-            .flatMap(body->getJsonFromRequest(body,tClass));
+            .flatMap(body -> getJsonFromRequest(body, tClass));
     }
 
     private RuntimeException getException(ClientResponse response) {
@@ -66,12 +66,11 @@ public class HttpGetClient {
         try {
             return Mono.just(parseJson(body, tClass));
         } catch (JsonSyntaxException | IllegalStateException e) {
-            logger.warn("Converting string to json threw error ", e);
             return Mono.error(e);
         }
     }
 
-    private <T> T  parseJson(String body, Class<T> tClass){
+    private <T> T parseJson(String body, Class<T> tClass) {
         return gson.fromJson(body, tClass);
     }
 

@@ -59,6 +59,52 @@
     },
     {
       "key": {
+        "uuid": "1a76adc5_a5c8e5a8",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/EnvironmentProcessor.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-08-30T19:30:59Z",
+      "side": 1,
+      "message": "systemEnvironment should be deleted - to much information in log",
+      "range": {
+        "startLine": 44,
+        "startChar": 82,
+        "endLine": 44,
+        "endChar": 98
+      },
+      "revId": "bf46403bce55801a5f16f99fd50594d45e96dd4c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_45b9d113",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/HttpGetClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-08-30T19:30:59Z",
+      "side": 1,
+      "message": "should be deleted",
+      "range": {
+        "startLine": 69,
+        "startChar": 12,
+        "endLine": 69,
+        "endChar": 69
+      },
+      "revId": "bf46403bce55801a5f16f99fd50594d45e96dd4c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a76adc5_0cf1c601",
         "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AaiProducerTaskImpl.java",
         "patchSetId": 3
@@ -70,6 +116,29 @@
       "writtenOn": "2018-08-30T13:02:55Z",
       "side": 1,
       "message": "useless log",
+      "revId": "bf46403bce55801a5f16f99fd50594d45e96dd4c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_c5f641f9",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/ScheduledTasks.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-08-30T19:30:59Z",
+      "side": 1,
+      "message": "only throwing exception",
+      "range": {
+        "startLine": 80,
+        "startChar": 12,
+        "endLine": 80,
+        "endChar": 70
+      },
       "revId": "bf46403bce55801a5f16f99fd50594d45e96dd4c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -127,6 +196,29 @@
         "startChar": 1,
         "endLine": 81,
         "endChar": 99
+      },
+      "revId": "bf46403bce55801a5f16f99fd50594d45e96dd4c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_25e5b537",
+        "filename": "prh-dmaap-client/src/main/java/org/onap/dcaegen2/services/prh/service/producer/DMaaPProducerReactiveHttpClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-08-30T19:30:59Z",
+      "side": 1,
+      "message": "only throwing exception",
+      "range": {
+        "startLine": 81,
+        "startChar": 16,
+        "endLine": 81,
+        "endChar": 62
       },
       "revId": "bf46403bce55801a5f16f99fd50594d45e96dd4c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",

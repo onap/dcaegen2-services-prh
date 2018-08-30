@@ -40,7 +40,7 @@ import reactor.core.publisher.Mono;
 @Api(value = "HeartbeatController", description = "Check liveness of PRH service")
 public class HeartbeatController {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(HeartbeatController.class);
 
     /**
      * Endpoint for checking that PRH is alive.
@@ -57,7 +57,7 @@ public class HeartbeatController {
     }
     )
     public Mono<ResponseEntity<String>> heartbeat() {
-        logger.trace("Receiving heartbeat request");
+        LOGGER.trace("Receiving heartbeat request");
         return Mono.defer(() ->
             Mono.just(new ResponseEntity<>("alive", HttpStatus.OK))
         );

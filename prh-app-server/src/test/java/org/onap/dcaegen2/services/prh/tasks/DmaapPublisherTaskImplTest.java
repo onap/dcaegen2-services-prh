@@ -64,7 +64,7 @@ class DmaapPublisherTaskImplTest {
             .dmaapTopicName("unauthenticated.SEC_OTHER_OUTPUT").build();
         consumerDmaapModel = ImmutableConsumerDmaapModel.builder().ipv4("10.16.123.234")
             .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
-            .pnfName("NOKQTFCOC540002E").build();
+            .sourceName("NOKQTFCOC540002E").build();
         appConfig = mock(AppConfig.class);
     }
 

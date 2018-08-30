@@ -67,24 +67,28 @@ class DmaapConsumerTaskImplTest {
 
         consumerDmaapModel = ImmutableConsumerDmaapModel.builder().ipv4("10.16.123.234")
             .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
-            .pnfName("NOKQTFCOC540002E").build();
+            .sourceName("NOKQTFCOC540002E").build();
         appConfig = mock(AppConfig.class);
 
-        message = "[{\"event\": {\"pnfRegistrationFields\": {"
-                + " \"unitType\": \"AirScale\","
-                + " \"serialNumber\": \"QTFCOC540002E\","
-                + " \"pnfRegistrationFieldsVersion\": \"2.0\","
-                + " \"manufactureDate\": \"1535014037024\","
-                + " \"modelNumber\": \"7BEA\",\n"
-                + " \"lastServiceDate\": \"1535014037024\","
-                + " \"unitFamily\": \"BBU\","
-                + " \"vendorName\": \"Nokia\","
-                + " \"oamV4IpAddress\": \"10.16.123.234\","
-                + " \"softwareVersion\": \"v4.5.0.1\","
-                + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
+        message = "[{\"event\": {"
+                + "\"commonEventHeader\": { \"sourceName\":\"NOKQTFCOC540002E\"},"
+                + "\"pnfRegistrationFields\": {"
+                    + " \"unitType\": \"AirScale\","
+                    + " \"serialNumber\": \"QTFCOC540002E\","
+                    + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+                    + " \"manufactureDate\": \"1535014037024\","
+                    + " \"modelNumber\": \"7BEA\",\n"
+                    + " \"lastServiceDate\": \"1535014037024\","
+                    + " \"unitFamily\": \"BBU\","
+                    + " \"vendorName\": \"Nokia\","
+                    + " \"oamV4IpAddress\": \"10.16.123.234\","
+                    + " \"softwareVersion\": \"v4.5.0.1\","
+                    + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
                 + "}}}]";
 
-        parsed = "{\"event\": {\"pnfRegistrationFields\": {"
+        parsed = "{\"event\": {"
+                + "\"commonEventHeader\": { \"sourceName\":\"NOKQTFCOC540002E\"},"
+                + "\"pnfRegistrationFields\": {"
                 + " \"unitType\": \"AirScale\","
                 + " \"serialNumber\": \"QTFCOC540002E\","
                 + " \"pnfRegistrationFieldsVersion\": \"2.0\","

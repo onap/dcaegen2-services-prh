@@ -40,11 +40,11 @@ import reactor.core.publisher.Mono;
 public class DmaapConsumerJsonParser {
 
     private static final String EVENT = "event";
+    private static final String COMMON_EVENT_HEADER = "commonEventHeader";
     private static final String PNF_REGISTRATION_FIELDS = "pnfRegistrationFields";
     private static final String OAM_IPV_4_ADDRESS = "oamV4IpAddress";
     private static final String OAM_IPV_6_ADDRESS = "oamV6IpAddress";
-    private static final String VENDOR_NAME = "vendorName";
-    private static final String SERIAL_NUMBER = "serialNumber";
+    private static final String SOURCE_NAME = "sourceName";
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -89,29 +89,28 @@ public class DmaapConsumerJsonParser {
                 : transform(monoJsonP));
     }
 
-    private Mono<ConsumerDmaapModel> transform(JsonObject monoJsonP) {
-        monoJsonP = monoJsonP.getAsJsonObject(EVENT).getAsJsonObject(PNF_REGISTRATION_FIELDS);
-        String pnfVendorName = getValueFromJson(monoJsonP, VENDOR_NAME);
-        String pnfSerialNumber = getValueFromJson(monoJsonP, SERIAL_NUMBER);
-        String pnfOamIpv4Address = getValueFromJson(monoJsonP, OAM_IPV_4_ADDRESS);
-        String pnfOamIpv6Address = getValueFromJson(monoJsonP, OAM_IPV_6_ADDRESS);
-        return
-            (!vendorAndSerialNotEmpty(pnfSerialNumber, pnfVendorName) || !ipPropertiesNotEmpty(pnfOamIpv4Address,
-                pnfOamIpv6Address))
+    private Mono<ConsumerDmaapModel> transform(JsonObject responseFromDmaap) {
+
+        JsonObject commonEventHeader = responseFromDmaap.getAsJsonObject(EVENT)
+                .getAsJsonObject(COMMON_EVENT_HEADER);
+        JsonObject pnfRegistrationFields = responseFromDmaap.getAsJsonObject(EVENT)
+                .getAsJsonObject(PNF_REGISTRATION_FIELDS);
+
+        String pnfSourceName = getValueFromJson(commonEventHeader, SOURCE_NAME);
+        String pnfOamIpv4Address = getValueFromJson(pnfRegistrationFields, OAM_IPV_4_ADDRESS);
+        String pnfOamIpv6Address = getValueFromJson(pnfRegistrationFields, OAM_IPV_6_ADDRESS);
+
+        return ( StringUtils.isEmpty(pnfSourceName) || !ipPropertiesNotEmpty(pnfOamIpv4Address, pnfOamIpv6Address) )
                 ? Mono.error(new DmaapNotFoundException("Incorrect json, consumerDmaapModel can not be created: "
-                + printMessage(pnfVendorName, pnfSerialNumber, pnfOamIpv4Address, pnfOamIpv6Address))) :
+                + printMessage(pnfSourceName, pnfOamIpv4Address, pnfOamIpv6Address))) :
                 Mono.just(ImmutableConsumerDmaapModel.builder()
-                    .pnfName(pnfVendorName.substring(0, Math.min(pnfVendorName.length(), 3)).toUpperCase()
-                        .concat(pnfSerialNumber)).ipv4(pnfOamIpv4Address)
+                    .sourceName(pnfSourceName)
+                    .ipv4(pnfOamIpv4Address)
                     .ipv6(pnfOamIpv6Address).build());
     }
 
     private String getValueFromJson(JsonObject jsonObject, String jsonKey) {
         return jsonObject.has(jsonKey) ? jsonObject.get(jsonKey).getAsString() : "";
-    }
-
-    private boolean vendorAndSerialNotEmpty(String pnfSerialNumber, String pnfVendorName) {
-        return (!StringUtils.isEmpty(pnfSerialNumber) && !StringUtils.isEmpty(pnfVendorName));
     }
 
     private boolean ipPropertiesNotEmpty(String ipv4, String ipv6) {
@@ -122,12 +121,11 @@ public class DmaapConsumerJsonParser {
         return jsonObject.has(EVENT) && jsonObject.getAsJsonObject(EVENT).has(PNF_REGISTRATION_FIELDS);
     }
 
-    private String printMessage(String vendorName, String serialNumber, String oamIpv4Address, String oamIpv6Address) {
+    private String printMessage(String sourceName, String oamIpv4Address, String oamIpv6Address) {
         return String.format("%n{"
-            + "\"" + VENDOR_NAME + " : \"%s\","
-            + "\"" + SERIAL_NUMBER + "\": \"%s\","
-            + "\"" + OAM_IPV_4_ADDRESS + "\": \"%s\","
-            + "\"" + OAM_IPV_6_ADDRESS + "\": \"%s\""
-            + "%n}", vendorName, serialNumber, oamIpv4Address, oamIpv6Address);
+            + "\"" + SOURCE_NAME        + "\": \"%s\","
+            + "\"" + OAM_IPV_4_ADDRESS  + "\": \"%s\","
+            + "\"" + OAM_IPV_6_ADDRESS  + "\": \"%s\""
+            + "%n}", sourceName, oamIpv4Address, oamIpv6Address);
     }
 }

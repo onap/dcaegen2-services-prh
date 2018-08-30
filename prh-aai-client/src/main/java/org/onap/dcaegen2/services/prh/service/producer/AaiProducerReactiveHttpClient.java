@@ -77,7 +77,7 @@ public class AaiProducerReactiveHttpClient {
     private Mono<Integer> patchAaiRequest(ConsumerDmaapModel dmaapModel) {
         try {
             return webClient.patch()
-                .uri(getUri(dmaapModel.getPnfName()))
+                .uri(getUri(dmaapModel.getSourceName()))
                 .body(BodyInserters.fromObject(dmaapModel))
                 .retrieve()
                 .onStatus(

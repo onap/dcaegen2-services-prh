@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "1a76adc5_aca9b291",
+        "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/AaiReactiveWebClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 3625
+      },
+      "writtenOn": "2018-08-30T13:30:22Z",
+      "side": 1,
+      "message": "either log and swallow/react or rethrow, log \u0026 rethrow is an antipattern that later bites you with duplicate log messages",
+      "revId": "bf46403bce55801a5f16f99fd50594d45e96dd4c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a76adc5_4cb49e34",
         "filename": "prh-aai-client/src/main/java/org/onap/dcaegen2/services/prh/service/producer/AaiProducerReactiveHttpClient.java",
         "patchSetId": 3

@@ -45,10 +45,8 @@ import reactor.test.StepVerifier;
 
 class AaiProducerReactiveHttpClientTest {
 
-    private static AaiProducerReactiveHttpClient aaiProducerReactiveHttpClient;
-
     private static final Integer SUCCESS_RESPONSE = 200;
-
+    private static AaiProducerReactiveHttpClient aaiProducerReactiveHttpClient;
     private static AaiClientConfiguration aaiConfigurationMock = mock(AaiClientConfiguration.class);
     private static WebClient webClient = mock(WebClient.class);
 
@@ -82,6 +80,14 @@ class AaiProducerReactiveHttpClientTest {
         responseSpec = mock(ResponseSpec.class);
     }
 
+    private static void setupHeaders() {
+        aaiHeaders = new HashMap<>();
+        aaiHeaders.put("X-FromAppId", "PRH");
+        aaiHeaders.put("X-TransactionId", "vv-temp");
+        aaiHeaders.put("Accept", "application/json");
+        aaiHeaders.put("Real-Time", "true");
+        aaiHeaders.put("Content-Type", "application/merge-patch+json");
+    }
 
     @Test
     void getAaiProducerResponse_shouldReturn200() {
@@ -118,7 +124,6 @@ class AaiProducerReactiveHttpClientTest {
             )).expectSubscription().expectError(Exception.class).verify();
     }
 
-
     private void mockWebClientDependantObject() {
         WebClient.RequestHeadersSpec requestHeadersSpec = mock(WebClient.RequestHeadersSpec.class);
         when(webClient.patch()).thenReturn(requestBodyUriSpec);
@@ -126,15 +131,6 @@ class AaiProducerReactiveHttpClientTest {
         when(requestBodyUriSpec.body(any())).thenReturn(requestHeadersSpec);
         doReturn(responseSpec).when(requestHeadersSpec).retrieve();
         doReturn(responseSpec).when(responseSpec).onStatus(any(), any());
-    }
-
-    private static void setupHeaders() {
-        aaiHeaders = new HashMap<>();
-        aaiHeaders.put("X-FromAppId", "PRH");
-        aaiHeaders.put("X-TransactionId", "vv-temp");
-        aaiHeaders.put("Accept", "application/json");
-        aaiHeaders.put("Real-Time", "true");
-        aaiHeaders.put("Content-Type", "application/merge-patch+json");
     }
 
 }

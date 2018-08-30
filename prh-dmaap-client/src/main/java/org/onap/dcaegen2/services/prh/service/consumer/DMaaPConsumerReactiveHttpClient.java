@@ -22,6 +22,7 @@ package org.onap.dcaegen2.services.prh.service.consumer;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.UUID;
 import org.apache.http.client.utils.URIBuilder;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.slf4j.Logger;
@@ -36,14 +37,13 @@ import reactor.core.publisher.Mono;
 public class DMaaPConsumerReactiveHttpClient {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    private WebClient webClient;
     private final String dmaapHostName;
     private final String dmaapProtocol;
     private final Integer dmaapPortNumber;
     private final String dmaapTopicName;
     private final String consumerGroup;
     private final String consumerId;
+    private WebClient webClient;
 
     /**
      * Constructor of DMaaPConsumerReactiveHttpClient.
@@ -69,6 +69,7 @@ public class DMaaPConsumerReactiveHttpClient {
             return webClient
                 .get()
                 .uri(getUri())
+                .header("X_INVOCATION_ID", UUID.randomUUID().toString())
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, clientResponse ->
                     Mono.error(new Exception("DmaaPConsumer HTTP " + clientResponse.statusCode()))

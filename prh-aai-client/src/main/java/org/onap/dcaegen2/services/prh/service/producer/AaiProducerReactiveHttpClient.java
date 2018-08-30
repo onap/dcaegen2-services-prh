@@ -22,7 +22,7 @@ package org.onap.dcaegen2.services.prh.service.producer;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import java.util.UUID;
 import org.apache.http.client.utils.URIBuilder;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.exceptions.AaiRequestException;
@@ -37,12 +37,12 @@ import reactor.core.publisher.Mono;
 
 public class AaiProducerReactiveHttpClient {
 
-    private WebClient webClient;
     private final String aaiHost;
     private final String aaiProtocol;
     private final Integer aaiHostPortNumber;
     private final String aaiBasePath;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private WebClient webClient;
 
 
     /**
@@ -76,8 +76,10 @@ public class AaiProducerReactiveHttpClient {
 
     private Mono<Integer> patchAaiRequest(ConsumerDmaapModel dmaapModel) {
         try {
+
             return webClient.patch()
                 .uri(getUri(dmaapModel.getPnfName()))
+                .header("X_INVOCATION_ID", UUID.randomUUID().toString())
                 .body(BodyInserters.fromObject(dmaapModel))
                 .retrieve()
                 .onStatus(

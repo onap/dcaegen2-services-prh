@@ -21,6 +21,7 @@
 package org.onap.dcaegen2.services.prh.config;
 
 import java.io.Serializable;
+import java.util.Map;
 import org.immutables.value.Value;
 
 /**
@@ -49,6 +50,8 @@ public interface DmaapCustomConfig extends Serializable {
     @Value.Parameter
     String dmaapContentType();
 
+    @Value.Parameter
+    Map<String, String> dmaapHeaders();
 
     interface Builder<T extends DmaapCustomConfig, B extends Builder<T, B>> {
 

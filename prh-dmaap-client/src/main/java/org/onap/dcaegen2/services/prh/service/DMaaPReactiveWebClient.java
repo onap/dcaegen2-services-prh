@@ -20,11 +20,12 @@
 
 package org.onap.dcaegen2.services.prh.service;
 
-import static org.springframework.web.reactive.function.client.ExchangeFilterFunctions.basicAuthentication;
-
+import java.util.HashMap;
+import java.util.Map;
 import org.onap.dcaegen2.services.prh.config.DmaapCustomConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -37,9 +38,9 @@ public class DMaaPReactiveWebClient {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private String dmaaPContentType;
     private String dmaaPUserName;
     private String dmaaPUserPassword;
+    private Map<String, String> dmaapHeaders = new HashMap<>();
 
     /**
      * Creating DMaaPReactiveWebClient passing to them basic DMaaPConfig.
@@ -48,9 +49,11 @@ public class DMaaPReactiveWebClient {
      * @return DMaaPReactiveWebClient
      */
     public DMaaPReactiveWebClient fromConfiguration(DmaapCustomConfig dmaapCustomConfig) {
+        this.dmaapHeaders.put(HttpHeaders.CONTENT_TYPE, dmaapCustomConfig.dmaapContentType());
+        this.dmaapHeaders.putAll(dmaapCustomConfig.dmaapHeaders());
         this.dmaaPUserName = dmaapCustomConfig.dmaapUserName();
         this.dmaaPUserPassword = dmaapCustomConfig.dmaapUserPassword();
-        this.dmaaPContentType = dmaapCustomConfig.dmaapContentType();
+
         return this;
     }
 
@@ -61,7 +64,7 @@ public class DMaaPReactiveWebClient {
      */
     public WebClient build() {
         return WebClient.builder()
-            .defaultHeader(HttpHeaders.CONTENT_TYPE, dmaaPContentType)
+            .defaultHeaders(httpHeaders -> httpHeaders.setAll(dmaapHeaders))
             .filter(logRequest())
             .filter(logResponse())
             .build();
@@ -69,6 +72,7 @@ public class DMaaPReactiveWebClient {
 
     private ExchangeFilterFunction logResponse() {
         return ExchangeFilterFunction.ofResponseProcessor(clientResponse -> {
+            MDC.put("ResponseCode", String.valueOf(clientResponse.statusCode()));
             logger.info("Response Status {}", clientResponse.statusCode());
             return Mono.just(clientResponse);
         });
@@ -76,6 +80,7 @@ public class DMaaPReactiveWebClient {
 
     private ExchangeFilterFunction logRequest() {
         return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
+            MDC.put("ServiceName", String.valueOf(clientRequest.url()));
             logger.info("Request: {} {}", clientRequest.method(), clientRequest.url());
             clientRequest.headers()
                 .forEach((name, values) -> values.forEach(value -> logger.info("{}={}", name, value)));

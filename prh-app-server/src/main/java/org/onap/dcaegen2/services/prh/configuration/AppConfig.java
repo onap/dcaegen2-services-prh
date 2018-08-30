@@ -153,6 +153,7 @@ public class AppConfig extends PrhAppConfig {
                 .orElse(dmaapConsumerConfiguration.consumerGroup()))
             .consumerId(Optional.ofNullable(consumerId).filter(isEmpty.negate())
                 .orElse(dmaapConsumerConfiguration.consumerId()))
+            .dmaapHeaders(dmaapConsumerConfiguration.dmaapHeaders())
             .build();
     }
 
@@ -204,6 +205,7 @@ public class AppConfig extends PrhAppConfig {
             .dmaapUserPassword(
                 Optional.ofNullable(producerDmaapUserPassword).filter(isEmpty.negate())
                     .orElse(dmaapPublisherConfiguration.dmaapUserPassword()))
+            .dmaapHeaders(dmaapPublisherConfiguration.dmaapHeaders())
             .build();
     }
 

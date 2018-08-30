@@ -18,27 +18,18 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.config;
+package org.onap.dcaegen2.services.prh.model.logging;
 
-import org.immutables.gson.Gson;
-import org.immutables.value.Value;
+public final class MDCVariables {
 
-/**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
- */
-@Value.Immutable(prehash = true)
-@Value.Style(builder = "new")
-@Gson.TypeAdapters
-public abstract class DmaapPublisherConfiguration implements DmaapCustomConfig {
+    public static final String X_ONAP_REQUEST_ID = "X-ONAP-RequestID";
+    public static final String X_INVOCATION_ID = "X-InvocationID";
+    public static final String REQUEST_ID = "RequestID";
+    public static final String INVOCATION_ID = "InvocationID";
+    public static final String INSTANCE_UUID = "InstanceUUID";
+    public static final String RESPONSE_CODE = "ResponseCode";
+    public static final String SERVICE_NAME = "ServiceName";
 
-    private static final long serialVersionUID = 1L;
-
-    public static DmaapPublisherConfiguration.Builder builder() {
-        return ImmutableDmaapPublisherConfiguration.builder();
-    }
-
-    interface Builder extends
-        DmaapCustomConfig.Builder<DmaapPublisherConfiguration, DmaapPublisherConfiguration.Builder> {
-
+    private MDCVariables() {
     }
 }

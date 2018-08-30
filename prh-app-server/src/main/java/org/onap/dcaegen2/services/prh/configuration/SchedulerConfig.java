@@ -88,6 +88,7 @@ public class SchedulerConfig {
     @PostConstruct
     @ApiOperation(value = "Start task if possible")
     public synchronized boolean tryToStartTask() {
+        //entry
         if (scheduledPrhTaskFutureList.isEmpty()) {
             scheduledPrhTaskFutureList.add(cloudTaskScheduler
                 .scheduleAtFixedRate(cloudConfiguration::runTask, Instant.now(),

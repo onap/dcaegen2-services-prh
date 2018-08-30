@@ -13,6 +13,12 @@
         "consumerGroup": "OpenDcae-c12",
         "timeoutMs": -1,
         "messageLimit": 1
+        /*,
+               "dmaapHeaders": {
+                 "X-ONAP-RequestID": "55555555555",
+                 "Accept": "application/json",
+                 "Real-Time": "true"
+               }*/
       },
       "dmaapProducerConfiguration": {
         "dmaapHostName": "localhost",
@@ -22,6 +28,12 @@
         "dmaapUserName": "admin",
         "dmaapUserPassword": "admin",
         "dmaapContentType": "application/json"
+        /*,
+                "dmaapHeaders": {
+                  "X-ONAP-RequestID": "123",
+                  "Accept": "application/json",
+                  "Real-Time": "true"
+                }*/
       }
     },
     "aai": {
@@ -35,11 +47,10 @@
         "aaiBasePath": "/aai/v12",
         "aaiPnfPath": "/network/pnfs/pnf",
         "aaiHeaders": {
-          "X-FromAppId": "prh",
-          "X-TransactionId": "9999",
+          //"X-ONAP-RequestID": "323232",
           "Accept": "application/json",
           "Real-Time": "true",
-          "Content-Type":"application/merge-patch+json"
+          "Content-Type": "application/merge-patch+json"
         }
       }
     }

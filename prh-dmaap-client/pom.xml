@@ -50,7 +50,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-webflux</artifactId>
-      <version>5.0.5.RELEASE</version>
+      <version>5.0.8.RELEASE</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

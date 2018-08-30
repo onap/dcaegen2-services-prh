@@ -20,23 +20,25 @@
 
 package org.onap.dcaegen2.services.prh.service.producer;
 
-import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.REQUEST_ID;
-import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.X_INVOCATION_ID;
-import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.X_ONAP_REQUEST_ID;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.UUID;
 import org.apache.http.client.utils.URIBuilder;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 import reactor.core.publisher.Mono;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.UUID;
+
+import static org.onap.dcaegen2.services.prh.model.CommonFunctions.createJsonBody;
+import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.*;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 7/4/18
@@ -44,11 +46,13 @@ import reactor.core.publisher.Mono;
 public class DMaaPProducerReactiveHttpClient {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private RestTemplate restTemplate;
     private final String dmaapHostName;
     private final Integer dmaapPortNumber;
     private final String dmaapProtocol;
     private final String dmaapTopicName;
-    private WebClient webClient;
+    private final String dmaapContentType;
 
     /**
      * Constructor DMaaPProducerReactiveHttpClient.
@@ -60,6 +64,7 @@ public class DMaaPProducerReactiveHttpClient {
         this.dmaapProtocol = dmaapPublisherConfiguration.dmaapProtocol();
         this.dmaapPortNumber = dmaapPublisherConfiguration.dmaapPortNumber();
         this.dmaapTopicName = dmaapPublisherConfiguration.dmaapTopicName();
+        this.dmaapContentType = dmaapPublisherConfiguration.dmaapContentType();
     }
 
     /**
@@ -68,29 +73,30 @@ public class DMaaPProducerReactiveHttpClient {
      * @param consumerDmaapModelMono - object which will be sent to DMaaP
      * @return status code of operation
      */
-    public Mono<String> getDMaaPProducerResponse(ConsumerDmaapModel consumerDmaapModelMono) {
-        try {
-            return webClient
-                .post()
-                .uri(getUri())
-                .header(X_ONAP_REQUEST_ID, MDC.get(REQUEST_ID))
-                .header(X_INVOCATION_ID, UUID.randomUUID().toString())
-                .body(BodyInserters.fromObject(consumerDmaapModelMono))
-                .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, clientResponse ->
-                    Mono.error(new Exception("DmaapProducer HTTP" + clientResponse.statusCode()))
-                )
-                .onStatus(HttpStatus::is5xxServerError, clientResponse ->
-                    Mono.error(new Exception("DmaapProducer HTTP " + clientResponse.statusCode())))
-                .bodyToMono(String.class);
-        } catch (URISyntaxException e) {
-            logger.warn("Exception while evaluating URI");
-            return Mono.error(e);
-        }
+
+    public Mono<ResponseEntity<String>> getDMaaPProducerResponse(ConsumerDmaapModel consumerDmaapModelMono) {
+        return Mono.defer(() -> {
+            try {
+                HttpEntity<String> request = new HttpEntity<>(createJsonBody(consumerDmaapModelMono), getAllHeaders());
+                return Mono.just(restTemplate.exchange(getUri(), HttpMethod.POST, request, String.class));
+            } catch (URISyntaxException e) {
+                logger.warn("Exception while evaluating URI");
+                return Mono.error(e);
+            }
+        });
     }
 
-    public DMaaPProducerReactiveHttpClient createDMaaPWebClient(WebClient webClient) {
-        this.webClient = webClient;
+    private HttpHeaders getAllHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(X_ONAP_REQUEST_ID, MDC.get(REQUEST_ID));
+        headers.set(X_INVOCATION_ID, UUID.randomUUID().toString());
+        headers.set(HttpHeaders.CONTENT_TYPE, dmaapContentType);
+        return headers;
+
+    }
+
+    public DMaaPProducerReactiveHttpClient createDMaaPWebClient(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
         return this;
     }
 

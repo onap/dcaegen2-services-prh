@@ -20,15 +20,20 @@
 
 package org.onap.dcaegen2.services.prh.service.producer;
 
+import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.REQUEST_ID;
+import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.X_INVOCATION_ID;
+import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.X_ONAP_REQUEST_ID;
+
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import java.util.UUID;
 import org.apache.http.client.utils.URIBuilder;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.exceptions.AaiRequestException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -37,12 +42,12 @@ import reactor.core.publisher.Mono;
 
 public class AaiProducerReactiveHttpClient {
 
-    private WebClient webClient;
     private final String aaiHost;
     private final String aaiProtocol;
     private final Integer aaiHostPortNumber;
     private final String aaiBasePath;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private WebClient webClient;
 
 
     /**
@@ -78,6 +83,8 @@ public class AaiProducerReactiveHttpClient {
         try {
             return webClient.patch()
                 .uri(getUri(dmaapModel.getSourceName()))
+                .header(X_ONAP_REQUEST_ID, MDC.get(REQUEST_ID))
+                .header(X_INVOCATION_ID, UUID.randomUUID().toString())
                 .body(BodyInserters.fromObject(dmaapModel))
                 .retrieve()
                 .onStatus(

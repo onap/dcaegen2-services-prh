@@ -81,6 +81,17 @@ class AaiProducerTaskImplTest {
 
     }
 
+    private static void getAaiProducerTask_whenMockingResponseObject(Integer statusCode) {
+        //given
+        aaiProducerReactiveHttpClient = mock(AaiProducerReactiveHttpClient.class);
+        when(aaiProducerReactiveHttpClient.getAaiProducerResponse(any()))
+            .thenReturn(Mono.just(statusCode));
+        when(appConfig.getAaiClientConfiguration()).thenReturn(aaiClientConfiguration);
+        aaiProducerTask = spy(new AaiProducerTaskImpl(appConfig));
+        when(aaiProducerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
+        doReturn(aaiProducerReactiveHttpClient).when(aaiProducerTask).resolveClient();
+    }
+
     @Test
     void whenPassedObjectDoesntFit_ThrowsPrhTaskException() {
         //given/when/
@@ -106,7 +117,6 @@ class AaiProducerTaskImplTest {
 
     }
 
-
     @Test
     void whenPassedObjectFits_butIncorrectResponseReturns() throws PrhTaskException {
         //given/when
@@ -116,16 +126,5 @@ class AaiProducerTaskImplTest {
         //then
         verify(aaiProducerReactiveHttpClient, times(1)).getAaiProducerResponse(any());
         verifyNoMoreInteractions(aaiProducerReactiveHttpClient);
-    }
-
-    private static void getAaiProducerTask_whenMockingResponseObject(Integer statusCode) {
-        //given
-        aaiProducerReactiveHttpClient = mock(AaiProducerReactiveHttpClient.class);
-        when(aaiProducerReactiveHttpClient.getAaiProducerResponse(any()))
-            .thenReturn(Mono.just(statusCode));
-        when(appConfig.getAaiClientConfiguration()).thenReturn(aaiClientConfiguration);
-        aaiProducerTask = spy(new AaiProducerTaskImpl(appConfig));
-        when(aaiProducerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
-        doReturn(aaiProducerReactiveHttpClient).when(aaiProducerTask).resolveClient();
     }
 }

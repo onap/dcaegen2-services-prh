@@ -20,29 +20,30 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
+import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.INVOCATION_ID;
+import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.REQUEST_ID;
+
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.TypeAdapterFactory;
-
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import java.nio.charset.StandardCharsets;
 import java.util.ServiceLoader;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -140,4 +141,11 @@ public abstract class PrhAppConfig implements Config {
         this.filepath = filepath;
     }
 
+    public void setXOnapRequestId(String xOnapRequestId) {
+        MDC.put(REQUEST_ID, xOnapRequestId);
+    }
+
+    public void setXInvocationId(String xInvocationId) {
+        MDC.put(INVOCATION_ID, xInvocationId);
+    }
 }

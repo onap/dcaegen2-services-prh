@@ -35,6 +35,10 @@ public abstract class DmaapConsumerConfiguration implements DmaapCustomConfig {
 
     private static final long serialVersionUID = 1L;
 
+    public static DmaapConsumerConfiguration.Builder builder() {
+        return ImmutableDmaapConsumerConfiguration.builder();
+    }
+
     @Value.Parameter
     public abstract String consumerId();
 
@@ -47,7 +51,6 @@ public abstract class DmaapConsumerConfiguration implements DmaapCustomConfig {
     @Value.Parameter
     public abstract Integer messageLimit();
 
-
     public interface Builder extends
         DmaapCustomConfig.Builder<DmaapConsumerConfiguration, DmaapConsumerConfiguration.Builder> {
 
@@ -58,10 +61,6 @@ public abstract class DmaapConsumerConfiguration implements DmaapCustomConfig {
         Builder timeoutMs(Integer timeoutMs);
 
         Builder messageLimit(Integer messageLimit);
-    }
-
-    public static DmaapConsumerConfiguration.Builder builder() {
-        return ImmutableDmaapConsumerConfiguration.builder();
     }
 
 }

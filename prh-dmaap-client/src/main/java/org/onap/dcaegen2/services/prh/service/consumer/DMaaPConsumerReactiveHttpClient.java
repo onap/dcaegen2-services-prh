@@ -20,12 +20,18 @@
 
 package org.onap.dcaegen2.services.prh.service.consumer;
 
+import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.REQUEST_ID;
+import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.X_INVOCATION_ID;
+import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.X_ONAP_REQUEST_ID;
+
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.UUID;
 import org.apache.http.client.utils.URIBuilder;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -36,14 +42,13 @@ import reactor.core.publisher.Mono;
 public class DMaaPConsumerReactiveHttpClient {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    private WebClient webClient;
     private final String dmaapHostName;
     private final String dmaapProtocol;
     private final Integer dmaapPortNumber;
     private final String dmaapTopicName;
     private final String consumerGroup;
     private final String consumerId;
+    private WebClient webClient;
 
     /**
      * Constructor of DMaaPConsumerReactiveHttpClient.
@@ -69,6 +74,8 @@ public class DMaaPConsumerReactiveHttpClient {
             return webClient
                 .get()
                 .uri(getUri())
+                .header(X_ONAP_REQUEST_ID, MDC.get(REQUEST_ID))
+                .header(X_INVOCATION_ID, UUID.randomUUID().toString())
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, clientResponse ->
                     Mono.error(new Exception("DmaaPConsumer HTTP " + clientResponse.statusCode()))

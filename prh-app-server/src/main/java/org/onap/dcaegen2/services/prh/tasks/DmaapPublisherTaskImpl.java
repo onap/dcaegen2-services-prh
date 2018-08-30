@@ -27,6 +27,8 @@ import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.producer.DMaaPProducerReactiveHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -38,6 +40,7 @@ import reactor.core.publisher.Mono;
 public class DmaapPublisherTaskImpl extends DmaapPublisherTask {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Marker INVOKE = MarkerFactory.getMarker("INVOKE");
     private final Config config;
     private DMaaPProducerReactiveHttpClient dmaapProducerReactiveHttpClient;
 
@@ -61,7 +64,7 @@ public class DmaapPublisherTaskImpl extends DmaapPublisherTask {
             throw new DmaapNotFoundException("Invoked null object to DMaaP task");
         }
         dmaapProducerReactiveHttpClient = resolveClient();
-        logger.trace("Method called with arg {}", consumerDmaapModel);
+        logger.info(INVOKE, "Method called with arg {}", consumerDmaapModel);
         return publish(consumerDmaapModel);
     }
 

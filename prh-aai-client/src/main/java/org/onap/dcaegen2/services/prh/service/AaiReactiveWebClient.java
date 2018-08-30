@@ -20,12 +20,15 @@
 
 package org.onap.dcaegen2.services.prh.service;
 
+import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.RESPONSE_CODE;
+import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.SERVICE_NAME;
 import static org.springframework.web.reactive.function.client.ExchangeFilterFunctions.basicAuthentication;
 
 import java.util.Map;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -68,6 +71,7 @@ public class AaiReactiveWebClient {
 
     private ExchangeFilterFunction logRequest() {
         return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
+            MDC.put(SERVICE_NAME, String.valueOf(clientRequest.url()));
             logger.info("Request: {} {}", clientRequest.method(), clientRequest.url());
             clientRequest.headers()
                 .forEach((name, values) -> values.forEach(value -> logger.info("{}={}", name, value)));
@@ -77,6 +81,7 @@ public class AaiReactiveWebClient {
 
     private ExchangeFilterFunction logResponse() {
         return ExchangeFilterFunction.ofResponseProcessor(clientResponse -> {
+            MDC.put(RESPONSE_CODE, String.valueOf(clientResponse.statusCode()));
             logger.info("Response Status {}", clientResponse.statusCode());
             return Mono.just(clientResponse);
         });

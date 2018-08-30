@@ -23,7 +23,6 @@ package org.onap.dcaegen2.services.prh.integration.junit5.mockito;
 import static org.mockito.Mockito.mock;
 
 import java.lang.reflect.Parameter;
-
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
@@ -36,9 +35,9 @@ import org.mockito.MockitoAnnotations;
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/27/18
  *
- *  {@code MockitoExtension } showcases the {@link TestInstancePostProcessor} and {@link ParameterResolver} extension
- *      APIs of JUnit 5 by providing dependency injection support at the field level and at the method parameter level
- *      viaMockito 2.x's {@link Mock @Mock} annotation.
+ * {@code MockitoExtension } showcases the {@link TestInstancePostProcessor} and {@link ParameterResolver} extension
+ * APIs of JUnit 5 by providing dependency injection support at the field level and at the method parameter level
+ * viaMockito 2.x's {@link Mock @Mock} annotation.
  */
 public class MockitoExtension implements TestInstancePostProcessor, ParameterResolver {
 

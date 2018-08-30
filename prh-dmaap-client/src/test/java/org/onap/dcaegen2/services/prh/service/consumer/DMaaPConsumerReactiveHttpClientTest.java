@@ -45,10 +45,9 @@ import reactor.test.StepVerifier;
  */
 class DMaaPConsumerReactiveHttpClientTest {
 
-    private DMaaPConsumerReactiveHttpClient dmaapConsumerReactiveHttpClient;
-
-    private DmaapConsumerConfiguration consumerConfigurationMock = mock(DmaapConsumerConfiguration.class);
     private static final String JSON_MESSAGE = "{ \"responseFromDmaap\": \"Success\"}";
+    private DMaaPConsumerReactiveHttpClient dmaapConsumerReactiveHttpClient;
+    private DmaapConsumerConfiguration consumerConfigurationMock = mock(DmaapConsumerConfiguration.class);
     private Mono<String> expectedResult = Mono.empty();
     private WebClient webClient;
     private RequestHeadersUriSpec requestHeadersSpec;
@@ -114,6 +113,7 @@ class DMaaPConsumerReactiveHttpClientTest {
     private void mockDependantObjects() {
         when(webClient.get()).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.uri((URI) any())).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.header(any(), any())).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         doReturn(responseSpec).when(responseSpec).onStatus(any(), any());
     }

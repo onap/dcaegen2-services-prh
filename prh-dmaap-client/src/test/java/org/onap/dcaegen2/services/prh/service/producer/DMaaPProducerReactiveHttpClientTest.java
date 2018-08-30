@@ -113,6 +113,7 @@ class DMaaPProducerReactiveHttpClientTest {
         RequestHeadersSpec requestHeadersSpec = mock(RequestHeadersSpec.class);
         when(webClient.post()).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.uri((URI) any())).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.header(any(), any())).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.body(any())).thenReturn(requestHeadersSpec);
         doReturn(responseSpec).when(requestHeadersSpec).retrieve();
         doReturn(responseSpec).when(responseSpec).onStatus(any(), any());

@@ -21,9 +21,7 @@
 package org.onap.dcaegen2.services.prh.config;
 
 import java.io.Serializable;
-
 import java.util.Map;
-
 import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 import org.springframework.stereotype.Component;

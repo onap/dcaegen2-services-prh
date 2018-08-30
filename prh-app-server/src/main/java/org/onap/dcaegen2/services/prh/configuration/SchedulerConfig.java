@@ -28,6 +28,10 @@ import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import javax.annotation.PostConstruct;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
@@ -49,6 +53,8 @@ public class SchedulerConfig {
     private static final int SCHEDULING_DELAY_FOR_PRH_TASKS = 5;
     private static final int SCHEDULING_REQUEST_FOR_CONFIGURATION_DELAY = 5;
     private static volatile List<ScheduledFuture> scheduledPrhTaskFutureList = new ArrayList<>();
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Marker ENTRY = MarkerFactory.getMarker("ENRTY");
 
     private final ConcurrentTaskScheduler taskScheduler;
     private final ScheduledTasks scheduledTask;
@@ -88,6 +94,7 @@ public class SchedulerConfig {
     @PostConstruct
     @ApiOperation(value = "Start task if possible")
     public synchronized boolean tryToStartTask() {
+        logger.info(ENTRY,"Start scheduling PRH workflow");
         if (scheduledPrhTaskFutureList.isEmpty()) {
             scheduledPrhTaskFutureList.add(cloudTaskScheduler
                 .scheduleAtFixedRate(cloudConfiguration::runTask, Instant.now(),

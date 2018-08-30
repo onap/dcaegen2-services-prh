@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
   <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-  <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}"/>
+  <property name="LOG_FILE"
+    value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}"/>
   <property name="FILE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN}"/>
   <Property name="outputFilename" value="prh-app-server_output"/>
   <Property name="log-path" value="/var/log/ONAP/prh/prh-app-server"/>
@@ -11,7 +12,7 @@
   <property name="totalSizeCap" value="10GB"/>
 
   <springProfile name="dev">
-    <appender name="CONSOLE" target="SYSTEM_OUT" class="ch.qos.logback.core.ConsoleAppender">
+    <appender class="ch.qos.logback.core.ConsoleAppender" name="CONSOLE" target="SYSTEM_OUT">
       <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
         <Pattern>%nopexception%logger
           |%date{yyyy-MM-dd'T'HH:mm:ss.SSSXXX,UTC}
@@ -21,10 +22,11 @@
           |%replace(%replace(%rootException){'\t','\\\\t'}){'\n','\\\\n'}
           |%replace(%replace(%marker){'\t','\\\\t'}){'\n','\\\\n'}
           |%thread
-          |%n</Pattern>
+          |%n
+        </Pattern>
       </encoder>
     </appender>
-    <appender name="ROLLING-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="ROLLING-FILE">
       <encoder>
         <pattern>%nopexception%logger
           |%date{yyyy-MM-dd'T'HH:mm:ss.SSSXXX,UTC}
@@ -34,7 +36,8 @@
           |%replace(%replace(%rootException){'\t','\\\\t'}){'\n','\\\\n'}
           |%replace(%replace(%marker){'\t','\\\\t'}){'\n','\\\\n'}
           |%thread
-          |%n</pattern>
+          |%n
+        </pattern>
       </encoder>
       <file>${LOG_FILE}</file>
       <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
@@ -51,7 +54,7 @@
   </springProfile>
 
   <springProfile name="prod">
-    <appender name="ROLLING-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="ROLLING-FILE">
       <encoder>
         <pattern>%nopexception%logger
           |%date{yyyy-MM-dd'T'HH:mm:ss.SSSXXX,UTC}
@@ -61,7 +64,8 @@
           |%replace(%replace(%rootException){'\t','\\\\t'}){'\n','\\\\n'}
           |%replace(%replace(%marker){'\t','\\\\t'}){'\n','\\\\n'}
           |%thread
-          |%n</pattern>
+          |%n
+        </pattern>
       </encoder>
       <File>${log-path}/${outputFilename}.log</File>
       <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">

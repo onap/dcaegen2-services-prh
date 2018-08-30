@@ -15,6 +15,5 @@ logging:
     org.springframework: ERROR
     org.springframework.data: ERROR
     org.onap.dcaegen2.services.prh: INFO
-  file: opt/log/application.log
 app:
   filepath: config/prh_endpoints.json

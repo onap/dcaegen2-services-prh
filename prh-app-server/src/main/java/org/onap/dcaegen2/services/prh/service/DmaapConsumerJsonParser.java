@@ -23,15 +23,14 @@ package org.onap.dcaegen2.services.prh.service;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.util.Optional;
+import java.util.stream.StreamSupport;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Mono;
-
-import java.util.Optional;
-import java.util.stream.StreamSupport;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/8/18
@@ -88,21 +87,21 @@ public class DmaapConsumerJsonParser {
     private Mono<ConsumerDmaapModel> transform(JsonObject responseFromDmaap) {
 
         JsonObject commonEventHeader = responseFromDmaap.getAsJsonObject(EVENT)
-                .getAsJsonObject(COMMON_EVENT_HEADER);
+            .getAsJsonObject(COMMON_EVENT_HEADER);
         JsonObject pnfRegistrationFields = responseFromDmaap.getAsJsonObject(EVENT)
-                .getAsJsonObject(PNF_REGISTRATION_FIELDS);
+            .getAsJsonObject(PNF_REGISTRATION_FIELDS);
 
         String pnfSourceName = getValueFromJson(commonEventHeader, SOURCE_NAME);
         String pnfOamIpv4Address = getValueFromJson(pnfRegistrationFields, OAM_IPV_4_ADDRESS);
         String pnfOamIpv6Address = getValueFromJson(pnfRegistrationFields, OAM_IPV_6_ADDRESS);
 
-        return ( StringUtils.isEmpty(pnfSourceName) || !ipPropertiesNotEmpty(pnfOamIpv4Address, pnfOamIpv6Address) )
-                ? Mono.error(new DmaapNotFoundException("Incorrect json, consumerDmaapModel can not be created: "
-                + printMessage(pnfSourceName, pnfOamIpv4Address, pnfOamIpv6Address))) :
-                Mono.just(ImmutableConsumerDmaapModel.builder()
-                    .sourceName(pnfSourceName)
-                    .ipv4(pnfOamIpv4Address)
-                    .ipv6(pnfOamIpv6Address).build());
+        return (StringUtils.isEmpty(pnfSourceName) || !ipPropertiesNotEmpty(pnfOamIpv4Address, pnfOamIpv6Address))
+            ? Mono.error(new DmaapNotFoundException("Incorrect json, consumerDmaapModel can not be created: "
+            + printMessage(pnfSourceName, pnfOamIpv4Address, pnfOamIpv6Address))) :
+            Mono.just(ImmutableConsumerDmaapModel.builder()
+                .sourceName(pnfSourceName)
+                .ipv4(pnfOamIpv4Address)
+                .ipv6(pnfOamIpv6Address).build());
     }
 
     private String getValueFromJson(JsonObject jsonObject, String jsonKey) {
@@ -119,9 +118,9 @@ public class DmaapConsumerJsonParser {
 
     private String printMessage(String sourceName, String oamIpv4Address, String oamIpv6Address) {
         return String.format("%n{"
-            + "\"" + SOURCE_NAME        + "\": \"%s\","
-            + "\"" + OAM_IPV_4_ADDRESS  + "\": \"%s\","
-            + "\"" + OAM_IPV_6_ADDRESS  + "\": \"%s\""
+            + "\"" + SOURCE_NAME + "\": \"%s\","
+            + "\"" + OAM_IPV_4_ADDRESS + "\": \"%s\","
+            + "\"" + OAM_IPV_6_ADDRESS + "\": \"%s\""
             + "%n}", sourceName, oamIpv4Address, oamIpv6Address);
     }
 }

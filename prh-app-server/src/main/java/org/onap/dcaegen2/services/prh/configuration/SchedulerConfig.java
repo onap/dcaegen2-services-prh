@@ -21,6 +21,12 @@
 package org.onap.dcaegen2.services.prh.configuration;
 
 import io.swagger.annotations.ApiOperation;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ScheduledFuture;
+import javax.annotation.PostConstruct;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,12 +40,6 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.PostConstruct;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ScheduledFuture;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 6/13/18
@@ -60,8 +60,8 @@ public class SchedulerConfig {
 
     @Autowired
     public SchedulerConfig(TaskScheduler taskScheduler,
-                           ScheduledTasks scheduledTask,
-                           CloudConfiguration cloudConfiguration) {
+        ScheduledTasks scheduledTask,
+        CloudConfiguration cloudConfiguration) {
         this.taskScheduler = taskScheduler;
         this.scheduledTask = scheduledTask;
         this.cloudConfiguration = cloudConfiguration;

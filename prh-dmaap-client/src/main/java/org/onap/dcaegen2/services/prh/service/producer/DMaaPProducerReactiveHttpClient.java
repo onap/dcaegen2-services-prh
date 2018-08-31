@@ -20,6 +20,14 @@
 
 package org.onap.dcaegen2.services.prh.service.producer;
 
+import static org.onap.dcaegen2.services.prh.model.CommonFunctions.createJsonBody;
+import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.REQUEST_ID;
+import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.X_INVOCATION_ID;
+import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.X_ONAP_REQUEST_ID;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.UUID;
 import org.apache.http.client.utils.URIBuilder;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
@@ -32,13 +40,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import reactor.core.publisher.Mono;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.UUID;
-
-import static org.onap.dcaegen2.services.prh.model.CommonFunctions.createJsonBody;
-import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.*;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 7/4/18

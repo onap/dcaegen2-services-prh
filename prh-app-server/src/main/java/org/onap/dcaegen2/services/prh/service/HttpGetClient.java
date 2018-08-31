@@ -46,7 +46,7 @@ class HttpGetClient {
         this.gson = new Gson();
     }
 
-    <T> Mono<T> callHttpGet(String url, Class<T> tClass) {
+    <T> Mono<T> callHttpGet(String url, Class<T> genericClassDeclaration) {
         return webClient
             .get()
             .uri(url)
@@ -54,7 +54,7 @@ class HttpGetClient {
             .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(getException(response)))
             .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(getException(response)))
             .bodyToMono(String.class)
-            .flatMap(body -> getJsonFromRequest(body, tClass));
+            .flatMap(body -> getJsonFromRequest(body, genericClassDeclaration));
     }
 
     private RuntimeException getException(ClientResponse response) {
@@ -62,16 +62,16 @@ class HttpGetClient {
             response.statusCode().value()));
     }
 
-    private <T> Mono<T> getJsonFromRequest(String body, Class<T> tClass) {
+    private <T> Mono<T> getJsonFromRequest(String body, Class<T> genericClassDeclaration) {
         try {
-            return Mono.just(parseJson(body, tClass));
+            return Mono.just(parseJson(body, genericClassDeclaration));
         } catch (JsonSyntaxException | IllegalStateException e) {
             return Mono.error(e);
         }
     }
 
-    private <T> T parseJson(String body, Class<T> tClass) {
-        return gson.fromJson(body, tClass);
+    private <T> T parseJson(String body, Class<T> genericClassDeclaration) {
+        return gson.fromJson(body, genericClassDeclaration);
     }
 
     private static ExchangeFilterFunction logResponse() {

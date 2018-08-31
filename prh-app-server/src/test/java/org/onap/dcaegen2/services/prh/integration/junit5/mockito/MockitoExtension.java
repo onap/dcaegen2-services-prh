@@ -35,9 +35,9 @@ import org.mockito.MockitoAnnotations;
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/27/18
  *
- * {@code MockitoExtension } showcases the {@link TestInstancePostProcessor} and {@link ParameterResolver} extension
- * APIs of JUnit 5 by providing dependency injection support at the field level and at the method parameter level
- * viaMockito 2.x's {@link Mock @Mock} annotation.
+ *      {@code MockitoExtension } showcases the {@link TestInstancePostProcessor} and {@link ParameterResolver}
+ *      extension APIs of JUnit 5 by providing dependency injection support at the field level and at the method
+ *      parameter level viaMockito 2.x's {@link Mock @Mock} annotation.
  */
 public class MockitoExtension implements TestInstancePostProcessor, ParameterResolver {
 

@@ -20,8 +20,8 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
-import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.INVOCATION_ID;
-import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.REQUEST_ID;
+import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.INVOCATION_ID;
+import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.REQUEST_ID;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -141,11 +141,11 @@ public abstract class PrhAppConfig implements Config {
         this.filepath = filepath;
     }
 
-    public void setXOnapRequestId(String xOnapRequestId) {
-        MDC.put(REQUEST_ID, xOnapRequestId);
+    public void setXOnapRequestId(String xonaprequestid) {
+        MDC.put(REQUEST_ID, xonaprequestid);
     }
 
-    public void setXInvocationId(String xInvocationId) {
-        MDC.put(INVOCATION_ID, xInvocationId);
+    public void setXInvocationId(String xinvocationid) {
+        MDC.put(INVOCATION_ID, xinvocationid);
     }
 }

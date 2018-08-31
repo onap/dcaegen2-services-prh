@@ -20,9 +20,9 @@
 
 package org.onap.dcaegen2.services.prh.service.consumer;
 
-import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.REQUEST_ID;
-import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.X_INVOCATION_ID;
-import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.X_ONAP_REQUEST_ID;
+import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.REQUEST_ID;
+import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.X_INVOCATION_ID;
+import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.X_ONAP_REQUEST_ID;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -30,8 +30,6 @@ import java.util.UUID;
 
 import org.apache.http.client.utils.URIBuilder;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

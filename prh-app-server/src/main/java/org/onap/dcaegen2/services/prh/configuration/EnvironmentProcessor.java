@@ -20,15 +20,14 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
+import java.util.Optional;
+import java.util.Properties;
 import org.onap.dcaegen2.services.prh.exceptions.EnvironmentLoaderException;
 import org.onap.dcaegen2.services.prh.model.EnvProperties;
 import org.onap.dcaegen2.services.prh.model.ImmutableEnvProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
-
-import java.util.Optional;
-import java.util.Properties;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 8/10/18

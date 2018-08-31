@@ -22,6 +22,7 @@ package org.onap.dcaegen2.services.prh.service;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import java.net.URISyntaxException;
 import org.apache.http.client.utils.URIBuilder;
 import org.onap.dcaegen2.services.prh.model.EnvProperties;
 import org.slf4j.Logger;
@@ -29,7 +30,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.net.URISyntaxException;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 8/10/18
@@ -59,7 +59,7 @@ public class PrhConfigurationProvider {
         logger.info("Retrieving Config Binding Service endpoint from Consul");
         try {
             return httpGetClient.callHttpGet(getConsulUrl(envProperties), JsonArray.class)
-                .flatMap(jsonArray -> this.createConfigBindingServiceURL(jsonArray, envProperties.appName()));
+                .flatMap(jsonArray -> this.createConfigBindingserviceurl(jsonArray, envProperties.appName()));
         } catch (URISyntaxException e) {
             logger.warn("Malformed Consul uri", e);
             return Mono.error(e);
@@ -77,11 +77,12 @@ public class PrhConfigurationProvider {
     }
 
 
-    private Mono<String> createConfigBindingServiceURL(JsonArray jsonArray, String appName) {
-        return getConfigBindingObject(jsonArray).flatMap(jsonObject -> buildConfigBindingServiceURL(jsonObject, appName));
+    private Mono<String> createConfigBindingserviceurl(JsonArray jsonArray, String appName) {
+        return getConfigBindingObject(jsonArray)
+            .flatMap(jsonObject -> buildConfigBindingserviceurl(jsonObject, appName));
     }
 
-    private Mono<String> buildConfigBindingServiceURL(JsonObject jsonObject, String appName) {
+    private Mono<String> buildConfigBindingserviceurl(JsonObject jsonObject, String appName) {
         try {
             return Mono.just(getUri(jsonObject.get("ServiceAddress").getAsString(),
                 jsonObject.get("ServicePort").getAsInt(), "/service_component", appName));

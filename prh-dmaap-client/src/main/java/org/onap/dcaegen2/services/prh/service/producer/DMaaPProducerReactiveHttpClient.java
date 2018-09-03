@@ -31,8 +31,6 @@ import java.util.UUID;
 import org.apache.http.client.utils.URIBuilder;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -45,8 +43,6 @@ import reactor.core.publisher.Mono;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 7/4/18
  */
 public class DMaaPProducerReactiveHttpClient {
-
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private RestTemplate restTemplate;
     private final String dmaapHostName;
@@ -81,7 +77,6 @@ public class DMaaPProducerReactiveHttpClient {
                 HttpEntity<String> request = new HttpEntity<>(createJsonBody(consumerDmaapModelMono), getAllHeaders());
                 return Mono.just(restTemplate.exchange(getUri(), HttpMethod.POST, request, String.class));
             } catch (URISyntaxException e) {
-                logger.warn("Exception while evaluating URI");
                 return Mono.error(e);
             }
         });

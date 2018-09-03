@@ -27,7 +27,7 @@ import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.X_ONAP_R
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
-
+import java.util.function.Consumer;
 import org.apache.http.client.utils.URIBuilder;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.slf4j.MDC;
@@ -75,9 +75,7 @@ public class DMaaPConsumerReactiveHttpClient {
             return webClient
                 .get()
                 .uri(getUri())
-                .header(X_ONAP_REQUEST_ID, MDC.get(REQUEST_ID))
-                .header(X_INVOCATION_ID, UUID.randomUUID().toString())
-                .header(HttpHeaders.CONTENT_TYPE, contentType)
+                .headers(getHeaders())
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, clientResponse ->
                     Mono.error(new RuntimeException("DmaaPConsumer HTTP " + clientResponse.statusCode()))
@@ -88,6 +86,14 @@ public class DMaaPConsumerReactiveHttpClient {
         } catch (URISyntaxException e) {
             return Mono.error(e);
         }
+    }
+
+    private Consumer<HttpHeaders> getHeaders() {
+        return httpHeaders -> {
+            httpHeaders.set(X_ONAP_REQUEST_ID, MDC.get(REQUEST_ID));
+            httpHeaders.set(X_INVOCATION_ID, UUID.randomUUID().toString());
+            httpHeaders.set(HttpHeaders.CONTENT_TYPE, contentType);
+        };
     }
 
     private String createRequestPath() {

@@ -6,7 +6,7 @@ server:
   ssl:
     key-store-type: PKCS12
     key-store-password: nokiapnf
-    key-store: classpath:keystore.jks
+    key-store: classpath:keystore-onap
     key-password: nokiapnf
     keyAlias: tomcat-localhost
 logging:
@@ -17,5 +17,3 @@ logging:
     org.springframework: ERROR
     org.springframework.data: ERROR
     org.springframework.web.reactive: WARN
-app:
-  filepath: config/prh_endpoints.json

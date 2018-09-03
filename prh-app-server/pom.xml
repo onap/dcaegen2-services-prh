@@ -19,8 +19,8 @@
   ~ ============LICENSE_END=========================================================
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -41,8 +41,7 @@
   <build>
     <resources>
       <resource>
-        <directory>config</directory>
-        <targetPath>${project.build.directory}/config</targetPath>
+        <directory>src/main/resources</directory>
       </resource>
     </resources>
 
@@ -71,16 +70,12 @@
               <include>${project.artifactId}.jar</include>
               <targetPath>/opt</targetPath>
             </resource>
-            <resource>
-              <directory>${project.build.directory}/config</directory>
-              <targetPath>/config</targetPath>
-            </resource>
           </resources>
           <exposes>
             <expose>8100</expose>
             <expose>8433</expose>
           </exposes>
-          <entryPoint>["java", "-jar", "/opt/${project.artifactId}.jar"]</entryPoint>
+          <cmd>["java", "-jar", "/opt/${project.artifactId}.jar"]</cmd>
         </configuration>
         <executions>
           <execution>

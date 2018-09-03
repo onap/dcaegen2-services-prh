@@ -41,6 +41,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.dcaegen2.services.prh.integration.junit5.mockito.MockitoExtension;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/9/18
@@ -78,8 +80,16 @@ class PrhAppConfigTest {
     private static PrhAppConfig prhAppConfig;
     private static AppConfig appConfig;
 
-    private static String filePath = Objects
-        .requireNonNull(PrhAppConfigTest.class.getClassLoader().getResource(PRH_ENDPOINTS)).getFile();
+    private static InputStream inputStream;
+
+    static {
+        try {
+            inputStream = Objects
+                .requireNonNull(PrhAppConfigTest.class.getClassLoader().getResource(PRH_ENDPOINTS)).openStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @BeforeEach
     void setUp() {
@@ -88,17 +98,15 @@ class PrhAppConfigTest {
     }
 
     @Test
-    void whenApplicationWasStarted_FilePathIsSet() {
+    void whenApplicationWasStarted_FilePathIsSet() throws IOException {
         //
         // When
         //
-        prhAppConfig.setFilepath(filePath);
+        doReturn(inputStream).when(prhAppConfig).getInputStream(anyString());
         //
         // Then
         //
-        verify(prhAppConfig, times(1)).setFilepath(anyString());
         verify(prhAppConfig, times(0)).initFileStreamReader();
-        Assertions.assertEquals(filePath, prhAppConfig.getFilepath());
     }
 
     @Test
@@ -112,7 +120,7 @@ class PrhAppConfigTest {
         //
         // When
         //
-        prhAppConfig.setFilepath(filePath);
+        prhAppConfig.setResourceFile(new InputStreamResource(inputStream));
         doReturn(inputStream).when(prhAppConfig).getInputStream(any());
         prhAppConfig.initFileStreamReader();
         appConfig.dmaapConsumerConfiguration = prhAppConfig.getDmaapConsumerConfiguration();
@@ -121,7 +129,6 @@ class PrhAppConfigTest {
         //
         // Then
         //
-        verify(prhAppConfig, times(1)).setFilepath(anyString());
         verify(prhAppConfig, times(1)).initFileStreamReader();
         Assertions.assertNotNull(prhAppConfig.getAaiClientConfiguration());
         Assertions.assertNotNull(prhAppConfig.getDmaapConsumerConfiguration());
@@ -136,12 +143,15 @@ class PrhAppConfigTest {
     }
 
     @Test
-    void whenFileIsNotExist_ThrowIoException() {
+    void whenFileIsNotExist_ThrowIoException() throws IOException {
         //
         // Given
+        InputStream inputStream = new ByteArrayInputStream((jsonString.getBytes(
+            StandardCharsets.UTF_8)));
+        Resource resource = spy(new InputStreamResource(inputStream));
         //
-        filePath = "/temp.json";
-        prhAppConfig.setFilepath(filePath);
+        when(resource.getInputStream()).thenThrow(new IOException());
+        prhAppConfig.setResourceFile(resource);
         //
         // When
         //
@@ -149,7 +159,6 @@ class PrhAppConfigTest {
         //
         // Then
         //
-        verify(prhAppConfig, times(1)).setFilepath(anyString());
         verify(prhAppConfig, times(1)).initFileStreamReader();
         Assertions.assertNull(prhAppConfig.getAaiClientConfiguration());
         Assertions.assertNull(prhAppConfig.getDmaapConsumerConfiguration());
@@ -167,14 +176,13 @@ class PrhAppConfigTest {
         //
         // When
         //
-        prhAppConfig.setFilepath(filePath);
+        prhAppConfig.setResourceFile(new InputStreamResource(inputStream));
         doReturn(inputStream).when(prhAppConfig).getInputStream(any());
         prhAppConfig.initFileStreamReader();
 
         //
         // Then
         //
-        verify(prhAppConfig, times(1)).setFilepath(anyString());
         verify(prhAppConfig, times(1)).initFileStreamReader();
         Assertions.assertNotNull(prhAppConfig.getAaiClientConfiguration());
         Assertions.assertNotNull(prhAppConfig.getDmaapConsumerConfiguration());
@@ -190,7 +198,7 @@ class PrhAppConfigTest {
         InputStream inputStream = new ByteArrayInputStream((jsonString.getBytes(
             StandardCharsets.UTF_8)));
         // When
-        prhAppConfig.setFilepath(filePath);
+        prhAppConfig.setResourceFile(new InputStreamResource(inputStream));
         doReturn(inputStream).when(prhAppConfig).getInputStream(any());
         JsonElement jsonElement = mock(JsonElement.class);
         when(jsonElement.isJsonObject()).thenReturn(false);
@@ -201,7 +209,6 @@ class PrhAppConfigTest {
         appConfig.aaiClientConfiguration = prhAppConfig.getAaiClientConfiguration();
 
         // Then
-        verify(prhAppConfig, times(1)).setFilepath(anyString());
         verify(prhAppConfig, times(1)).initFileStreamReader();
         Assertions.assertNull(prhAppConfig.getAaiClientConfiguration());
         Assertions.assertNull(prhAppConfig.getDmaapConsumerConfiguration());

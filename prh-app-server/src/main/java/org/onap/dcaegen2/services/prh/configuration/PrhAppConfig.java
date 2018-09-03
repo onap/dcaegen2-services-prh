@@ -36,7 +36,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ServiceLoader;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
@@ -44,9 +43,11 @@ import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/9/18
@@ -71,9 +72,8 @@ public abstract class PrhAppConfig implements Config {
 
     DmaapPublisherConfiguration dmaapPublisherConfiguration;
 
-    @NotEmpty
-    private String filepath;
-
+    @Value("classpath:prh_endpoints.json")
+    private Resource resourceFile;
 
     @Override
     public DmaapConsumerConfiguration getDmaapConsumerConfiguration() {
@@ -97,7 +97,8 @@ public abstract class PrhAppConfig implements Config {
         ServiceLoader.load(TypeAdapterFactory.class).forEach(gsonBuilder::registerTypeAdapterFactory);
         JsonParser parser = new JsonParser();
         JsonObject jsonObject;
-        try (InputStream inputStream = getInputStream(filepath)) {
+
+        try (InputStream inputStream = resourceFile.getInputStream()) {
             JsonElement rootElement = getJsonElement(parser, inputStream);
             if (rootElement.isJsonObject()) {
                 jsonObject = rootElement.getAsJsonObject();
@@ -114,7 +115,7 @@ public abstract class PrhAppConfig implements Config {
                     DmaapPublisherConfiguration.class);
             }
         } catch (IOException e) {
-            LOGGER.warn("Problem with file loading, file: {}", filepath, e);
+            LOGGER.warn("Problem with file loading, file ", e);
         } catch (JsonSyntaxException e) {
             LOGGER.warn("Problem with Json deserialization", e);
         }
@@ -129,16 +130,12 @@ public abstract class PrhAppConfig implements Config {
         return gsonBuilder.create().fromJson(jsonObject, type);
     }
 
+    void setResourceFile(Resource resourceFile) {
+        this.resourceFile = resourceFile;
+    }
+
     InputStream getInputStream(@NotNull String filepath) throws IOException {
         return new BufferedInputStream(new FileInputStream(filepath));
-    }
-
-    String getFilepath() {
-        return this.filepath;
-    }
-
-    public void setFilepath(String filepath) {
-        this.filepath = filepath;
     }
 
     public void setXOnapRequestId(String xonaprequestid) {

@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_69537f39",
+        "filename": "prh-app-server/pom.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 2831
+      },
+      "writtenOn": "2018-09-03T13:14:24Z",
+      "side": 1,
+      "message": "This is already declared in parent pom",
+      "revId": "1af10e363da2f5a6373683778f49dd4689ec6a55",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_09344bfa",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AaiProducerTaskImpl.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 2831
+      },
+      "writtenOn": "2018-09-03T13:14:24Z",
+      "side": 1,
+      "message": "maybe move this to debug verbosity?",
+      "revId": "1af10e363da2f5a6373683778f49dd4689ec6a55",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_a92437c5",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/DmaapConsumerTaskImpl.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 2831
+      },
+      "writtenOn": "2018-09-03T13:14:24Z",
+      "side": 1,
+      "message": "private static final Logger",
+      "revId": "1af10e363da2f5a6373683778f49dd4689ec6a55",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_492d63a7",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/DmaapConsumerTaskImpl.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 2831
+      },
+      "writtenOn": "2018-09-03T13:14:24Z",
+      "side": 1,
+      "message": "maybe move this to debug verbosity?",
+      "revId": "1af10e363da2f5a6373683778f49dd4689ec6a55",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

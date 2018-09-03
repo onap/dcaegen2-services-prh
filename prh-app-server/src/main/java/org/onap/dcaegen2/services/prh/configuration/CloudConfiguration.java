@@ -89,7 +89,8 @@ public class CloudConfiguration extends AppConfig {
         logger.info("Received application configuration: {}", jsonObject);
         CloudConfigParser cloudConfigParser = new CloudConfigParser(jsonObject);
         dmaapPublisherCloudConfiguration = cloudConfigParser.getDmaapPublisherConfig();
-        aaiClientCloudConfiguration = cloudConfigParser.getAaiClientConfig();
+        aaiClientCloudConfiguration = ImmutableAaiClientConfiguration.copyOf(cloudConfigParser.getAaiClientConfig())
+            .withAaiHeaders(aaiClientConfiguration.aaiHeaders());
         dmaapConsumerCloudConfiguration = cloudConfigParser.getDmaapConsumerConfig();
     }
 
@@ -100,10 +101,9 @@ public class CloudConfiguration extends AppConfig {
 
     @Override
     public AaiClientConfiguration getAaiClientConfiguration() {
-        return Optional.ofNullable(ImmutableAaiClientConfiguration.copyOf(aaiClientCloudConfiguration)
-            .withAaiHeaders(aaiClientConfiguration.aaiHeaders()))
-            .orElse(ImmutableAaiClientConfiguration.copyOf(super.getAaiClientConfiguration()));
+        return Optional.ofNullable(aaiClientCloudConfiguration).orElse(super.getAaiClientConfiguration());
     }
+
 
     @Override
     public DmaapConsumerConfiguration getDmaapConsumerConfiguration() {

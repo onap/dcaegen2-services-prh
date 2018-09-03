@@ -29,7 +29,6 @@ import static org.springframework.web.reactive.function.client.ExchangeFilterFun
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -120,7 +119,7 @@ class DMaaPConsumerReactiveHttpClientTest {
     private void mockDependantObjects() {
         when(webClient.get()).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.uri((URI) any())).thenReturn(requestHeadersSpec);
-        when(requestHeadersSpec.header(any(), any())).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.headers(any())).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         doReturn(responseSpec).when(responseSpec).onStatus(any(), any());
     }

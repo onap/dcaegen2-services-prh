@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_3e1a9bcc",
+        "filename": "prh-dmaap-client/src/main/java/org/onap/dcaegen2/services/prh/service/consumer/DMaaPConsumerReactiveHttpClient.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 3443
+      },
+      "writtenOn": "2018-09-03T07:20:10Z",
+      "side": 0,
+      "message": "In DMaaPProducerReactiveHttpClient you have added warning log for the evaluation issue. You could revert it here too.",
+      "revId": "3c2766d8a64d21f402b5234e33419a8aed14d7ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

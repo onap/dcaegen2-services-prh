@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_1e2ebffb",
+        "filename": "prh-app-server/config/prh_endpoints.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 3443
+      },
+      "writtenOn": "2018-09-03T07:20:10Z",
+      "side": 1,
+      "message": "Should be transactionId unique?",
+      "revId": "88a7b695b184f5f2680630edcbe09381cb3de2b7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

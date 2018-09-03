@@ -48,6 +48,7 @@ import reactor.core.scheduler.Schedulers;
 @EnableScheduling
 @Primary
 public class CloudConfiguration extends AppConfig {
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private PrhConfigurationProvider prhConfigurationProvider;
 

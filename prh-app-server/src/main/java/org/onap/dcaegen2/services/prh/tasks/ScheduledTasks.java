@@ -34,6 +34,8 @@ import org.onap.dcaegen2.services.prh.model.logging.MdcVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -49,6 +51,7 @@ public class ScheduledTasks {
     private final DmaapConsumerTask dmaapConsumerTask;
     private final DmaapPublisherTask dmaapProducerTask;
     private final AaiProducerTask aaiProducerTask;
+    private final Marker INVOKE = MarkerFactory.getMarker("INVOKE");
     private Map<String, String> contextMap = MDC.getCopyOfContextMap();
 
     /**
@@ -99,6 +102,7 @@ public class ScheduledTasks {
         MDC.put(RESPONSE_CODE, responseCode.getStatusCode().toString());
         logger.info("Prh consumed tasks successfully. HTTP Response code from DMaaPProducer {}",
             responseCode.getStatusCode().value());
+        MDC.remove(RESPONSE_CODE);
     }
 
     private void onError(Throwable throwable) {
@@ -112,7 +116,7 @@ public class ScheduledTasks {
         return Mono.defer(() -> {
             MdcVariables.setMdcContextMap(contextMap);
             MDC.put(INSTANCE_UUID, UUID.randomUUID().toString());
-            logger.info("Init configs");
+            logger.info(INVOKE, "Init configs");
             dmaapConsumerTask.initConfigs();
             return dmaapConsumerTask.execute("");
         });

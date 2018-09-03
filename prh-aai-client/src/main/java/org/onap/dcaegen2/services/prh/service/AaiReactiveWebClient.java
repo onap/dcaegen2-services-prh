@@ -27,10 +27,8 @@ import static org.springframework.web.reactive.function.client.ExchangeFilterFun
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
-
 import java.util.Map;
 import javax.net.ssl.SSLException;
-
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,6 +91,7 @@ public class AaiReactiveWebClient {
             logger.info("Request: {} {}", clientRequest.method(), clientRequest.url());
             clientRequest.headers()
                 .forEach((name, values) -> values.forEach(value -> logger.info("{}={}", name, value)));
+            MDC.remove(SERVICE_NAME);
             return Mono.just(clientRequest);
         });
     }
@@ -101,6 +100,7 @@ public class AaiReactiveWebClient {
         return ExchangeFilterFunction.ofResponseProcessor(clientResponse -> {
             MDC.put(RESPONSE_CODE, String.valueOf(clientResponse.statusCode()));
             logger.info("Response Status {}", clientResponse.statusCode());
+            MDC.remove(RESPONSE_CODE);
             return Mono.just(clientResponse);
         });
     }

@@ -45,7 +45,6 @@ import reactor.core.publisher.Mono;
 public class AaiProducerTaskImpl extends
     AaiProducerTask {
 
-    private static final Marker INVOKE = MarkerFactory.getMarker("INVOKE");
     private static final Logger LOGGER = LoggerFactory.getLogger(AaiProducerTaskImpl.class);
 
     private final Config config;
@@ -86,7 +85,7 @@ public class AaiProducerTaskImpl extends
             throw new DmaapNotFoundException("Invoked null object to DMaaP task");
         }
         aaiProducerReactiveHttpClient = resolveClient();
-        LOGGER.info(INVOKE, "Method called with arg {}", consumerDmaapModel);
+        LOGGER.info("Method called with arg {}", consumerDmaapModel);
         return publish(consumerDmaapModel);
 
     }

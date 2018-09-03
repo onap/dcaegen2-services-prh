@@ -42,7 +42,6 @@ import reactor.core.publisher.Mono;
 public class DmaapPublisherTaskImpl extends DmaapPublisherTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DmaapPublisherTaskImpl.class);
-    private static final Marker INVOKE = MarkerFactory.getMarker("INVOKE");
     private final Config config;
     private DMaaPProducerReactiveHttpClient dmaapProducerReactiveHttpClient;
 
@@ -62,7 +61,7 @@ public class DmaapPublisherTaskImpl extends DmaapPublisherTask {
             throw new DmaapNotFoundException("Invoked null object to DMaaP task");
         }
         dmaapProducerReactiveHttpClient = resolveClient();
-        LOGGER.info(INVOKE, "Method called with arg {}", consumerDmaapModel);
+        LOGGER.info("Method called with arg {}", consumerDmaapModel);
         return publish(consumerDmaapModel);
     }
 

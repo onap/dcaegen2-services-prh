@@ -20,7 +20,6 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-
 import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.INSTANCE_UUID;
 import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.RESPONSE_CODE;
 

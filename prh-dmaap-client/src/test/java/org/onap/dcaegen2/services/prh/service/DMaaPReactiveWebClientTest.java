@@ -47,7 +47,6 @@ class DMaaPReactiveWebClientTest {
         when(dmaapConsumerConfiguration.dmaapUserName()).thenReturn(dmaaPUserName);
         when(dmaapConsumerConfiguration.dmaapUserPassword()).thenReturn(dmaaPUserPassword);
         WebClient dmaapreactiveWebClient = new DMaaPReactiveWebClient()
-            .fromConfiguration(dmaapConsumerConfiguration)
             .build();
 
         //then

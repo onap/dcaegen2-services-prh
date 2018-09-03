@@ -26,6 +26,7 @@ import java.util.Properties;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
+import org.onap.dcaegen2.services.prh.config.ImmutableAaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.model.EnvProperties;
 import org.onap.dcaegen2.services.prh.service.PrhConfigurationProvider;
 import org.slf4j.Logger;
@@ -99,7 +100,9 @@ public class CloudConfiguration extends AppConfig {
 
     @Override
     public AaiClientConfiguration getAaiClientConfiguration() {
-        return Optional.ofNullable(aaiClientCloudConfiguration).orElse(super.getAaiClientConfiguration());
+        return Optional.ofNullable(ImmutableAaiClientConfiguration.copyOf(aaiClientCloudConfiguration)
+            .withAaiHeaders(aaiClientConfiguration.aaiHeaders()))
+            .orElse(ImmutableAaiClientConfiguration.copyOf(super.getAaiClientConfiguration()));
     }
 
     @Override

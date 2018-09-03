@@ -20,7 +20,6 @@
 
 package org.onap.dcaegen2.services.prh.service;
 
-import org.onap.dcaegen2.services.prh.config.DmaapCustomConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -34,21 +33,6 @@ import reactor.core.publisher.Mono;
 public class DMaaPReactiveWebClient {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    private String dmaaPUserName;
-    private String dmaaPUserPassword;
-
-    /**
-     * Creating DMaaPReactiveWebClient passing to them basic DMaaPConfig.
-     *
-     * @param dmaapCustomConfig - configuration object
-     * @return DMaaPReactiveWebClient
-     */
-    public DMaaPReactiveWebClient fromConfiguration(DmaapCustomConfig dmaapCustomConfig) {
-        this.dmaaPUserName = dmaapCustomConfig.dmaapUserName();
-        this.dmaaPUserPassword = dmaapCustomConfig.dmaapUserPassword();
-        return this;
-    }
 
     /**
      * Construct Reactive WebClient with appropriate settings.

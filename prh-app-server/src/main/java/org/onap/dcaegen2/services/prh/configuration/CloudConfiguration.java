@@ -21,6 +21,8 @@
 package org.onap.dcaegen2.services.prh.configuration;
 
 import com.google.gson.JsonObject;
+import java.util.Optional;
+import java.util.Properties;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
@@ -37,9 +39,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
 
-import java.util.Optional;
-import java.util.Properties;
-
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 8/9/18
  */
@@ -48,7 +47,6 @@ import java.util.Properties;
 @EnableScheduling
 @Primary
 public class CloudConfiguration extends AppConfig {
-
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private PrhConfigurationProvider prhConfigurationProvider;
 

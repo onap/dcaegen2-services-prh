@@ -20,6 +20,9 @@
 
 package org.onap.dcaegen2.services.prh.service;
 
+import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.RESPONSE_CODE;
+import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.SERVICE_NAME;
+
 import org.onap.dcaegen2.services.prh.config.DmaapCustomConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,18 +67,20 @@ public class DMaaPReactiveWebClient {
 
     private ExchangeFilterFunction logResponse() {
         return ExchangeFilterFunction.ofResponseProcessor(clientResponse -> {
-            MDC.put("ResponseCode", String.valueOf(clientResponse.statusCode()));
+            MDC.put(RESPONSE_CODE, String.valueOf(clientResponse.statusCode()));
             logger.info("Response Status {}", clientResponse.statusCode());
+            MDC.remove(RESPONSE_CODE);
             return Mono.just(clientResponse);
         });
     }
 
     private ExchangeFilterFunction logRequest() {
         return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
-            MDC.put("ServiceName", String.valueOf(clientRequest.url()));
+            MDC.put(SERVICE_NAME, String.valueOf(clientRequest.url()));
             logger.info("Request: {} {}", clientRequest.method(), clientRequest.url());
             clientRequest.headers()
                     .forEach((name, values) -> values.forEach(value -> logger.info("{}={}", name, value)));
+            MDC.remove(SERVICE_NAME);
             return Mono.just(clientRequest);
         });
     }

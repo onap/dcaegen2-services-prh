@@ -92,6 +92,7 @@ public class AaiReactiveWebClient {
             logger.info("Request: {} {}", clientRequest.method(), clientRequest.url());
             clientRequest.headers()
                     .forEach((name, values) -> values.forEach(value -> logger.info("{}={}", name, value)));
+            MDC.remove(SERVICE_NAME);
             return Mono.just(clientRequest);
         });
     }
@@ -100,6 +101,7 @@ public class AaiReactiveWebClient {
         return ExchangeFilterFunction.ofResponseProcessor(clientResponse -> {
             MDC.put(RESPONSE_CODE, String.valueOf(clientResponse.statusCode()));
             logger.info("Response Status {}", clientResponse.statusCode());
+            MDC.remove(RESPONSE_CODE);
             return Mono.just(clientResponse);
         });
     }

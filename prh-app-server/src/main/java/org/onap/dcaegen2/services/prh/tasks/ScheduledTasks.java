@@ -27,6 +27,8 @@ import org.onap.dcaegen2.services.prh.model.logging.MDCVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -50,6 +52,7 @@ public class ScheduledTasks {
     private final DmaapConsumerTask dmaapConsumerTask;
     private final DmaapPublisherTask dmaapProducerTask;
     private final AaiProducerTask aaiProducerTask;
+    private final Marker INVOKE = MarkerFactory.getMarker("INVOKE");
     private Map<String, String> contextMap = MDC.getCopyOfContextMap();
 
     /**
@@ -77,7 +80,7 @@ public class ScheduledTasks {
             CountDownLatch mainCountDownLatch = new CountDownLatch(1);
             consumeFromDMaaPMessage()
                     .doOnError(DmaapEmptyResponseException.class, error ->
-                            logger.warn("Nothing to consume from DMaaP")
+                            logger.warn("Nothing to consume from DMaaP") //??
                     )
                     .flatMap(this::publishToAaiConfiguration)
                     .flatMap(this::publishToDmaapConfiguration)
@@ -111,7 +114,7 @@ public class ScheduledTasks {
         return Mono.defer(() -> {
             MDCVariables.setMdcContextMap(contextMap);
             MDC.put(INSTANCE_UUID, UUID.randomUUID().toString());
-            logger.info("Init configs");
+            logger.info(INVOKE, "Init configs");
             dmaapConsumerTask.initConfigs();
             return dmaapConsumerTask.execute("");
         });

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_3e0cdba4",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/PrhConfigurationProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 3443
+      },
+      "writtenOn": "2018-09-03T07:04:13Z",
+      "side": 1,
+      "message": "Why lower case for Service and Url?",
+      "revId": "59f45dc242ab4847f2e9430bb6e448124c758517",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

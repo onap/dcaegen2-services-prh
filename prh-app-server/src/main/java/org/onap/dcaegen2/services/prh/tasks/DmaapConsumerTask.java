@@ -43,6 +43,6 @@ abstract class DmaapConsumerTask {
     protected abstract Mono<ConsumerDmaapModel> execute(String object);
 
     WebClient buildWebClient() {
-        return new DMaaPReactiveWebClient().fromConfiguration(resolveConfiguration()).build();
+        return new DMaaPReactiveWebClient().build();
     }
 }

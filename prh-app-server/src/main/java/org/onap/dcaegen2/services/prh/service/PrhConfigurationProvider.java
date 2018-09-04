@@ -59,7 +59,7 @@ public class PrhConfigurationProvider {
         LOGGER.info("Retrieving Config Binding Service endpoint from Consul");
         try {
             return httpGetClient.callHttpGet(getConsulUrl(envProperties), JsonArray.class)
-                .flatMap(jsonArray -> this.createConfigBindingserviceurl(jsonArray, envProperties.appName()));
+                .flatMap(jsonArray -> this.createConfigBindingServiceUrl(jsonArray, envProperties.appName()));
         } catch (URISyntaxException e) {
             LOGGER.warn("Malformed Consul uri", e);
             return Mono.error(e);
@@ -77,12 +77,12 @@ public class PrhConfigurationProvider {
     }
 
 
-    private Mono<String> createConfigBindingserviceurl(JsonArray jsonArray, String appName) {
+    private Mono<String> createConfigBindingServiceUrl(JsonArray jsonArray, String appName) {
         return getConfigBindingObject(jsonArray)
-            .flatMap(jsonObject -> buildConfigBindingserviceurl(jsonObject, appName));
+            .flatMap(jsonObject -> buildConfigBindingServiceUrl(jsonObject, appName));
     }
 
-    private Mono<String> buildConfigBindingserviceurl(JsonObject jsonObject, String appName) {
+    private Mono<String> buildConfigBindingServiceUrl(JsonObject jsonObject, String appName) {
         try {
             return Mono.just(getUri(jsonObject.get("ServiceAddress").getAsString(),
                 jsonObject.get("ServicePort").getAsInt(), "/service_component", appName));

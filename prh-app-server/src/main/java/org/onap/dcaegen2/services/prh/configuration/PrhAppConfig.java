@@ -137,12 +137,4 @@ public abstract class PrhAppConfig implements Config {
     InputStream getInputStream(@NotNull String filepath) throws IOException {
         return new BufferedInputStream(new FileInputStream(filepath));
     }
-
-    public void setXOnapRequestId(String xonaprequestid) {
-        MDC.put(REQUEST_ID, xonaprequestid);
-    }
-
-    public void setXInvocationId(String xinvocationid) {
-        MDC.put(INVOCATION_ID, xinvocationid);
-    }
 }

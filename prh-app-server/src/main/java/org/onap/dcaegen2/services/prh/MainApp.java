@@ -20,6 +20,13 @@
 
 package org.onap.dcaegen2.services.prh;
 
+import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.INVOCATION_ID;
+import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.REQUEST_ID;
+
+import java.util.Map;
+import java.util.UUID;
+import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
@@ -39,6 +46,13 @@ public class MainApp {
 
     public static void main(String[] args) {
         SpringApplication.run(MainApp.class, args);
+    }
+
+    @Bean
+    Map<String, String> mdcContextMap(){
+        MDC.put(REQUEST_ID, "SampleRequestID");
+        MDC.put(INVOCATION_ID, UUID.randomUUID().toString());
+        return MDC.getCopyOfContextMap();
     }
 
     @Bean

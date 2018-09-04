@@ -36,7 +36,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
 
@@ -49,7 +48,7 @@ import reactor.core.scheduler.Schedulers;
 @Primary
 public class CloudConfiguration extends AppConfig {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(CloudConfiguration.class);
     private PrhConfigurationProvider prhConfigurationProvider;
 
     private AaiClientConfiguration aaiClientCloudConfiguration;
@@ -72,21 +71,21 @@ public class CloudConfiguration extends AppConfig {
     }
 
     private void parsingConfigError(Throwable throwable) {
-        logger.warn("Error in case of processing system environment, more details below: ", throwable);
+        LOGGER.warn("Error in case of processing system environment, more details below: ", throwable);
     }
 
     private void cloudConfigError(Throwable throwable) {
-        logger.warn("Exception during getting configuration from CONSUL/CONFIG_BINDING_SERVICE ", throwable);
+        LOGGER.warn("Exception during getting configuration from CONSUL/CONFIG_BINDING_SERVICE ", throwable);
     }
 
     private void parsingConfigSuccess(EnvProperties envProperties) {
-        logger.info("Fetching PRH configuration from ConfigBindingService/Consul");
+        LOGGER.info("Fetching PRH configuration from ConfigBindingService/Consul");
         prhConfigurationProvider.callForPrhConfiguration(envProperties)
             .subscribe(this::parseCloudConfig, this::cloudConfigError);
     }
 
     private void parseCloudConfig(JsonObject jsonObject) {
-        logger.info("Received application configuration: {}", jsonObject);
+        LOGGER.info("Received application configuration: {}", jsonObject);
         CloudConfigParser cloudConfigParser = new CloudConfigParser(jsonObject);
         dmaapPublisherCloudConfiguration = cloudConfigParser.getDmaapPublisherConfig();
         aaiClientCloudConfiguration = cloudConfigParser.getAaiClientConfig();

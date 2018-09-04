@@ -38,7 +38,7 @@ import java.net.URISyntaxException;
 @Service
 public class PrhConfigurationProvider {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(PrhConfigurationProvider.class);
 
     private final HttpGetClient httpGetClient;
 
@@ -56,12 +56,12 @@ public class PrhConfigurationProvider {
     }
 
     private Mono<String> callConsulForConfigBindingServiceEndpoint(EnvProperties envProperties) {
-        logger.info("Retrieving Config Binding Service endpoint from Consul");
+        LOGGER.info("Retrieving Config Binding Service endpoint from Consul");
         try {
             return httpGetClient.callHttpGet(getConsulUrl(envProperties), JsonArray.class)
                 .flatMap(jsonArray -> this.createConfigBindingServiceURL(jsonArray, envProperties.appName()));
         } catch (URISyntaxException e) {
-            logger.warn("Malformed Consul uri", e);
+            LOGGER.warn("Malformed Consul uri", e);
             return Mono.error(e);
         }
     }
@@ -72,7 +72,7 @@ public class PrhConfigurationProvider {
     }
 
     private Mono<JsonObject> callConfigBindingServiceForPrhConfiguration(String configBindingServiceUri) {
-        logger.info("Retrieving PRH configuration");
+        LOGGER.info("Retrieving PRH configuration");
         return httpGetClient.callHttpGet(configBindingServiceUri, JsonObject.class);
     }
 
@@ -86,7 +86,7 @@ public class PrhConfigurationProvider {
             return Mono.just(getUri(jsonObject.get("ServiceAddress").getAsString(),
                 jsonObject.get("ServicePort").getAsInt(), "/service_component", appName));
         } catch (URISyntaxException e) {
-            logger.warn("Malformed Config Binding Service uri", e);
+            LOGGER.warn("Malformed Config Binding Service uri", e);
             return Mono.error(e);
         }
     }
@@ -99,7 +99,7 @@ public class PrhConfigurationProvider {
                 throw new IllegalStateException("JSON Array was empty");
             }
         } catch (IllegalStateException e) {
-            logger.warn("Failed to retrieve JSON Object from array", e);
+            LOGGER.warn("Failed to retrieve JSON Object from array", e);
             return Mono.error(e);
         }
     }

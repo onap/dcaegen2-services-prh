@@ -40,7 +40,7 @@ import reactor.core.publisher.Mono;
 @Api(value = "ScheduleController", description = "Schedule Controller")
 public class ScheduleController {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleController.class);
 
     private final SchedulerConfig schedulerConfig;
 
@@ -52,14 +52,14 @@ public class ScheduleController {
     @RequestMapping(value = "start", method = RequestMethod.GET)
     @ApiOperation(value = "Start scheduling worker request")
     public Mono<ResponseEntity<String>> startTasks() {
-        logger.trace("Receiving start scheduling worker request");
+        LOGGER.trace("Receiving start scheduling worker request");
         return Mono.fromSupplier(schedulerConfig::tryToStartTask).map(this::createStartTaskResponse);
     }
 
     @RequestMapping(value = "stopPrh", method = RequestMethod.GET)
     @ApiOperation(value = "Receiving stop scheduling worker request")
     public Mono<ResponseEntity<String>> stopTask() {
-        logger.trace("Receiving stop scheduling worker request");
+        LOGGER.trace("Receiving stop scheduling worker request");
         return schedulerConfig.getResponseFromCancellationOfTasks();
     }
 

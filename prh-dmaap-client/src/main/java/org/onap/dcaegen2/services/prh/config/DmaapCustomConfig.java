@@ -21,7 +21,6 @@
 package org.onap.dcaegen2.services.prh.config;
 
 import java.io.Serializable;
-import java.util.Map;
 import org.immutables.value.Value;
 
 /**

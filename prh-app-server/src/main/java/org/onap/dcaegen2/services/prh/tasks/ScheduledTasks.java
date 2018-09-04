@@ -20,8 +20,9 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.INSTANCE_UUID;
-import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.RESPONSE_CODE;
+
+import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.INSTANCE_UUID;
+import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.RESPONSE_CODE;
 
 import java.util.Map;
 import java.util.UUID;
@@ -30,7 +31,7 @@ import javax.net.ssl.SSLException;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.model.logging.MDCVariables;
+import org.onap.dcaegen2.services.prh.model.logging.MdcVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -71,7 +72,7 @@ public class ScheduledTasks {
      * Main function for scheduling prhWorkflow.
      */
     public void scheduleMainPrhEventTask() {
-        MDCVariables.setMdcContextMap(contextMap);
+        MdcVariables.setMdcContextMap(contextMap);
         try {
             logger.trace("Execution of tasks was registered");
             CountDownLatch mainCountDownLatch = new CountDownLatch(1);
@@ -86,7 +87,8 @@ public class ScheduledTasks {
 
             mainCountDownLatch.await();
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            logger.warn("Interruption problem on countDownLatch ", e);
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -110,7 +112,7 @@ public class ScheduledTasks {
 
     private Mono<ConsumerDmaapModel> consumeFromDMaaPMessage() {
         return Mono.defer(() -> {
-            MDCVariables.setMdcContextMap(contextMap);
+            MdcVariables.setMdcContextMap(contextMap);
             MDC.put(INSTANCE_UUID, UUID.randomUUID().toString());
             logger.info("Init configs");
             dmaapConsumerTask.initConfigs();

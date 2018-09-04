@@ -20,6 +20,7 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
+import javax.net.ssl.SSLException;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.exceptions.AaiNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
@@ -29,7 +30,6 @@ import org.onap.dcaegen2.services.prh.service.producer.AaiProducerReactiveHttpCl
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import javax.net.ssl.SSLException;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18

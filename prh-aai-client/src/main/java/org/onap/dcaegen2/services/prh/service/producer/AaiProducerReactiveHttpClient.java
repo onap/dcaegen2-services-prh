@@ -20,22 +20,21 @@
 
 package org.onap.dcaegen2.services.prh.service.producer;
 
-import org.apache.http.client.utils.URIBuilder;
-import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
-import org.springframework.web.reactive.function.client.ClientResponse;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
+import static org.onap.dcaegen2.services.prh.model.CommonFunctions.createJsonBody;
+import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.REQUEST_ID;
+import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.X_INVOCATION_ID;
+import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.X_ONAP_REQUEST_ID;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
-
-import static org.onap.dcaegen2.services.prh.model.CommonFunctions.createJsonBody;
-import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.*;
+import org.apache.http.client.utils.URIBuilder;
+import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+import org.slf4j.MDC;
+import org.springframework.web.reactive.function.client.ClientResponse;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 
 public class AaiProducerReactiveHttpClient {

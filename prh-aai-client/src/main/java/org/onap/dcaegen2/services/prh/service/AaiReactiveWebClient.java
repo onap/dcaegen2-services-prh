@@ -20,8 +20,8 @@
 
 package org.onap.dcaegen2.services.prh.service;
 
-import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.RESPONSE_CODE;
-import static org.onap.dcaegen2.services.prh.model.logging.MDCVariables.SERVICE_NAME;
+import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.RESPONSE_CODE;
+import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.SERVICE_NAME;
 import static org.springframework.web.reactive.function.client.ExchangeFilterFunctions.basicAuthentication;
 
 import io.netty.handler.ssl.SslContext;

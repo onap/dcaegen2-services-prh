@@ -40,8 +40,6 @@ import reactor.core.publisher.Mono;
 @Component
 public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
 
-    private static final Marker INVOKE = MarkerFactory.getMarker("INVOKE");
-
     private static final Logger LOGGER = LoggerFactory.getLogger(DmaapConsumerTaskImpl.class);
     private final Config config;
     private DmaapConsumerJsonParser dmaapConsumerJsonParser;
@@ -65,7 +63,7 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
     @Override
     public Mono<ConsumerDmaapModel> execute(String object) {
         DMaaPConsumerReactiveHttpClient dmaaPConsumerReactiveHttpClient = resolveClient();
-        LOGGER.debug(INVOKE, "Method called with arg {}", object);
+        LOGGER.debug("Method called with arg {}", object);
         return consume(dmaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse());
     }
 

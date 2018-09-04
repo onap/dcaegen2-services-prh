@@ -16,6 +16,24 @@
       "revId": "a919693d1ca9f2fae73662f21097849e9ea36c79",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_8afa8973",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/ScheduledTasks.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 3773
+      },
+      "writtenOn": "2018-09-04T10:17:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a76adc5_2abed5b4",
+      "revId": "a919693d1ca9f2fae73662f21097849e9ea36c79",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_2abed5b4",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/ScheduledTasks.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-09-04T10:01:53Z",
+      "side": 1,
+      "message": "please resolve mdfContextMap from SpringIoC by using constructor (hint: define on existing contructor additional parameter). PLease, don\u0027t do that as above by defining @Autowiare annotation above private field",
+      "revId": "a919693d1ca9f2fae73662f21097849e9ea36c79",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

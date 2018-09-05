@@ -48,7 +48,7 @@ import reactor.core.publisher.Mono;
 public class ScheduledTasks {
 
     private static final Logger logger = LoggerFactory.getLogger(ScheduledTasks.class);
-    private final Marker INVOKE = MarkerFactory.getMarker("INVOKE");
+    private static final Marker INVOKE = MarkerFactory.getMarker("INVOKE");
     private final DmaapConsumerTask dmaapConsumerTask;
     private final DmaapPublisherTask dmaapProducerTask;
     private final AaiProducerTask aaiProducerTask;

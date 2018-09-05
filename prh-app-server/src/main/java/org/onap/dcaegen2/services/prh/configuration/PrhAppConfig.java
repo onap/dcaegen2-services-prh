@@ -20,9 +20,6 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
-import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.INVOCATION_ID;
-import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.REQUEST_ID;
-
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -42,7 +39,6 @@ import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

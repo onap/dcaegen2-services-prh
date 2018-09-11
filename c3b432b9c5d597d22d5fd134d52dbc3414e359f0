@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_38afea2b",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-09-11T09:28:17Z",
+      "side": 1,
+      "message": "please add something about endpoints in prh, prh ports (8100/8433)",
+      "revId": "c3b432b9c5d597d22d5fd134d52dbc3414e359f0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_f87bb2bb",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-09-11T09:28:17Z",
+      "side": 1,
+      "message": "Copyright information/license should be visible on gerrit/github/gitlab webpage\n\nI mean only the header of license and type of license apache",
+      "revId": "c3b432b9c5d597d22d5fd134d52dbc3414e359f0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

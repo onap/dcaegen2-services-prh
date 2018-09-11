@@ -48,7 +48,7 @@ public class MainApp {
     }
 
     @Bean
-    Map<String, String> mdcContextMap(){
+    Map<String, String> mdcContextMap() {
         MDC.put(REQUEST_ID, "SampleRequestID");
         MDC.put(INVOCATION_ID, UUID.randomUUID().toString());
         return MDC.getCopyOfContextMap();

@@ -23,6 +23,7 @@ package org.onap.dcaegen2.services.prh.tasks;
 import static org.mockito.Mockito.spy;
 
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,6 +50,7 @@ public class ScheduleControllerSpy {
     @Bean
     @Primary
     public ScheduledTasks registerSimpleScheduledTask() {
-        return spy(new ScheduledTasks(dmaapConsumerTaskImplSpy, dmaapPublisherTaskImplSpy, aaiPublisherTaskImplSpy, mdcContextMap));
+        return spy(new ScheduledTasks(dmaapConsumerTaskImplSpy, dmaapPublisherTaskImplSpy, aaiPublisherTaskImplSpy,
+            mdcContextMap));
     }
 }

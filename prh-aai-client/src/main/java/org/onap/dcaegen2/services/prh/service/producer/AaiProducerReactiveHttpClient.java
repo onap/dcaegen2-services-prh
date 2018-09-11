@@ -26,15 +26,17 @@ import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.X_INVOCA
 import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.X_ONAP_REQUEST_ID;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.UUID;
-import org.apache.http.client.utils.URIBuilder;
+
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.slf4j.MDC;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 import reactor.core.publisher.Mono;
+
+
 
 
 public class AaiProducerReactiveHttpClient {
@@ -66,11 +68,7 @@ public class AaiProducerReactiveHttpClient {
      * @return status code of operation
      */
     public Mono<ClientResponse> getAaiProducerResponse(ConsumerDmaapModel consumerDmaapModelMono) {
-        try {
-            return patchAaiRequest(consumerDmaapModelMono);
-        } catch (URISyntaxException e) {
-            return Mono.error(e);
-        }
+        return patchAaiRequest(consumerDmaapModelMono);
     }
 
     public AaiProducerReactiveHttpClient createAaiWebClient(WebClient webClient) {
@@ -78,7 +76,7 @@ public class AaiProducerReactiveHttpClient {
         return this;
     }
 
-    private Mono<ClientResponse> patchAaiRequest(ConsumerDmaapModel dmaapModel) throws URISyntaxException {
+    private Mono<ClientResponse> patchAaiRequest(ConsumerDmaapModel dmaapModel) {
         return
             webClient.patch()
                 .uri(getUri(dmaapModel.getSourceName()))
@@ -88,12 +86,8 @@ public class AaiProducerReactiveHttpClient {
                 .exchange();
     }
 
-    URI getUri(String pnfName) throws URISyntaxException {
-        return new URIBuilder()
-            .setScheme(aaiProtocol)
-            .setHost(aaiHost)
-            .setPort(aaiHostPortNumber)
-            .setPath(aaiBasePath + aaiPnfPath + "/" + pnfName)
-            .build();
+    URI getUri(String pnfName) {
+        return new DefaultUriBuilderFactory().builder().scheme(aaiProtocol).host(aaiHost).port(aaiHostPortNumber)
+            .path(aaiBasePath + aaiPnfPath + "/" + pnfName).build();
     }
 }

@@ -21,8 +21,6 @@
 
 package org.onap.dcaegen2.services.prh.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -34,6 +32,8 @@ import com.google.gson.JsonSyntaxException;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
+
 
 class HttpGetClientTest {
     private static final String SOMEURL = "http://someurl";
@@ -50,12 +50,9 @@ class HttpGetClientTest {
         HttpGetClient httpGetClient = new HttpGetClient(webClient);
         when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just(DATA));
 
-        //when
-        Mono<JsonObject> jsonObjectMono = httpGetClient.callHttpGet(SOMEURL, JsonObject.class);
-
-        //then
-        assertThat(jsonObjectMono).isNotNull();
-        assertThat(jsonObjectMono.block()).isEqualTo(gson.fromJson(DATA, JsonObject.class));
+        //when/then
+        StepVerifier.create(httpGetClient.callHttpGet(SOMEURL, JsonObject.class)).expectSubscription()
+            .expectNext(gson.fromJson(DATA, JsonObject.class)).verifyComplete();
     }
 
     @Test
@@ -65,14 +62,10 @@ class HttpGetClientTest {
         HttpGetClient httpGetClient = new HttpGetClient(webClient);
         when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("some wrong data"));
 
-        //when
-        Mono<JsonObject> jsonObjectMono = httpGetClient.callHttpGet(SOMEURL, JsonObject.class);
-
-        //then
-        assertThat(jsonObjectMono).isNotNull();
-        assertThrows(JsonSyntaxException.class, jsonObjectMono::block);
+        //when/then
+        StepVerifier.create(httpGetClient.callHttpGet(SOMEURL, JsonObject.class)).expectSubscription()
+            .expectError(JsonSyntaxException.class).verify();
     }
-
 
 
     private void mockWebClientDependantObject() {

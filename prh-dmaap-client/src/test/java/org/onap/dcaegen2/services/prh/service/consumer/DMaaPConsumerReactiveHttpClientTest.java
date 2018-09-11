@@ -97,20 +97,6 @@ class DMaaPConsumerReactiveHttpClientTest {
     }
 
     @Test
-    void getHttpResponse_whenUriSyntaxExceptionHasBeenThrown() throws URISyntaxException {
-        //given
-        dmaapConsumerReactiveHttpClient = spy(dmaapConsumerReactiveHttpClient);
-        //when
-        when(webClient.get()).thenReturn(requestHeadersSpec);
-        dmaapConsumerReactiveHttpClient.createDMaaPWebClient(webClient);
-        when(dmaapConsumerReactiveHttpClient.getUri()).thenThrow(URISyntaxException.class);
-
-        //then
-        StepVerifier.create(dmaapConsumerReactiveHttpClient.getDMaaPConsumerResponse()).expectSubscription()
-            .expectError(Exception.class).verify();
-    }
-
-    @Test
     void getAppropriateUri_whenPassingCorrectedPathForPnf() throws URISyntaxException {
         Assertions.assertEquals(dmaapConsumerReactiveHttpClient.getUri(),
             URI.create("https://54.45.33.2:1234/unauthenticated.SEC_OTHER_OUTPUT/OpenDCAE-c12/c12"));

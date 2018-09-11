@@ -105,23 +105,9 @@ class AaiProducerReactiveHttpClientTest {
             }).verifyComplete();
     }
 
-    @Test
-    void getHttpResponse_whenUriSyntaxExceptionHasBeenThrown() throws URISyntaxException {
-        ///given
-        aaiProducerReactiveHttpClient = spy(aaiProducerReactiveHttpClient);
-        //when
-        when(webClient.patch()).thenReturn(requestBodyUriSpec);
-        aaiProducerReactiveHttpClient.createAaiWebClient(webClient);
-        doThrow(URISyntaxException.class).when(aaiProducerReactiveHttpClient).getUri(any());
-        //then
-        StepVerifier.create(
-            aaiProducerReactiveHttpClient.getAaiProducerResponse(
-                dmaapModel
-            )).expectSubscription().expectError(Exception.class).verify();
-    }
 
     @Test
-    void getAppropriateUri_whenPassingCorrectedPathForPnf() throws URISyntaxException {
+    void getAppropriateUri_whenPassingCorrectedPathForPnf() {
         Assertions.assertEquals(aaiProducerReactiveHttpClient.getUri("NOKnhfsadhff"),
             URI.create("https://54.45.33.2:1234/aai/v11/network/pnfs/pnf/NOKnhfsadhff"));
     }

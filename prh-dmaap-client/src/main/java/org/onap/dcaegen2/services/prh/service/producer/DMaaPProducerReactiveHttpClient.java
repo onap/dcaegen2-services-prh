@@ -26,9 +26,7 @@ import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.X_INVOCA
 import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.X_ONAP_REQUEST_ID;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.UUID;
-import org.apache.http.client.utils.URIBuilder;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.slf4j.MDC;
@@ -37,7 +35,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 import reactor.core.publisher.Mono;
+
+
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 7/4/18
@@ -74,12 +75,9 @@ public class DMaaPProducerReactiveHttpClient {
 
     public Mono<ResponseEntity<String>> getDMaaPProducerResponse(ConsumerDmaapModel consumerDmaapModelMono) {
         return Mono.defer(() -> {
-            try {
-                HttpEntity<String> request = new HttpEntity<>(createJsonBody(consumerDmaapModelMono), getAllHeaders());
-                return Mono.just(restTemplate.exchange(getUri(), HttpMethod.POST, request, String.class));
-            } catch (URISyntaxException e) {
-                return Mono.error(e);
-            }
+            HttpEntity<String> request = new HttpEntity<>(createJsonBody(consumerDmaapModelMono), getAllHeaders());
+            return Mono.just(restTemplate.exchange(getUri(), HttpMethod.POST, request, String.class));
+
         });
     }
 
@@ -97,9 +95,9 @@ public class DMaaPProducerReactiveHttpClient {
         return this;
     }
 
-    URI getUri() throws URISyntaxException {
-        return new URIBuilder().setScheme(dmaapProtocol).setHost(dmaapHostName).setPort(dmaapPortNumber)
-            .setPath(dmaapTopicName).build();
+    URI getUri() {
+        return new DefaultUriBuilderFactory().builder().scheme(dmaapProtocol).host(dmaapHostName).port(dmaapPortNumber)
+            .path(dmaapTopicName).build();
     }
 
 }

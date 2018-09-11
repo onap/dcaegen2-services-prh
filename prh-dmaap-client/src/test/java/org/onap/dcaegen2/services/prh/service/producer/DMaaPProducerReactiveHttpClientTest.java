@@ -86,19 +86,7 @@ class DMaaPProducerReactiveHttpClientTest {
     }
 
     @Test
-    void getHttpResponse_whenUriSyntaxExceptionHasBeenThrown() throws URISyntaxException {
-        //given
-        dmaapProducerReactiveHttpClient = spy(dmaapProducerReactiveHttpClient);
-        //when
-        when(dmaapProducerReactiveHttpClient.getUri()).thenThrow(URISyntaxException.class);
-
-        //then
-        StepVerifier.create(dmaapProducerReactiveHttpClient.getDMaaPProducerResponse(any())).expectSubscription()
-            .expectError(Exception.class).verify();
-    }
-
-    @Test
-    void getAppropriateUri_whenPassingCorrectedPathForPnf() throws URISyntaxException {
+    void getAppropriateUri_whenPassingCorrectedPathForPnf() {
         Assertions.assertEquals(dmaapProducerReactiveHttpClient.getUri(),
             URI.create("https://54.45.33.2:1234/unauthenticated.PNF_READY"));
     }

@@ -20,14 +20,13 @@
 
 package org.onap.dcaegen2.services.prh.model.utils;
 
-import org.apache.http.HttpStatus;
 
-public final class HttpUtils implements HttpStatus {
+public final class HttpUtils {
 
     private HttpUtils() {
     }
 
     public static boolean isSuccessfulResponseCode(Integer statusCode) {
-        return statusCode >= 200 && statusCode < 300;
+        return statusCode > 199 && statusCode < 300;
     }
 }

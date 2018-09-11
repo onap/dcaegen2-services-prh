@@ -22,12 +22,11 @@ package org.onap.dcaegen2.services.prh.service;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import java.net.URISyntaxException;
-import org.apache.http.client.utils.URIBuilder;
 import org.onap.dcaegen2.services.prh.model.EnvProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 import reactor.core.publisher.Mono;
 
 
@@ -57,16 +56,12 @@ public class PrhConfigurationProvider {
 
     private Mono<String> callConsulForConfigBindingServiceEndpoint(EnvProperties envProperties) {
         LOGGER.info("Retrieving Config Binding Service endpoint from Consul");
-        try {
-            return httpGetClient.callHttpGet(getConsulUrl(envProperties), JsonArray.class)
-                .flatMap(jsonArray -> this.createConfigBindingServiceUrl(jsonArray, envProperties.appName()));
-        } catch (URISyntaxException e) {
-            LOGGER.warn("Malformed Consul uri", e);
-            return Mono.error(e);
-        }
+        return httpGetClient.callHttpGet(getConsulUrl(envProperties), JsonArray.class)
+            .flatMap(jsonArray -> this.createConfigBindingServiceUrl(jsonArray, envProperties.appName()));
+
     }
 
-    private String getConsulUrl(EnvProperties envProperties) throws URISyntaxException {
+    private String getConsulUrl(EnvProperties envProperties) {
         return getUri(envProperties.consulHost(), envProperties.consulPort(), "/v1/catalog/service",
             envProperties.cbsName());
     }
@@ -83,13 +78,8 @@ public class PrhConfigurationProvider {
     }
 
     private Mono<String> buildConfigBindingServiceUrl(JsonObject jsonObject, String appName) {
-        try {
-            return Mono.just(getUri(jsonObject.get("ServiceAddress").getAsString(),
-                jsonObject.get("ServicePort").getAsInt(), "/service_component", appName));
-        } catch (URISyntaxException e) {
-            LOGGER.warn("Malformed Config Binding Service uri", e);
-            return Mono.error(e);
-        }
+        return Mono.just(getUri(jsonObject.get("ServiceAddress").getAsString(),
+            jsonObject.get("ServicePort").getAsInt(), "/service_component", appName));
     }
 
     private Mono<JsonObject> getConfigBindingObject(JsonArray jsonArray) {
@@ -105,12 +95,12 @@ public class PrhConfigurationProvider {
         }
     }
 
-    private String getUri(String host, Integer port, String... paths) throws URISyntaxException {
-        return new URIBuilder()
-            .setScheme("http")
-            .setHost(host)
-            .setPort(port)
-            .setPath(String.join("/", paths))
+    private String getUri(String host, Integer port, String... paths) {
+        return new DefaultUriBuilderFactory().builder()
+            .scheme("http")
+            .host(host)
+            .port(port)
+            .path(String.join("/", paths))
             .build().toString();
     }
 }

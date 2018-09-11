@@ -23,12 +23,9 @@ package org.onap.dcaegen2.services.prh.service.producer;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.net.URI;
-import java.net.URISyntaxException;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,6 +38,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import reactor.test.StepVerifier;
+
+
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 7/4/18
@@ -86,19 +85,7 @@ class DMaaPProducerReactiveHttpClientTest {
     }
 
     @Test
-    void getHttpResponse_whenUriSyntaxExceptionHasBeenThrown() throws URISyntaxException {
-        //given
-        dmaapProducerReactiveHttpClient = spy(dmaapProducerReactiveHttpClient);
-        //when
-        when(dmaapProducerReactiveHttpClient.getUri()).thenThrow(URISyntaxException.class);
-
-        //then
-        StepVerifier.create(dmaapProducerReactiveHttpClient.getDMaaPProducerResponse(any())).expectSubscription()
-            .expectError(Exception.class).verify();
-    }
-
-    @Test
-    void getAppropriateUri_whenPassingCorrectedPathForPnf() throws URISyntaxException {
+    void getAppropriateUri_whenPassingCorrectedPathForPnf() {
         Assertions.assertEquals(dmaapProducerReactiveHttpClient.getUri(),
             URI.create("https://54.45.33.2:1234/unauthenticated.PNF_READY"));
     }

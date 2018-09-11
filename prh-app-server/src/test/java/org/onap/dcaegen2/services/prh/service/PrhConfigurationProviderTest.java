@@ -20,18 +20,17 @@
 
 package org.onap.dcaegen2.services.prh.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.prh.model.EnvProperties;
 import org.onap.dcaegen2.services.prh.model.ImmutableEnvProperties;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 
 class PrhConfigurationProviderTest {
@@ -72,12 +71,9 @@ class PrhConfigurationProviderTest {
 
         PrhConfigurationProvider provider = new PrhConfigurationProvider(webClient);
 
-        // when
-        Mono<JsonObject> jsonObjectMono = provider.callForPrhConfiguration(envProperties);
-
-        // then
-        assertThat(jsonObjectMono).isNotNull();
-        assertThat(jsonObjectMono.block()).isEqualTo(prhMockConfigurationJson);
+        //when/then
+        StepVerifier.create(provider.callForPrhConfiguration(envProperties)).expectSubscription()
+            .expectNext(prhMockConfigurationJson).verifyComplete();
     }
 
     @Test
@@ -90,11 +86,8 @@ class PrhConfigurationProviderTest {
 
         PrhConfigurationProvider provider = new PrhConfigurationProvider(webClient);
 
-        // when
-        Mono<JsonObject> jsonObjectMono = provider.callForPrhConfiguration(envProperties);
-
-        // then
-        assertThat(jsonObjectMono).isNotNull();
-        Assertions.assertThrows(IllegalStateException.class, jsonObjectMono::block);
+        //when/then
+        StepVerifier.create(provider.callForPrhConfiguration(envProperties)).expectSubscription()
+            .expectError(IllegalStateException.class).verify();
     }
 }

@@ -25,15 +25,14 @@ import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.X_INVOCA
 import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.X_ONAP_REQUEST_ID;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.UUID;
 import java.util.function.Consumer;
-import org.apache.http.client.utils.URIBuilder;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.slf4j.MDC;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 import reactor.core.publisher.Mono;
 
 /**
@@ -71,21 +70,17 @@ public class DMaaPConsumerReactiveHttpClient {
      * @return reactive response from DMaaP in string format
      */
     public Mono<String> getDMaaPConsumerResponse() {
-        try {
-            return webClient
-                .get()
-                .uri(getUri())
-                .headers(getHeaders())
-                .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, clientResponse ->
-                    Mono.error(new RuntimeException("DmaaPConsumer HTTP " + clientResponse.statusCode()))
-                )
-                .onStatus(HttpStatus::is5xxServerError, clientResponse ->
-                    Mono.error(new RuntimeException("DmaaPConsumer HTTP " + clientResponse.statusCode())))
-                .bodyToMono(String.class);
-        } catch (URISyntaxException e) {
-            return Mono.error(e);
-        }
+        return webClient
+            .get()
+            .uri(getUri())
+            .headers(getHeaders())
+            .retrieve()
+            .onStatus(HttpStatus::is4xxClientError, clientResponse ->
+                Mono.error(new RuntimeException("DmaaPConsumer HTTP " + clientResponse.statusCode()))
+            )
+            .onStatus(HttpStatus::is5xxServerError, clientResponse ->
+                Mono.error(new RuntimeException("DmaaPConsumer HTTP " + clientResponse.statusCode())))
+            .bodyToMono(String.class);
     }
 
     private Consumer<HttpHeaders> getHeaders() {
@@ -105,8 +100,8 @@ public class DMaaPConsumerReactiveHttpClient {
         return this;
     }
 
-    URI getUri() throws URISyntaxException {
-        return new URIBuilder().setScheme(dmaapProtocol).setHost(dmaapHostName).setPort(dmaapPortNumber)
-            .setPath(createRequestPath()).build();
+    URI getUri() {
+        return new DefaultUriBuilderFactory().builder().scheme(dmaapProtocol).host(dmaapHostName).port(dmaapPortNumber)
+            .path(createRequestPath()).build();
     }
 }

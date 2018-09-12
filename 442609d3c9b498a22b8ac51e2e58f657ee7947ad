@@ -1,0 +1,8 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Luke Parker <lparker@amdocs.com>
+Code-Review+2: Przemyslaw Wasala <przemyslaw.wasala@nokia.com>
+Submitted-by: Przemyslaw Wasala <przemyslaw.wasala@nokia.com>
+Submitted-at: Wed, 12 Sep 2018 06:47:49 +0000
+Reviewed-on: https://gerrit.onap.org/r/64993
+Project: dcaegen2/services/prh
+Branch: refs/heads/master

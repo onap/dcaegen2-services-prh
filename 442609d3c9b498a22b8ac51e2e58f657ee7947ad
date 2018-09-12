@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_eeb8c776",
+        "filename": "prh-app-server/src/main/resources/logback-spring.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 129
+      },
+      "writtenOn": "2018-09-12T02:46:25Z",
+      "side": 1,
+      "message": "Interesting. This is a combination of tab- and pipe-delimited. We\u0027ll need to clean it up when we finalize the cutover (back) to pipe-delimited.",
+      "revId": "442609d3c9b498a22b8ac51e2e58f657ee7947ad",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

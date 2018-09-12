@@ -46,6 +46,30 @@
       "revId": "7b9f68e2a4f667c66c759fd51a46748de57505a0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_67d4dfbc",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/utils/HttpUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-09-12T04:09:53Z",
+      "side": 1,
+      "message": "From this class I have deleted only HttpStatus from apache dependency in connection with cleaning unnecessary dependencies. In second patch set I have changed this by using HttpStatusCodes from spring-web dep. Could you please check this out?",
+      "parentUuid": "1a76adc5_07b16b46",
+      "range": {
+        "startLine": 30,
+        "startChar": 28,
+        "endLine": 30,
+        "endChar": 31
+      },
+      "revId": "7b9f68e2a4f667c66c759fd51a46748de57505a0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

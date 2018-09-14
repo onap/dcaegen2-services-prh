@@ -32,8 +32,8 @@ import org.immutables.value.Value;
 @Gson.TypeAdapters(fieldNamingStrategy = true)
 public interface ConsumerDmaapModel {
 
-    @SerializedName(value = "sourceName", alternate = "sourceName")
-    String getSourceName();
+    @SerializedName(value = "correlationId", alternate = "correlationId")
+    String getCorrelationId();
 
     @SerializedName(value = "ipaddress-v4-oam", alternate = "ipaddress-v4-oam")
     String getIpv4();

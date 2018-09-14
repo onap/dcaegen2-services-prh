@@ -66,7 +66,7 @@ class AaiProducerReactiveHttpClientTest {
         setupHeaders();
         clientResponse = mock(ClientResponse.class);
         clientResponseMono = Mono.just(clientResponse);
-        when(dmaapModel.getSourceName()).thenReturn("NOKnhfsadhff");
+        when(dmaapModel.getCorrelationId()).thenReturn("NOKnhfsadhff");
         when(aaiConfigurationMock.aaiHost()).thenReturn("54.45.33.2");
         when(aaiConfigurationMock.aaiProtocol()).thenReturn("https");
         when(aaiConfigurationMock.aaiPort()).thenReturn(1234);

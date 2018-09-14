@@ -67,7 +67,7 @@ class DmaapConsumerTaskImplTest {
 
         consumerDmaapModel = ImmutableConsumerDmaapModel.builder().ipv4("10.16.123.234")
             .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
-            .sourceName("NOKQTFCOC540002E").build();
+            .correlationId("NOKQTFCOC540002E").build();
         appConfig = mock(AppConfig.class);
 
         message = "[{\"event\": {"

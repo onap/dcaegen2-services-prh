@@ -43,6 +43,7 @@ public class DmaapConsumerJsonParser {
     private static final String OAM_IPV_4_ADDRESS = "oamV4IpAddress";
     private static final String OAM_IPV_6_ADDRESS = "oamV6IpAddress";
     private static final String SOURCE_NAME = "sourceName";
+    private static final String CORRELATION_ID = "correlationId";
 
     /**
      * Extract info from string and create @see {@link org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel}.
@@ -99,7 +100,7 @@ public class DmaapConsumerJsonParser {
             ? Mono.error(new DmaapNotFoundException("Incorrect json, consumerDmaapModel can not be created: "
             + printMessage(pnfSourceName, pnfOamIpv4Address, pnfOamIpv6Address))) :
             Mono.just(ImmutableConsumerDmaapModel.builder()
-                .sourceName(pnfSourceName)
+                .correlationId(pnfSourceName)
                 .ipv4(pnfOamIpv4Address)
                 .ipv6(pnfOamIpv6Address).build());
     }
@@ -118,7 +119,7 @@ public class DmaapConsumerJsonParser {
 
     private String printMessage(String sourceName, String oamIpv4Address, String oamIpv6Address) {
         return String.format("%n{"
-            + "\"" + SOURCE_NAME + "\": \"%s\","
+            + "\"" + CORRELATION_ID + "\": \"%s\","
             + "\"" + OAM_IPV_4_ADDRESS + "\": \"%s\","
             + "\"" + OAM_IPV_6_ADDRESS + "\": \"%s\""
             + "%n}", sourceName, oamIpv4Address, oamIpv6Address);

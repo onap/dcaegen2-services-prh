@@ -22,7 +22,7 @@ package org.onap.dcaegen2.services.prh.model;
 
 public class ConsumerDmaapModelForUnitTest implements ConsumerDmaapModel {
 
-    private final String sourceName;
+    private final String correlationId;
     private final String ipv4;
     private final String ipv6;
 
@@ -30,14 +30,14 @@ public class ConsumerDmaapModelForUnitTest implements ConsumerDmaapModel {
      * Class for testing serialization of ConsumerDmaapModel.
      */
     public ConsumerDmaapModelForUnitTest() {
-        this.sourceName = "NOKnhfsadhff";
+        this.correlationId = "NOKnhfsadhff";
         this.ipv4 = "256.22.33.155";
         this.ipv6 = "2001:0db8:85a3:0000:0000:8a2e:0370:7334";
 
     }
 
-    public String getSourceName() {
-        return sourceName;
+    public String getCorrelationId() {
+        return correlationId;
     }
 
     public String getIpv4() {

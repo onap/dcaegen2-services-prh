@@ -34,14 +34,14 @@ class ConsumerDmaapModelTest {
         String ipv4 = "11.22.33.155";
         String ipv6 = "2001:0db8:85a3:0000:0000:8a2e:0370:7334";
         ConsumerDmaapModel consumerDmaapModel = ImmutableConsumerDmaapModel.builder()
-            .sourceName(sourceName)
+            .correlationId(sourceName)
             .ipv4(ipv4)
             .ipv6(ipv6)
             .build();
 
         // Then
         Assertions.assertNotNull(consumerDmaapModel);
-        Assertions.assertEquals(sourceName, consumerDmaapModel.getSourceName());
+        Assertions.assertEquals(sourceName, consumerDmaapModel.getCorrelationId());
         Assertions.assertEquals(ipv4, consumerDmaapModel.getIpv4());
         Assertions.assertEquals(ipv6, consumerDmaapModel.getIpv6());
     }

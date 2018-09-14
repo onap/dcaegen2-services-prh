@@ -76,7 +76,7 @@ class DmaapConsumerJsonParserTest {
 
         ConsumerDmaapModel expectedObject = ImmutableConsumerDmaapModel.builder().ipv4("10.16.123.234")
             .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
-            .sourceName("NOKQTFCOC540002E").build();
+            .correlationId("NOKQTFCOC540002E").build();
         //when
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
         JsonElement jsonElement = new JsonParser().parse(parsed);
@@ -133,7 +133,7 @@ class DmaapConsumerJsonParserTest {
         //then
         ConsumerDmaapModel expectedObject = ImmutableConsumerDmaapModel.builder().ipv4("")
             .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
-            .sourceName("NOKQTFCOC540002E").build();
+            .correlationId("NOKQTFCOC540002E").build();
         Assertions.assertNotNull(consumerDmaapModel);
         Assertions.assertEquals(expectedObject, consumerDmaapModel);
     }
@@ -172,7 +172,7 @@ class DmaapConsumerJsonParserTest {
                 + "}}}";
 
         ConsumerDmaapModel expectedObject = ImmutableConsumerDmaapModel.builder().ipv4("10.16.123.234").ipv6("")
-            .sourceName("NOKQTFCOC540002E").build();
+            .correlationId("NOKQTFCOC540002E").build();
         //when
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
         JsonElement jsonElement = new JsonParser().parse(parsed);

@@ -79,7 +79,7 @@ public class AaiProducerReactiveHttpClient {
     private Mono<ClientResponse> patchAaiRequest(ConsumerDmaapModel dmaapModel) {
         return
             webClient.patch()
-                .uri(getUri(dmaapModel.getSourceName()))
+                .uri(getUri(dmaapModel.getCorrelationId()))
                 .header(X_ONAP_REQUEST_ID, MDC.get(REQUEST_ID))
                 .header(X_INVOCATION_ID, UUID.randomUUID().toString())
                 .body(Mono.just(createJsonBody(dmaapModel)), String.class)

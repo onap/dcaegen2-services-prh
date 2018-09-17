@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_7ab2164d",
+        "filename": "prh-app-server/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2018-09-17T13:10:29Z",
+      "side": 1,
+      "message": "Do not comment out. Just remove :)",
+      "revId": "f245daa4b205846af33f7a8e088d203c39f24d52",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

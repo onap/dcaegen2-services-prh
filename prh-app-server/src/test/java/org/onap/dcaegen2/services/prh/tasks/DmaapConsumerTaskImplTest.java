@@ -42,6 +42,7 @@ import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
 import org.onap.dcaegen2.services.prh.service.consumer.DMaaPConsumerReactiveHttpClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -71,36 +72,36 @@ class DmaapConsumerTaskImplTest {
         appConfig = mock(AppConfig.class);
 
         message = "[{\"event\": {"
-                + "\"commonEventHeader\": { \"sourceName\":\"NOKQTFCOC540002E\"},"
-                + "\"pnfRegistrationFields\": {"
-                    + " \"unitType\": \"AirScale\","
-                    + " \"serialNumber\": \"QTFCOC540002E\","
-                    + " \"pnfRegistrationFieldsVersion\": \"2.0\","
-                    + " \"manufactureDate\": \"1535014037024\","
-                    + " \"modelNumber\": \"7BEA\",\n"
-                    + " \"lastServiceDate\": \"1535014037024\","
-                    + " \"unitFamily\": \"BBU\","
-                    + " \"vendorName\": \"Nokia\","
-                    + " \"oamV4IpAddress\": \"10.16.123.234\","
-                    + " \"softwareVersion\": \"v4.5.0.1\","
-                    + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
-                + "}}}]";
+            + "\"commonEventHeader\": { \"sourceName\":\"NOKQTFCOC540002E\"},"
+            + "\"pnfRegistrationFields\": {"
+            + " \"unitType\": \"AirScale\","
+            + " \"serialNumber\": \"QTFCOC540002E\","
+            + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+            + " \"manufactureDate\": \"1535014037024\","
+            + " \"modelNumber\": \"7BEA\",\n"
+            + " \"lastServiceDate\": \"1535014037024\","
+            + " \"unitFamily\": \"BBU\","
+            + " \"vendorName\": \"Nokia\","
+            + " \"oamV4IpAddress\": \"10.16.123.234\","
+            + " \"softwareVersion\": \"v4.5.0.1\","
+            + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
+            + "}}}]";
 
         parsed = "{\"event\": {"
-                + "\"commonEventHeader\": { \"sourceName\":\"NOKQTFCOC540002E\"},"
-                + "\"pnfRegistrationFields\": {"
-                + " \"unitType\": \"AirScale\","
-                + " \"serialNumber\": \"QTFCOC540002E\","
-                + " \"pnfRegistrationFieldsVersion\": \"2.0\","
-                + " \"manufactureDate\": \"1535014037024\","
-                + " \"modelNumber\": \"7BEA\",\n"
-                + " \"lastServiceDate\": \"1535014037024\","
-                + " \"unitFamily\": \"BBU\","
-                + " \"vendorName\": \"Nokia\","
-                + " \"oamV4IpAddress\": \"10.16.123.234\","
-                + " \"softwareVersion\": \"v4.5.0.1\","
-                + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
-                + "}}}";
+            + "\"commonEventHeader\": { \"sourceName\":\"NOKQTFCOC540002E\"},"
+            + "\"pnfRegistrationFields\": {"
+            + " \"unitType\": \"AirScale\","
+            + " \"serialNumber\": \"QTFCOC540002E\","
+            + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+            + " \"manufactureDate\": \"1535014037024\","
+            + " \"modelNumber\": \"7BEA\",\n"
+            + " \"lastServiceDate\": \"1535014037024\","
+            + " \"unitFamily\": \"BBU\","
+            + " \"vendorName\": \"Nokia\","
+            + " \"oamV4IpAddress\": \"10.16.123.234\","
+            + " \"softwareVersion\": \"v4.5.0.1\","
+            + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
+            + "}}}";
     }
 
     @Test
@@ -120,11 +121,11 @@ class DmaapConsumerTaskImplTest {
         //given
         prepareMocksForDmaapConsumer(Optional.of(message));
         //when
-        Mono<ConsumerDmaapModel> response = dmaapConsumerTask.execute("Sample input");
+        Flux<ConsumerDmaapModel> response = dmaapConsumerTask.execute("Sample input");
 
         //then
         verify(dMaaPConsumerReactiveHttpClient, times(1)).getDMaaPConsumerResponse();
-        assertEquals(consumerDmaapModel, response.block());
+        assertEquals(consumerDmaapModel, response.blockFirst());
 
 
     }

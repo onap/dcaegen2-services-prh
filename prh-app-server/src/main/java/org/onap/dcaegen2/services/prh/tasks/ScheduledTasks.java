@@ -26,11 +26,14 @@ import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.RESPONSE
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import javax.net.ssl.SSLException;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.logging.MdcVariables;
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -39,6 +42,7 @@ import org.slf4j.MarkerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -83,7 +87,13 @@ public class ScheduledTasks {
                     logger.warn("Nothing to consume from DMaaP")
                 )
                 .flatMap(this::publishToAaiConfiguration)
+                .doOnError(exception ->
+                    logger.warn("AAIProducerTask exception has been registered: ", exception))
+                .onErrorResume(resumePrhPredicate(), exception -> Mono.empty())
                 .flatMap(this::publishToDmaapConfiguration)
+                .doOnError(exception ->
+                    logger.warn("DMaaPProducerTask exception has been registered: ", exception))
+                .onErrorResume(resumePrhPredicate(), exception -> Mono.empty())
                 .doOnTerminate(mainCountDownLatch::countDown)
                 .subscribe(this::onSuccess, this::onError, this::onComplete);
 
@@ -113,8 +123,8 @@ public class ScheduledTasks {
     }
 
 
-    private Mono<ConsumerDmaapModel> consumeFromDMaaPMessage() {
-        return Mono.defer(() -> {
+    private Flux<ConsumerDmaapModel> consumeFromDMaaPMessage() {
+        return Flux.defer(() -> {
             MdcVariables.setMdcContextMap(mdcContextMap);
             MDC.put(INSTANCE_UUID, UUID.randomUUID().toString());
             logger.info(INVOKE, "Init configs");
@@ -137,5 +147,9 @@ public class ScheduledTasks {
         } catch (PrhTaskException e) {
             return Mono.error(e);
         }
+    }
+
+    private Predicate<Throwable> resumePrhPredicate() {
+        return exception -> exception instanceof PrhTaskException;
     }
 }

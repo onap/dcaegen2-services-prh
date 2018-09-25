@@ -25,6 +25,7 @@ import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.DMaaPReactiveWebClient;
 import org.onap.dcaegen2.services.prh.service.consumer.DMaaPConsumerReactiveHttpClient;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -32,7 +33,7 @@ import reactor.core.publisher.Mono;
  */
 abstract class DmaapConsumerTask {
 
-    abstract Mono<ConsumerDmaapModel> consume(Mono<String> message);
+    abstract Flux<ConsumerDmaapModel> consume(Mono<String> message);
 
     abstract DMaaPConsumerReactiveHttpClient resolveClient();
 
@@ -40,7 +41,7 @@ abstract class DmaapConsumerTask {
 
     protected abstract DmaapConsumerConfiguration resolveConfiguration();
 
-    protected abstract Mono<ConsumerDmaapModel> execute(String object);
+    protected abstract Flux<ConsumerDmaapModel> execute(String object);
 
     WebClient buildWebClient() {
         return new DMaaPReactiveWebClient().build();

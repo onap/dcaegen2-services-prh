@@ -30,6 +30,7 @@ import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 import org.springframework.util.StringUtils;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -51,9 +52,9 @@ public class DmaapConsumerJsonParser {
      * @param monoMessage - results from DMaaP
      * @return reactive DMaaPModel
      */
-    public Mono<ConsumerDmaapModel> getJsonObject(Mono<String> monoMessage) {
+    public Flux<ConsumerDmaapModel> getJsonObject(Mono<String> monoMessage) {
         return monoMessage
-            .flatMap(this::getJsonParserMessage)
+            .flatMapMany(this::getJsonParserMessage)
             .flatMap(this::createJsonConsumerModel);
     }
 
@@ -62,27 +63,27 @@ public class DmaapConsumerJsonParser {
             : Mono.fromCallable(() -> new JsonParser().parse(message));
     }
 
-    private Mono<ConsumerDmaapModel> createJsonConsumerModel(JsonElement jsonElement) {
+    private Flux<ConsumerDmaapModel> createJsonConsumerModel(JsonElement jsonElement) {
         return jsonElement.isJsonObject()
-            ? create(Mono.fromCallable(jsonElement::getAsJsonObject))
+            ? create(Flux.defer(() -> Flux.just(jsonElement.getAsJsonObject())))
             : getConsumerDmaapModelFromJsonArray(jsonElement);
     }
 
-    private Mono<ConsumerDmaapModel> getConsumerDmaapModelFromJsonArray(JsonElement jsonElement) {
+    private Flux<ConsumerDmaapModel> getConsumerDmaapModelFromJsonArray(JsonElement jsonElement) {
         return create(
-            Mono.fromCallable(() -> StreamSupport.stream(jsonElement.getAsJsonArray().spliterator(), false).findFirst()
-                .flatMap(this::getJsonObjectFromAnArray)
-                .orElseThrow(DmaapEmptyResponseException::new)));
+            Flux.defer(() -> Flux.fromStream(StreamSupport.stream(jsonElement.getAsJsonArray().spliterator(), false)
+                .map(x -> getJsonObjectFromAnArray(x).orElseGet(JsonObject::new)))));
     }
 
     public Optional<JsonObject> getJsonObjectFromAnArray(JsonElement element) {
-        return Optional.of(new JsonParser().parse(element.getAsString()).getAsJsonObject());
+        return Optional.of(element.getAsJsonObject());
     }
 
-    private Mono<ConsumerDmaapModel> create(Mono<JsonObject> jsonObject) {
+    private Flux<ConsumerDmaapModel> create(Flux<JsonObject> jsonObject) {
         return jsonObject.flatMap(monoJsonP ->
-            !containsHeader(monoJsonP) ? Mono.error(new DmaapNotFoundException("Incorrect JsonObject - missing header"))
-                : transform(monoJsonP));
+            !containsHeader(monoJsonP) ? Flux.error(new DmaapNotFoundException("Incorrect JsonObject - missing header"))
+                : transform(monoJsonP))
+            .onErrorResume(exception -> exception instanceof DmaapNotFoundException, e -> Mono.empty());
     }
 
     private Mono<ConsumerDmaapModel> transform(JsonObject responseFromDmaap) {

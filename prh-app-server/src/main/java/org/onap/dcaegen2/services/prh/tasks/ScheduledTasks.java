@@ -39,6 +39,7 @@ import org.slf4j.MarkerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -113,8 +114,8 @@ public class ScheduledTasks {
     }
 
 
-    private Mono<ConsumerDmaapModel> consumeFromDMaaPMessage() {
-        return Mono.defer(() -> {
+    private Flux<ConsumerDmaapModel> consumeFromDMaaPMessage() {
+        return Flux.defer(() -> {
             MdcVariables.setMdcContextMap(mdcContextMap);
             MDC.put(INSTANCE_UUID, UUID.randomUUID().toString());
             logger.info(INVOKE, "Init configs");

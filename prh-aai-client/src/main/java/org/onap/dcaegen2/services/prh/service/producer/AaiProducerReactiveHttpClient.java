@@ -34,6 +34,7 @@ import org.slf4j.MDC;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 
@@ -85,6 +86,10 @@ public class AaiProducerReactiveHttpClient {
                 .body(Mono.just(createJsonBody(dmaapModel)), String.class)
                 .exchange();
     }
+
+    /*
+    * then(response -> response.bodyToFlux(Account.class))
+    * */
 
     URI getUri(String pnfName) {
         return new DefaultUriBuilderFactory().builder().scheme(aaiProtocol).host(aaiHost).port(aaiHostPortNumber)

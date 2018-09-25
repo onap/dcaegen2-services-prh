@@ -28,6 +28,7 @@ import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.AaiReactiveWebClient;
 import org.onap.dcaegen2.services.prh.service.producer.AaiProducerReactiveHttpClient;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 

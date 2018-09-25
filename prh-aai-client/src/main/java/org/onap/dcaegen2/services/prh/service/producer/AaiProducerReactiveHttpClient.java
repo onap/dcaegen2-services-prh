@@ -27,7 +27,6 @@ import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.X_ONAP_R
 
 import java.net.URI;
 import java.util.UUID;
-
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.slf4j.MDC;
@@ -35,8 +34,6 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import reactor.core.publisher.Mono;
-
-
 
 
 public class AaiProducerReactiveHttpClient {

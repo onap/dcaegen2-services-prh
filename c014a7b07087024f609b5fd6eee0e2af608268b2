@@ -46,6 +46,30 @@
       "revId": "c014a7b07087024f609b5fd6eee0e2af608268b2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bada0100_6b123364",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/DmaapConsumerTaskImplTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-10-05T05:47:05Z",
+      "side": 1,
+      "message": "Of course, it just seems so :]",
+      "parentUuid": "bada0100_3cb6b68b",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 35
+      },
+      "revId": "c014a7b07087024f609b5fd6eee0e2af608268b2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

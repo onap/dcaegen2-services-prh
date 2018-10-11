@@ -109,25 +109,25 @@ class DmaapConsumerTaskImplTest {
         //given
         prepareMocksForDmaapConsumer(Optional.empty());
 
-        //then
-        StepVerifier.create(dmaapConsumerTask.execute("Sample input")).expectSubscription()
-            .expectError(DmaapEmptyResponseException.class).verify();
+        //when
+        Flux<ConsumerDmaapModel> response = dmaapConsumerTask.execute("Sample input");
 
+        //then
         verify(dMaaPConsumerReactiveHttpClient, times(1)).getDMaaPConsumerResponse();
+        assertEquals(null, response.blockFirst());
     }
 
     @Test
     void whenPassedObjectFits_ReturnsCorrectResponse() {
         //given
         prepareMocksForDmaapConsumer(Optional.of(message));
+
         //when
         Flux<ConsumerDmaapModel> response = dmaapConsumerTask.execute("Sample input");
 
         //then
         verify(dMaaPConsumerReactiveHttpClient, times(1)).getDMaaPConsumerResponse();
         assertEquals(consumerDmaapModel, response.blockFirst());
-
-
     }
 
     private void prepareMocksForDmaapConsumer(Optional<String> message) {

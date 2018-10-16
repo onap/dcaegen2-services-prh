@@ -35,7 +35,9 @@ import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.http.client.reactive.ClientHttpConnector;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.http.client.reactive.ReactorResourceFactory;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -68,18 +70,15 @@ public class AaiReactiveWebClient {
      * @return WebClient
      */
     public WebClient build() throws SSLException {
-        SslContext sslContext;
-        sslContext = SslContextBuilder
+        LOGGER.debug("Setting ssl context");
+        SslContext sslContext = SslContextBuilder
             .forClient()
             .trustManager(InsecureTrustManagerFactory.INSTANCE)
             .build();
-        LOGGER.debug("Setting ssl context");
-
+        ClientHttpConnector reactorClientHttpConnector = new ReactorClientHttpConnector(new ReactorResourceFactory(),
+            httpClient -> httpClient.secure(sslContextSpec -> sslContextSpec.sslContext(sslContext)));
         return WebClient.builder()
-            .clientConnector(new ReactorClientHttpConnector(clientOptions -> {
-                clientOptions.sslContext(sslContext);
-                clientOptions.disablePool();
-            }))
+            .clientConnector(reactorClientHttpConnector)
             .defaultHeaders(httpHeaders -> httpHeaders.setAll(aaiHeaders))
             .filter(basicAuthentication(aaiUserName, aaiUserPassword))
             .filter(logRequest())

@@ -32,7 +32,7 @@
 
   <groupId>org.onap.dcaegen2.services</groupId>
   <artifactId>prh</artifactId>
-  <version>1.1.0-SNAPSHOT</version>
+  <version>1.1.1-SNAPSHOT</version>
 
   <name>dcaegen2-services-prh</name>
   <description>PNF Registration Handler</description>
@@ -48,8 +48,8 @@
   <properties>
     <java.version>8</java.version>
     <immutables.version>2.5.6</immutables.version>
-    <spring.version>5.0.5.RELEASE</spring.version>
-    <spring-boot.version>2.0.4.RELEASE</spring-boot.version>
+    <spring.version>5.1.0.RELEASE</spring.version>
+    <spring-boot.version>2.0.5.RELEASE</spring-boot.version>
     <tomcat.version>8.5.32</tomcat.version>
     <slf4j.version>1.7.25</slf4j.version>
     <junit-jupiter.version>5.1.0</junit-jupiter.version>
@@ -133,9 +133,14 @@
       <dependency>
         <groupId>io.projectreactor</groupId>
         <artifactId>reactor-bom</artifactId>
-        <version>Bismuth-SR10</version>
+        <version>Bismuth-SR12</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.projectreactor.netty</groupId>
+        <artifactId>reactor-netty</artifactId>
+        <version>0.8.1.RELEASE</version>
       </dependency>
       <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -158,6 +163,16 @@
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-beans</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-core</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-web</artifactId>
         <version>${spring.version}</version>
       </dependency>
       <dependency>

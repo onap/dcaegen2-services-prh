@@ -27,20 +27,18 @@ import static org.springframework.web.reactive.function.client.ExchangeFilterFun
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
-
 import java.util.Map;
 import javax.net.ssl.SSLException;
-
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.http.client.reactive.ClientHttpConnector;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
-import org.springframework.http.client.reactive.ReactorResourceFactory;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.netty.http.client.HttpClient;
 
 
 public class AaiReactiveWebClient {
@@ -75,8 +73,8 @@ public class AaiReactiveWebClient {
             .forClient()
             .trustManager(InsecureTrustManagerFactory.INSTANCE)
             .build();
-        ClientHttpConnector reactorClientHttpConnector = new ReactorClientHttpConnector(new ReactorResourceFactory(),
-            httpClient -> httpClient.secure(sslContextSpec -> sslContextSpec.sslContext(sslContext)));
+        ClientHttpConnector reactorClientHttpConnector = new ReactorClientHttpConnector(
+            HttpClient.create().secure(sslContextSpec -> sslContextSpec.sslContext(sslContext)));
         return WebClient.builder()
             .clientConnector(reactorClientHttpConnector)
             .defaultHeaders(httpHeaders -> httpHeaders.setAll(aaiHeaders))

@@ -48,11 +48,11 @@ import reactor.test.StepVerifier;
 class AaiProducerReactiveHttpClientTest {
 
     private static final Integer SUCCESS_RESPONSE = 200;
-    private static AaiProducerReactiveHttpClient aaiProducerReactiveHttpClient;
     private static AaiClientConfiguration aaiConfigurationMock = mock(AaiClientConfiguration.class);
-    private static WebClient webClient = mock(WebClient.class);
 
 
+    private AaiProducerReactiveHttpClient aaiProducerReactiveHttpClient;
+    private WebClient webClient = mock(WebClient.class);
     private ConsumerDmaapModel dmaapModel = spy(new ConsumerDmaapModelForUnitTest());
     private WebClient.RequestBodyUriSpec requestBodyUriSpec;
     private ResponseSpec responseSpec;

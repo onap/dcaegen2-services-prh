@@ -77,8 +77,8 @@ class PrhAppConfigTest {
         + "\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2223,\"dmaapProtocol\":\"http\",\"dmaaptopicName\""
         + ":\"temp\",\"dmaapuserName\":\"admin\",\"dmaapuserPassword\":\"admin\"}}}}";
 
-    private static PrhAppConfig prhAppConfig;
-    private static AppConfig appConfig;
+    private PrhAppConfig prhAppConfig;
+    private AppConfig appConfig;
 
     private static InputStream inputStream;
 

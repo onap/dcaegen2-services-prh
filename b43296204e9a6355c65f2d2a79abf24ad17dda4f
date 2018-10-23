@@ -1,0 +1,11 @@
+Code-Review+1: Maciej Wejs <maciej.wejs@nokia.com>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Tomasz Kaminski <tomasz.kaminski@nokia.com>
+Code-Review+1: Piotr Wielebski <piotr.wielebski@nokia.com>
+Code-Review+2: Przemyslaw Wasala <przemyslaw.wasala@nokia.com>
+Code-Review+1: Marcin Migdal <marcin.migdal@nokia.com>
+Submitted-by: Przemyslaw Wasala <przemyslaw.wasala@nokia.com>
+Submitted-at: Tue, 23 Oct 2018 05:31:05 +0000
+Reviewed-on: https://gerrit.onap.org/r/70942
+Project: dcaegen2/services/prh
+Branch: refs/heads/master

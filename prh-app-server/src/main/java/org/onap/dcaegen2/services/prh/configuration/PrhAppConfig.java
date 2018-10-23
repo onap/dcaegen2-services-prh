@@ -35,8 +35,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ServiceLoader;
 import javax.validation.constraints.NotNull;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.config.AaiSecurityConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
+import org.onap.dcaegen2.services.prh.config.DmaapSecurityConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,6 +61,7 @@ public abstract class PrhAppConfig implements Config {
     private static final String AAI_CONFIG = "aaiClientConfiguration";
     private static final String DMAAP_PRODUCER = "dmaapProducerConfiguration";
     private static final String DMAAP_CONSUMER = "dmaapConsumerConfiguration";
+    private static final String SECURITY = "security";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PrhAppConfig.class);
 
@@ -67,6 +70,10 @@ public abstract class PrhAppConfig implements Config {
     DmaapConsumerConfiguration dmaapConsumerConfiguration;
 
     DmaapPublisherConfiguration dmaapPublisherConfiguration;
+
+    DmaapSecurityConfiguration dmaapSecurityConfiguration;
+
+    AaiSecurityConfiguration aaiSecurityConfiguration;
 
     @Value("classpath:prh_endpoints.json")
     private Resource resourceFile;
@@ -85,6 +92,12 @@ public abstract class PrhAppConfig implements Config {
     public DmaapPublisherConfiguration getDmaapPublisherConfiguration() {
         return dmaapPublisherConfiguration;
     }
+
+    @Override
+    public DmaapSecurityConfiguration getDmaapSecurityConfiguration(){ return dmaapSecurityConfiguration; }
+
+    @Override
+    public AaiSecurityConfiguration getAaiSecurityConfiguration(){ return aaiSecurityConfiguration; }
 
     @Override
     public void initFileStreamReader() {
@@ -109,6 +122,14 @@ public abstract class PrhAppConfig implements Config {
                 dmaapPublisherConfiguration = deserializeType(gsonBuilder,
                     jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(DMAAP).getAsJsonObject(DMAAP_PRODUCER),
                     DmaapPublisherConfiguration.class);
+
+                aaiSecurityConfiguration = deserializeType(gsonBuilder,
+                    jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(SECURITY),
+                    AaiSecurityConfiguration.class);
+
+                dmaapSecurityConfiguration = deserializeType(gsonBuilder,
+                    jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(SECURITY),
+                    DmaapSecurityConfiguration.class);
             }
         } catch (IOException e) {
             LOGGER.warn("Problem with file loading, file ", e);

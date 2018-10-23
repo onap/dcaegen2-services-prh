@@ -20,14 +20,20 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
+import java.io.File;
 import java.util.Optional;
 import java.util.function.Predicate;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.config.AaiSecurityConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
+import org.onap.dcaegen2.services.prh.config.DmaapSecurityConfiguration;
 import org.onap.dcaegen2.services.prh.config.ImmutableAaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.config.ImmutableDmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.config.ImmutableDmaapPublisherConfiguration;
+import org.onap.dcaegen2.services.prh.config.ImmutableDmaapSecurityConfiguration;
+import org.onap.dcaegen2.services.prh.config.ImmutableAaiSecurityConfiguration;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -120,6 +126,75 @@ public class AppConfig extends PrhAppConfig {
     @Value("${aai.aaiClientConfiguration.aaiPnfPath:}")
     public String aaiPnfPath;
 
+    @Value("${security.keyFile:}")
+    public File keyFile;
+
+    @Value("${security.trustStore:}")
+    public File trustStore;
+
+    @Value("${security.trustStorePassword:}")
+    public String trustStorePass;
+
+    @Value("${security.keyStore:}")
+    public File keyStore;
+
+    @Value("${security.keyStorePassword:}")
+    public String keyStorePass;
+
+    @Value("${security.enableAaiCertAuth:}")
+    public Boolean enableAaiCertAuth;
+
+    @Value("${security.enableDmaapCertAuth:}")
+    public Boolean enableDmaapCertAuth;
+
+    @Override
+    public DmaapSecurityConfiguration getDmaapSecurityConfiguration(){
+        return new ImmutableDmaapSecurityConfiguration.Builder()
+            .keyFile(
+                Optional.ofNullable(keyFile).filter(p -> !p.toString().isEmpty())
+                    .orElse(dmaapSecurityConfiguration.keyFile()))
+            .trustStore(
+                Optional.ofNullable(trustStore).filter(p -> !p.toString().isEmpty())
+                    .orElse(dmaapSecurityConfiguration.trustStore()))
+            .trustStorePass(
+                Optional.ofNullable(trustStorePass).filter(isEmpty.negate())
+                    .orElse(dmaapSecurityConfiguration.trustStorePass()))
+            .keyStore(
+                Optional.ofNullable(keyStore).filter(p -> !p.toString().isEmpty())
+                    .orElse(dmaapSecurityConfiguration.keyStore()))
+            .keyStorePass(
+                Optional.ofNullable(keyStorePass).filter(isEmpty.negate())
+                    .orElse(dmaapSecurityConfiguration.keyStorePass()))
+            .enableDmaapCertAuth(
+                Optional.ofNullable(enableDmaapCertAuth).filter(p -> !p.toString().isEmpty())
+                    .orElse(dmaapSecurityConfiguration.enableDmaapCertAuth()))
+            .build();
+    }
+
+    @Override
+    public AaiSecurityConfiguration getAaiSecurityConfiguration(){
+        return new ImmutableAaiSecurityConfiguration.Builder()
+            .keyFile(
+                Optional.ofNullable(keyFile).filter(p -> !p.toString().isEmpty())
+                    .orElse(aaiSecurityConfiguration.keyFile()))
+            .trustStore(
+                Optional.ofNullable(trustStore).filter(p -> !p.toString().isEmpty())
+                    .orElse(aaiSecurityConfiguration.trustStore()))
+            .trustStorePass(
+                Optional.ofNullable(trustStorePass).filter(isEmpty.negate())
+                    .orElse(aaiSecurityConfiguration.trustStorePass()))
+            .keyStore(
+                Optional.ofNullable(keyStore).filter(p -> !p.toString().isEmpty())
+                    .orElse(aaiSecurityConfiguration.keyStore()))
+            .keyStorePass(
+                Optional.ofNullable(keyStorePass).filter(isEmpty.negate())
+                    .orElse(aaiSecurityConfiguration.keyStorePass()))
+            .enableAaiCertAuth(
+                Optional.ofNullable(enableAaiCertAuth).filter(p -> !p.toString().isEmpty())
+                    .orElse(aaiSecurityConfiguration.enableAaiCertAuth()))
+            .build();
+    }
+
     @Override
     public DmaapConsumerConfiguration getDmaapConsumerConfiguration() {
         return new ImmutableDmaapConsumerConfiguration.Builder()
@@ -206,5 +281,4 @@ public class AppConfig extends PrhAppConfig {
                     .orElse(dmaapPublisherConfiguration.dmaapUserPassword()))
             .build();
     }
-
 }

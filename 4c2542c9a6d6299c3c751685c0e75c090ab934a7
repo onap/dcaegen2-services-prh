@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bada0100_59acac35",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/PrhAppConfig.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 4401
+      },
+      "writtenOn": "2018-10-23T12:43:49Z",
+      "side": 1,
+      "message": "please update junits for this implementation",
+      "range": {
+        "startLine": 125,
+        "startChar": 0,
+        "endLine": 132,
+        "endChar": 54
+      },
+      "revId": "4c2542c9a6d6299c3c751685c0e75c090ab934a7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

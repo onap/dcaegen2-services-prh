@@ -42,6 +42,17 @@
           "Content-Type": "application/merge-patch+json"
         }
       }
+    },
+    "secure": {
+      "configuration": {
+        "keyFile" : "change it",
+        "trustStore" : "change it",
+        "trustStorePassword" : "change it",
+        "keyStore" : "change it",
+        "keyStorePassword" : "change it",
+        "enableAaiCertAuth" : "false",
+        "enableDmaapCertAuth" : "false"
+      }
     }
   }
 }

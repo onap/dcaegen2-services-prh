@@ -24,8 +24,10 @@ import com.google.gson.JsonObject;
 import java.util.Optional;
 import java.util.Properties;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.config.AaiSecurityConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
+import org.onap.dcaegen2.services.prh.config.DmaapSecurityConfiguration;
 import org.onap.dcaegen2.services.prh.config.ImmutableAaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.model.EnvProperties;
 import org.onap.dcaegen2.services.prh.service.PrhConfigurationProvider;
@@ -55,6 +57,8 @@ public class CloudConfiguration extends AppConfig {
     private AaiClientConfiguration aaiClientCloudConfiguration;
     private DmaapPublisherConfiguration dmaapPublisherCloudConfiguration;
     private DmaapConsumerConfiguration dmaapConsumerCloudConfiguration;
+    private DmaapSecurityConfiguration dmaapSecurityConfiguration;
+    private AaiSecurityConfiguration aaiSecurityConfiguration;
 
     @Value("#{systemEnvironment}")
     private Properties systemEnvironment;
@@ -104,9 +108,18 @@ public class CloudConfiguration extends AppConfig {
         return Optional.ofNullable(aaiClientCloudConfiguration).orElse(super.getAaiClientConfiguration());
     }
 
-
     @Override
     public DmaapConsumerConfiguration getDmaapConsumerConfiguration() {
         return Optional.ofNullable(dmaapConsumerCloudConfiguration).orElse(super.getDmaapConsumerConfiguration());
+    }
+
+    @Override
+    public DmaapSecurityConfiguration getDmaapSecurityConfiguration(){
+        return  Optional.ofNullable(dmaapSecurityConfiguration).orElse(super.getDmaapSecurityConfiguration());
+    }
+
+    @Override
+    public AaiSecurityConfiguration getAaiSecurityConfiguration(){
+        return Optional.ofNullable(aaiSecurityConfiguration).orElse(super.getAaiSecurityConfiguration());
     }
 }

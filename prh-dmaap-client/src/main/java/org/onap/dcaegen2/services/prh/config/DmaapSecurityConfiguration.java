@@ -17,29 +17,37 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+package org.onap.dcaegen2.services.prh.config;
 
-package org.onap.dcaegen2.services.prh.configuration;
+import java.io.File;
+import java.io.Serializable;
+import org.immutables.gson.Gson;
+import org.immutables.value.Value;
+import org.springframework.stereotype.Component;
 
-import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
-import org.onap.dcaegen2.services.prh.config.AaiSecurityConfiguration;
-import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
-import org.onap.dcaegen2.services.prh.config.DmaapSecurityConfiguration;
+@Component
+@Value.Immutable(prehash = true)
+@Value.Style(builder = "new")
+@Gson.TypeAdapters
+public abstract class DmaapSecurityConfiguration implements Serializable {
 
-/**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/25/18
- */
-public interface Config {
+    private static final long serialVersionUID =1L;
 
-    DmaapConsumerConfiguration getDmaapConsumerConfiguration();
+    @Value.Parameter
+    public abstract File keyFile();
 
-    AaiClientConfiguration getAaiClientConfiguration();
+    @Value.Parameter
+    public abstract File trustStore();
 
-    DmaapPublisherConfiguration getDmaapPublisherConfiguration();
+    @Value.Parameter
+    public abstract  String trustStorePass();
 
-    DmaapSecurityConfiguration getDmaapSecurityConfiguration();
+    @Value.Parameter
+    public abstract File keyStore();
 
-    AaiSecurityConfiguration getAaiSecurityConfiguration();
+    @Value.Parameter
+    public abstract String keyStorePass();
 
-    void initFileStreamReader();
+    @Value.Parameter
+    public abstract Boolean enableDmaapCertAuth();
 }

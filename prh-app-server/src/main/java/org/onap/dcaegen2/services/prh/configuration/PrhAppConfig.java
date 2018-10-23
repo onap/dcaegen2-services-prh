@@ -35,8 +35,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ServiceLoader;
 import javax.validation.constraints.NotNull;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.config.AaiSecurityConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
+import org.onap.dcaegen2.services.prh.config.DmaapSecurityConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -68,6 +70,10 @@ public abstract class PrhAppConfig implements Config {
 
     DmaapPublisherConfiguration dmaapPublisherConfiguration;
 
+    DmaapSecurityConfiguration dmaapSecurityConfiguration;
+
+    AaiSecurityConfiguration aaiSecurityConfiguration;
+
     @Value("classpath:prh_endpoints.json")
     private Resource resourceFile;
 
@@ -85,6 +91,12 @@ public abstract class PrhAppConfig implements Config {
     public DmaapPublisherConfiguration getDmaapPublisherConfiguration() {
         return dmaapPublisherConfiguration;
     }
+
+    @Override
+    public DmaapSecurityConfiguration getDmaapSecurityConfiguration(){ return dmaapSecurityConfiguration; }
+
+    @Override
+    public AaiSecurityConfiguration getAaiSecurityConfiguration(){ return aaiSecurityConfiguration; }
 
     @Override
     public void initFileStreamReader() {

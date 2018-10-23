@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bada0100_997214ac",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/CloudConfiguration.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 4401
+      },
+      "writtenOn": "2018-10-23T09:01:57Z",
+      "side": 1,
+      "message": "fields not needed here, they are already defined in PrhAppConfig",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 62
+      },
+      "revId": "350f835fb47d4968c4ad4d77db48a0466676616f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bada0100_79a65012",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/PrhAppConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 4401
+      },
+      "writtenOn": "2018-10-23T09:01:57Z",
+      "side": 1,
+      "message": "looks like there is missing implementation for these fileds in the initFileStreamReader() - (json parsing)",
+      "range": {
+        "startLine": 96,
+        "startChar": 3,
+        "endLine": 99,
+        "endChar": 101
+      },
+      "revId": "350f835fb47d4968c4ad4d77db48a0466676616f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

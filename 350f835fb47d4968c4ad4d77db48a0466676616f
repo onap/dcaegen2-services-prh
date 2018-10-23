@@ -45,6 +45,29 @@
       "revId": "350f835fb47d4968c4ad4d77db48a0466676616f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bada0100_b9a278ac",
+        "filename": "prh-app-server/src/main/resources/prh_endpoints.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 2999
+      },
+      "writtenOn": "2018-10-23T11:21:05Z",
+      "side": 1,
+      "message": "Wouldn\u0027t it be better to put all fields under node:\nconfigs.security\n?",
+      "range": {
+        "startLine": 46,
+        "startChar": 5,
+        "endLine": 46,
+        "endChar": 11
+      },
+      "revId": "350f835fb47d4968c4ad4d77db48a0466676616f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

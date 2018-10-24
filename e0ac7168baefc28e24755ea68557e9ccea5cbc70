@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bada0100_235bb288",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/ConsumerDmaapModelForUnitTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-10-24T10:53:16Z",
+      "side": 1,
+      "message": "Are you sure about that?",
+      "range": {
+        "startLine": 35,
+        "startChar": 8,
+        "endLine": 35,
+        "endChar": 62
+      },
+      "revId": "e0ac7168baefc28e24755ea68557e9ccea5cbc70",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

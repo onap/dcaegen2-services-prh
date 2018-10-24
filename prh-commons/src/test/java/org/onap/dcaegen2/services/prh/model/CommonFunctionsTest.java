@@ -29,7 +29,7 @@ class CommonFunctionsTest {
     @Test
     void createJsonBody_shouldReturnJsonInString() {
         String expectedResult = "{\"correlationId\":\"NOKnhfsadhff\",\"ipaddress-v4-oam\":\"256.22.33.155\""
-            + ",\"ipaddress-v6-oam\":\"2001:0db8:85a3:0000:0000:8a2e:0370:7334\"}";
+            + ",\"ipaddress-v6-oam\":\"200J:0db8:85a3:0000:0000:8a2e:0370:7334\"}";
         assertEquals(expectedResult, CommonFunctions.createJsonBody(new ConsumerDmaapModelForUnitTest()));
     }
 }

@@ -32,7 +32,7 @@ public class ConsumerDmaapModelForUnitTest implements ConsumerDmaapModel {
     public ConsumerDmaapModelForUnitTest() {
         this.correlationId = "NOKnhfsadhff";
         this.ipv4 = "256.22.33.155";
-        this.ipv6 = "2001:0db8:85a3:0000:0000:8a2e:0370:7334";
+        this.ipv6 = "200J:0db8:85a3:0000:0000:8a2e:0370:7334";
 
     }
 

@@ -20,7 +20,9 @@
 
 package org.onap.dcaegen2.services.prh.service.config;
 
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.config.ImmutableDmaapConsumerConfiguration;
@@ -43,33 +45,51 @@ class DmaapConsumerConfigurationTest {
         String consumerGroup = "other";
         Integer timeoutMs = 1000;
         Integer messageLimit = 1000;
+        String keyFile = "keyFile";
+        String trustStore = "trustStore";
+        String trustStorePass = "trustPass";
+        String keyStore = "keyStore";
+        String keyStorePass = "keyPass";
+        Boolean enableDmaapCertAuth = true;
 
         // When
         configuration = new ImmutableDmaapConsumerConfiguration.Builder()
-            .consumerId(consumerId)
-            .dmaapHostName(dmaapHostName)
-            .dmaapPortNumber(dmaapPortNumber)
-            .dmaapTopicName(dmaapTopicName)
-            .dmaapProtocol(dmaapProtocol)
-            .dmaapUserName(dmaapUserName)
-            .dmaapUserPassword(dmaapUserPassword)
-            .dmaapContentType(dmaapContentType)
-            .consumerGroup(consumerGroup)
-            .timeoutMs(timeoutMs)
-            .messageLimit(messageLimit)
-            .build();
+                .consumerId(consumerId)
+                .dmaapHostName(dmaapHostName)
+                .dmaapPortNumber(dmaapPortNumber)
+                .dmaapTopicName(dmaapTopicName)
+                .dmaapProtocol(dmaapProtocol)
+                .dmaapUserName(dmaapUserName)
+                .dmaapUserPassword(dmaapUserPassword)
+                .dmaapContentType(dmaapContentType)
+                .consumerGroup(consumerGroup)
+                .timeoutMs(timeoutMs)
+                .messageLimit(messageLimit)
+                .keyFile(keyFile)
+                .trustStore(trustStore)
+                .trustStorePassword(trustStorePass)
+                .keyStore(keyStore)
+                .keyStorePassword(keyStorePass)
+                .enableDmaapCertAuth(enableDmaapCertAuth)
+                .build();
 
         // Then
-        Assertions.assertNotNull(configuration);
-        Assertions.assertEquals(consumerId, configuration.consumerId());
-        Assertions.assertEquals(dmaapHostName, configuration.dmaapHostName());
-        Assertions.assertEquals(dmaapPortNumber, configuration.dmaapPortNumber());
-        Assertions.assertEquals(dmaapTopicName, configuration.dmaapTopicName());
-        Assertions.assertEquals(dmaapProtocol, configuration.dmaapProtocol());
-        Assertions.assertEquals(dmaapUserName, configuration.dmaapUserName());
-        Assertions.assertEquals(dmaapUserPassword, configuration.dmaapUserPassword());
-        Assertions.assertEquals(consumerGroup, configuration.consumerGroup());
-        Assertions.assertEquals(timeoutMs, configuration.timeoutMs());
-        Assertions.assertEquals(messageLimit, configuration.messageLimit());
+        assertNotNull(configuration);
+        assertEquals(consumerId, configuration.consumerId());
+        assertEquals(dmaapHostName, configuration.dmaapHostName());
+        assertEquals(dmaapPortNumber, configuration.dmaapPortNumber());
+        assertEquals(dmaapTopicName, configuration.dmaapTopicName());
+        assertEquals(dmaapProtocol, configuration.dmaapProtocol());
+        assertEquals(dmaapUserName, configuration.dmaapUserName());
+        assertEquals(dmaapUserPassword, configuration.dmaapUserPassword());
+        assertEquals(consumerGroup, configuration.consumerGroup());
+        assertEquals(timeoutMs, configuration.timeoutMs());
+        assertEquals(messageLimit, configuration.messageLimit());
+        assertEquals(keyFile, configuration.keyFile());
+        assertEquals(trustStore, configuration.trustStore());
+        assertEquals(trustStorePass, configuration.trustStorePassword());
+        assertEquals(keyStore, configuration.keyStore());
+        assertEquals(keyStorePass, configuration.keyStorePassword());
+        assertEquals(enableDmaapCertAuth, configuration.enableDmaapCertAuth());
     }
 }

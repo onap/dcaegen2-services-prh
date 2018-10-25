@@ -1,0 +1,57 @@
+{
+  "configs": {
+    "aai": {
+      "aaiClientConfiguration": {
+        "aaiHost": "localhost",
+        "aaiPort": 8080,
+        "aaiIgnoreSslCertificateErrors": true,
+        "aaiProtocol": "https",
+        "aaiUserName": "admin",
+        "aaiUserPassword": "admin",
+        "aaiBasePath": "/aai/v11",
+        "aaiPnfPath": "/network/pnfs/pnf",
+        "aaiHeaders": {
+          "X-FromAppId": "prh",
+          "X-TransactionId": "9999",
+          "Accept": "application/json",
+          "Real-Time": "true",
+          "Content-Type": "application/merge-patch+json",
+          "Authorization": "Basic QUFJOkFBSQ=="
+        }
+      }
+    },
+    "dmaap": {
+      "dmaapConsumerConfiguration": {
+        "consumerGroup": "other",
+        "consumerId": "1",
+        "dmaapContentType": "application/json",
+        "dmaapHostName": "localhost",
+        "dmaapPortNumber": 2222,
+        "dmaapProtocol": "http",
+        "dmaapTopicName": "temp",
+        "dmaapUserName": "admin",
+        "dmaapUserPassword": "admin",
+        "messageLimit": 1000,
+        "timeoutMs": 1000
+      },
+      "dmaapProducerConfiguration": {
+        "dmaapContentType": "application/json",
+        "dmaapHostName": "localhost",
+        "dmaapPortNumber": 2223,
+        "dmaapProtocol": "http",
+        "dmaaptopicName": "temp",
+        "dmaapuserName": "admin",
+        "dmaapuserPassword": "admin"
+      }
+    },
+    "security": {
+      "keyFile": "/opt/app/prh/local/org.onap.prh.keyfile",
+      "trustStore": "/opt/app/prh/local/org.onap.prh.trust.jks",
+      "trustStorePassword": "change it",
+      "keyStore": "/opt/app/prh/local/org.onap.prh.p12",
+      "keyStorePassword": "change it",
+      "enableAaiCertAuth": "false",
+      "enableDmaapCertAuth": "false"
+    }
+  }
+}

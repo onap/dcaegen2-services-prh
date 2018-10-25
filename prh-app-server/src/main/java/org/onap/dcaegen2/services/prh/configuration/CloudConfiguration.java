@@ -104,7 +104,6 @@ public class CloudConfiguration extends AppConfig {
         return Optional.ofNullable(aaiClientCloudConfiguration).orElse(super.getAaiClientConfiguration());
     }
 
-
     @Override
     public DmaapConsumerConfiguration getDmaapConsumerConfiguration() {
         return Optional.ofNullable(dmaapConsumerCloudConfiguration).orElse(super.getDmaapConsumerConfiguration());

@@ -22,14 +22,13 @@ package org.onap.dcaegen2.services.prh.service.producer;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.springframework.web.reactive.function.client.ExchangeFilterFunctions.basicAuthentication;
 
 import java.net.URI;
-import java.net.URISyntaxException;
+
 import java.util.HashMap;
 import java.util.Map;
 

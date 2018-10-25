@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bada0100_c1497bd1",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/CloudConfigParser.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-10-25T13:06:05Z",
+      "side": 1,
+      "message": "useless, put this values in prh_config",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 81
+      },
+      "revId": "d9f11fb1362147d3145373e90280936c26933ac9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bada0100_811373b7",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/TestAppConfiguration.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-10-25T13:06:05Z",
+      "side": 1,
+      "message": "prh ? take a look in other class header def",
+      "range": {
+        "startLine": 3,
+        "startChar": 3,
+        "endLine": 3,
+        "endChar": 10
+      },
+      "revId": "d9f11fb1362147d3145373e90280936c26933ac9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bada0100_016ea32f",
+        "filename": "prh-dmaap-client/src/test/java/org/onap/dcaegen2/services/prh/service/config/DmaapConsumerConfigurationTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-10-25T13:06:05Z",
+      "side": 1,
+      "message": "toString() comparision against this copy-paste ?",
+      "range": {
+        "startLine": 78,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 79
+      },
+      "revId": "d9f11fb1362147d3145373e90280936c26933ac9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bada0100_21696725",
+        "filename": "prh-dmaap-client/src/test/java/org/onap/dcaegen2/services/prh/service/config/DmaapPublisherConfigurationTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-10-25T13:06:05Z",
+      "side": 1,
+      "message": "toString comparision",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 79
+      },
+      "revId": "d9f11fb1362147d3145373e90280936c26933ac9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

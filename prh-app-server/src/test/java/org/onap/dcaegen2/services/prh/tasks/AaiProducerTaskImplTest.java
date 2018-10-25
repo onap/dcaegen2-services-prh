@@ -29,13 +29,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+
 import javax.net.ssl.SSLException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import org.onap.dcaegen2.services.prh.TestAppConfiguration;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
-import org.onap.dcaegen2.services.prh.config.ImmutableAaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
@@ -51,14 +52,6 @@ import reactor.test.StepVerifier;
  */
 class AaiProducerTaskImplTest {
 
-
-    private static final String AAI_HOST = "/aai/v11/network/pnfs/pnf/NOKQTFCOC540002E";
-    private static final Integer PORT = 1234;
-    private static final String PROTOCOL = "https";
-    private static final String USER_NAME_PASSWORD = "PRH";
-    private static final String BASE_PATH = "/aai/v11";
-    private static final String PNF_PATH = "/network/pnfs/pnf";
-
     private ConsumerDmaapModel consumerDmaapModel;
     private AaiProducerTaskImpl aaiProducerTask;
     private AaiClientConfiguration aaiClientConfiguration;
@@ -69,16 +62,7 @@ class AaiProducerTaskImplTest {
     @BeforeEach
     void setUp() {
         clientResponse = mock(ClientResponse.class);
-        aaiClientConfiguration = new ImmutableAaiClientConfiguration.Builder()
-            .aaiHost(AAI_HOST)
-            .aaiPort(PORT)
-            .aaiProtocol(PROTOCOL)
-            .aaiUserName(USER_NAME_PASSWORD)
-            .aaiUserPassword(USER_NAME_PASSWORD)
-            .aaiIgnoreSslCertificateErrors(true)
-            .aaiBasePath(BASE_PATH)
-            .aaiPnfPath(PNF_PATH)
-            .build();
+        aaiClientConfiguration = TestAppConfiguration.createDefaultAaiClientConfiguration();
         consumerDmaapModel = ImmutableConsumerDmaapModel.builder().ipv4("10.16.123.234")
             .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
             .correlationId("NOKQTFCOC540002E").build();

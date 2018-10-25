@@ -49,6 +49,24 @@ public interface DmaapCustomConfig extends Serializable {
     @Value.Parameter
     String dmaapContentType();
 
+    @Value.Parameter
+    String keyFile();
+
+    @Value.Parameter
+    String trustStore();
+
+    @Value.Parameter
+    String trustStorePassword();
+
+    @Value.Parameter
+    String keyStore();
+
+    @Value.Parameter
+    String keyStorePassword();
+
+    @Value.Parameter
+    Boolean enableDmaapCertAuth();
+
     interface Builder<T extends DmaapCustomConfig, B extends Builder<T, B>> {
 
         B dmaapHostName(String dmaapHostName);
@@ -64,6 +82,18 @@ public interface DmaapCustomConfig extends Serializable {
         B dmaapUserPassword(String dmaapUserPassword);
 
         B dmaapContentType(String dmaapContentType);
+
+        B keyFile(String keyFile);
+
+        B trustStore(String trustStore);
+
+        B trustStorePassword(String trustStorePass);
+
+        B keyStore(String keyStore);
+
+        B keyStorePassword(String keyStorePass);
+
+        B enableDmaapCertAuth(Boolean enableDmaapCertAuth);
 
         T build();
     }

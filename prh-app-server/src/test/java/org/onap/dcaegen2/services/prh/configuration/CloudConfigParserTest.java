@@ -20,11 +20,15 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
+import static java.lang.ClassLoader.getSystemResource;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import org.junit.jupiter.api.Test;
+import org.onap.dcaegen2.services.prh.TestAppConfiguration;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
@@ -32,79 +36,25 @@ import org.onap.dcaegen2.services.prh.config.ImmutableAaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.config.ImmutableDmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.config.ImmutableDmaapPublisherConfiguration;
 
-public class CloudConfigParserTest {
 
-    private static final String correctJson =
-        "{\"aai.aaiClientConfiguration.aaiIgnoreSslCertificateErrors\": true, "
-            + "\"dmaap.dmaapProducerConfiguration.dmaapTopicName\": \"/events/unauthenticated.PNF_READY\", "
-            + "\"dmaap.dmaapConsumerCon"
-            + "figuration.timeoutMs\": -1, \"dmaap.dmaapConsumerConfiguration.dmaapHostName\": "
-            + "\"message-router.onap.svc.cluster.local\", \"aai.aaiClientConfiguration.aaiPnfPath\": "
-            + "\"/network/pnfs/pnf\", \"aai.aaiClientConfiguration.aai"
-            + "UserPassword\": \"AAI\", \"dmaap.dmaapConsumerConfiguration.dmaapUserName\": \"admin\", "
-            + "\"aai.aaiClientConfiguration.aaiBasePath\": \"/aai/v12\", "
-            + "\"dmaap.dmaapProducerConfiguration.dmaapPortNumber\": 3904, \"aai.aaiClientConf"
-            + "iguration.aaiHost\": \"aai.onap.svc.cluster.local\", "
-            + "\"dmaap.dmaapConsumerConfiguration.dmaapUserPassword\": \"admin\", "
-            + "\"dmaap.dmaapProducerConfiguration.dmaapProtocol\": \"http\", \"dmaap.dmaapProducerConfiguration.dmaapC"
-            + "ontentType\": \"application/json\", "
-            + "\"dmaap.dmaapConsumerConfiguration.dmaapTopicName\": \"/events/unauthenticated.SEC_OTHER_OUTPUT\", "
-            + "\"dmaap.dmaapConsumerConfiguration.dmaapPortNumber\": 3904, \"dmaap.dmaapConsumerConfi"
-            + "guration.dmaapContentType\": \"application/json\", \"dmaap.dmaapConsumerConfiguration.messageLimit\": "
-            + "-1, \"dmaap.dmaapConsumerConfiguration.dmaapProtocol\": \"http\", "
-            + "\"aai.aaiClientConfiguration.aaiUserName\": \"AAI\", \"dm"
-            + "aap.dmaapConsumerConfiguration.consumerId\": \"c12\", \"dmaap.dmaapProducerConfiguration.dmaapHostName\""
-            + ": \"message-router.onap.svc.cluster.local\", \"aai.aaiClientConfiguration.aaiHostPortNumber\": "
-            + "8443, \"dmaap.dmaapConsumerConfiguration.consumerGroup\": \"OpenDCAE-c12\", "
-            + "\"aai.aaiClientConfiguration.aaiProtocol\": \"https\", "
-            + "\"dmaap.dmaapProducerConfiguration.dmaapUserName\": \"admin\", "
-            + "\"dmaap.dmaapProducerConfiguration.dmaapUserPasswor"
-            + "d\": \"admin\"}";
+class CloudConfigParserTest {
 
-    private static final ImmutableAaiClientConfiguration correctAaiClientConfig =
-        new ImmutableAaiClientConfiguration.Builder()
-            .aaiHost("aai.onap.svc.cluster.local")
-            .aaiPort(8443)
-            .aaiUserName("AAI")
-            .aaiPnfPath("/network/pnfs/pnf")
-            .aaiIgnoreSslCertificateErrors(true)
-            .aaiUserPassword("AAI")
-            .aaiProtocol("https")
-            .aaiBasePath("/aai/v12")
-            .build();
+    private final String correctJson =
+            new String(Files.readAllBytes(Paths.get(getSystemResource("flattened_configuration.json").toURI())));
+    private final ImmutableAaiClientConfiguration correctAaiClientConfig =
+            TestAppConfiguration.createDefaultAaiClientConfiguration();
+    private final ImmutableDmaapConsumerConfiguration correctDmaapConsumerConfig =
+            TestAppConfiguration.createDefaultDmaapConsumerConfiguration();
+    private final ImmutableDmaapPublisherConfiguration correctDmaapPublisherConfig =
+            TestAppConfiguration.createDefaultDmaapPublisherConfiguration();
+    private final CloudConfigParser cloudConfigParser = new CloudConfigParser(
+            new Gson().fromJson(correctJson, JsonObject.class));
 
-    private static final ImmutableDmaapConsumerConfiguration correctDmaapConsumerConfig =
-        new ImmutableDmaapConsumerConfiguration.Builder()
-            .timeoutMs(-1)
-            .dmaapHostName("message-router.onap.svc.cluster.local")
-            .dmaapUserName("admin")
-            .dmaapUserPassword("admin")
-            .dmaapTopicName("/events/unauthenticated.SEC_OTHER_OUTPUT")
-            .dmaapPortNumber(3904)
-            .dmaapContentType("application/json")
-            .messageLimit(-1)
-            .dmaapProtocol("http")
-            .consumerId("c12")
-            .consumerGroup("OpenDCAE-c12")
-            .build();
-
-    private static final ImmutableDmaapPublisherConfiguration correctDmaapPublisherConfig =
-        new ImmutableDmaapPublisherConfiguration.Builder()
-            .dmaapTopicName("/events/unauthenticated.PNF_READY")
-            .dmaapUserPassword("admin")
-            .dmaapPortNumber(3904)
-            .dmaapProtocol("http")
-            .dmaapContentType("application/json")
-            .dmaapHostName("message-router.onap.svc.cluster.local")
-            .dmaapUserName("admin")
-            .build();
-
-    private CloudConfigParser cloudConfigParser = new CloudConfigParser(
-        new Gson().fromJson(correctJson, JsonObject.class));
-
+    CloudConfigParserTest() throws Exception {
+    }
 
     @Test
-    public void shouldCreateAaiConfigurationCorrectly() {
+    void shouldCreateAaiConfigurationCorrectly() {
         // when
         AaiClientConfiguration aaiClientConfig = cloudConfigParser.getAaiClientConfig();
 
@@ -115,7 +65,7 @@ public class CloudConfigParserTest {
 
 
     @Test
-    public void shouldCreateDmaapConsumerConfigurationCorrectly() {
+    void shouldCreateDmaapConsumerConfigurationCorrectly() {
         // when
         DmaapConsumerConfiguration dmaapConsumerConfig = cloudConfigParser.getDmaapConsumerConfig();
 
@@ -126,7 +76,7 @@ public class CloudConfigParserTest {
 
 
     @Test
-    public void shouldCreateDmaapPublisherConfigurationCorrectly() {
+    void shouldCreateDmaapPublisherConfigurationCorrectly() {
         // when
         DmaapPublisherConfiguration dmaapPublisherConfig = cloudConfigParser.getDmaapPublisherConfig();
 

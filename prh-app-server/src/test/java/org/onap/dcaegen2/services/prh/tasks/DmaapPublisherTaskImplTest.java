@@ -29,12 +29,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.onap.dcaegen2.services.prh.TestAppConfiguration.createDefaultDmaapPublisherConfiguration;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
-import org.onap.dcaegen2.services.prh.config.ImmutableDmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
@@ -59,10 +59,7 @@ class DmaapPublisherTaskImplTest {
 
     @BeforeAll
     static void setUp() {
-        dmaapPublisherConfiguration = new ImmutableDmaapPublisherConfiguration.Builder()
-            .dmaapContentType("application/json").dmaapHostName("54.45.33.2").dmaapPortNumber(1234)
-            .dmaapProtocol("https").dmaapUserName("PRH").dmaapUserPassword("PRH")
-            .dmaapTopicName("unauthenticated.SEC_OTHER_OUTPUT").build();
+        dmaapPublisherConfiguration = createDefaultDmaapPublisherConfiguration();
         consumerDmaapModel = ImmutableConsumerDmaapModel.builder().ipv4("10.16.123.234")
             .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
             .correlationId("NOKQTFCOC540002E").build();

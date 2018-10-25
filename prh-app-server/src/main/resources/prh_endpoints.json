@@ -42,6 +42,15 @@
           "Content-Type": "application/merge-patch+json"
         }
       }
+    },
+    "security": {
+        "keyFile" : "/opt/app/prh/local/org.onap.prh.keyfile",
+        "trustStore" : "change it",
+        "trustStorePassword" : "change it",
+        "keyStore" : "change it",
+        "keyStorePassword" : "change it",
+        "enableAaiCertAuth" : "false",
+        "enableDmaapCertAuth" : "false"
     }
   }
 }

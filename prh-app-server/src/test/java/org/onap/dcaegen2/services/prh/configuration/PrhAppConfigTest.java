@@ -20,12 +20,15 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
+import static java.lang.ClassLoader.getSystemResource;
+import static java.nio.file.Files.readAllBytes;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -35,8 +38,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Objects;
-import org.junit.jupiter.api.Assertions;
+import java.nio.file.Paths;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,51 +46,22 @@ import org.onap.dcaegen2.services.prh.integration.junit5.mockito.MockitoExtensio
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 
+
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/9/18
  */
 @ExtendWith({MockitoExtension.class})
 class PrhAppConfigTest {
 
-    private static final String PRH_ENDPOINTS = "prh_endpoints.json";
-    private static final String jsonString = "{\"configs\":{\"aai\":{\"aaiClientConfiguration\":{\"aaiHost\":"
-        + "\"localhost\",\"aaiPort\":8080,\"aaiIgnoreSslCertificateErrors\":true,\"aaiProtocol\":"
-        + "\"https\",\"aaiUserName\":\"admin\",\"aaiUserPassword\":\"admin\",\"aaiBasePath\":\"/aai/v11\","
-        + "\"aaiPnfPath\":\"/network/pnfs/pnf\",\"aaiHeaders\":{\"X-FromAppId\":\"prh\",\"X-TransactionId\":\"9999\","
-        + "\"Accept\":\"application/json\",\"Real-Time\":\"true\",\"Content-Type\":\"application/merge-patch+json\","
-        + "\"Authorization\":\"Basic QUFJOkFBSQ==\"}}},"
-        + "\"dmaap\":{\"dmaapConsumerConfiguration\":{\"consumerGroup\":\"other\",\"consumerId\":\"1\","
-        + "\"dmaapContentType\":\"application/json\",\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2222,"
-        + "\"dmaapProtocol\":\"http\",\"dmaapTopicName\":\"temp\",\"dmaapUserName\":\"admin\",\"dmaapUserPassword\""
-        + ":\"admin\",\"messageLimit\":1000,\"timeoutMs\":1000},\"dmaapProducerConfiguration\":{\"dmaapContentType\":"
-        + "\"application/json\",\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2223,\"dmaapProtocol\":\"http\","
-        + "\"dmaapTopicName\":\"temp\",\"dmaapUserName\":\"admin\",\"dmaapUserPassword\":\"admin\"}}}}";
-
-    private static final String incorrectJsonString = "{\"configs\":{\"aai\":{\"aaiClientConfiguration\":{\"aaiHost\":"
-        + "\"localhost\",\"aaiPort\":8080,\"aaiIgnoreSslCertificateErrors\":true,\"aaiProtocol\":\"https\","
-        + "\"aaiUserName\":\"admin\",\"aaiUserPassword\":\"admin\",\"aaiBasePath\":\"/aai/v11\",\"aaiPnfPath\":"
-        + "\"/network/pnfs/pnf\",\"aaiHeaders\":{\"X-FromAppId\":\"prh\",\"X-TransactionId\":\"9999\",\"Accept\":"
-        + "\"application/json\",\"Real-Time\":\"true\",\"Content-Type\":\"application/merge-patch+json\","
-        + "\"Authorization\":\"Basic QUFJOkFBSQ==\"}}},\"dmaap\""
-        + ":{\"dmaapConsumerConfiguration\":{\"consumerGroup\":\"other\",\"consumerId\":\"1\",\"dmaapContentType\""
-        + ":\"application/json\",\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2222,\"dmaapProtocol\":\"http\""
-        + ",\"dmaapTopicName\":\"temp\",\"dmaapUserName\":\"admin\",\"dmaapUserPassword\":\"admin\",\"messageLimit\""
-        + ":1000,\"timeoutMs\":1000},\"dmaapProducerConfiguration\":{\"dmaapContentType\":\"application/json\","
-        + "\"dmaapHostName\":\"localhost\",\"dmaapPortNumber\":2223,\"dmaapProtocol\":\"http\",\"dmaaptopicName\""
-        + ":\"temp\",\"dmaapuserName\":\"admin\",\"dmaapuserPassword\":\"admin\"}}}}";
-
+    private final String jsonString =
+            new String(readAllBytes(Paths.get(getSystemResource("correct_config.json").toURI())));
+    private final String incorrectJsonString =
+            new String(readAllBytes(Paths.get(getSystemResource("incorrect_config.json").toURI())));
     private PrhAppConfig prhAppConfig;
     private AppConfig appConfig;
 
-    private static InputStream inputStream;
 
-    static {
-        try {
-            inputStream = Objects
-                .requireNonNull(PrhAppConfigTest.class.getClassLoader().getResource(PRH_ENDPOINTS)).openStream();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    PrhAppConfigTest() throws Exception {
     }
 
     @BeforeEach
@@ -98,30 +71,16 @@ class PrhAppConfigTest {
     }
 
     @Test
-    void whenApplicationWasStarted_FilePathIsSet() throws IOException {
-        //
-        // When
-        //
-        doReturn(inputStream).when(prhAppConfig).getInputStream(anyString());
-        //
-        // Then
-        //
-        verify(prhAppConfig, times(0)).initFileStreamReader();
-    }
-
-    @Test
-    void whenTheConfigurationFits_GetAaiAndDmaapObjectRepresentationConfiguration()
-        throws IOException {
+    void whenTheConfigurationFits_GetAaiAndDmaapObjectRepresentationConfiguration() {
         //
         // Given
         //
         InputStream inputStream = new ByteArrayInputStream((jsonString.getBytes(
-            StandardCharsets.UTF_8)));
+                StandardCharsets.UTF_8)));
         //
         // When
         //
         prhAppConfig.setResourceFile(new InputStreamResource(inputStream));
-        doReturn(inputStream).when(prhAppConfig).getInputStream(any());
         prhAppConfig.initFileStreamReader();
         appConfig.dmaapConsumerConfiguration = prhAppConfig.getDmaapConsumerConfiguration();
         appConfig.dmaapPublisherConfiguration = prhAppConfig.getDmaapPublisherConfiguration();
@@ -129,16 +88,13 @@ class PrhAppConfigTest {
         //
         // Then
         //
-        verify(prhAppConfig, times(1)).initFileStreamReader();
-        Assertions.assertNotNull(prhAppConfig.getAaiClientConfiguration());
-        Assertions.assertNotNull(prhAppConfig.getDmaapConsumerConfiguration());
-        Assertions.assertNotNull(prhAppConfig.getDmaapPublisherConfiguration());
-        Assertions
-            .assertEquals(appConfig.getDmaapPublisherConfiguration(), prhAppConfig.getDmaapPublisherConfiguration());
-        Assertions
-            .assertEquals(appConfig.getDmaapConsumerConfiguration(), prhAppConfig.getDmaapConsumerConfiguration());
-        Assertions
-            .assertEquals(appConfig.getAaiClientConfiguration(), prhAppConfig.getAaiClientConfiguration());
+        verify(prhAppConfig).initFileStreamReader();
+        assertNotNull(prhAppConfig.getDmaapConsumerConfiguration());
+        assertNotNull(prhAppConfig.getDmaapPublisherConfiguration());
+        assertNotNull(prhAppConfig.getAaiClientConfiguration());
+        assertEquals(appConfig.getDmaapPublisherConfiguration(), prhAppConfig.getDmaapPublisherConfiguration());
+        assertEquals(appConfig.getDmaapConsumerConfiguration(), prhAppConfig.getDmaapConsumerConfiguration());
+        assertEquals(appConfig.getAaiClientConfiguration(), prhAppConfig.getAaiClientConfiguration());
 
     }
 
@@ -147,7 +103,7 @@ class PrhAppConfigTest {
         //
         // Given
         InputStream inputStream = new ByteArrayInputStream((jsonString.getBytes(
-            StandardCharsets.UTF_8)));
+                StandardCharsets.UTF_8)));
         Resource resource = spy(new InputStreamResource(inputStream));
         //
         when(resource.getInputStream()).thenThrow(new IOException());
@@ -159,47 +115,44 @@ class PrhAppConfigTest {
         //
         // Then
         //
-        verify(prhAppConfig, times(1)).initFileStreamReader();
-        Assertions.assertNull(prhAppConfig.getAaiClientConfiguration());
-        Assertions.assertNull(prhAppConfig.getDmaapConsumerConfiguration());
-        Assertions.assertNull(prhAppConfig.getDmaapPublisherConfiguration());
+        verify(prhAppConfig).initFileStreamReader();
+        assertNull(prhAppConfig.getAaiClientConfiguration());
+        assertNull(prhAppConfig.getDmaapConsumerConfiguration());
+        assertNull(prhAppConfig.getDmaapPublisherConfiguration());
 
     }
 
     @Test
-    void whenFileIsExistsButJsonIsIncorrect() throws IOException {
+    void whenFileIsExistsButJsonIsIncorrect() {
         //
         // Given
         //
         InputStream inputStream = new ByteArrayInputStream((incorrectJsonString.getBytes(
-            StandardCharsets.UTF_8)));
+                StandardCharsets.UTF_8)));
         //
         // When
         //
         prhAppConfig.setResourceFile(new InputStreamResource(inputStream));
-        doReturn(inputStream).when(prhAppConfig).getInputStream(any());
         prhAppConfig.initFileStreamReader();
 
         //
         // Then
         //
-        verify(prhAppConfig, times(1)).initFileStreamReader();
-        Assertions.assertNotNull(prhAppConfig.getAaiClientConfiguration());
-        Assertions.assertNotNull(prhAppConfig.getDmaapConsumerConfiguration());
-        Assertions.assertNull(prhAppConfig.getDmaapPublisherConfiguration());
+        verify(prhAppConfig).initFileStreamReader();
+        assertNotNull(prhAppConfig.getAaiClientConfiguration());
+        assertNotNull(prhAppConfig.getDmaapConsumerConfiguration());
+        assertNull(prhAppConfig.getDmaapPublisherConfiguration());
 
     }
 
 
     @Test
-    void whenTheConfigurationFits_ButRootElementIsNotAJsonObject()
-        throws IOException {
+    void whenTheConfigurationFits_ButRootElementIsNotAJsonObject() {
         // Given
         InputStream inputStream = new ByteArrayInputStream((jsonString.getBytes(
-            StandardCharsets.UTF_8)));
+                StandardCharsets.UTF_8)));
         // When
         prhAppConfig.setResourceFile(new InputStreamResource(inputStream));
-        doReturn(inputStream).when(prhAppConfig).getInputStream(any());
         JsonElement jsonElement = mock(JsonElement.class);
         when(jsonElement.isJsonObject()).thenReturn(false);
         doReturn(jsonElement).when(prhAppConfig).getJsonElement(any(JsonParser.class), any(InputStream.class));
@@ -209,9 +162,9 @@ class PrhAppConfigTest {
         appConfig.aaiClientConfiguration = prhAppConfig.getAaiClientConfiguration();
 
         // Then
-        verify(prhAppConfig, times(1)).initFileStreamReader();
-        Assertions.assertNull(prhAppConfig.getAaiClientConfiguration());
-        Assertions.assertNull(prhAppConfig.getDmaapConsumerConfiguration());
-        Assertions.assertNull(prhAppConfig.getDmaapPublisherConfiguration());
+        verify(prhAppConfig).initFileStreamReader();
+        assertNull(prhAppConfig.getAaiClientConfiguration());
+        assertNull(prhAppConfig.getDmaapConsumerConfiguration());
+        assertNull(prhAppConfig.getDmaapPublisherConfiguration());
     }
 }

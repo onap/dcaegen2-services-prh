@@ -20,10 +20,9 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.service.DMaaPReactiveWebClient;
 import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
 import org.onap.dcaegen2.services.prh.service.consumer.DMaaPConsumerReactiveHttpClient;
 import org.slf4j.Logger;
@@ -37,26 +36,28 @@ import reactor.core.publisher.Mono;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
 @Component
-public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
+public class DmaapConsumerTaskImpl implements DmaapConsumerTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DmaapConsumerTaskImpl.class);
     private final Config config;
-    private DmaapConsumerJsonParser dmaapConsumerJsonParser;
+    private final DmaapConsumerJsonParser dmaapConsumerJsonParser;
+    private final DMaaPReactiveWebClient dmaapReactiveWebClient;
 
     @Autowired
     public DmaapConsumerTaskImpl(Config config) {
-        this.config = config;
-        this.dmaapConsumerJsonParser = new DmaapConsumerJsonParser();
+        this(config, new DmaapConsumerJsonParser(), new DMaaPReactiveWebClient());
     }
 
-    DmaapConsumerTaskImpl(AppConfig prhAppConfig, DmaapConsumerJsonParser dmaapConsumerJsonParser) {
+    DmaapConsumerTaskImpl(Config prhAppConfig, DmaapConsumerJsonParser dmaapConsumerJsonParser,
+                          DMaaPReactiveWebClient dmaapReactiveWebClient) {
         this.config = prhAppConfig;
         this.dmaapConsumerJsonParser = dmaapConsumerJsonParser;
+        this.dmaapReactiveWebClient = dmaapReactiveWebClient;
     }
 
     @Override
-    Flux<ConsumerDmaapModel> consume(Mono<String> message) {
-        return dmaapConsumerJsonParser.getJsonObject(message);
+    public void initConfigs() {
+        config.initFileStreamReader();
     }
 
     @Override
@@ -67,17 +68,13 @@ public class DmaapConsumerTaskImpl extends DmaapConsumerTask {
     }
 
     @Override
-    void initConfigs() {
-        config.initFileStreamReader();
+    public Flux<ConsumerDmaapModel> consume(Mono<String> message) {
+        return dmaapConsumerJsonParser.getJsonObject(message);
     }
 
     @Override
-    protected DmaapConsumerConfiguration resolveConfiguration() {
-        return config.getDmaapConsumerConfiguration();
-    }
-
-    @Override
-    DMaaPConsumerReactiveHttpClient resolveClient() {
-        return new DMaaPConsumerReactiveHttpClient(resolveConfiguration()).createDMaaPWebClient(buildWebClient());
+    public DMaaPConsumerReactiveHttpClient resolveClient() {
+        return new DMaaPConsumerReactiveHttpClient(
+                config.getDmaapConsumerConfiguration()).createDMaaPWebClient(dmaapReactiveWebClient.build());
     }
 }

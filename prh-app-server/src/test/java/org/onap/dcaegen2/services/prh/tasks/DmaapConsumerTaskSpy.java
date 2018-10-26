@@ -50,7 +50,6 @@ public class DmaapConsumerTaskSpy {
         DmaapConsumerTaskImpl dmaapConsumerTask = spy(new DmaapConsumerTaskImpl(appConfig));
         DMaaPConsumerReactiveHttpClient dmaapConsumerReactiveHttpClient = mock(
             DMaaPConsumerReactiveHttpClient.class);
-        doReturn(mock(DmaapConsumerConfiguration.class)).when(dmaapConsumerTask).resolveConfiguration();
         doReturn(dmaapConsumerReactiveHttpClient).when(dmaapConsumerTask).resolveClient();
         return dmaapConsumerTask;
     }

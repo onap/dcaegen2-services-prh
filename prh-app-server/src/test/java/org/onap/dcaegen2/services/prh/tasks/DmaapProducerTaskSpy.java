@@ -26,7 +26,7 @@ import static org.mockito.Mockito.spy;
 
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
-import org.onap.dcaegen2.services.prh.service.producer.DMaaPProducerReactiveHttpClient;
+import org.onap.dcaegen2.services.prh.service.producer.DMaaPPublisherReactiveHttpClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -48,9 +48,8 @@ public class DmaapProducerTaskSpy {
         AppConfig appConfig = spy(AppConfig.class);
         doReturn(mock(DmaapPublisherConfiguration.class)).when(appConfig).getDmaapPublisherConfiguration();
         DmaapPublisherTaskImpl dmaapPublisherTask = spy(new DmaapPublisherTaskImpl(appConfig));
-        DMaaPProducerReactiveHttpClient extendedDmaapProducerHttpClient = mock(
-            DMaaPProducerReactiveHttpClient.class);
-        doReturn(mock(DmaapPublisherConfiguration.class)).when(dmaapPublisherTask).resolveConfiguration();
+        DMaaPPublisherReactiveHttpClient extendedDmaapProducerHttpClient = mock(
+            DMaaPPublisherReactiveHttpClient.class);
         doReturn(extendedDmaapProducerHttpClient).when(dmaapPublisherTask).resolveClient();
         return dmaapPublisherTask;
     }

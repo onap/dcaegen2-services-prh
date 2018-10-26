@@ -43,7 +43,7 @@ import reactor.core.publisher.Mono;
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 7/4/18
  */
-public class DMaaPProducerReactiveHttpClient {
+public class DMaaPPublisherReactiveHttpClient {
 
     private final String dmaapHostName;
     private final Integer dmaapPortNumber;
@@ -54,11 +54,11 @@ public class DMaaPProducerReactiveHttpClient {
     private RestTemplate restTemplate;
 
     /**
-     * Constructor DMaaPProducerReactiveHttpClient.
+     * Constructor DMaaPPublisherReactiveHttpClient.
      *
      * @param dmaapPublisherConfiguration - DMaaP producer configuration object
      */
-    public DMaaPProducerReactiveHttpClient(DmaapPublisherConfiguration dmaapPublisherConfiguration) {
+    public DMaaPPublisherReactiveHttpClient(DmaapPublisherConfiguration dmaapPublisherConfiguration) {
         this.dmaapHostName = dmaapPublisherConfiguration.dmaapHostName();
         this.dmaapProtocol = dmaapPublisherConfiguration.dmaapProtocol();
         this.dmaapPortNumber = dmaapPublisherConfiguration.dmaapPortNumber();
@@ -90,7 +90,7 @@ public class DMaaPProducerReactiveHttpClient {
 
     }
 
-    public DMaaPProducerReactiveHttpClient createDMaaPWebClient(RestTemplate restTemplate) {
+    public DMaaPPublisherReactiveHttpClient createDMaaPWebClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
         return this;
     }

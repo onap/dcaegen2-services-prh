@@ -20,11 +20,10 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.service.producer.DMaaPProducerReactiveHttpClient;
+import org.onap.dcaegen2.services.prh.service.producer.DMaaPPublisherReactiveHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +36,11 @@ import reactor.core.publisher.Mono;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
 @Component
-public class DmaapPublisherTaskImpl extends DmaapPublisherTask {
+public class DmaapPublisherTaskImpl implements DmaapPublisherTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DmaapPublisherTaskImpl.class);
     private final Config config;
-    private DMaaPProducerReactiveHttpClient dmaapProducerReactiveHttpClient;
+    private DMaaPPublisherReactiveHttpClient dmaapPublisherReactiveHttpClient;
 
     @Autowired
     public DmaapPublisherTaskImpl(Config config) {
@@ -49,32 +48,23 @@ public class DmaapPublisherTaskImpl extends DmaapPublisherTask {
     }
 
     @Override
-    Mono<ResponseEntity<String>> publish(ConsumerDmaapModel consumerDmaapModel) {
-        return dmaapProducerReactiveHttpClient.getDMaaPProducerResponse(consumerDmaapModel);
-    }
-
-    @Override
     public Mono<ResponseEntity<String>> execute(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException {
         if (consumerDmaapModel == null) {
             throw new DmaapNotFoundException("Invoked null object to DMaaP task");
         }
-        dmaapProducerReactiveHttpClient = resolveClient();
+        dmaapPublisherReactiveHttpClient = resolveClient();
         LOGGER.info("Method called with arg {}", consumerDmaapModel);
         return publish(consumerDmaapModel);
     }
 
     @Override
-    RestTemplate buildWebClient() {
-        return new RestTemplate();
+    public Mono<ResponseEntity<String>> publish(ConsumerDmaapModel consumerDmaapModel) {
+        return dmaapPublisherReactiveHttpClient.getDMaaPProducerResponse(consumerDmaapModel);
     }
 
     @Override
-    protected DmaapPublisherConfiguration resolveConfiguration() {
-        return config.getDmaapPublisherConfiguration();
-    }
-
-    @Override
-    DMaaPProducerReactiveHttpClient resolveClient() {
-        return new DMaaPProducerReactiveHttpClient(resolveConfiguration()).createDMaaPWebClient(buildWebClient());
+    public DMaaPPublisherReactiveHttpClient resolveClient() {
+        return new DMaaPPublisherReactiveHttpClient(config.getDmaapPublisherConfiguration())
+                .createDMaaPWebClient(new RestTemplate());
     }
 }

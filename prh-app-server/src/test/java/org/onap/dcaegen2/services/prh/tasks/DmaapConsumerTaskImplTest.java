@@ -29,16 +29,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.onap.dcaegen2.services.prh.TestAppConfiguration.createDefaultDmaapConsumerConfiguration;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.service.DMaaPReactiveWebClient;
 import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
 import org.onap.dcaegen2.services.prh.service.consumer.DMaaPConsumerReactiveHttpClient;
 import reactor.core.publisher.Flux;
@@ -56,7 +54,6 @@ class DmaapConsumerTaskImplTest {
     private static AppConfig appConfig;
     private static DmaapConsumerConfiguration dmaapConsumerConfiguration;
     private static String message;
-    private static String parsed;
 
     @BeforeAll
     static void setUp() {
@@ -82,22 +79,6 @@ class DmaapConsumerTaskImplTest {
             + " \"softwareVersion\": \"v4.5.0.1\","
             + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
             + "}}}]";
-
-        parsed = "{\"event\": {"
-            + "\"commonEventHeader\": { \"sourceName\":\"NOKQTFCOC540002E\"},"
-            + "\"pnfRegistrationFields\": {"
-            + " \"unitType\": \"AirScale\","
-            + " \"serialNumber\": \"QTFCOC540002E\","
-            + " \"pnfRegistrationFieldsVersion\": \"2.0\","
-            + " \"manufactureDate\": \"1535014037024\","
-            + " \"modelNumber\": \"7BEA\",\n"
-            + " \"lastServiceDate\": \"1535014037024\","
-            + " \"unitFamily\": \"BBU\","
-            + " \"vendorName\": \"Nokia\","
-            + " \"oamV4IpAddress\": \"10.16.123.234\","
-            + " \"softwareVersion\": \"v4.5.0.1\","
-            + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
-            + "}}}";
     }
 
     @Test
@@ -126,16 +107,22 @@ class DmaapConsumerTaskImplTest {
         assertEquals(consumerDmaapModel, response.blockFirst());
     }
 
+    @Test
+    void whenInitConfigs_initStreamReader() {
+        //when
+        dmaapConsumerTask.initConfigs();
+
+        //then
+        verify(appConfig).initFileStreamReader();
+    }
+
     private void prepareMocksForDmaapConsumer(Optional<String> message) {
-        DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
-        JsonElement jsonElement = new JsonParser().parse(parsed);
-        Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
-            .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
         dMaaPConsumerReactiveHttpClient = mock(DMaaPConsumerReactiveHttpClient.class);
         when(dMaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse()).thenReturn(Mono.just(message.orElse("")));
         when(appConfig.getDmaapConsumerConfiguration()).thenReturn(dmaapConsumerConfiguration);
-        dmaapConsumerTask = spy(new DmaapConsumerTaskImpl(appConfig, dmaapConsumerJsonParser));
-        when(dmaapConsumerTask.resolveConfiguration()).thenReturn(dmaapConsumerConfiguration);
+        DMaaPReactiveWebClient dmaapReactiveWebClient = mock(DMaaPReactiveWebClient.class);
+        dmaapConsumerTask =
+                spy(new DmaapConsumerTaskImpl(appConfig, new DmaapConsumerJsonParser(), dmaapReactiveWebClient));
         doReturn(dMaaPConsumerReactiveHttpClient).when(dmaapConsumerTask).resolveClient();
     }
 }

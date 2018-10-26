@@ -45,9 +45,9 @@ import reactor.test.StepVerifier;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 7/4/18
  */
 
-class DMaaPProducerReactiveHttpClientTest {
+class DMaaPPublisherReactiveHttpClientTest {
 
-    private DMaaPProducerReactiveHttpClient dmaapProducerReactiveHttpClient;
+    private DMaaPPublisherReactiveHttpClient dmaapPublisherReactiveHttpClient;
 
     private DmaapPublisherConfiguration dmaapPublisherConfigurationMock = mock(
         DmaapPublisherConfiguration.class);
@@ -63,7 +63,7 @@ class DMaaPProducerReactiveHttpClientTest {
         when(dmaapPublisherConfigurationMock.dmaapUserPassword()).thenReturn("PRH");
         when(dmaapPublisherConfigurationMock.dmaapContentType()).thenReturn("application/json");
         when(dmaapPublisherConfigurationMock.dmaapTopicName()).thenReturn("unauthenticated.PNF_READY");
-        dmaapProducerReactiveHttpClient = new DMaaPProducerReactiveHttpClient(dmaapPublisherConfigurationMock);
+        dmaapPublisherReactiveHttpClient = new DMaaPPublisherReactiveHttpClient(dmaapPublisherConfigurationMock);
 
     }
 
@@ -77,16 +77,16 @@ class DMaaPProducerReactiveHttpClientTest {
         when(mockedResponseEntity.getStatusCode()).thenReturn(HttpStatus.valueOf(responseSuccess));
         doReturn(mockedResponseEntity).when(restTemplate)
             .exchange(any(URI.class), any(HttpMethod.class), any(HttpEntity.class), (Class<Object>) any());
-        dmaapProducerReactiveHttpClient.createDMaaPWebClient(restTemplate);
+        dmaapPublisherReactiveHttpClient.createDMaaPWebClient(restTemplate);
 
         //then
-        StepVerifier.create(dmaapProducerReactiveHttpClient.getDMaaPProducerResponse(consumerDmaapModel))
+        StepVerifier.create(dmaapPublisherReactiveHttpClient.getDMaaPProducerResponse(consumerDmaapModel))
             .expectSubscription().expectNext(mockedResponseEntity).verifyComplete();
     }
 
     @Test
     void getAppropriateUri_whenPassingCorrectedPathForPnf() {
-        Assertions.assertEquals(dmaapProducerReactiveHttpClient.getUri(),
+        Assertions.assertEquals(dmaapPublisherReactiveHttpClient.getUri(),
             URI.create("https://54.45.33.2:1234/unauthenticated.PNF_READY"));
     }
 }

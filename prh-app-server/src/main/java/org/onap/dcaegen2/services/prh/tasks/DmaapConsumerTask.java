@@ -20,30 +20,21 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.service.DMaaPReactiveWebClient;
 import org.onap.dcaegen2.services.prh.service.consumer.DMaaPConsumerReactiveHttpClient;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
-abstract class DmaapConsumerTask {
+interface DmaapConsumerTask {
 
-    abstract Flux<ConsumerDmaapModel> consume(Mono<String> message);
+    void initConfigs();
 
-    abstract DMaaPConsumerReactiveHttpClient resolveClient();
+    Flux<ConsumerDmaapModel> execute(String object);
 
-    abstract void initConfigs();
+    Flux<ConsumerDmaapModel> consume(Mono<String> message);
 
-    protected abstract DmaapConsumerConfiguration resolveConfiguration();
-
-    protected abstract Flux<ConsumerDmaapModel> execute(String object);
-
-    WebClient buildWebClient() {
-        return new DMaaPReactiveWebClient().build();
-    }
+    DMaaPConsumerReactiveHttpClient resolveClient();
 }

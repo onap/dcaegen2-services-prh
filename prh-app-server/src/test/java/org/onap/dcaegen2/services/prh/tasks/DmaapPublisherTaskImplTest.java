@@ -40,7 +40,7 @@ import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.service.producer.DMaaPProducerReactiveHttpClient;
+import org.onap.dcaegen2.services.prh.service.producer.DMaaPPublisherReactiveHttpClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
@@ -53,7 +53,7 @@ class DmaapPublisherTaskImplTest {
 
     private static ConsumerDmaapModel consumerDmaapModel;
     private static DmaapPublisherTaskImpl dmaapPublisherTask;
-    private static DMaaPProducerReactiveHttpClient dMaaPProducerReactiveHttpClient;
+    private static DMaaPPublisherReactiveHttpClient dMaaPPublisherReactiveHttpClient;
     private static AppConfig appConfig;
     private static DmaapPublisherConfiguration dmaapPublisherConfiguration;
 
@@ -90,9 +90,9 @@ class DmaapPublisherTaskImplTest {
             .expectNext(responseEntity).verifyComplete();
 
         //then
-        verify(dMaaPProducerReactiveHttpClient, times(1))
+        verify(dMaaPPublisherReactiveHttpClient, times(1))
             .getDMaaPProducerResponse(consumerDmaapModel);
-        verifyNoMoreInteractions(dMaaPProducerReactiveHttpClient);
+        verifyNoMoreInteractions(dMaaPPublisherReactiveHttpClient);
     }
 
 
@@ -107,22 +107,20 @@ class DmaapPublisherTaskImplTest {
             .expectNext(responseEntity).verifyComplete();
 
         //then
-        verify(dMaaPProducerReactiveHttpClient, times(1))
+        verify(dMaaPPublisherReactiveHttpClient, times(1))
             .getDMaaPProducerResponse(consumerDmaapModel);
-        verifyNoMoreInteractions(dMaaPProducerReactiveHttpClient);
+        verifyNoMoreInteractions(dMaaPPublisherReactiveHttpClient);
     }
 
 
     private ResponseEntity<String> prepareMocksForTests(Integer httpResponseCode) {
         ResponseEntity<String> responseEntity = mock(ResponseEntity.class);
-        //when
         when(responseEntity.getStatusCode()).thenReturn(HttpStatus.valueOf(httpResponseCode));
-        dMaaPProducerReactiveHttpClient = mock(DMaaPProducerReactiveHttpClient.class);
-        when(dMaaPProducerReactiveHttpClient.getDMaaPProducerResponse(any()))
+        dMaaPPublisherReactiveHttpClient = mock(DMaaPPublisherReactiveHttpClient.class);
+        when(dMaaPPublisherReactiveHttpClient.getDMaaPProducerResponse(any()))
             .thenReturn(Mono.just(responseEntity));
         dmaapPublisherTask = spy(new DmaapPublisherTaskImpl(appConfig));
-        when(dmaapPublisherTask.resolveConfiguration()).thenReturn(dmaapPublisherConfiguration);
-        doReturn(dMaaPProducerReactiveHttpClient).when(dmaapPublisherTask).resolveClient();
+        doReturn(dMaaPPublisherReactiveHttpClient).when(dmaapPublisherTask).resolveClient();
         return responseEntity;
     }
 }

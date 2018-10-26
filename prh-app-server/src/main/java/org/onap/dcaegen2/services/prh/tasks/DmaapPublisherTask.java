@@ -20,27 +20,20 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.service.producer.DMaaPProducerReactiveHttpClient;
+import org.onap.dcaegen2.services.prh.service.producer.DMaaPPublisherReactiveHttpClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 import reactor.core.publisher.Mono;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
-abstract class DmaapPublisherTask {
+interface DmaapPublisherTask {
 
-    abstract Mono<ResponseEntity<String>> publish(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException;
+    Mono<ResponseEntity<String>> execute(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException;
 
-    abstract DMaaPProducerReactiveHttpClient resolveClient();
+    Mono<ResponseEntity<String>> publish(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException;
 
-    protected abstract DmaapPublisherConfiguration resolveConfiguration();
-
-    protected abstract Mono<ResponseEntity<String>> execute(ConsumerDmaapModel consumerDmaapModel)
-        throws PrhTaskException;
-
-    abstract RestTemplate buildWebClient();
+    DMaaPPublisherReactiveHttpClient resolveClient();
 }

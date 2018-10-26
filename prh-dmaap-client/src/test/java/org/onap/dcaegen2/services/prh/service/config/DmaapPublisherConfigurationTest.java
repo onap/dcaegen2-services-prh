@@ -20,7 +20,8 @@
 
 package org.onap.dcaegen2.services.prh.service.config;
 
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.config.ImmutableDmaapPublisherConfiguration;
@@ -40,25 +41,35 @@ class DmaapPublisherConfigurationTest {
         String dmaapUserName = "admin";
         String dmaapUserPassword = "admin";
         String dmaapContentType = "application/json";
+        String keyFile = "keyFile";
+        String trustStore = "trustStore";
+        String trustStorePass = "trustPass";
+        String keyStore = "keyStore";
+        String keyStorePass = "keyPass";
+        Boolean enableDmaapCertAuth = true;
 
         // When
         configuration = new ImmutableDmaapPublisherConfiguration.Builder()
-            .dmaapHostName(dmaapHostName)
-            .dmaapPortNumber(dmaapPortNumber)
-            .dmaapTopicName(dmaapTopicName)
-            .dmaapProtocol(dmaapProtocol)
-            .dmaapUserName(dmaapUserName)
-            .dmaapUserPassword(dmaapUserPassword)
-            .dmaapContentType(dmaapContentType)
-            .build();
+                .dmaapHostName(dmaapHostName)
+                .dmaapPortNumber(dmaapPortNumber)
+                .dmaapTopicName(dmaapTopicName)
+                .dmaapProtocol(dmaapProtocol)
+                .dmaapUserName(dmaapUserName)
+                .dmaapUserPassword(dmaapUserPassword)
+                .dmaapContentType(dmaapContentType)
+                .keyFile(keyFile)
+                .trustStore(trustStore)
+                .trustStorePassword(trustStorePass)
+                .keyStore(keyStore)
+                .keyStorePassword(keyStorePass)
+                .enableDmaapCertAuth(enableDmaapCertAuth)
+                .build();
 
         // Then
-        Assertions.assertNotNull(configuration);
-        Assertions.assertEquals(dmaapHostName, configuration.dmaapHostName());
-        Assertions.assertEquals(dmaapPortNumber, configuration.dmaapPortNumber());
-        Assertions.assertEquals(dmaapTopicName, configuration.dmaapTopicName());
-        Assertions.assertEquals(dmaapProtocol, configuration.dmaapProtocol());
-        Assertions.assertEquals(dmaapUserName, configuration.dmaapUserName());
-        Assertions.assertEquals(dmaapUserPassword, configuration.dmaapUserPassword());
+        assertEquals("DmaapPublisherConfiguration{dmaapHostName=localhost, dmaapPortNumber=2222, "
+                + "dmaapTopicName=temp, dmaapProtocol=http, dmaapUserName=admin, dmaapUserPassword=admin, "
+                + "dmaapContentType=application/json, keyFile=keyFile, trustStore=trustStore, "
+                + "trustStorePassword=trustPass, keyStore=keyStore, keyStorePassword=keyPass, "
+                + "enableDmaapCertAuth=true}", configuration.toString());
     }
 }

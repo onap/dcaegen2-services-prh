@@ -26,8 +26,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.TypeAdapterFactory;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -59,6 +57,7 @@ public abstract class PrhAppConfig implements Config {
     private static final String AAI_CONFIG = "aaiClientConfiguration";
     private static final String DMAAP_PRODUCER = "dmaapProducerConfiguration";
     private static final String DMAAP_CONSUMER = "dmaapConsumerConfiguration";
+    private static final String SECURITY = "security";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PrhAppConfig.class);
 
@@ -92,22 +91,25 @@ public abstract class PrhAppConfig implements Config {
         GsonBuilder gsonBuilder = new GsonBuilder();
         ServiceLoader.load(TypeAdapterFactory.class).forEach(gsonBuilder::registerTypeAdapterFactory);
         JsonParser parser = new JsonParser();
-        JsonObject jsonObject;
 
         try (InputStream inputStream = resourceFile.getInputStream()) {
             JsonElement rootElement = getJsonElement(parser, inputStream);
             if (rootElement.isJsonObject()) {
-                jsonObject = rootElement.getAsJsonObject();
+                JsonObject jsonObject = concatenateJsonObjects(
+                        rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(AAI).getAsJsonObject(AAI_CONFIG),
+                        rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(SECURITY));
                 aaiClientConfiguration = deserializeType(gsonBuilder,
-                    jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(AAI).getAsJsonObject(AAI_CONFIG),
+                        jsonObject,
                     AaiClientConfiguration.class);
-
                 dmaapConsumerConfiguration = deserializeType(gsonBuilder,
-                    jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(DMAAP).getAsJsonObject(DMAAP_CONSUMER),
+                    concatenateJsonObjects(
+                        rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(DMAAP).getAsJsonObject(DMAAP_CONSUMER),
+                        rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(SECURITY)),
                     DmaapConsumerConfiguration.class);
-
                 dmaapPublisherConfiguration = deserializeType(gsonBuilder,
-                    jsonObject.getAsJsonObject(CONFIG).getAsJsonObject(DMAAP).getAsJsonObject(DMAAP_PRODUCER),
+                    concatenateJsonObjects(
+                        rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(DMAAP).getAsJsonObject(DMAAP_PRODUCER),
+                        rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(SECURITY)),
                     DmaapPublisherConfiguration.class);
             }
         } catch (IOException e) {
@@ -121,6 +123,12 @@ public abstract class PrhAppConfig implements Config {
         return parser.parse(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
     }
 
+    private JsonObject concatenateJsonObjects(JsonObject target, JsonObject source) {
+        source.entrySet()
+            .forEach(entry -> target.add(entry.getKey(), entry.getValue()));
+        return target;
+    }
+
     private <T> T deserializeType(@NotNull GsonBuilder gsonBuilder, @NotNull JsonObject jsonObject,
         @NotNull Class<T> type) {
         return gsonBuilder.create().fromJson(jsonObject, type);
@@ -130,7 +138,4 @@ public abstract class PrhAppConfig implements Config {
         this.resourceFile = resourceFile;
     }
 
-    InputStream getInputStream(@NotNull String filepath) throws IOException {
-        return new BufferedInputStream(new FileInputStream(filepath));
-    }
 }

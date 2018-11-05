@@ -47,14 +47,14 @@ public class DMaaPConsumerReactiveHttpClient {
     private final String consumerGroup;
     private final String consumerId;
     private final String contentType;
-    private WebClient webClient;
+    private final WebClient webClient;
 
     /**
      * Constructor of DMaaPConsumerReactiveHttpClient.
      *
      * @param consumerConfiguration - DMaaP consumer configuration object
      */
-    public DMaaPConsumerReactiveHttpClient(DmaapConsumerConfiguration consumerConfiguration) {
+    DMaaPConsumerReactiveHttpClient(DmaapConsumerConfiguration consumerConfiguration, WebClient webClient) {
         this.dmaapHostName = consumerConfiguration.dmaapHostName();
         this.dmaapProtocol = consumerConfiguration.dmaapProtocol();
         this.dmaapPortNumber = consumerConfiguration.dmaapPortNumber();
@@ -62,6 +62,7 @@ public class DMaaPConsumerReactiveHttpClient {
         this.consumerGroup = consumerConfiguration.consumerGroup();
         this.consumerId = consumerConfiguration.consumerId();
         this.contentType = consumerConfiguration.dmaapContentType();
+        this.webClient = webClient;
     }
 
     /**
@@ -95,10 +96,6 @@ public class DMaaPConsumerReactiveHttpClient {
         return dmaapTopicName + "/" + consumerGroup + "/" + consumerId;
     }
 
-    public DMaaPConsumerReactiveHttpClient createDMaaPWebClient(WebClient webClient) {
-        this.webClient = webClient;
-        return this;
-    }
 
     URI getUri() {
         return new DefaultUriBuilderFactory().builder().scheme(dmaapProtocol).host(dmaapHostName).port(dmaapPortNumber)

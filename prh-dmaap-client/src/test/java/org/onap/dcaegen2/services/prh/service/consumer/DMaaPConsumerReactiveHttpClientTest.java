@@ -66,12 +66,12 @@ class DMaaPConsumerReactiveHttpClientTest {
         when(consumerConfigurationMock.consumerGroup()).thenReturn("OpenDCAE-c12");
         when(consumerConfigurationMock.consumerId()).thenReturn("c12");
 
-        dmaapConsumerReactiveHttpClient = new DMaaPConsumerReactiveHttpClient(consumerConfigurationMock);
         webClient = spy(WebClient.builder()
             .defaultHeader(HttpHeaders.CONTENT_TYPE, consumerConfigurationMock.dmaapContentType())
             .filter(basicAuthentication(consumerConfigurationMock.dmaapUserName(),
                 consumerConfigurationMock.dmaapUserPassword()))
             .build());
+        dmaapConsumerReactiveHttpClient = new DMaaPConsumerReactiveHttpClient(consumerConfigurationMock, webClient);
         requestHeadersSpec = mock(RequestHeadersUriSpec.class);
         responseSpec = mock(ResponseSpec.class);
     }
@@ -85,7 +85,6 @@ class DMaaPConsumerReactiveHttpClientTest {
         //when
         mockDependantObjects();
         doReturn(expectedResult).when(responseSpec).bodyToMono(String.class);
-        dmaapConsumerReactiveHttpClient.createDMaaPWebClient(webClient);
         Mono<String> response = dmaapConsumerReactiveHttpClient.getDMaaPConsumerResponse();
 
         //then

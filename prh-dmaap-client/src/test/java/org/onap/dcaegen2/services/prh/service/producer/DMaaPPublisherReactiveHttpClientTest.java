@@ -39,8 +39,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import reactor.test.StepVerifier;
 
-
-
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 7/4/18
  */
@@ -48,10 +46,10 @@ import reactor.test.StepVerifier;
 class DMaaPPublisherReactiveHttpClientTest {
 
     private DMaaPPublisherReactiveHttpClient dmaapPublisherReactiveHttpClient;
-
     private DmaapPublisherConfiguration dmaapPublisherConfigurationMock = mock(
-        DmaapPublisherConfiguration.class);
+            DmaapPublisherConfiguration.class);
     private ConsumerDmaapModel consumerDmaapModel = new ConsumerDmaapModelForUnitTest();
+    private RestTemplate restTemplate = mock(RestTemplate.class);
 
 
     @BeforeEach
@@ -63,7 +61,8 @@ class DMaaPPublisherReactiveHttpClientTest {
         when(dmaapPublisherConfigurationMock.dmaapUserPassword()).thenReturn("PRH");
         when(dmaapPublisherConfigurationMock.dmaapContentType()).thenReturn("application/json");
         when(dmaapPublisherConfigurationMock.dmaapTopicName()).thenReturn("unauthenticated.PNF_READY");
-        dmaapPublisherReactiveHttpClient = new DMaaPPublisherReactiveHttpClient(dmaapPublisherConfigurationMock);
+        dmaapPublisherReactiveHttpClient =
+                new DMaaPPublisherReactiveHttpClient(dmaapPublisherConfigurationMock, restTemplate);
 
     }
 
@@ -72,21 +71,19 @@ class DMaaPPublisherReactiveHttpClientTest {
         //given
         int responseSuccess = 200;
         ResponseEntity<String> mockedResponseEntity = mock(ResponseEntity.class);
-        RestTemplate restTemplate = mock(RestTemplate.class);
         //when
         when(mockedResponseEntity.getStatusCode()).thenReturn(HttpStatus.valueOf(responseSuccess));
         doReturn(mockedResponseEntity).when(restTemplate)
-            .exchange(any(URI.class), any(HttpMethod.class), any(HttpEntity.class), (Class<Object>) any());
-        dmaapPublisherReactiveHttpClient.createDMaaPWebClient(restTemplate);
+                .exchange(any(URI.class), any(HttpMethod.class), any(HttpEntity.class), (Class<Object>) any());
 
         //then
         StepVerifier.create(dmaapPublisherReactiveHttpClient.getDMaaPProducerResponse(consumerDmaapModel))
-            .expectSubscription().expectNext(mockedResponseEntity).verifyComplete();
+                .expectSubscription().expectNext(mockedResponseEntity).verifyComplete();
     }
 
     @Test
     void getAppropriateUri_whenPassingCorrectedPathForPnf() {
         Assertions.assertEquals(dmaapPublisherReactiveHttpClient.getUri(),
-            URI.create("https://54.45.33.2:1234/unauthenticated.PNF_READY"));
+                URI.create("https://54.45.33.2:1234/unauthenticated.PNF_READY"));
     }
 }

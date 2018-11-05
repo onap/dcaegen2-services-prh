@@ -50,20 +50,21 @@ public class DMaaPPublisherReactiveHttpClient {
     private final String dmaapProtocol;
     private final String dmaapTopicName;
     private final String dmaapContentType;
-
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     /**
      * Constructor DMaaPPublisherReactiveHttpClient.
      *
      * @param dmaapPublisherConfiguration - DMaaP producer configuration object
      */
-    public DMaaPPublisherReactiveHttpClient(DmaapPublisherConfiguration dmaapPublisherConfiguration) {
+    DMaaPPublisherReactiveHttpClient(DmaapPublisherConfiguration dmaapPublisherConfiguration,
+                                     RestTemplate restTemplate) {
         this.dmaapHostName = dmaapPublisherConfiguration.dmaapHostName();
         this.dmaapProtocol = dmaapPublisherConfiguration.dmaapProtocol();
         this.dmaapPortNumber = dmaapPublisherConfiguration.dmaapPortNumber();
         this.dmaapTopicName = dmaapPublisherConfiguration.dmaapTopicName();
         this.dmaapContentType = dmaapPublisherConfiguration.dmaapContentType();
+        this.restTemplate = restTemplate;
     }
 
     /**
@@ -88,11 +89,6 @@ public class DMaaPPublisherReactiveHttpClient {
         headers.set(HttpHeaders.CONTENT_TYPE, dmaapContentType);
         return headers;
 
-    }
-
-    public DMaaPPublisherReactiveHttpClient createDMaaPWebClient(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-        return this;
     }
 
     URI getUri() {

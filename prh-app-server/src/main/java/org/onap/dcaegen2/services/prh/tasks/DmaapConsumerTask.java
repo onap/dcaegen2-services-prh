@@ -23,7 +23,6 @@ package org.onap.dcaegen2.services.prh.tasks;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.consumer.DMaaPConsumerReactiveHttpClient;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
@@ -33,8 +32,6 @@ interface DmaapConsumerTask {
     void initConfigs();
 
     Flux<ConsumerDmaapModel> execute(String object);
-
-    Flux<ConsumerDmaapModel> consume(Mono<String> message);
 
     DMaaPConsumerReactiveHttpClient resolveClient();
 }

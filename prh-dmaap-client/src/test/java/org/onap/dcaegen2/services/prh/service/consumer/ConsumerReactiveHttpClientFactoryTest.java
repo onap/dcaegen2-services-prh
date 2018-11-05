@@ -18,20 +18,25 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.tasks;
+package org.onap.dcaegen2.services.prh.service.consumer;
 
-import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.service.producer.DMaaPPublisherReactiveHttpClient;
-import org.springframework.http.ResponseEntity;
-import reactor.core.publisher.Mono;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
-/**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
- */
-interface DmaapPublisherTask {
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 
-    Mono<ResponseEntity<String>> execute(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException;
+class ConsumerReactiveHttpClientFactoryTest {
 
-    DMaaPPublisherReactiveHttpClient resolveClient();
+    private DmaapConsumerConfiguration dmaapConsumerConfiguration = mock(DmaapConsumerConfiguration.class);
+    private DMaaPReactiveWebClient reactiveWebClient = mock(DMaaPReactiveWebClient.class);
+    private ConsumerReactiveHttpClientFactory httpClientFactory =
+            new ConsumerReactiveHttpClientFactory(reactiveWebClient);
+
+    @Test
+    void create_shouldReturnNotNullFactoryInstance() {
+        Assertions.assertNotNull(httpClientFactory.create(dmaapConsumerConfiguration));
+        verify(reactiveWebClient).build();
+    }
 }

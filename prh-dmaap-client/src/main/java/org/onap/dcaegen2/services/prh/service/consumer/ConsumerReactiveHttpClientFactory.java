@@ -18,20 +18,20 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.tasks;
+package org.onap.dcaegen2.services.prh.service.consumer;
 
-import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.service.producer.DMaaPPublisherReactiveHttpClient;
-import org.springframework.http.ResponseEntity;
-import reactor.core.publisher.Mono;
+import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 
-/**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
- */
-interface DmaapPublisherTask {
+public class ConsumerReactiveHttpClientFactory {
 
-    Mono<ResponseEntity<String>> execute(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException;
+    private final DMaaPReactiveWebClient reactiveWebClient;
 
-    DMaaPPublisherReactiveHttpClient resolveClient();
+    public ConsumerReactiveHttpClientFactory(DMaaPReactiveWebClient reactiveWebClient) {
+        this.reactiveWebClient = reactiveWebClient;
+    }
+
+    public DMaaPConsumerReactiveHttpClient create(DmaapConsumerConfiguration consumerConfiguration) {
+        return new DMaaPConsumerReactiveHttpClient(consumerConfiguration, reactiveWebClient.build());
+    }
+
 }

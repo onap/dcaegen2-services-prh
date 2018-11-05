@@ -22,15 +22,15 @@ package org.onap.dcaegen2.services.prh.tasks;
 
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.service.DMaaPReactiveWebClient;
 import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
+import org.onap.dcaegen2.services.prh.service.consumer.ConsumerReactiveHttpClientFactory;
 import org.onap.dcaegen2.services.prh.service.consumer.DMaaPConsumerReactiveHttpClient;
+import org.onap.dcaegen2.services.prh.service.consumer.DMaaPReactiveWebClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
@@ -41,18 +41,20 @@ public class DmaapConsumerTaskImpl implements DmaapConsumerTask {
     private static final Logger LOGGER = LoggerFactory.getLogger(DmaapConsumerTaskImpl.class);
     private final Config config;
     private final DmaapConsumerJsonParser dmaapConsumerJsonParser;
-    private final DMaaPReactiveWebClient dmaapReactiveWebClient;
+    private final ConsumerReactiveHttpClientFactory httpClientFactory;
 
     @Autowired
     public DmaapConsumerTaskImpl(Config config) {
-        this(config, new DmaapConsumerJsonParser(), new DMaaPReactiveWebClient());
+        this(config, new DmaapConsumerJsonParser(),
+                new ConsumerReactiveHttpClientFactory(new DMaaPReactiveWebClient()));
     }
 
-    DmaapConsumerTaskImpl(Config prhAppConfig, DmaapConsumerJsonParser dmaapConsumerJsonParser,
-                          DMaaPReactiveWebClient dmaapReactiveWebClient) {
+    DmaapConsumerTaskImpl(Config prhAppConfig,
+                          DmaapConsumerJsonParser dmaapConsumerJsonParser,
+                          ConsumerReactiveHttpClientFactory httpClientFactory) {
         this.config = prhAppConfig;
         this.dmaapConsumerJsonParser = dmaapConsumerJsonParser;
-        this.dmaapReactiveWebClient = dmaapReactiveWebClient;
+        this.httpClientFactory = httpClientFactory;
     }
 
     @Override
@@ -64,17 +66,11 @@ public class DmaapConsumerTaskImpl implements DmaapConsumerTask {
     public Flux<ConsumerDmaapModel> execute(String object) {
         DMaaPConsumerReactiveHttpClient dmaaPConsumerReactiveHttpClient = resolveClient();
         LOGGER.debug("Method called with arg {}", object);
-        return consume(dmaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse());
-    }
-
-    @Override
-    public Flux<ConsumerDmaapModel> consume(Mono<String> message) {
-        return dmaapConsumerJsonParser.getJsonObject(message);
+        return dmaapConsumerJsonParser.getJsonObject(dmaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse());
     }
 
     @Override
     public DMaaPConsumerReactiveHttpClient resolveClient() {
-        return new DMaaPConsumerReactiveHttpClient(
-                config.getDmaapConsumerConfiguration()).createDMaaPWebClient(dmaapReactiveWebClient.build());
+        return httpClientFactory.create(config.getDmaapConsumerConfiguration());
     }
 }

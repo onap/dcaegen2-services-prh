@@ -41,6 +41,7 @@ import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.producer.DMaaPPublisherReactiveHttpClient;
+import org.onap.dcaegen2.services.prh.service.producer.PublisherReactiveHttpClientFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
@@ -119,8 +120,9 @@ class DmaapPublisherTaskImplTest {
         dMaaPPublisherReactiveHttpClient = mock(DMaaPPublisherReactiveHttpClient.class);
         when(dMaaPPublisherReactiveHttpClient.getDMaaPProducerResponse(any()))
             .thenReturn(Mono.just(responseEntity));
-        dmaapPublisherTask = spy(new DmaapPublisherTaskImpl(appConfig));
-        doReturn(dMaaPPublisherReactiveHttpClient).when(dmaapPublisherTask).resolveClient();
+        PublisherReactiveHttpClientFactory httpClientFactory = mock(PublisherReactiveHttpClientFactory.class);
+        doReturn(dMaaPPublisherReactiveHttpClient).when(httpClientFactory).create(dmaapPublisherConfiguration);
+        dmaapPublisherTask = new DmaapPublisherTaskImpl(appConfig, httpClientFactory);
         return responseEntity;
     }
 }

@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.service;
+package org.onap.dcaegen2.services.prh.service.consumer;
 
 import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.RESPONSE_CODE;
 import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.SERVICE_NAME;

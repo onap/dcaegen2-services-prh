@@ -36,8 +36,8 @@ import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.service.DMaaPReactiveWebClient;
 import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
+import org.onap.dcaegen2.services.prh.service.consumer.ConsumerReactiveHttpClientFactory;
 import org.onap.dcaegen2.services.prh.service.consumer.DMaaPConsumerReactiveHttpClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -120,9 +120,8 @@ class DmaapConsumerTaskImplTest {
         dMaaPConsumerReactiveHttpClient = mock(DMaaPConsumerReactiveHttpClient.class);
         when(dMaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse()).thenReturn(Mono.just(message.orElse("")));
         when(appConfig.getDmaapConsumerConfiguration()).thenReturn(dmaapConsumerConfiguration);
-        DMaaPReactiveWebClient dmaapReactiveWebClient = mock(DMaaPReactiveWebClient.class);
-        dmaapConsumerTask =
-                spy(new DmaapConsumerTaskImpl(appConfig, new DmaapConsumerJsonParser(), dmaapReactiveWebClient));
-        doReturn(dMaaPConsumerReactiveHttpClient).when(dmaapConsumerTask).resolveClient();
+        ConsumerReactiveHttpClientFactory httpClientFactory = mock(ConsumerReactiveHttpClientFactory.class);
+        doReturn(dMaaPConsumerReactiveHttpClient).when(httpClientFactory).create(dmaapConsumerConfiguration);
+        dmaapConsumerTask = new DmaapConsumerTaskImpl(appConfig, new DmaapConsumerJsonParser(), httpClientFactory);
     }
 }

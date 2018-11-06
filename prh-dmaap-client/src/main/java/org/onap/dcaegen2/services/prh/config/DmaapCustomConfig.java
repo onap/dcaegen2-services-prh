@@ -50,19 +50,16 @@ public interface DmaapCustomConfig extends Serializable {
     String dmaapContentType();
 
     @Value.Parameter
-    String keyFile();
+    String trustStorePath();
 
     @Value.Parameter
-    String trustStore();
+    String trustStorePasswordPath();
 
     @Value.Parameter
-    String trustStorePassword();
+    String keyStorePath();
 
     @Value.Parameter
-    String keyStore();
-
-    @Value.Parameter
-    String keyStorePassword();
+    String keyStorePasswordPath();
 
     @Value.Parameter
     Boolean enableDmaapCertAuth();
@@ -83,15 +80,13 @@ public interface DmaapCustomConfig extends Serializable {
 
         B dmaapContentType(String dmaapContentType);
 
-        B keyFile(String keyFile);
+        B trustStorePath(String trustStorePath);
 
-        B trustStore(String trustStore);
+        B trustStorePasswordPath(String trustStorePasswordPath);
 
-        B trustStorePassword(String trustStorePass);
+        B keyStorePath(String keyStore);
 
-        B keyStore(String keyStore);
-
-        B keyStorePassword(String keyStorePass);
+        B keyStorePasswordPath(String keyStorePass);
 
         B enableDmaapCertAuth(Boolean enableDmaapCertAuth);
 

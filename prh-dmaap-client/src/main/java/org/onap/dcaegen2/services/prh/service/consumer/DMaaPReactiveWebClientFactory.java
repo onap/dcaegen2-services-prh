@@ -74,8 +74,8 @@ public class DMaaPReactiveWebClientFactory {
     private SslContext createSslContext(DmaapConsumerConfiguration consumerConfiguration) throws SSLException {
         if (consumerConfiguration.enableDmaapCertAuth()) {
             return sslFactory.createSecureContext(
-                    consumerConfiguration.keyStore(), consumerConfiguration.keyStorePassword(),
-                    consumerConfiguration.trustStore(), consumerConfiguration.trustStorePassword()
+                    consumerConfiguration.keyStorePath(), consumerConfiguration.keyStorePasswordPath(),
+                    consumerConfiguration.trustStorePath(), consumerConfiguration.trustStorePasswordPath()
             );
         }
         return sslFactory.createInsecureContext();

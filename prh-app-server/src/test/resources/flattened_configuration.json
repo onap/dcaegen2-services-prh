@@ -25,11 +25,10 @@
   "aai.aaiClientConfiguration.aaiProtocol": "https",
   "dmaap.dmaapProducerConfiguration.dmaapUserName": "admin",
   "dmaap.dmaapProducerConfiguration.dmaapUserPassword": "admin",
-  "security.keyFile": "/opt/app/prh/local/org.onap.prh.keyfile",
-  "security.trustStore": "/opt/app/prh/local/org.onap.prh.trust.jks",
-  "security.trustStorePassword": "change_it",
-  "security.keyStore": "/opt/app/prh/local/org.onap.prh.p12",
-  "security.keyStorePassword": "change_it",
+  "security.trustStorePath": "/opt/app/prh/local/org.onap.prh.trust.jks",
+  "security.trustStorePasswordPath": "change_it",
+  "security.keyStorePath": "/opt/app/prh/local/org.onap.prh.p12",
+  "security.keyStorePasswordPath": "change_it",
   "security.enableAaiCertAuth": false,
   "security.enableDmaapCertAuth": false
 }

@@ -48,10 +48,10 @@ public class AaiReactiveWebClient {
     private final String aaiUserPassword;
     private final Map<String, String> aaiHeaders;
     private final Boolean enableAaiCertAuth;
-    private final String trustStore;
-    private final String trustStorePassword;
-    private final String keyStore;
-    private final String keyStorePassword;
+    private final String trustStorePath;
+    private final String trustStorePasswordPath;
+    private final String keyStorePath;
+    private final String keyStorePasswordPath;
     private final SslFactory sslFactory;
 
     /**
@@ -64,10 +64,10 @@ public class AaiReactiveWebClient {
         this.aaiUserName = configuration.aaiUserName();
         this.aaiUserPassword = configuration.aaiUserPassword();
         this.aaiHeaders = configuration.aaiHeaders();
-        this.trustStore = configuration.trustStore();
-        this.trustStorePassword = configuration.trustStorePassword();
-        this.keyStore = configuration.keyStore();
-        this.keyStorePassword = configuration.keyStorePassword();
+        this.trustStorePath = configuration.trustStorePath();
+        this.trustStorePasswordPath = configuration.trustStorePasswordPath();
+        this.keyStorePath = configuration.keyStorePath();
+        this.keyStorePasswordPath = configuration.keyStorePasswordPath();
         this.enableAaiCertAuth = configuration.enableAaiCertAuth();
         this.sslFactory = sslFactory;
     }
@@ -97,10 +97,10 @@ public class AaiReactiveWebClient {
     private SslContext createSslContext() throws SSLException {
         if (enableAaiCertAuth) {
             return sslFactory.createSecureContext(
-                keyStore,
-                keyStorePassword,
-                trustStore,
-                trustStorePassword
+                keyStorePath,
+                keyStorePasswordPath,
+                trustStorePath,
+                trustStorePasswordPath
             );
         }
         return sslFactory.createInsecureContext();

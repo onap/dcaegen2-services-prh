@@ -44,11 +44,10 @@ class DmaapConsumerConfigurationTest {
         String consumerGroup = "other";
         Integer timeoutMs = 1000;
         Integer messageLimit = 1000;
-        String keyFile = "keyFile";
-        String trustStore = "trustStore";
-        String trustStorePass = "trustPass";
-        String keyStore = "keyStore";
-        String keyStorePass = "keyPass";
+        String trustStorePath = "trustStorePath";
+        String trustStorePasswordPath = "trustStorePasswordPath";
+        String keyStorePath = "keyStorePath";
+        String keyStorePasswordPath = "keyStorePasswordPath";
         Boolean enableDmaapCertAuth = true;
 
         // When
@@ -64,11 +63,10 @@ class DmaapConsumerConfigurationTest {
                 .consumerGroup(consumerGroup)
                 .timeoutMs(timeoutMs)
                 .messageLimit(messageLimit)
-                .keyFile(keyFile)
-                .trustStore(trustStore)
-                .trustStorePassword(trustStorePass)
-                .keyStore(keyStore)
-                .keyStorePassword(keyStorePass)
+                .trustStorePath(trustStorePath)
+                .trustStorePasswordPath(trustStorePasswordPath)
+                .keyStorePath(keyStorePath)
+                .keyStorePasswordPath(keyStorePasswordPath)
                 .enableDmaapCertAuth(enableDmaapCertAuth)
                 .build();
 
@@ -76,9 +74,10 @@ class DmaapConsumerConfigurationTest {
         assertEquals("DmaapConsumerConfiguration{"
                 + "consumerId=1, consumerGroup=other, timeoutMs=1000, messageLimit=1000, dmaapHostName=localhost, "
                 + "dmaapPortNumber=2222, dmaapTopicName=temp, dmaapProtocol=http, dmaapUserName=admin, "
-                + "dmaapUserPassword=admin, dmaapContentType=application/json, keyFile=keyFile, "
-                + "trustStore=trustStore, trustStorePassword=trustPass, keyStore=keyStore, "
-                + "keyStorePassword=keyPass, enableDmaapCertAuth=true}", configuration.toString());
+                + "dmaapUserPassword=admin, dmaapContentType=application/json, "
+                + "trustStorePath=trustStorePath, trustStorePasswordPath=trustStorePasswordPath, "
+                + "keyStorePath=keyStorePath, keyStorePasswordPath=keyStorePasswordPath, enableDmaapCertAuth=true}",
+                configuration.toString());
 
     }
 }

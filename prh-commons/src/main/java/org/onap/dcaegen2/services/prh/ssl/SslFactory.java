@@ -38,16 +38,16 @@ public class SslFactory {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SslFactory.class);
 
-    public SslContext createSecureContext(String keyStoreFilename,
-        String keyStorePassword,
-        String trustStoreFilename,
-        String trustStorePassword) throws SSLException {
-        LOGGER.info("Creating secure ssl context for: {} {}", keyStoreFilename, trustStoreFilename);
+    public SslContext createSecureContext(String keyStorePath,
+        String keyStorePasswordPath,
+        String trustStorePath,
+        String trustStorePasswordPath) throws SSLException {
+        LOGGER.info("Creating secure ssl context for: {} {}", keyStorePath, trustStorePath);
         try {
             return SslContextBuilder
                 .forClient()
-                .keyManager(keyManagerFactory(keyStoreFilename, loadPasswordFromFile(keyStorePassword)))
-                .trustManager(trustManagerFactory(trustStoreFilename, loadPasswordFromFile(trustStorePassword)))
+                .keyManager(keyManagerFactory(keyStorePath, loadPasswordFromFile(keyStorePasswordPath)))
+                .trustManager(trustManagerFactory(trustStorePath, loadPasswordFromFile(trustStorePasswordPath)))
                 .build();
         } catch (Exception ex) {
             throw new SSLException(ex);
@@ -62,27 +62,27 @@ public class SslFactory {
             .build();
     }
 
-    private KeyManagerFactory keyManagerFactory(String fileName, String password) throws Exception {
+    private KeyManagerFactory keyManagerFactory(String path, String password) throws Exception {
         KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-        kmf.init(loadKeyStoreFromFile(fileName, password),
+        kmf.init(loadKeyStoreFromFile(path, password),
             password.toCharArray());
         return kmf;
     }
 
-    private TrustManagerFactory trustManagerFactory(String fileName, String password) throws Exception {
+    private TrustManagerFactory trustManagerFactory(String path, String password) throws Exception {
         TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-        tmf.init(loadKeyStoreFromFile(fileName, password));
+        tmf.init(loadKeyStoreFromFile(path, password));
         return tmf;
     }
 
-    private KeyStore loadKeyStoreFromFile(String fileName, String keyStorePassword) throws Exception {
+    private KeyStore loadKeyStoreFromFile(String path, String keyStorePassword) throws Exception {
         KeyStore ks = KeyStore.getInstance("jks");
-        ks.load(getResource(fileName), keyStorePassword.toCharArray());
+        ks.load(getResource(path), keyStorePassword.toCharArray());
         return ks;
     }
 
-    private InputStream getResource(String fileName) throws Exception {
-        return new FileInputStream(fileName);
+    private InputStream getResource(String path) throws Exception {
+        return new FileInputStream(path);
     }
 
     private String loadPasswordFromFile(String path) throws Exception {

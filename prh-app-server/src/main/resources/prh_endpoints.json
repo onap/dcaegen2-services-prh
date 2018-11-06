@@ -44,11 +44,10 @@
       }
     },
     "security": {
-        "keyFile" : "/opt/app/prh/local/org.onap.prh.keyfile",
-        "trustStore" : "change it",
-        "trustStorePassword" : "change it",
-        "keyStore" : "change it",
-        "keyStorePassword" : "change it",
+        "trustStorePath" : "change it",
+        "trustStorePasswordPath" : "change it",
+        "keyStorePath" : "change it",
+        "keyStorePasswordPath" : "change it",
         "enableAaiCertAuth" : "false",
         "enableDmaapCertAuth" : "false"
     }

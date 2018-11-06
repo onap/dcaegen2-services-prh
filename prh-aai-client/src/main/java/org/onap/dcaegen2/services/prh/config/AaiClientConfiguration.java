@@ -63,19 +63,16 @@ public abstract class AaiClientConfiguration implements Serializable {
     public abstract Map<String, String> aaiHeaders();
 
     @Value.Parameter
-    public abstract String keyFile();
+    public abstract String trustStorePath();
 
     @Value.Parameter
-    public abstract String trustStore();
+    public abstract  String trustStorePasswordPath();
 
     @Value.Parameter
-    public abstract  String trustStorePassword();
+    public abstract String keyStorePath();
 
     @Value.Parameter
-    public abstract String keyStore();
-
-    @Value.Parameter
-    public abstract String keyStorePassword();
+    public abstract String keyStorePasswordPath();
 
     @Value.Parameter
     public abstract Boolean enableAaiCertAuth();

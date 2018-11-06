@@ -119,20 +119,17 @@ public class AppConfig extends PrhAppConfig {
     @Value("${aai.aaiClientConfiguration.aaiPnfPath:}")
     public String aaiPnfPath;
 
-    @Value("${security.keyFile:}")
-    public String keyFile;
+    @Value("${security.trustStorePath:}")
+    public String trustStorePath;
 
-    @Value("${security.trustStore:}")
-    public String trustStore;
+    @Value("${security.trustStorePasswordPath:}")
+    public String trustStorePasswordPath;
 
-    @Value("${security.trustStorePassword:}")
-    public String trustStorePassword;
+    @Value("${security.keyStorePath:}")
+    public String keyStorePath;
 
-    @Value("${security.keyStore:}")
-    public String keyStore;
-
-    @Value("${security.keyStorePassword:}")
-    public String keyStorePassword;
+    @Value("${security.keyStorePasswordPath:}")
+    public String keyStorePasswordPath;
 
     @Value("${security.enableAaiCertAuth:}")
     public Boolean enableAaiCertAuth;
@@ -173,21 +170,18 @@ public class AppConfig extends PrhAppConfig {
                 .orElse(dmaapConsumerConfiguration.consumerGroup()))
             .consumerId(Optional.ofNullable(consumerId).filter(isEmpty.negate())
                 .orElse(dmaapConsumerConfiguration.consumerId()))
-            .keyFile(
-                Optional.ofNullable(keyFile).filter(isEmpty.negate())
-                    .orElse(dmaapConsumerConfiguration.keyFile()))
-            .trustStore(
-                Optional.ofNullable(trustStore).filter(isEmpty.negate())
-                    .orElse(dmaapConsumerConfiguration.trustStore()))
-            .trustStorePassword(
-                Optional.ofNullable(trustStorePassword).filter(isEmpty.negate())
-                    .orElse(dmaapConsumerConfiguration.trustStorePassword()))
-            .keyStore(
-                Optional.ofNullable(keyStore).filter(isEmpty.negate())
-                    .orElse(dmaapConsumerConfiguration.keyStore()))
-            .keyStorePassword(
-                Optional.ofNullable(keyStorePassword).filter(isEmpty.negate())
-                    .orElse(dmaapConsumerConfiguration.keyStorePassword()))
+            .trustStorePath(
+                Optional.ofNullable(trustStorePath).filter(isEmpty.negate())
+                    .orElse(dmaapConsumerConfiguration.trustStorePath()))
+            .trustStorePasswordPath(
+                Optional.ofNullable(trustStorePasswordPath).filter(isEmpty.negate())
+                    .orElse(dmaapConsumerConfiguration.trustStorePasswordPath()))
+            .keyStorePath(
+                Optional.ofNullable(keyStorePath).filter(isEmpty.negate())
+                    .orElse(dmaapConsumerConfiguration.keyStorePath()))
+            .keyStorePasswordPath(
+                Optional.ofNullable(keyStorePasswordPath).filter(isEmpty.negate())
+                    .orElse(dmaapConsumerConfiguration.keyStorePasswordPath()))
             .enableDmaapCertAuth(
                 Optional.ofNullable(enableDmaapCertAuth).filter(p -> !p.toString().isEmpty())
                     .orElse(dmaapConsumerConfiguration.enableDmaapCertAuth()))
@@ -215,21 +209,18 @@ public class AppConfig extends PrhAppConfig {
             .aaiPnfPath(
                 Optional.ofNullable(aaiPnfPath).filter(isEmpty.negate()).orElse(aaiClientConfiguration.aaiPnfPath()))
             .aaiHeaders(aaiClientConfiguration.aaiHeaders())
-            .keyFile(
-                Optional.ofNullable(keyFile).filter(isEmpty.negate())
-                    .orElse(aaiClientConfiguration.keyFile()))
-            .trustStore(
-                Optional.ofNullable(trustStore).filter(isEmpty.negate())
-                    .orElse(aaiClientConfiguration.trustStore()))
-            .trustStorePassword(
-                Optional.ofNullable(trustStorePassword).filter(isEmpty.negate())
-                    .orElse(aaiClientConfiguration.trustStorePassword()))
-            .keyStore(
-                Optional.ofNullable(keyStore).filter(isEmpty.negate())
-                    .orElse(aaiClientConfiguration.keyStore()))
-            .keyStorePassword(
-                Optional.ofNullable(keyStorePassword).filter(isEmpty.negate())
-                    .orElse(aaiClientConfiguration.keyStorePassword()))
+            .trustStorePath(
+                Optional.ofNullable(trustStorePath).filter(isEmpty.negate())
+                    .orElse(aaiClientConfiguration.trustStorePath()))
+            .trustStorePasswordPath(
+                Optional.ofNullable(trustStorePasswordPath).filter(isEmpty.negate())
+                    .orElse(aaiClientConfiguration.trustStorePasswordPath()))
+            .keyStorePath(
+                Optional.ofNullable(keyStorePath).filter(isEmpty.negate())
+                    .orElse(aaiClientConfiguration.keyStorePath()))
+            .keyStorePasswordPath(
+                Optional.ofNullable(keyStorePasswordPath).filter(isEmpty.negate())
+                    .orElse(aaiClientConfiguration.keyStorePasswordPath()))
             .enableAaiCertAuth(
                 Optional.ofNullable(enableAaiCertAuth).filter(p -> !p.toString().isEmpty())
                     .orElse(aaiClientConfiguration.enableAaiCertAuth()))
@@ -260,21 +251,18 @@ public class AppConfig extends PrhAppConfig {
             .dmaapUserPassword(
                 Optional.ofNullable(producerDmaapUserPassword).filter(isEmpty.negate())
                     .orElse(dmaapPublisherConfiguration.dmaapUserPassword()))
-            .keyFile(
-                Optional.ofNullable(keyFile).filter(isEmpty.negate())
-                    .orElse(dmaapPublisherConfiguration.keyFile()))
-            .trustStore(
-                Optional.ofNullable(trustStore).filter(isEmpty.negate())
-                    .orElse(dmaapPublisherConfiguration.trustStore()))
-            .trustStorePassword(
-                Optional.ofNullable(trustStorePassword).filter(isEmpty.negate())
-                    .orElse(dmaapPublisherConfiguration.trustStorePassword()))
-            .keyStore(
-                Optional.ofNullable(keyStore).filter(isEmpty.negate())
-                    .orElse(dmaapPublisherConfiguration.keyStore()))
-            .keyStorePassword(
-                Optional.ofNullable(keyStorePassword).filter(isEmpty.negate())
-                    .orElse(dmaapPublisherConfiguration.keyStorePassword()))
+            .trustStorePath(
+                Optional.ofNullable(trustStorePath).filter(isEmpty.negate())
+                    .orElse(dmaapPublisherConfiguration.trustStorePath()))
+            .trustStorePasswordPath(
+                Optional.ofNullable(trustStorePasswordPath).filter(isEmpty.negate())
+                    .orElse(dmaapPublisherConfiguration.trustStorePasswordPath()))
+            .keyStorePath(
+                Optional.ofNullable(keyStorePath).filter(isEmpty.negate())
+                    .orElse(dmaapPublisherConfiguration.keyStorePath()))
+            .keyStorePasswordPath(
+                Optional.ofNullable(keyStorePasswordPath).filter(isEmpty.negate())
+                    .orElse(dmaapPublisherConfiguration.keyStorePasswordPath()))
             .enableDmaapCertAuth(
                 Optional.ofNullable(enableDmaapCertAuth).filter(p -> !p.toString().isEmpty())
                     .orElse(dmaapPublisherConfiguration.enableDmaapCertAuth()))

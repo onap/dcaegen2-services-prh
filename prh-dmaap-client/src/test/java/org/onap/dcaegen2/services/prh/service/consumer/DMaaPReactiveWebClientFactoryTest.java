@@ -77,10 +77,10 @@ class DMaaPReactiveWebClientFactoryTest {
     private DmaapConsumerConfiguration givenDmaapConfigurationWithSslEnabled() {
         DmaapConsumerConfiguration dmaapConsumerConfiguration = mock(DmaapConsumerConfiguration.class);
         when(dmaapConsumerConfiguration.enableDmaapCertAuth()).thenReturn(true);
-        when(dmaapConsumerConfiguration.keyStore()).thenReturn(KEY_STORE);
-        when(dmaapConsumerConfiguration.keyStorePassword()).thenReturn(KEY_STORE_PASS);
-        when(dmaapConsumerConfiguration.trustStore()).thenReturn(TRUST_STORE);
-        when(dmaapConsumerConfiguration.trustStorePassword()).thenReturn(TRUST_STORE_PASS);
+        when(dmaapConsumerConfiguration.keyStorePath()).thenReturn(KEY_STORE);
+        when(dmaapConsumerConfiguration.keyStorePasswordPath()).thenReturn(KEY_STORE_PASS);
+        when(dmaapConsumerConfiguration.trustStorePath()).thenReturn(TRUST_STORE);
+        when(dmaapConsumerConfiguration.trustStorePasswordPath()).thenReturn(TRUST_STORE_PASS);
         return dmaapConsumerConfiguration;
     }
 }

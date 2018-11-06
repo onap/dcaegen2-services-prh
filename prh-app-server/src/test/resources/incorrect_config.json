@@ -45,11 +45,10 @@
       }
     },
     "security": {
-      "keyFile": "/opt/app/prh/local/org.onap.prh.keyfile",
-      "trustStore": "/opt/app/prh/local/org.onap.prh.trust.jks",
-      "trustStorePassword": "change it",
-      "keyStore": "/opt/app/prh/local/org.onap.prh.p12",
-      "keyStorePassword": "change it",
+      "trustStorePath": "/opt/app/prh/local/org.onap.prh.trust.jks",
+      "trustStorePasswordPath": "change it",
+      "keyStorePath": "/opt/app/prh/local/org.onap.prh.p12",
+      "keyStorePasswordPath": "change it",
       "enableAaiCertAuth": "false",
       "enableDmaapCertAuth": "false"
     }

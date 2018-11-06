@@ -33,11 +33,10 @@ import org.onap.dcaegen2.services.prh.config.ImmutableDmaapPublisherConfiguratio
  */
 class CloudConfigParser {
 
-    private static final String SECURITY_KEY_FILE = "security.keyFile";
-    private static final String SECURITY_TRUST_STORE = "security.trustStore";
-    private static final String SECURITY_KEY_STORE = "security.keyStore";
-    private static final String KEY_STORE_PASS = "security.keyStorePassword";
-    private static final String TRUST_STORE_PASS = "security.trustStorePassword";
+    private static final String SECURITY_TRUST_STORE_PATH = "security.trustStorePath";
+    private static final String SECURITY_TRUST_STORE_PASS_PATH = "security.trustStorePasswordPath";
+    private static final String SECURITY_KEY_STORE_PATH = "security.keyStorePath";
+    private static final String SECURITY_KEY_STORE_PASS_PATH = "security.keyStorePasswordPath";
     private final JsonObject jsonObject;
 
     CloudConfigParser(JsonObject jsonObject) {
@@ -53,11 +52,10 @@ class CloudConfigParser {
             .dmaapContentType(jsonObject.get("dmaap.dmaapProducerConfiguration.dmaapContentType").getAsString())
             .dmaapHostName(jsonObject.get("dmaap.dmaapProducerConfiguration.dmaapHostName").getAsString())
             .dmaapUserName(jsonObject.get("dmaap.dmaapProducerConfiguration.dmaapUserName").getAsString())
-            .keyFile(jsonObject.get(SECURITY_KEY_FILE).getAsString())
-            .trustStore(jsonObject.get(SECURITY_TRUST_STORE).getAsString())
-            .trustStorePassword(jsonObject.get(TRUST_STORE_PASS).getAsString())
-            .keyStore(jsonObject.get(SECURITY_KEY_STORE).getAsString())
-            .keyStorePassword(jsonObject.get(KEY_STORE_PASS).getAsString())
+            .trustStorePath(jsonObject.get(SECURITY_TRUST_STORE_PATH).getAsString())
+            .trustStorePasswordPath(jsonObject.get(SECURITY_TRUST_STORE_PASS_PATH).getAsString())
+            .keyStorePath(jsonObject.get(SECURITY_KEY_STORE_PATH).getAsString())
+            .keyStorePasswordPath(jsonObject.get(SECURITY_KEY_STORE_PASS_PATH).getAsString())
             .enableDmaapCertAuth(jsonObject.get("security.enableDmaapCertAuth").getAsBoolean())
             .build();
     }
@@ -73,11 +71,10 @@ class CloudConfigParser {
             .aaiUserPassword(jsonObject.get("aai.aaiClientConfiguration.aaiUserPassword").getAsString())
             .aaiProtocol(jsonObject.get("aai.aaiClientConfiguration.aaiProtocol").getAsString())
             .aaiBasePath(jsonObject.get("aai.aaiClientConfiguration.aaiBasePath").getAsString())
-            .keyFile(jsonObject.get(SECURITY_KEY_FILE).getAsString())
-            .trustStore(jsonObject.get(SECURITY_TRUST_STORE).getAsString())
-            .trustStorePassword(jsonObject.get(TRUST_STORE_PASS).getAsString())
-            .keyStore(jsonObject.get(SECURITY_KEY_STORE).getAsString())
-            .keyStorePassword(jsonObject.get(KEY_STORE_PASS).getAsString())
+            .trustStorePath(jsonObject.get(SECURITY_TRUST_STORE_PATH).getAsString())
+            .trustStorePasswordPath(jsonObject.get(SECURITY_TRUST_STORE_PASS_PATH).getAsString())
+            .keyStorePath(jsonObject.get(SECURITY_KEY_STORE_PATH).getAsString())
+            .keyStorePasswordPath(jsonObject.get(SECURITY_KEY_STORE_PASS_PATH).getAsString())
             .enableAaiCertAuth(jsonObject.get("security.enableAaiCertAuth").getAsBoolean())
             .build();
     }
@@ -95,11 +92,10 @@ class CloudConfigParser {
             .dmaapProtocol(jsonObject.get("dmaap.dmaapConsumerConfiguration.dmaapProtocol").getAsString())
             .consumerId(jsonObject.get("dmaap.dmaapConsumerConfiguration.consumerId").getAsString())
             .consumerGroup(jsonObject.get("dmaap.dmaapConsumerConfiguration.consumerGroup").getAsString())
-            .keyFile(jsonObject.get(SECURITY_KEY_FILE).getAsString())
-            .trustStore(jsonObject.get(SECURITY_TRUST_STORE).getAsString())
-            .trustStorePassword(jsonObject.get(TRUST_STORE_PASS).getAsString())
-            .keyStore(jsonObject.get(SECURITY_KEY_STORE).getAsString())
-            .keyStorePassword(jsonObject.get(KEY_STORE_PASS).getAsString())
+            .trustStorePath(jsonObject.get(SECURITY_TRUST_STORE_PATH).getAsString())
+            .trustStorePasswordPath(jsonObject.get(SECURITY_TRUST_STORE_PASS_PATH).getAsString())
+            .keyStorePath(jsonObject.get(SECURITY_KEY_STORE_PATH).getAsString())
+            .keyStorePasswordPath(jsonObject.get(SECURITY_KEY_STORE_PASS_PATH).getAsString())
             .enableDmaapCertAuth(jsonObject.get("security.enableDmaapCertAuth").getAsBoolean())
             .build();
     }

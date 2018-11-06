@@ -174,16 +174,16 @@ public class AppConfig extends PrhAppConfig {
             .consumerId(Optional.ofNullable(consumerId).filter(isEmpty.negate())
                 .orElse(dmaapConsumerConfiguration.consumerId()))
             .keyFile(
-                Optional.ofNullable(keyFile).filter(p -> !p.isEmpty())
+                Optional.ofNullable(keyFile).filter(isEmpty.negate())
                     .orElse(dmaapConsumerConfiguration.keyFile()))
             .trustStore(
-                Optional.ofNullable(trustStore).filter(p -> !p.isEmpty())
+                Optional.ofNullable(trustStore).filter(isEmpty.negate())
                     .orElse(dmaapConsumerConfiguration.trustStore()))
             .trustStorePassword(
                 Optional.ofNullable(trustStorePassword).filter(isEmpty.negate())
                     .orElse(dmaapConsumerConfiguration.trustStorePassword()))
             .keyStore(
-                Optional.ofNullable(keyStore).filter(p -> !p.isEmpty())
+                Optional.ofNullable(keyStore).filter(isEmpty.negate())
                     .orElse(dmaapConsumerConfiguration.keyStore()))
             .keyStorePassword(
                 Optional.ofNullable(keyStorePassword).filter(isEmpty.negate())
@@ -216,16 +216,16 @@ public class AppConfig extends PrhAppConfig {
                 Optional.ofNullable(aaiPnfPath).filter(isEmpty.negate()).orElse(aaiClientConfiguration.aaiPnfPath()))
             .aaiHeaders(aaiClientConfiguration.aaiHeaders())
             .keyFile(
-                Optional.ofNullable(keyFile).filter(p -> !p.isEmpty())
+                Optional.ofNullable(keyFile).filter(isEmpty.negate())
                     .orElse(aaiClientConfiguration.keyFile()))
             .trustStore(
-                Optional.ofNullable(trustStore).filter(p -> !p.isEmpty())
+                Optional.ofNullable(trustStore).filter(isEmpty.negate())
                     .orElse(aaiClientConfiguration.trustStore()))
             .trustStorePassword(
                 Optional.ofNullable(trustStorePassword).filter(isEmpty.negate())
                     .orElse(aaiClientConfiguration.trustStorePassword()))
             .keyStore(
-                Optional.ofNullable(keyStore).filter(p -> !p.isEmpty())
+                Optional.ofNullable(keyStore).filter(isEmpty.negate())
                     .orElse(aaiClientConfiguration.keyStore()))
             .keyStorePassword(
                 Optional.ofNullable(keyStorePassword).filter(isEmpty.negate())
@@ -261,16 +261,16 @@ public class AppConfig extends PrhAppConfig {
                 Optional.ofNullable(producerDmaapUserPassword).filter(isEmpty.negate())
                     .orElse(dmaapPublisherConfiguration.dmaapUserPassword()))
             .keyFile(
-                Optional.ofNullable(keyFile).filter(p -> !p.isEmpty())
+                Optional.ofNullable(keyFile).filter(isEmpty.negate())
                     .orElse(dmaapPublisherConfiguration.keyFile()))
             .trustStore(
-                Optional.ofNullable(trustStore).filter(p -> !p.isEmpty())
+                Optional.ofNullable(trustStore).filter(isEmpty.negate())
                     .orElse(dmaapPublisherConfiguration.trustStore()))
             .trustStorePassword(
                 Optional.ofNullable(trustStorePassword).filter(isEmpty.negate())
                     .orElse(dmaapPublisherConfiguration.trustStorePassword()))
             .keyStore(
-                Optional.ofNullable(keyStore).filter(p -> !p.isEmpty())
+                Optional.ofNullable(keyStore).filter(isEmpty.negate())
                     .orElse(dmaapPublisherConfiguration.keyStore()))
             .keyStorePassword(
                 Optional.ofNullable(keyStorePassword).filter(isEmpty.negate())

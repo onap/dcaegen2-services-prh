@@ -95,11 +95,10 @@ public abstract class PrhAppConfig implements Config {
         try (InputStream inputStream = resourceFile.getInputStream()) {
             JsonElement rootElement = getJsonElement(parser, inputStream);
             if (rootElement.isJsonObject()) {
-                JsonObject jsonObject = concatenateJsonObjects(
-                        rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(AAI).getAsJsonObject(AAI_CONFIG),
-                        rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(SECURITY));
                 aaiClientConfiguration = deserializeType(gsonBuilder,
-                        jsonObject,
+                    concatenateJsonObjects(
+                        rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(AAI).getAsJsonObject(AAI_CONFIG),
+                        rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(SECURITY)),
                     AaiClientConfiguration.class);
                 dmaapConsumerConfiguration = deserializeType(gsonBuilder,
                     concatenateJsonObjects(

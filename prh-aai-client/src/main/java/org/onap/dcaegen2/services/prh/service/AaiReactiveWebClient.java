@@ -25,11 +25,10 @@ import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.SERVICE_
 import static org.springframework.web.reactive.function.client.ExchangeFilterFunctions.basicAuthentication;
 
 import io.netty.handler.ssl.SslContext;
-import io.netty.handler.ssl.SslContextBuilder;
-import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import java.util.Map;
 import javax.net.ssl.SSLException;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.ssl.SslFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -45,21 +44,32 @@ public class AaiReactiveWebClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AaiReactiveWebClient.class);
 
-    private String aaiUserName;
-    private String aaiUserPassword;
-    private Map<String, String> aaiHeaders;
+    private final String aaiUserName;
+    private final String aaiUserPassword;
+    private final Map<String, String> aaiHeaders;
+    private final Boolean enableAaiCertAuth;
+    private final String trustStore;
+    private final String trustStorePassword;
+    private final String keyStore;
+    private final String keyStorePassword;
+    private final SslFactory sslFactory;
 
     /**
      * Creating AaiReactiveWebClient.
      *
      * @param configuration - configuration object
-     * @return AaiReactiveWebClient
+     * @param sslFactory - factory for ssl setup
      */
-    public AaiReactiveWebClient fromConfiguration(AaiClientConfiguration configuration) {
+    public AaiReactiveWebClient(SslFactory sslFactory, AaiClientConfiguration configuration) {
         this.aaiUserName = configuration.aaiUserName();
         this.aaiUserPassword = configuration.aaiUserPassword();
         this.aaiHeaders = configuration.aaiHeaders();
-        return this;
+        this.trustStore = configuration.trustStore();
+        this.trustStorePassword = configuration.trustStorePassword();
+        this.keyStore = configuration.keyStore();
+        this.keyStorePassword = configuration.keyStorePassword();
+        this.enableAaiCertAuth = configuration.enableAaiCertAuth();
+        this.sslFactory = sslFactory;
     }
 
     /**
@@ -69,12 +79,12 @@ public class AaiReactiveWebClient {
      */
     public WebClient build() throws SSLException {
         LOGGER.debug("Setting ssl context");
-        SslContext sslContext = SslContextBuilder
-            .forClient()
-            .trustManager(InsecureTrustManagerFactory.INSTANCE)
-            .build();
+        
+        SslContext sslContext = createSslContext();
+        
         ClientHttpConnector reactorClientHttpConnector = new ReactorClientHttpConnector(
             HttpClient.create().secure(sslContextSpec -> sslContextSpec.sslContext(sslContext)));
+
         return WebClient.builder()
             .clientConnector(reactorClientHttpConnector)
             .defaultHeaders(httpHeaders -> httpHeaders.setAll(aaiHeaders))
@@ -84,6 +94,18 @@ public class AaiReactiveWebClient {
             .build();
     }
 
+    private SslContext createSslContext() throws SSLException {
+        if (enableAaiCertAuth) {
+            return sslFactory.createSecureContext(
+                keyStore,
+                keyStorePassword,
+                trustStore,
+                trustStorePassword
+            );
+        }
+        return sslFactory.createInsecureContext();
+    }
+    
     private ExchangeFilterFunction logRequest() {
         return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
             MDC.put(SERVICE_NAME, String.valueOf(clientRequest.url()));

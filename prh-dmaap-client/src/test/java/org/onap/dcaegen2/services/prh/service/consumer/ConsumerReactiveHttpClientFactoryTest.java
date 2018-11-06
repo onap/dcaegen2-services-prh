@@ -30,13 +30,13 @@ import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 class ConsumerReactiveHttpClientFactoryTest {
 
     private DmaapConsumerConfiguration dmaapConsumerConfiguration = mock(DmaapConsumerConfiguration.class);
-    private DMaaPReactiveWebClient reactiveWebClient = mock(DMaaPReactiveWebClient.class);
+    private DMaaPReactiveWebClientFactory reactiveWebClientFactory = mock(DMaaPReactiveWebClientFactory.class);
     private ConsumerReactiveHttpClientFactory httpClientFactory =
-            new ConsumerReactiveHttpClientFactory(reactiveWebClient);
+            new ConsumerReactiveHttpClientFactory(reactiveWebClientFactory);
 
     @Test
-    void create_shouldReturnNotNullFactoryInstance() {
+    void create_shouldReturnNotNullFactoryInstance() throws Exception {
         Assertions.assertNotNull(httpClientFactory.create(dmaapConsumerConfiguration));
-        verify(reactiveWebClient).build();
+        verify(reactiveWebClientFactory).build(dmaapConsumerConfiguration);
     }
 }

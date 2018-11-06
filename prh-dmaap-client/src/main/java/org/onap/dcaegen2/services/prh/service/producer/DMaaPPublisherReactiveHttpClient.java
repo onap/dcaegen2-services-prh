@@ -29,6 +29,8 @@ import java.net.URI;
 import java.util.UUID;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -45,6 +47,7 @@ import reactor.core.publisher.Mono;
  */
 public class DMaaPPublisherReactiveHttpClient {
 
+    private final Logger logger = LoggerFactory.getLogger(DMaaPPublisherReactiveHttpClient.class);
     private final String dmaapHostName;
     private final Integer dmaapPortNumber;
     private final String dmaapProtocol;
@@ -77,6 +80,7 @@ public class DMaaPPublisherReactiveHttpClient {
     public Mono<ResponseEntity<String>> getDMaaPProducerResponse(ConsumerDmaapModel consumerDmaapModelMono) {
         return Mono.defer(() -> {
             HttpEntity<String> request = new HttpEntity<>(createJsonBody(consumerDmaapModelMono), getAllHeaders());
+            logger.info("Request: {} {}", getUri(), request);
             return Mono.just(restTemplate.exchange(getUri(), HttpMethod.POST, request, String.class));
 
         });

@@ -127,8 +127,16 @@ public class ScheduledTasks {
             MDC.put(INSTANCE_UUID, UUID.randomUUID().toString());
             logger.info(INVOKE, "Init configs");
             dmaapConsumerTask.initConfigs();
-            return dmaapConsumerTask.execute("");
+            return consumeFromDMaaP();
         });
+    }
+
+    private Flux<ConsumerDmaapModel> consumeFromDMaaP() {
+        try {
+            return dmaapConsumerTask.execute("");
+        } catch (SSLException e) {
+            return Flux.error(e);
+        }
     }
 
     private Mono<ConsumerDmaapModel> publishToAaiConfiguration(ConsumerDmaapModel monoDMaaPModel) {

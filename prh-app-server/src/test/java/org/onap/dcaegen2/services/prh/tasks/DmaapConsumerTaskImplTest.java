@@ -82,7 +82,7 @@ class DmaapConsumerTaskImplTest {
     }
 
     @Test
-    void whenPassedObjectDoesntFit_DoesNotThrowPrhTaskException() {
+    void whenPassedObjectDoesntFit_DoesNotThrowPrhTaskException() throws Exception {
         //given
         prepareMocksForDmaapConsumer(Optional.empty());
 
@@ -95,7 +95,7 @@ class DmaapConsumerTaskImplTest {
     }
 
     @Test
-    void whenPassedObjectFits_ReturnsCorrectResponse() {
+    void whenPassedObjectFits_ReturnsCorrectResponse() throws Exception {
         //given
         prepareMocksForDmaapConsumer(Optional.of(message));
 
@@ -116,7 +116,7 @@ class DmaapConsumerTaskImplTest {
         verify(appConfig).initFileStreamReader();
     }
 
-    private void prepareMocksForDmaapConsumer(Optional<String> message) {
+    private void prepareMocksForDmaapConsumer(Optional<String> message) throws Exception {
         dMaaPConsumerReactiveHttpClient = mock(DMaaPConsumerReactiveHttpClient.class);
         when(dMaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse()).thenReturn(Mono.just(message.orElse("")));
         when(appConfig.getDmaapConsumerConfiguration()).thenReturn(dmaapConsumerConfiguration);

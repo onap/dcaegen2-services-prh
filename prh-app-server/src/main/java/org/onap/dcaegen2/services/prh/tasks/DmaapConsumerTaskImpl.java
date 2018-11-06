@@ -20,17 +20,19 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
+import javax.net.ssl.SSLException;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
 import org.onap.dcaegen2.services.prh.service.consumer.ConsumerReactiveHttpClientFactory;
 import org.onap.dcaegen2.services.prh.service.consumer.DMaaPConsumerReactiveHttpClient;
-import org.onap.dcaegen2.services.prh.service.consumer.DMaaPReactiveWebClient;
+import org.onap.dcaegen2.services.prh.service.consumer.DMaaPReactiveWebClientFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
+
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
@@ -46,7 +48,7 @@ public class DmaapConsumerTaskImpl implements DmaapConsumerTask {
     @Autowired
     public DmaapConsumerTaskImpl(Config config) {
         this(config, new DmaapConsumerJsonParser(),
-                new ConsumerReactiveHttpClientFactory(new DMaaPReactiveWebClient()));
+                new ConsumerReactiveHttpClientFactory(new DMaaPReactiveWebClientFactory()));
     }
 
     DmaapConsumerTaskImpl(Config prhAppConfig,
@@ -63,14 +65,14 @@ public class DmaapConsumerTaskImpl implements DmaapConsumerTask {
     }
 
     @Override
-    public Flux<ConsumerDmaapModel> execute(String object) {
+    public Flux<ConsumerDmaapModel> execute(String object) throws SSLException {
         DMaaPConsumerReactiveHttpClient dmaaPConsumerReactiveHttpClient = resolveClient();
         LOGGER.debug("Method called with arg {}", object);
         return dmaapConsumerJsonParser.getJsonObject(dmaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse());
     }
 
     @Override
-    public DMaaPConsumerReactiveHttpClient resolveClient() {
+    public DMaaPConsumerReactiveHttpClient resolveClient() throws SSLException {
         return httpClientFactory.create(config.getDmaapConsumerConfiguration());
     }
 }

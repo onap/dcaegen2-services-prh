@@ -23,30 +23,62 @@ package org.onap.dcaegen2.services.prh.service.consumer;
 import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.RESPONSE_CODE;
 import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.SERVICE_NAME;
 
+import io.netty.handler.ssl.SslContext;
+import javax.net.ssl.SSLException;
+import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
+import org.onap.dcaegen2.services.prh.ssl.SslFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.http.client.reactive.ClientHttpConnector;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.netty.http.client.HttpClient;
+
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 7/4/18
  */
-public class DMaaPReactiveWebClient {
+public class DMaaPReactiveWebClientFactory {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private final SslFactory sslFactory;
+
+    public DMaaPReactiveWebClientFactory() {
+        this(new SslFactory());
+    }
+
+    DMaaPReactiveWebClientFactory(SslFactory sslFactory) {
+        this.sslFactory = sslFactory;
+    }
 
     /**
      * Construct Reactive WebClient with appropriate settings.
      *
      * @return WebClient
      */
-    public WebClient build() {
+    public WebClient build(DmaapConsumerConfiguration consumerConfiguration) throws SSLException {
+        SslContext sslContext = createSslContext(consumerConfiguration);
+        ClientHttpConnector reactorClientHttpConnector = new ReactorClientHttpConnector(
+                HttpClient.create().secure(sslContextSpec -> sslContextSpec.sslContext(sslContext)));
         return WebClient.builder()
-            .filter(logRequest())
-            .filter(logResponse())
-            .build();
+                .clientConnector(reactorClientHttpConnector)
+                .filter(logRequest())
+                .filter(logResponse())
+                .build();
+    }
+
+    private SslContext createSslContext(DmaapConsumerConfiguration consumerConfiguration) throws SSLException {
+        if (consumerConfiguration.enableDmaapCertAuth()) {
+            return sslFactory.createSecureContext(
+                    consumerConfiguration.keyStore(), consumerConfiguration.keyStorePassword(),
+                    consumerConfiguration.trustStore(), consumerConfiguration.trustStorePassword()
+            );
+        }
+        return sslFactory.createInsecureContext();
     }
 
     private ExchangeFilterFunction logResponse() {

@@ -20,18 +20,21 @@
 
 package org.onap.dcaegen2.services.prh.service.consumer;
 
+import javax.net.ssl.SSLException;
 import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 
 public class ConsumerReactiveHttpClientFactory {
 
-    private final DMaaPReactiveWebClient reactiveWebClient;
+    private final DMaaPReactiveWebClientFactory reactiveWebClient;
 
-    public ConsumerReactiveHttpClientFactory(DMaaPReactiveWebClient reactiveWebClient) {
+    public ConsumerReactiveHttpClientFactory(DMaaPReactiveWebClientFactory reactiveWebClient) {
         this.reactiveWebClient = reactiveWebClient;
     }
 
-    public DMaaPConsumerReactiveHttpClient create(DmaapConsumerConfiguration consumerConfiguration) {
-        return new DMaaPConsumerReactiveHttpClient(consumerConfiguration, reactiveWebClient.build());
+    public DMaaPConsumerReactiveHttpClient create(DmaapConsumerConfiguration consumerConfiguration)
+            throws SSLException {
+        return new DMaaPConsumerReactiveHttpClient(consumerConfiguration,
+                reactiveWebClient.build(consumerConfiguration));
     }
 
 }

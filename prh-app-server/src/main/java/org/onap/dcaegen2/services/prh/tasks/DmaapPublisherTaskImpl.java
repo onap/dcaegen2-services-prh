@@ -24,6 +24,7 @@ import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.producer.DMaaPPublisherReactiveHttpClient;
+import org.onap.dcaegen2.services.prh.service.producer.DmaaPRestTemplateFactory;
 import org.onap.dcaegen2.services.prh.service.producer.PublisherReactiveHttpClientFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +45,7 @@ public class DmaapPublisherTaskImpl implements DmaapPublisherTask {
 
     @Autowired
     public DmaapPublisherTaskImpl(Config config) {
-        this(config, new PublisherReactiveHttpClientFactory());
+        this(config, new PublisherReactiveHttpClientFactory(new DmaaPRestTemplateFactory()));
     }
 
     DmaapPublisherTaskImpl(Config config, PublisherReactiveHttpClientFactory httpClientFactory) {

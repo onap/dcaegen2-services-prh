@@ -29,8 +29,10 @@ import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 
 class PublisherReactiveHttpClientFactoryTest {
 
+    private DmaaPRestTemplateFactory restTemplateFactory = mock(DmaaPRestTemplateFactory.class);
     private DmaapPublisherConfiguration dmaapPublisherConfiguration = mock(DmaapPublisherConfiguration.class);
-    private PublisherReactiveHttpClientFactory httpClientFactory = new PublisherReactiveHttpClientFactory();
+    private PublisherReactiveHttpClientFactory httpClientFactory =
+            new PublisherReactiveHttpClientFactory(restTemplateFactory);
 
     @Test
     void create_shouldReturnNotNullFactoryInstance() {

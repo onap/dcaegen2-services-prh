@@ -22,18 +22,22 @@ package org.onap.dcaegen2.services.prh.service.producer;
 
 import static org.mockito.Mockito.mock;
 
+import javax.net.ssl.SSLException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 
 
+
 class PublisherReactiveHttpClientFactoryTest {
 
+    private DmaaPRestTemplateFactory restTemplateFactory = mock(DmaaPRestTemplateFactory.class);
     private DmaapPublisherConfiguration dmaapPublisherConfiguration = mock(DmaapPublisherConfiguration.class);
-    private PublisherReactiveHttpClientFactory httpClientFactory = new PublisherReactiveHttpClientFactory();
+    private PublisherReactiveHttpClientFactory httpClientFactory =
+            new PublisherReactiveHttpClientFactory(restTemplateFactory);
 
     @Test
-    void create_shouldReturnNotNullFactoryInstance() {
+    void create_shouldReturnNotNullFactoryInstance() throws SSLException {
         Assertions.assertNotNull(httpClientFactory.create(dmaapPublisherConfiguration));
     }
 }

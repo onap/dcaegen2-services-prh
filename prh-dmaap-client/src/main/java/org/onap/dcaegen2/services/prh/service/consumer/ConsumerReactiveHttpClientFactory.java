@@ -25,16 +25,16 @@ import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
 
 public class ConsumerReactiveHttpClientFactory {
 
-    private final DMaaPReactiveWebClientFactory reactiveWebClient;
+    private final DMaaPReactiveWebClientFactory reactiveWebClientFactory;
 
-    public ConsumerReactiveHttpClientFactory(DMaaPReactiveWebClientFactory reactiveWebClient) {
-        this.reactiveWebClient = reactiveWebClient;
+    public ConsumerReactiveHttpClientFactory(DMaaPReactiveWebClientFactory reactiveWebClientFactory) {
+        this.reactiveWebClientFactory = reactiveWebClientFactory;
     }
 
     public DMaaPConsumerReactiveHttpClient create(DmaapConsumerConfiguration consumerConfiguration)
             throws SSLException {
         return new DMaaPConsumerReactiveHttpClient(consumerConfiguration,
-                reactiveWebClient.build(consumerConfiguration));
+                reactiveWebClientFactory.build(consumerConfiguration));
     }
 
 }

@@ -53,7 +53,7 @@ public class DMaaPPublisherReactiveHttpClient {
     private final String dmaapProtocol;
     private final String dmaapTopicName;
     private final String dmaapContentType;
-    private final RestTemplate restTemplate;
+    private final Mono<RestTemplate> restTemplate;
 
     /**
      * Constructor DMaaPPublisherReactiveHttpClient.
@@ -61,7 +61,7 @@ public class DMaaPPublisherReactiveHttpClient {
      * @param dmaapPublisherConfiguration - DMaaP producer configuration object
      */
     DMaaPPublisherReactiveHttpClient(DmaapPublisherConfiguration dmaapPublisherConfiguration,
-                                     RestTemplate restTemplate) {
+                                     Mono<RestTemplate> restTemplate) {
         this.dmaapHostName = dmaapPublisherConfiguration.dmaapHostName();
         this.dmaapProtocol = dmaapPublisherConfiguration.dmaapProtocol();
         this.dmaapPortNumber = dmaapPublisherConfiguration.dmaapPortNumber();
@@ -81,8 +81,7 @@ public class DMaaPPublisherReactiveHttpClient {
         return Mono.defer(() -> {
             HttpEntity<String> request = new HttpEntity<>(createJsonBody(consumerDmaapModelMono), getAllHeaders());
             logger.info("Request: {} {}", getUri(), request);
-            return Mono.just(restTemplate.exchange(getUri(), HttpMethod.POST, request, String.class));
-
+            return restTemplate.map(r -> r.exchange(getUri(), HttpMethod.POST, request, String.class));
         });
     }
 

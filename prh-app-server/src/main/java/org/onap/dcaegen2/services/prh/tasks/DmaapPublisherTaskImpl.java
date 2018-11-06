@@ -22,8 +22,10 @@ package org.onap.dcaegen2.services.prh.tasks;
 
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
+import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.producer.DMaaPPublisherReactiveHttpClient;
+import org.onap.dcaegen2.services.prh.service.producer.DmaaPRestTemplateFactory;
 import org.onap.dcaegen2.services.prh.service.producer.PublisherReactiveHttpClientFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
+
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
@@ -44,7 +47,7 @@ public class DmaapPublisherTaskImpl implements DmaapPublisherTask {
 
     @Autowired
     public DmaapPublisherTaskImpl(Config config) {
-        this(config, new PublisherReactiveHttpClientFactory());
+        this(config, new PublisherReactiveHttpClientFactory(new DmaaPRestTemplateFactory()));
     }
 
     DmaapPublisherTaskImpl(Config config, PublisherReactiveHttpClientFactory httpClientFactory) {
@@ -53,7 +56,7 @@ public class DmaapPublisherTaskImpl implements DmaapPublisherTask {
     }
 
     @Override
-    public Mono<ResponseEntity<String>> execute(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException {
+    public Mono<ResponseEntity<String>> execute(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException {
         if (consumerDmaapModel == null) {
             throw new DmaapNotFoundException("Invoked null object to DMaaP task");
         }

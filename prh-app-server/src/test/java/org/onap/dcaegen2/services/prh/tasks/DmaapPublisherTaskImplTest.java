@@ -24,19 +24,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.onap.dcaegen2.services.prh.TestAppConfiguration.createDefaultDmaapPublisherConfiguration;
 
+import javax.net.ssl.SSLException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
-import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
@@ -47,6 +46,7 @@ import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/17/18
  */
@@ -54,6 +54,7 @@ class DmaapPublisherTaskImplTest {
 
     private static ConsumerDmaapModel consumerDmaapModel;
     private static DmaapPublisherTaskImpl dmaapPublisherTask;
+    private static PublisherReactiveHttpClientFactory httpClientFactory;
     private static DMaaPPublisherReactiveHttpClient dMaaPPublisherReactiveHttpClient;
     private static AppConfig appConfig;
     private static DmaapPublisherConfiguration dmaapPublisherConfiguration;
@@ -61,6 +62,7 @@ class DmaapPublisherTaskImplTest {
     @BeforeAll
     static void setUp() {
         dmaapPublisherConfiguration = createDefaultDmaapPublisherConfiguration();
+        httpClientFactory = mock(PublisherReactiveHttpClientFactory.class);
         consumerDmaapModel = ImmutableConsumerDmaapModel.builder().ipv4("10.16.123.234")
             .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
             .correlationId("NOKQTFCOC540002E").build();
@@ -81,7 +83,21 @@ class DmaapPublisherTaskImplTest {
     }
 
     @Test
-    void whenPassedObjectFits_ReturnsCorrectStatus() throws PrhTaskException {
+    void whenSslExceptionDuringInit_ThrowsPrhTaskException() throws SSLException {
+        //given
+        when(appConfig.getDmaapPublisherConfiguration()).thenReturn(dmaapPublisherConfiguration);
+        when(httpClientFactory.create(dmaapPublisherConfiguration)).thenThrow(new SSLException("exception"));
+        dmaapPublisherTask = new DmaapPublisherTaskImpl(appConfig, httpClientFactory);
+
+        //when
+        Executable executableFunction = () -> dmaapPublisherTask.execute(consumerDmaapModel);
+
+        //then
+        assertThrows(PrhTaskException.class, executableFunction);
+    }
+
+    @Test
+    void whenPassedObjectFits_ReturnsCorrectStatus() throws Exception {
         //given
         ResponseEntity<String> responseEntity = prepareMocksForTests(HttpStatus.OK.value());
 
@@ -98,7 +114,7 @@ class DmaapPublisherTaskImplTest {
 
 
     @Test
-    void whenPassedObjectFits_butIncorrectResponseReturns() throws DmaapNotFoundException {
+    void whenPassedObjectFits_butIncorrectResponseReturns() throws Exception {
         //given
         ResponseEntity<String> responseEntity = prepareMocksForTests(HttpStatus.UNAUTHORIZED.value());
 
@@ -114,7 +130,7 @@ class DmaapPublisherTaskImplTest {
     }
 
 
-    private ResponseEntity<String> prepareMocksForTests(Integer httpResponseCode) {
+    private ResponseEntity<String> prepareMocksForTests(Integer httpResponseCode) throws Exception {
         ResponseEntity<String> responseEntity = mock(ResponseEntity.class);
         when(responseEntity.getStatusCode()).thenReturn(HttpStatus.valueOf(httpResponseCode));
         dMaaPPublisherReactiveHttpClient = mock(DMaaPPublisherReactiveHttpClient.class);

@@ -32,4 +32,8 @@ public class PrhTaskException extends Exception {
     public PrhTaskException(String message) {
         super(message);
     }
+
+    public PrhTaskException(Throwable throwable) {
+        super(throwable);
+    }
 }

@@ -20,13 +20,22 @@
 
 package org.onap.dcaegen2.services.prh.service.producer;
 
+import javax.net.ssl.SSLException;
 import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
-import org.springframework.web.client.RestTemplate;
+
 
 public class PublisherReactiveHttpClientFactory {
 
-    public DMaaPPublisherReactiveHttpClient create(DmaapPublisherConfiguration publisherConfiguration) {
-        return new DMaaPPublisherReactiveHttpClient(publisherConfiguration, new RestTemplate());
+    private final DmaaPRestTemplateFactory restTemplateFactory;
+
+    public PublisherReactiveHttpClientFactory(DmaaPRestTemplateFactory restTemplateFactory) {
+        this.restTemplateFactory = restTemplateFactory;
+    }
+
+    public DMaaPPublisherReactiveHttpClient create(DmaapPublisherConfiguration publisherConfiguration)
+            throws SSLException {
+        return new DMaaPPublisherReactiveHttpClient(publisherConfiguration,
+                restTemplateFactory.build(publisherConfiguration));
     }
 
 }

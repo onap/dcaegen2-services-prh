@@ -37,6 +37,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 /**
@@ -62,7 +63,7 @@ class DMaaPPublisherReactiveHttpClientTest {
         when(dmaapPublisherConfigurationMock.dmaapContentType()).thenReturn("application/json");
         when(dmaapPublisherConfigurationMock.dmaapTopicName()).thenReturn("unauthenticated.PNF_READY");
         dmaapPublisherReactiveHttpClient =
-                new DMaaPPublisherReactiveHttpClient(dmaapPublisherConfigurationMock, restTemplate);
+                new DMaaPPublisherReactiveHttpClient(dmaapPublisherConfigurationMock, Mono.just(restTemplate));
 
     }
 

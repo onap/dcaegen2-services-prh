@@ -41,7 +41,6 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import reactor.core.publisher.Mono;
 
 
-
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 7/4/18
  */
@@ -53,7 +52,7 @@ public class DMaaPPublisherReactiveHttpClient {
     private final String dmaapProtocol;
     private final String dmaapTopicName;
     private final String dmaapContentType;
-    private final RestTemplate restTemplate;
+    private final Mono<RestTemplate> restTemplateMono;
 
     /**
      * Constructor DMaaPPublisherReactiveHttpClient.
@@ -61,13 +60,13 @@ public class DMaaPPublisherReactiveHttpClient {
      * @param dmaapPublisherConfiguration - DMaaP producer configuration object
      */
     DMaaPPublisherReactiveHttpClient(DmaapPublisherConfiguration dmaapPublisherConfiguration,
-                                     RestTemplate restTemplate) {
+                                     Mono<RestTemplate> restTemplateMono) {
         this.dmaapHostName = dmaapPublisherConfiguration.dmaapHostName();
         this.dmaapProtocol = dmaapPublisherConfiguration.dmaapProtocol();
         this.dmaapPortNumber = dmaapPublisherConfiguration.dmaapPortNumber();
         this.dmaapTopicName = dmaapPublisherConfiguration.dmaapTopicName();
         this.dmaapContentType = dmaapPublisherConfiguration.dmaapContentType();
-        this.restTemplate = restTemplate;
+        this.restTemplateMono = restTemplateMono;
     }
 
     /**
@@ -81,8 +80,8 @@ public class DMaaPPublisherReactiveHttpClient {
         return Mono.defer(() -> {
             HttpEntity<String> request = new HttpEntity<>(createJsonBody(consumerDmaapModelMono), getAllHeaders());
             logger.info("Request: {} {}", getUri(), request);
-            return Mono.just(restTemplate.exchange(getUri(), HttpMethod.POST, request, String.class));
-
+            return restTemplateMono.map(
+                restTemplate -> restTemplate.exchange(getUri(), HttpMethod.POST, request, String.class));
         });
     }
 
@@ -97,7 +96,7 @@ public class DMaaPPublisherReactiveHttpClient {
 
     URI getUri() {
         return new DefaultUriBuilderFactory().builder().scheme(dmaapProtocol).host(dmaapHostName).port(dmaapPortNumber)
-            .path(dmaapTopicName).build();
+                .path(dmaapTopicName).build();
     }
 
 }

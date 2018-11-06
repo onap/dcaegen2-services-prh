@@ -1,0 +1,8 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Tomasz Kaminski <tomasz.kaminski@nokia.com>
+Code-Review+2: Przemyslaw Wasala <przemyslaw.wasala@nokia.com>
+Submitted-by: Przemyslaw Wasala <przemyslaw.wasala@nokia.com>
+Submitted-at: Tue, 06 Nov 2018 13:48:56 +0000
+Reviewed-on: https://gerrit.onap.org/r/71939
+Project: dcaegen2/services/prh
+Branch: refs/heads/master

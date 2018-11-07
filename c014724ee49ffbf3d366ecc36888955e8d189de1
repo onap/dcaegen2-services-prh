@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9adffdf1_f08ccc81",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/DmaapPublisherTaskImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-11-07T10:07:04Z",
+      "side": 1,
+      "message": "You can change this to return Mono.error against try catch block and re-throwing this",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 9
+      },
+      "revId": "c014724ee49ffbf3d366ecc36888955e8d189de1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_b03c0495",
+        "filename": "prh-dmaap-client/src/main/java/org/onap/dcaegen2/services/prh/service/producer/DmaaPRestTemplateFactory.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-11-07T10:07:04Z",
+      "side": 1,
+      "message": "Wrapping Mono\u003cRestTemplate\u003e ?",
+      "range": {
+        "startLine": 77,
+        "startChar": 5,
+        "endLine": 79,
+        "endChar": 9
+      },
+      "revId": "c014724ee49ffbf3d366ecc36888955e8d189de1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

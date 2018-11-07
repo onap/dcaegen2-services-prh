@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9adffdf1_b07e44e3",
+        "filename": "prh-dmaap-client/src/main/java/org/onap/dcaegen2/services/prh/service/producer/DMaaPPublisherReactiveHttpClient.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-11-07T12:25:23Z",
+      "side": 1,
+      "message": "r variable, could you change the name of this variable, example (restTemplateHttpClient)",
+      "range": {
+        "startLine": 84,
+        "startChar": 36,
+        "endLine": 84,
+        "endChar": 37
+      },
+      "revId": "fbe83ef16b84d51d85d59a5cf8754b74b90f6454",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_508358cc",
+        "filename": "prh-dmaap-client/src/main/java/org/onap/dcaegen2/services/prh/service/producer/DmaaPRestTemplateFactory.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 2813
+      },
+      "writtenOn": "2018-11-07T12:25:23Z",
+      "side": 1,
+      "message": "extract method? smth like getSslContext() ?",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 29
+      },
+      "revId": "fbe83ef16b84d51d85d59a5cf8754b74b90f6454",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

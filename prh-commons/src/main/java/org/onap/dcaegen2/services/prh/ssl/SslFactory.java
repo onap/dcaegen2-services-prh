@@ -24,9 +24,12 @@ import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLException;
@@ -38,6 +41,15 @@ public class SslFactory {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SslFactory.class);
 
+    /**
+     * Function for creating secure ssl context.
+     *
+     * @param keyStorePath - path to file with keystore
+     * @param keyStorePasswordPath - path to file with keystore password
+     * @param trustStorePath - path to file with truststore
+     * @param trustStorePasswordPath - path to file with truststore password
+     * @return configured ssl context
+     */
     public SslContext createSecureContext(String keyStorePath,
         String keyStorePasswordPath,
         String trustStorePath,
@@ -49,11 +61,16 @@ public class SslFactory {
                 .keyManager(keyManagerFactory(keyStorePath, loadPasswordFromFile(keyStorePasswordPath)))
                 .trustManager(trustManagerFactory(trustStorePath, loadPasswordFromFile(trustStorePasswordPath)))
                 .build();
-        } catch (Exception ex) {
+        } catch (GeneralSecurityException | IOException ex) {
             throw new SSLException(ex);
         }
     }
 
+    /**
+     * Function for creating insecure ssl context.
+     *
+     * @return configured insecure ssl context
+     */
     public SslContext createInsecureContext() throws SSLException {
         LOGGER.info("Creating insecure ssl context");
         return SslContextBuilder
@@ -62,30 +79,33 @@ public class SslFactory {
             .build();
     }
 
-    private KeyManagerFactory keyManagerFactory(String path, String password) throws Exception {
+    private KeyManagerFactory keyManagerFactory(String path, String password)
+            throws GeneralSecurityException, IOException {
         KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
         kmf.init(loadKeyStoreFromFile(path, password),
             password.toCharArray());
         return kmf;
     }
 
-    private TrustManagerFactory trustManagerFactory(String path, String password) throws Exception {
+    private TrustManagerFactory trustManagerFactory(String path, String password)
+            throws GeneralSecurityException, IOException {
         TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
         tmf.init(loadKeyStoreFromFile(path, password));
         return tmf;
     }
 
-    private KeyStore loadKeyStoreFromFile(String path, String keyStorePassword) throws Exception {
+    private KeyStore loadKeyStoreFromFile(String path, String keyStorePassword)
+            throws GeneralSecurityException, IOException {
         KeyStore ks = KeyStore.getInstance("jks");
         ks.load(getResource(path), keyStorePassword.toCharArray());
         return ks;
     }
 
-    private InputStream getResource(String path) throws Exception {
+    private InputStream getResource(String path) throws FileNotFoundException {
         return new FileInputStream(path);
     }
 
-    private String loadPasswordFromFile(String path) throws Exception {
+    private String loadPasswordFromFile(String path) throws IOException {
         return new String(Files.readAllBytes(Paths.get(path)));
     }
 }

@@ -1,0 +1,9 @@
+Code-Review+1: Michal Dziedzic <michal.1.dziedzic@nokia.com>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Piotr Karaś <piotr.karas@nokia.com>
+Code-Review+2: Przemyslaw Wasala <przemyslaw.wasala@nokia.com>
+Submitted-by: Przemyslaw Wasala <przemyslaw.wasala@nokia.com>
+Submitted-at: Fri, 09 Nov 2018 12:09:45 +0000
+Reviewed-on: https://gerrit.onap.org/r/72278
+Project: dcaegen2/services/prh
+Branch: refs/heads/casablanca

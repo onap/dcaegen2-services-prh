@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9adffdf1_97b68389",
+        "filename": "prh-commons/src/test/java/org/onap/dcaegen2/services/prh/ssl/SslFactoryTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 3009
+      },
+      "writtenOn": "2018-11-13T07:54:41Z",
+      "side": 1,
+      "message": "It is not obvious why this is wrong...\nMaybe pass \"Wrong password\"",
+      "range": {
+        "startLine": 54,
+        "startChar": 16,
+        "endLine": 54,
+        "endChar": 44
+      },
+      "revId": "03075eb4d2212f8dc0045f29462935855d5045ca",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

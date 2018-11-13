@@ -26,7 +26,7 @@
   <parent>
     <groupId>org.onap.oparent</groupId>
     <artifactId>oparent</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
     <relativePath/>
   </parent>
 
@@ -48,8 +48,8 @@
   <properties>
     <java.version>8</java.version>
     <immutables.version>2.5.6</immutables.version>
-    <spring.version>5.1.0.RELEASE</spring.version>
-    <spring-boot.version>2.0.5.RELEASE</spring-boot.version>
+    <spring.version>5.1.2.RELEASE</spring.version>
+    <spring-boot.version>2.1.0.RELEASE</spring-boot.version>
     <tomcat.version>8.5.32</tomcat.version>
     <slf4j.version>1.7.25</slf4j.version>
     <junit-jupiter.version>5.1.0</junit-jupiter.version>

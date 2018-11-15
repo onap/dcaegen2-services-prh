@@ -25,7 +25,7 @@ import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.exceptions.AaiNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.service.AaiReactiveWebClient;
+import org.onap.dcaegen2.services.prh.service.AaiReactiveWebClientFactory;
 import org.onap.dcaegen2.services.prh.service.producer.AaiProducerReactiveHttpClient;
 import org.onap.dcaegen2.services.prh.ssl.SslFactory;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -47,6 +47,6 @@ public abstract class AaiProducerTask {
         throws PrhTaskException, SSLException;
 
     WebClient buildWebClient() throws SSLException {
-        return new AaiReactiveWebClient(new SslFactory(), resolveConfiguration()).build();
+        return new AaiReactiveWebClientFactory(new SslFactory(), resolveConfiguration()).build();
     }
 }

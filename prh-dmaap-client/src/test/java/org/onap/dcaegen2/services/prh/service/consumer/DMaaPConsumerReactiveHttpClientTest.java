@@ -96,7 +96,7 @@ class DMaaPConsumerReactiveHttpClientTest {
     }
 
     @Test
-    void getAppropriateUri_whenPassingCorrectedPathForPnf() throws URISyntaxException {
+    void getAppropriateUri_whenPassingCorrectedPathForPnf() {
         Assertions.assertEquals(dmaapConsumerReactiveHttpClient.getUri(),
             URI.create("https://54.45.33.2:1234/unauthenticated.SEC_OTHER_OUTPUT/OpenDCAE-c12/c12"));
     }

@@ -40,9 +40,9 @@ import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
 
-public class AaiReactiveWebClient {
+public class AaiReactiveWebClientFactory {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AaiReactiveWebClient.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AaiReactiveWebClientFactory.class);
 
     private final String aaiUserName;
     private final String aaiUserPassword;
@@ -55,12 +55,12 @@ public class AaiReactiveWebClient {
     private final SslFactory sslFactory;
 
     /**
-     * Creating AaiReactiveWebClient.
+     * Creating AaiReactiveWebClientFactory.
      *
      * @param configuration - configuration object
      * @param sslFactory - factory for ssl setup
      */
-    public AaiReactiveWebClient(SslFactory sslFactory, AaiClientConfiguration configuration) {
+    public AaiReactiveWebClientFactory(SslFactory sslFactory, AaiClientConfiguration configuration) {
         this.aaiUserName = configuration.aaiUserName();
         this.aaiUserPassword = configuration.aaiUserPassword();
         this.aaiHeaders = configuration.aaiHeaders();

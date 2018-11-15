@@ -20,6 +20,7 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
@@ -139,6 +140,9 @@ public class AppConfig extends PrhAppConfig {
 
     @Override
     public DmaapConsumerConfiguration getDmaapConsumerConfiguration() {
+        if (noFileConfiguration(dmaapConsumerConfiguration)) {
+            return null;
+        }
         return new ImmutableDmaapConsumerConfiguration.Builder()
             .dmaapUserPassword(
                 Optional.ofNullable(consumerDmaapUserPassword).filter(isEmpty.negate())
@@ -190,6 +194,9 @@ public class AppConfig extends PrhAppConfig {
 
     @Override
     public AaiClientConfiguration getAaiClientConfiguration() {
+        if (noFileConfiguration(aaiClientConfiguration)) {
+            return null;
+        }
         return new ImmutableAaiClientConfiguration.Builder()
             .aaiHost(Optional.ofNullable(aaiHost).filter(isEmpty.negate()).orElse(aaiClientConfiguration.aaiHost()))
             .aaiPort(
@@ -229,6 +236,9 @@ public class AppConfig extends PrhAppConfig {
 
     @Override
     public DmaapPublisherConfiguration getDmaapPublisherConfiguration() {
+        if (noFileConfiguration(dmaapPublisherConfiguration)) {
+            return null;
+        }
         return new ImmutableDmaapPublisherConfiguration.Builder()
             .dmaapContentType(
                 Optional.ofNullable(producerDmaapContentType).filter(isEmpty.negate())
@@ -267,5 +277,9 @@ public class AppConfig extends PrhAppConfig {
                 Optional.ofNullable(enableDmaapCertAuth).filter(p -> !p.toString().isEmpty())
                     .orElse(dmaapPublisherConfiguration.enableDmaapCertAuth()))
             .build();
+    }
+
+    private boolean noFileConfiguration(Object object) {
+        return Objects.isNull(object);
     }
 }

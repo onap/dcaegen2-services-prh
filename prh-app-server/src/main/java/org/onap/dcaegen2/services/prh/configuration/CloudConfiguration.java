@@ -65,7 +65,7 @@ public class CloudConfiguration extends AppConfig {
         this.prhConfigurationProvider = prhConfigurationProvider;
     }
 
-    protected void runTask() {
+    public void runTask() {
         Flux.defer(() -> EnvironmentProcessor.evaluate(systemEnvironment))
             .subscribeOn(Schedulers.parallel())
             .subscribe(this::parsingConfigSuccess, this::parsingConfigError);

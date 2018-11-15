@@ -22,7 +22,7 @@ package org.onap.dcaegen2.services.prh.controllers;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.onap.dcaegen2.services.prh.configuration.SchedulerConfig;
+import org.onap.dcaegen2.services.prh.tasks.ScheduledTasksRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,25 +42,25 @@ public class ScheduleController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleController.class);
 
-    private final SchedulerConfig schedulerConfig;
+    private final ScheduledTasksRunner scheduledTasksRunner;
 
     @Autowired
-    public ScheduleController(SchedulerConfig schedulerConfig) {
-        this.schedulerConfig = schedulerConfig;
+    public ScheduleController(ScheduledTasksRunner scheduledTasksRunner) {
+        this.scheduledTasksRunner = scheduledTasksRunner;
     }
 
     @RequestMapping(value = "start", method = RequestMethod.GET)
     @ApiOperation(value = "Start scheduling worker request")
     public Mono<ResponseEntity<String>> startTasks() {
         LOGGER.trace("Receiving start scheduling worker request");
-        return Mono.fromSupplier(schedulerConfig::tryToStartTask).map(this::createStartTaskResponse);
+        return Mono.fromSupplier(scheduledTasksRunner::tryToStartTask).map(this::createStartTaskResponse);
     }
 
     @RequestMapping(value = "stopPrh", method = RequestMethod.GET)
     @ApiOperation(value = "Receiving stop scheduling worker request")
     public Mono<ResponseEntity<String>> stopTask() {
         LOGGER.trace("Receiving stop scheduling worker request");
-        return schedulerConfig.getResponseFromCancellationOfTasks();
+        return scheduledTasksRunner.getResponseFromCancellationOfTasks();
     }
 
     @ApiOperation(value = "Sends success or error response on starting task execution")

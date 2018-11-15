@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.configuration;
+package org.onap.dcaegen2.services.prh.tasks;
 
 import io.swagger.annotations.ApiOperation;
 import java.time.Duration;
@@ -27,7 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import javax.annotation.PostConstruct;
-import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
+
+import org.onap.dcaegen2.services.prh.configuration.CloudConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -46,11 +47,11 @@ import reactor.core.publisher.Mono;
  */
 @Configuration
 @EnableScheduling
-public class SchedulerConfig {
+public class ScheduledTasksRunner {
 
     private static final int SCHEDULING_DELAY_FOR_PRH_TASKS = 10;
     private static final int SCHEDULING_REQUEST_FOR_CONFIGURATION_DELAY = 5;
-    private static final Logger LOGGER = LoggerFactory.getLogger(SchedulerConfig.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledTasksRunner.class);
     private static final Marker ENTRY = MarkerFactory.getMarker("ENTRY");
     private static volatile List<ScheduledFuture> scheduledPrhTaskFutureList = new ArrayList<>();
 
@@ -59,9 +60,9 @@ public class SchedulerConfig {
     private final CloudConfiguration cloudConfiguration;
 
     @Autowired
-    public SchedulerConfig(TaskScheduler taskScheduler,
-        ScheduledTasks scheduledTask,
-        CloudConfiguration cloudConfiguration) {
+    public ScheduledTasksRunner(TaskScheduler taskScheduler,
+                                ScheduledTasks scheduledTask,
+                                CloudConfiguration cloudConfiguration) {
         this.taskScheduler = taskScheduler;
         this.scheduledTask = scheduledTask;
         this.cloudConfiguration = cloudConfiguration;

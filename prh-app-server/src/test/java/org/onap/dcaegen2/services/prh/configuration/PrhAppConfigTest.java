@@ -22,22 +22,14 @@ package org.onap.dcaegen2.services.prh.configuration;
 
 import static java.lang.ClassLoader.getSystemResource;
 import static java.nio.file.Files.readAllBytes;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,118 +45,64 @@ import org.springframework.core.io.Resource;
 @ExtendWith({MockitoExtension.class})
 class PrhAppConfigTest {
 
-    private final String jsonString =
-            new String(readAllBytes(Paths.get(getSystemResource("correct_config.json").toURI())));
-    private final String incorrectJsonString =
-            new String(readAllBytes(Paths.get(getSystemResource("incorrect_config.json").toURI())));
-    private PrhAppConfig prhAppConfig;
+    private static final String CORRECT_CONFIG_FILE = "correct_config.json";
+    private static final String INCORRECT_CONFIG_FILE = "incorrect_config.json";
+    private static final String NOT_JSON_OBJECT_FILE = "not_json_object.json";
     private AppConfig appConfig;
-
-
-    PrhAppConfigTest() throws Exception {
-    }
 
     @BeforeEach
     void setUp() {
-        prhAppConfig = spy(PrhAppConfig.class);
-        appConfig = spy(new AppConfig());
+        appConfig = new AppConfig();
     }
 
     @Test
-    void whenTheConfigurationFits_GetAaiAndDmaapObjectRepresentationConfiguration() {
-        //
-        // Given
-        //
-        InputStream inputStream = new ByteArrayInputStream((jsonString.getBytes(
-                StandardCharsets.UTF_8)));
-        //
-        // When
-        //
-        prhAppConfig.setResourceFile(new InputStreamResource(inputStream));
-        prhAppConfig.initFileStreamReader();
-        appConfig.dmaapConsumerConfiguration = prhAppConfig.getDmaapConsumerConfiguration();
-        appConfig.dmaapPublisherConfiguration = prhAppConfig.getDmaapPublisherConfiguration();
-        appConfig.aaiClientConfiguration = prhAppConfig.getAaiClientConfiguration();
-        //
-        // Then
-        //
-        verify(prhAppConfig).initFileStreamReader();
-        assertNotNull(prhAppConfig.getDmaapConsumerConfiguration());
-        assertNotNull(prhAppConfig.getDmaapPublisherConfiguration());
-        assertNotNull(prhAppConfig.getAaiClientConfiguration());
-        assertEquals(appConfig.getDmaapPublisherConfiguration(), prhAppConfig.getDmaapPublisherConfiguration());
-        assertEquals(appConfig.getDmaapConsumerConfiguration(), prhAppConfig.getDmaapConsumerConfiguration());
-        assertEquals(appConfig.getAaiClientConfiguration(), prhAppConfig.getAaiClientConfiguration());
+    void whenTheConfigurationFits() throws Exception {
+        InputStream inputStream = createInputStream(CORRECT_CONFIG_FILE);
+        appConfig.setResourceFile(new InputStreamResource(inputStream));
+        appConfig.initFileStreamReader();
 
+        assertNotNull(appConfig.getDmaapConsumerConfiguration());
+        assertNotNull(appConfig.getDmaapPublisherConfiguration());
+        assertNotNull(appConfig.getAaiClientConfiguration());
     }
 
     @Test
-    void whenFileIsNotExist_ThrowIoException() throws IOException {
-        //
-        // Given
-        InputStream inputStream = new ByteArrayInputStream((jsonString.getBytes(
-                StandardCharsets.UTF_8)));
+    void whenFileDoesNotExist() throws Exception {
+        InputStream inputStream = createInputStream(CORRECT_CONFIG_FILE);
         Resource resource = spy(new InputStreamResource(inputStream));
-        //
         when(resource.getInputStream()).thenThrow(new IOException());
-        prhAppConfig.setResourceFile(resource);
-        //
-        // When
-        //
-        prhAppConfig.initFileStreamReader();
-        //
-        // Then
-        //
-        verify(prhAppConfig).initFileStreamReader();
-        assertNull(prhAppConfig.getAaiClientConfiguration());
-        assertNull(prhAppConfig.getDmaapConsumerConfiguration());
-        assertNull(prhAppConfig.getDmaapPublisherConfiguration());
+        appConfig.setResourceFile(resource);
+        appConfig.initFileStreamReader();
 
+        assertNull(appConfig.getAaiClientConfiguration());
+        assertNull(appConfig.getDmaapConsumerConfiguration());
+        assertNull(appConfig.getDmaapPublisherConfiguration());
     }
 
     @Test
-    void whenFileIsExistsButJsonIsIncorrect() {
-        //
-        // Given
-        //
-        InputStream inputStream = new ByteArrayInputStream((incorrectJsonString.getBytes(
-                StandardCharsets.UTF_8)));
-        //
-        // When
-        //
-        prhAppConfig.setResourceFile(new InputStreamResource(inputStream));
-        prhAppConfig.initFileStreamReader();
+    void whenFileExistsButDmaapPublisherJsonConfigurationIsIncorrect() throws Exception {
+        InputStream inputStream = createInputStream(INCORRECT_CONFIG_FILE);
+        appConfig.setResourceFile(new InputStreamResource(inputStream));
+        appConfig.initFileStreamReader();
 
-        //
-        // Then
-        //
-        verify(prhAppConfig).initFileStreamReader();
-        assertNotNull(prhAppConfig.getAaiClientConfiguration());
-        assertNotNull(prhAppConfig.getDmaapConsumerConfiguration());
-        assertNull(prhAppConfig.getDmaapPublisherConfiguration());
-
+        assertNotNull(appConfig.getAaiClientConfiguration());
+        assertNotNull(appConfig.getDmaapConsumerConfiguration());
+        assertNull(appConfig.getDmaapPublisherConfiguration());
     }
 
-
     @Test
-    void whenTheConfigurationFits_ButRootElementIsNotAJsonObject() {
-        // Given
-        InputStream inputStream = new ByteArrayInputStream((jsonString.getBytes(
-                StandardCharsets.UTF_8)));
-        // When
-        prhAppConfig.setResourceFile(new InputStreamResource(inputStream));
-        JsonElement jsonElement = mock(JsonElement.class);
-        when(jsonElement.isJsonObject()).thenReturn(false);
-        doReturn(jsonElement).when(prhAppConfig).getJsonElement(any(JsonParser.class), any(InputStream.class));
-        prhAppConfig.initFileStreamReader();
-        appConfig.dmaapConsumerConfiguration = prhAppConfig.getDmaapConsumerConfiguration();
-        appConfig.dmaapPublisherConfiguration = prhAppConfig.getDmaapPublisherConfiguration();
-        appConfig.aaiClientConfiguration = prhAppConfig.getAaiClientConfiguration();
+    void whenRootElementIsNotAJsonObject() throws Exception {
+        InputStream inputStream = createInputStream(NOT_JSON_OBJECT_FILE);
+        appConfig.setResourceFile(new InputStreamResource(inputStream));
+        appConfig.initFileStreamReader();
 
-        // Then
-        verify(prhAppConfig).initFileStreamReader();
-        assertNull(prhAppConfig.getAaiClientConfiguration());
-        assertNull(prhAppConfig.getDmaapConsumerConfiguration());
-        assertNull(prhAppConfig.getDmaapPublisherConfiguration());
+
+        assertNull(appConfig.getAaiClientConfiguration());
+        assertNull(appConfig.getDmaapConsumerConfiguration());
+        assertNull(appConfig.getDmaapPublisherConfiguration());
+    }
+
+    private InputStream createInputStream(String jsonFile) throws Exception {
+        return new ByteArrayInputStream(readAllBytes(Paths.get(getSystemResource(jsonFile).toURI())));
     }
 }

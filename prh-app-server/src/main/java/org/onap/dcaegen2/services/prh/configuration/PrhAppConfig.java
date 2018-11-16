@@ -95,27 +95,37 @@ public abstract class PrhAppConfig implements Config {
         try (InputStream inputStream = resourceFile.getInputStream()) {
             JsonElement rootElement = getJsonElement(parser, inputStream);
             if (rootElement.isJsonObject()) {
-                aaiClientConfiguration = deserializeType(gsonBuilder,
-                    concatenateJsonObjects(
-                        rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(AAI).getAsJsonObject(AAI_CONFIG),
-                        rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(SECURITY)),
-                    AaiClientConfiguration.class);
-                dmaapConsumerConfiguration = deserializeType(gsonBuilder,
-                    concatenateJsonObjects(
-                        rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(DMAAP).getAsJsonObject(DMAAP_CONSUMER),
-                        rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(SECURITY)),
-                    DmaapConsumerConfiguration.class);
-                dmaapPublisherConfiguration = deserializeType(gsonBuilder,
-                    concatenateJsonObjects(
-                        rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(DMAAP).getAsJsonObject(DMAAP_PRODUCER),
-                        rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(SECURITY)),
-                    DmaapPublisherConfiguration.class);
+                deserializeAaiConfiguration(gsonBuilder, rootElement);
+                deserializeDmaapConsumerConfiguration(gsonBuilder, rootElement);
+                deserializeDmaapPublisherConfiguration(gsonBuilder, rootElement);
             }
-        } catch (IOException e) {
-            LOGGER.warn("Problem with file loading, file ", e);
-        } catch (JsonSyntaxException e) {
-            LOGGER.warn("Problem with Json deserialization", e);
         }
+        catch (IOException e) {
+            LOGGER.warn("Problem with file loading, file ", e);
+        }
+    }
+
+    private void deserializeDmaapPublisherConfiguration(GsonBuilder gsonBuilder, JsonElement rootElement) {
+        dmaapPublisherConfiguration = deserializeType(gsonBuilder, concatenateJsonObjects(
+                rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(DMAAP)
+                        .getAsJsonObject(DMAAP_PRODUCER),
+                    rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(SECURITY)),
+            DmaapPublisherConfiguration.class);
+    }
+
+    private void deserializeDmaapConsumerConfiguration(GsonBuilder gsonBuilder, JsonElement rootElement) {
+        dmaapConsumerConfiguration = deserializeType(gsonBuilder, concatenateJsonObjects(
+                rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(DMAAP)
+                        .getAsJsonObject(DMAAP_CONSUMER),
+                rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(SECURITY)),
+            DmaapConsumerConfiguration.class);
+    }
+
+    private void deserializeAaiConfiguration(GsonBuilder gsonBuilder, JsonElement rootElement) {
+        aaiClientConfiguration = deserializeType(gsonBuilder, concatenateJsonObjects(
+                rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(AAI).getAsJsonObject(AAI_CONFIG),
+                rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(SECURITY)),
+                AaiClientConfiguration.class);
     }
 
     JsonElement getJsonElement(JsonParser parser, InputStream inputStream) {
@@ -130,7 +140,12 @@ public abstract class PrhAppConfig implements Config {
 
     private <T> T deserializeType(@NotNull GsonBuilder gsonBuilder, @NotNull JsonObject jsonObject,
         @NotNull Class<T> type) {
-        return gsonBuilder.create().fromJson(jsonObject, type);
+        try {
+            return gsonBuilder.create().fromJson(jsonObject, type);
+        }  catch (JsonSyntaxException e) {
+            LOGGER.warn("Problem with Json deserialization", e);
+            return null;
+        }
     }
 
     void setResourceFile(Resource resourceFile) {

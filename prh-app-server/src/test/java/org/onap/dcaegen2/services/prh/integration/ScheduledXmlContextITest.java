@@ -40,11 +40,10 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/27/18
  */
-
 @Configuration
-@ComponentScan
+@ComponentScan("org.onap.dcaegen2.services.sdk.rest.services.cbs.client.providers")
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
-@ContextConfiguration(locations = {"classpath:scheduled-context.xml"})
+@ContextConfiguration(locations = "classpath:scheduled-context.xml")
 class ScheduledXmlContextITest extends AbstractTestNGSpringContextTests {
 
     private static final int WAIT_FOR_SCHEDULING = 1;
@@ -62,5 +61,3 @@ class ScheduledXmlContextITest extends AbstractTestNGSpringContextTests {
         verify(scheduledTask, atLeast(1)).scheduleMainPrhEventTask();
     }
 }
-
-

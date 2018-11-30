@@ -21,36 +21,34 @@
 package org.onap.dcaegen2.services.prh.configuration;
 
 import com.google.gson.JsonObject;
-import java.util.Optional;
-import java.util.Properties;
-import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
-import org.onap.dcaegen2.services.prh.config.DmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.prh.config.DmaapPublisherConfiguration;
-import org.onap.dcaegen2.services.prh.config.ImmutableAaiClientConfiguration;
-import org.onap.dcaegen2.services.prh.model.EnvProperties;
-import org.onap.dcaegen2.services.prh.service.PrhConfigurationProvider;
+import org.onap.dcaegen2.services.prh.config.*;
+import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.http.configuration.EnvProperties;
+import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.providers.CloudConfigurationClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.*;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
+
+import java.util.Optional;
+import java.util.Properties;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 8/9/18
  */
 @Configuration
+@ComponentScan("org.onap.dcaegen2.services.sdk.rest.services.cbs.client.providers")
 @EnableConfigurationProperties
 @EnableScheduling
 @Primary
 public class CloudConfiguration extends AppConfig {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CloudConfiguration.class);
-    private PrhConfigurationProvider prhConfigurationProvider;
+    private CloudConfigurationClient prhConfigurationProvider;
 
     private AaiClientConfiguration aaiClientCloudConfiguration;
     private DmaapPublisherConfiguration dmaapPublisherCloudConfiguration;
@@ -61,7 +59,7 @@ public class CloudConfiguration extends AppConfig {
 
 
     @Autowired
-    public void setThreadPoolTaskScheduler(PrhConfigurationProvider prhConfigurationProvider) {
+    public void setThreadPoolTaskScheduler(CloudConfigurationClient prhConfigurationProvider) {
         this.prhConfigurationProvider = prhConfigurationProvider;
     }
 
@@ -72,16 +70,16 @@ public class CloudConfiguration extends AppConfig {
     }
 
     private void parsingConfigError(Throwable throwable) {
-        LOGGER.warn("Error in case of processing system environment, more details below: ", throwable);
+        LOGGER.warn("Failed to process system environments", throwable);
     }
 
     private void cloudConfigError(Throwable throwable) {
-        LOGGER.warn("Exception during getting configuration from CONSUL/CONFIG_BINDING_SERVICE ", throwable);
+        LOGGER.warn("Failed to gather configuration from ConfigBindingService/Consul", throwable);
     }
 
     private void parsingConfigSuccess(EnvProperties envProperties) {
-        LOGGER.info("Fetching PRH configuration from ConfigBindingService/Consul");
-        prhConfigurationProvider.callForPrhConfiguration(envProperties)
+        LOGGER.debug("Fetching PRH configuration from ConfigBindingService/Consul");
+        prhConfigurationProvider.callForServiceConfigurationReactive(envProperties)
             .subscribe(this::parseCloudConfig, this::cloudConfigError);
     }
 

@@ -20,9 +20,9 @@
 
 package org.onap.dcaegen2.services.prh;
 
-import org.onap.dcaegen2.services.prh.config.ImmutableAaiClientConfiguration;
-import org.onap.dcaegen2.services.prh.config.ImmutableDmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.prh.config.ImmutableDmaapPublisherConfiguration;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.ImmutableAaiClientConfiguration;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.ImmutableDmaapConsumerConfiguration;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.ImmutableDmaapPublisherConfiguration;
 
 
 public class TestAppConfiguration {

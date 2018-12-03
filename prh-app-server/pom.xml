@@ -164,19 +164,18 @@
       <artifactId>prh-commons</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.onap.dcaegen2.services.prh</groupId>
-      <artifactId>prh-aai-client</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.onap.dcaegen2.services.prh</groupId>
-      <artifactId>prh-dmaap-client</artifactId>
-      <version>${project.version}</version>
-    </dependency>
+
     <dependency>
       <groupId>org.onap.dcaegen2.services.sdk.rest.services</groupId>
       <artifactId>cbs-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.onap.dcaegen2.services.sdk.rest.services</groupId>
+      <artifactId>aai-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.onap.dcaegen2.services.sdk.rest.services</groupId>
+      <artifactId>dmaap-client</artifactId>
     </dependency>
 
     <dependency>

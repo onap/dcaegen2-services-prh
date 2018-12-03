@@ -21,8 +21,8 @@
 package org.onap.dcaegen2.services.prh.tasks;
 
 import javax.net.ssl.SSLException;
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.service.consumer.DMaaPConsumerReactiveHttpClient;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.consumer.DMaaPConsumerReactiveHttpClient;
+import org.onap.dcaegen2.services.sdk.rest.services.model.ConsumerDmaapModel;
 import reactor.core.publisher.Flux;
 
 

@@ -25,9 +25,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 
 import javax.net.ssl.SSLException;
-import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
-import org.onap.dcaegen2.services.prh.service.producer.AaiProducerReactiveHttpClient;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.patch.AaiReactiveHttpPatchClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -51,9 +51,9 @@ public class AaiPublisherTaskSpy {
         AppConfig appConfig = spy(AppConfig.class);
         doReturn(mock(AaiClientConfiguration.class)).when(appConfig).getAaiClientConfiguration();
         AaiProducerTaskImpl aaiProducerTask = spy(new AaiProducerTaskImpl(appConfig));
-        AaiProducerReactiveHttpClient aaiProducerReactiveHttpClient = mock(AaiProducerReactiveHttpClient.class);
+        AaiReactiveHttpPatchClient aaiReactiveHttpPatchClient = mock(AaiReactiveHttpPatchClient.class);
         doReturn(mock(AaiClientConfiguration.class)).when(aaiProducerTask).resolveConfiguration();
-        doReturn(aaiProducerReactiveHttpClient).when(aaiProducerTask).resolveClient();
+        doReturn(aaiReactiveHttpPatchClient).when(aaiProducerTask).resolveClient();
         return aaiProducerTask;
     }
 }

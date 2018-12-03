@@ -21,13 +21,13 @@
 package org.onap.dcaegen2.services.prh.tasks;
 
 import javax.net.ssl.SSLException;
-import org.onap.dcaegen2.services.prh.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.exceptions.AaiNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.service.AaiReactiveWebClientFactory;
-import org.onap.dcaegen2.services.prh.service.producer.AaiProducerReactiveHttpClient;
-import org.onap.dcaegen2.services.prh.ssl.SslFactory;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.AaiReactiveWebClientFactory;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.patch.AaiReactiveHttpPatchClient;
+import org.onap.dcaegen2.services.sdk.rest.services.model.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.sdk.rest.services.ssl.SslFactory;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -39,7 +39,7 @@ public abstract class AaiProducerTask {
 
     abstract Mono<ConsumerDmaapModel> publish(ConsumerDmaapModel message) throws AaiNotFoundException;
 
-    abstract AaiProducerReactiveHttpClient resolveClient() throws SSLException;
+    abstract AaiReactiveHttpPatchClient resolveClient() throws SSLException;
 
     protected abstract AaiClientConfiguration resolveConfiguration();
 

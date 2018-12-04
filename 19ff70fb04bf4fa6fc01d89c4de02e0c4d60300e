@@ -1,0 +1,10 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Marcin Migdal <marcin.migdal@nokia.com>
+Code-Review+1: Piotr Wielebski <piotr.wielebski@nokia.com>
+Code-Review+1: Piotr Bochenski <piotr.bochenski@nokia.com>
+Code-Review+2: Przemyslaw Wasala <przemo.wasala@gmail.com>
+Submitted-by: Przemyslaw Wasala <przemo.wasala@gmail.com>
+Submitted-at: Tue, 04 Dec 2018 11:15:50 +0000
+Reviewed-on: https://gerrit.onap.org/r/74127
+Project: dcaegen2/services/prh
+Branch: refs/heads/master

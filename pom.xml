@@ -37,6 +37,9 @@
     <junit-vintage.version>5.1.0</junit-vintage.version>
     <junit-platform.version>1.1.0</junit-platform.version>
     <jacoco.version>0.8.2</jacoco.version>
+    <reactor-netty.version>0.8.1.RELEASE</reactor-netty.version>
+    <logback-classic.version>1.2.3</logback-classic.version>
+    <mockito-core.version>2.16.0</mockito-core.version>
   </properties>
 
   <modules>
@@ -110,6 +113,32 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
+        <groupId>org.onap.dcaegen2.services.sdk.rest.services</groupId>
+        <artifactId>cbs-client</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.onap.dcaegen2.services.sdk.rest.services</groupId>
+        <artifactId>aai-client</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.onap.dcaegen2.services.sdk.rest.services</groupId>
+        <artifactId>dmaap-client</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-swagger2</artifactId>
+        <version>2.8.0</version>
+      </dependency>
+      <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-swagger-ui</artifactId>
+        <version>2.8.0</version>
+      </dependency>
+
+      <dependency>
         <groupId>io.projectreactor</groupId>
         <artifactId>reactor-bom</artifactId>
         <version>Californium-SR2</version>
@@ -117,27 +146,11 @@
         <scope>import</scope>
       </dependency>
       <dependency>
-        <groupId>io.projectreactor.netty</groupId>
-        <artifactId>reactor-netty</artifactId>
-        <version>0.8.1.RELEASE</version>
-      </dependency>
-      <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
         <version>${spring-boot.version}</version>
         <type>pom</type>
         <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.immutables</groupId>
-        <artifactId>value</artifactId>
-        <version>${immutables.version}</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.immutables</groupId>
-        <artifactId>gson</artifactId>
-        <version>${immutables.version}</version>
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
@@ -165,6 +178,21 @@
         <version>${spring.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.immutables</groupId>
+        <artifactId>value</artifactId>
+        <version>${immutables.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.immutables</groupId>
+        <artifactId>gson</artifactId>
+        <version>${immutables.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.projectreactor.netty</groupId>
+        <artifactId>reactor-netty</artifactId>
+        <version>${reactor-netty.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.apache.tomcat.embed</groupId>
         <artifactId>tomcat-embed-core</artifactId>
         <version>${tomcat.version}</version>
@@ -179,27 +207,11 @@
         <artifactId>tomcat-embed-websocket</artifactId>
         <version>${tomcat.version}</version>
       </dependency>
-      <dependency>
-        <groupId>org.onap.dcaegen2.services.sdk.rest.services</groupId>
-        <artifactId>cbs-client</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.onap.dcaegen2.services.sdk.rest.services</groupId>
-        <artifactId>aai-client</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.onap.dcaegen2.services.sdk.rest.services</groupId>
-        <artifactId>dmaap-client</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-      </dependency>
 
       <dependency>
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
-        <version>1.2.3</version>
-        <scope>provided</scope>
+        <version>${logback-classic.version}</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
@@ -212,6 +224,12 @@
         <version>${slf4j.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <version>${spring.version}</version>
+        <scope>test</scope>
+      </dependency>
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
@@ -243,15 +261,9 @@
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-test</artifactId>
-        <version>${spring.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-core</artifactId>
-        <version>2.16.0</version>
+        <version>${mockito-core.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -265,17 +277,6 @@
         <artifactId>jersey-apache-connector</artifactId>
         <version>2.25.1</version>
         <scope>test</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>io.springfox</groupId>
-        <artifactId>springfox-swagger2</artifactId>
-        <version>2.8.0</version>
-      </dependency>
-      <dependency>
-        <groupId>io.springfox</groupId>
-        <artifactId>springfox-swagger-ui</artifactId>
-        <version>2.8.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9adffdf1_5749975e",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 2683
+      },
+      "writtenOn": "2018-12-17T14:01:39Z",
+      "side": 1,
+      "message": "We shouldn\u0027t probably change it if it was already increased for dublin. Using different sdk version won\u0027t affect the functionality nor PRH public API, will it?",
+      "revId": "30bb583eca7814cbeb9b0be3e088aa517a6beb8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_fcb99079",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 2683
+      },
+      "writtenOn": "2018-12-17T14:01:39Z",
+      "side": 1,
+      "message": "Is there any other way to add SNAPSHOT dependency? Maybe after stabilizing SDK we should reconfigure its builds to enable release publishing (then we should manually update version after each change).",
+      "revId": "30bb583eca7814cbeb9b0be3e088aa517a6beb8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

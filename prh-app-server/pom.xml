@@ -129,7 +129,7 @@
     <dependency>
       <groupId>org.onap.dcaegen2.services.prh</groupId>
       <artifactId>prh-commons</artifactId>
-      <version>${project.version}</version>
+      <version>1.2.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.onap.dcaegen2.services.sdk.rest.services</groupId>
@@ -142,6 +142,10 @@
     <dependency>
       <groupId>org.onap.dcaegen2.services.sdk.rest.services</groupId>
       <artifactId>dmaap-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.onap.dcaegen2.services.sdk.rest.services</groupId>
+      <artifactId>common-dependency</artifactId>
     </dependency>
 
     <dependency>

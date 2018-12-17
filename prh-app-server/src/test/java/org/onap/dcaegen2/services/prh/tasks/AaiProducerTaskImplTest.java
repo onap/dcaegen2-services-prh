@@ -38,10 +38,11 @@ import org.junit.jupiter.api.function.Executable;
 import org.onap.dcaegen2.services.prh.TestAppConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.patch.AaiReactiveHttpPatchClient;
-import org.onap.dcaegen2.services.sdk.rest.services.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.sdk.rest.services.model.ImmutableConsumerDmaapModel;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import reactor.core.publisher.Mono;

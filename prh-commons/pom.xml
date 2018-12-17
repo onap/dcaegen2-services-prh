@@ -14,7 +14,12 @@
   <artifactId>prh-commons</artifactId>
   <packaging>jar</packaging>
 
+
   <dependencies>
+    <dependency>
+      <groupId>org.onap.dcaegen2.services.sdk.rest.services</groupId>
+      <artifactId>common-dependency</artifactId>
+    </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
@@ -55,5 +60,6 @@
       <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
+
   </dependencies>
 </project>

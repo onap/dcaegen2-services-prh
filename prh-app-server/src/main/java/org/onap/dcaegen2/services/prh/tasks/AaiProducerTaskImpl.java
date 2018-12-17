@@ -25,10 +25,12 @@ import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.AaiNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.model.JsonBodyBuilderImpl;
 import org.onap.dcaegen2.services.prh.model.utils.HttpUtils;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.patch.AaiReactiveHttpPatchClient;
-import org.onap.dcaegen2.services.sdk.rest.services.model.ConsumerDmaapModel;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,13 +42,13 @@ import reactor.core.publisher.Mono;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
 @Component
-public class AaiProducerTaskImpl extends
-    AaiProducerTask {
+public class AaiProducerTaskImpl extends AaiProducerTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AaiProducerTaskImpl.class);
 
     private final Config config;
     private AaiReactiveHttpPatchClient aaiReactiveHttpPatchClient;
+    private JsonBodyBuilderImpl jsonBodyBuilder;
 
     @Autowired
     public AaiProducerTaskImpl(Config config) {
@@ -67,8 +69,8 @@ public class AaiProducerTaskImpl extends
     }
 
     @Override
-    AaiReactiveHttpPatchClient resolveClient() throws SSLException {
-        return new AaiReactiveHttpPatchClient(resolveConfiguration()).createAaiWebClient(buildWebClient());
+    AaiReactiveHttpPatchClient resolveClient(ConsumerDmaapModel consumerDmaapModel) throws SSLException {
+        return new AaiReactiveHttpPatchClient(resolveConfiguration(), jsonBodyBuilder).createAaiWebClient(buildWebClient());
     }
 
     @Override
@@ -82,7 +84,7 @@ public class AaiProducerTaskImpl extends
         if (consumerDmaapModel == null) {
             throw new DmaapNotFoundException("Invoked null object to DMaaP task");
         }
-        aaiReactiveHttpPatchClient = resolveClient();
+        aaiReactiveHttpPatchClient = resolveClient(consumerDmaapModel);
         LOGGER.debug("Method called with arg {}", consumerDmaapModel);
         return publish(consumerDmaapModel);
 

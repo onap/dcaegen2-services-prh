@@ -22,13 +22,14 @@ package org.onap.dcaegen2.services.prh.model;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapterFactory;
+import org.onap.dcaegen2.services.sdk.rest.services.model.JsonBodyBuilder;
+
 import java.util.ServiceLoader;
 
 
-public class CommonFunctions {
+public class JsonBodyBuilderImpl implements JsonBodyBuilder<ConsumerDmaapModel> {
 
-    private CommonFunctions() {
-    }
+    public JsonBodyBuilderImpl() {}
 
     /**
      * Method for serialization object by GSON.
@@ -36,7 +37,7 @@ public class CommonFunctions {
      * @param consumerDmaapModel - object which will be serialized
      * @return string from serialization
      */
-    public static String createJsonBody(ConsumerDmaapModel consumerDmaapModel) {
+    public String createJsonBody(ConsumerDmaapModel consumerDmaapModel) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         ServiceLoader.load(TypeAdapterFactory.class).forEach(gsonBuilder::registerTypeAdapterFactory);
         return gsonBuilder.create().toJson(ImmutableConsumerDmaapModel.builder().ipv4(consumerDmaapModel.getIpv4())

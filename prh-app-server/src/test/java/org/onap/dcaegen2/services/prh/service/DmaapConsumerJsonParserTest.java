@@ -28,8 +28,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.onap.dcaegen2.services.sdk.rest.services.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.sdk.rest.services.model.ImmutableConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 

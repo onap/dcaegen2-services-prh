@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9adffdf1_d756e7cd",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 2807
+      },
+      "writtenOn": "2018-12-17T14:52:45Z",
+      "side": 1,
+      "message": "So do you suggest to upgrade the patch version instead of minor?",
+      "parentUuid": "9adffdf1_5749975e",
+      "revId": "30bb583eca7814cbeb9b0be3e088aa517a6beb8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9adffdf1_fcb99079",
         "filename": "pom.xml",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2018-12-17T14:01:39Z",
       "side": 1,
       "message": "Is there any other way to add SNAPSHOT dependency? Maybe after stabilizing SDK we should reconfigure its builds to enable release publishing (then we should manually update version after each change).",
+      "revId": "30bb583eca7814cbeb9b0be3e088aa517a6beb8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_d70d87e9",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 2807
+      },
+      "writtenOn": "2018-12-17T14:52:45Z",
+      "side": 1,
+      "message": "Like I wrote above, maybe we should update the patch version and after that there will be no enforcer issue",
+      "parentUuid": "9adffdf1_fcb99079",
       "revId": "30bb583eca7814cbeb9b0be3e088aa517a6beb8a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false

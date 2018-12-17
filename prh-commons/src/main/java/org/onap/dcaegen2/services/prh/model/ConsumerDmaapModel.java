@@ -23,6 +23,8 @@ package org.onap.dcaegen2.services.prh.model;
 import com.google.gson.annotations.SerializedName;
 import org.immutables.gson.Gson;
 import org.immutables.value.Value;
+import org.onap.dcaegen2.services.sdk.rest.services.model.AaiModel;
+import org.onap.dcaegen2.services.sdk.rest.services.model.DmaapModel;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/8/18
@@ -30,7 +32,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @Gson.TypeAdapters(fieldNamingStrategy = true)
-public interface ConsumerDmaapModel {
+public interface ConsumerDmaapModel extends AaiModel, DmaapModel {
 
     @SerializedName(value = "correlationId", alternate = "correlationId")
     String getCorrelationId();

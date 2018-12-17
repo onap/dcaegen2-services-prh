@@ -13,7 +13,7 @@
 
   <groupId>org.onap.dcaegen2.services</groupId>
   <artifactId>prh</artifactId>
-  <version>1.2.0-SNAPSHOT</version>
+  <version>1.2.0-SANPSHOT</version>
 
   <name>dcaegen2-services-prh</name>
   <description>PNF Registration Handler</description>
@@ -35,6 +35,7 @@
     <slf4j.version>1.7.25</slf4j.version>
     <junit-platform.version>1.1.0</junit-platform.version>
     <jacoco.version>0.8.2</jacoco.version>
+    <sdk.version>1.2.0</sdk.version>
   </properties>
 
   <modules>
@@ -110,17 +111,22 @@
       <dependency>
         <groupId>org.onap.dcaegen2.services.sdk.rest.services</groupId>
         <artifactId>cbs-client</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>${sdk.version}</version>
       </dependency>
       <dependency>
         <groupId>org.onap.dcaegen2.services.sdk.rest.services</groupId>
         <artifactId>aai-client</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>${sdk.version}</version>
       </dependency>
       <dependency>
         <groupId>org.onap.dcaegen2.services.sdk.rest.services</groupId>
         <artifactId>dmaap-client</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>${sdk.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.onap.dcaegen2.services.sdk.rest.services</groupId>
+        <artifactId>common-dependency</artifactId>
+        <version>${sdk.version}</version>
       </dependency>
       <dependency>
         <groupId>io.springfox</groupId>
@@ -147,4 +153,5 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
+
 </project>

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9adffdf1_717f06ac",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AaiProducerTaskImpl.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 3773
+      },
+      "writtenOn": "2018-12-18T12:23:40Z",
+      "side": 1,
+      "message": "where do you use it? is it needed?",
+      "range": {
+        "startLine": 72,
+        "startChar": 64,
+        "endLine": 72,
+        "endChar": 82
+      },
+      "revId": "7c0eaf383fcdb8dc89f52df51fadea0c78fec4c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

@@ -36,13 +36,11 @@ dcae-services
 
 ### Maven Children Artifacts:
 1. prh-app-server: Pnf Registration Handler (PRH) server
-2. prh-aai-client: Contains implementation of AAI client
-3. prh-dmaap-client: Contains implementation of DmaaP client
-4. prh-commons: Common code for whole prh modules
+2. prh-commons: Common code for whole prh modules
 
 
 ## License
 
-Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+Copyright (C) 2018-2019 NOKIA Intellectual Property. All rights reserved.
 [License](http://www.apache.org/licenses/LICENSE-2.0)
 

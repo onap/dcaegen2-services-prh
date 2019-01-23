@@ -34,8 +34,13 @@
   <packaging>jar</packaging>
 
   <properties>
-    <docker.image.name>onap/${project.groupId}.${project.artifactId}</docker.image.name>
     <maven.build.timestamp.format>yyyyMMdd'T'HHmmss</maven.build.timestamp.format>
+
+    <prh.main.class>org.onap.dcaegen2.services.prh.MainApp</prh.main.class>
+    <dependency.dir.name>libs</dependency.dir.name>
+    <dependency.dir.location>${project.build.directory}/${dependency.dir.name}</dependency.dir.location>
+    <docker.artifact.dir>/opt</docker.artifact.dir>
+    <docker.image.name>onap/${project.groupId}.${project.artifactId}</docker.image.name>
   </properties>
 
   <build>
@@ -47,12 +52,35 @@
 
     <plugins>
       <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.0.2</version>
         <configuration>
-          <finalName>${project.artifactId}</finalName>
-          <mainClass>org.onap.dcaegen2.services.prh.MainApp</mainClass>
+          <archive>
+            <manifestEntries>
+              <Main-Class>${prh.main.class}</Main-Class>
+              <Build-Time>${maven.build.timestamp}</Build-Time>
+            </manifestEntries>
+          </archive>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <configuration>
+          <outputDirectory>${dependency.dir.location}</outputDirectory>
+          <includeScope>runtime</includeScope>
+          <silent>true</silent>
+        </configuration>
+        <executions>
+          <execution>
+            <id>copy-external-dependencies</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>com.spotify</groupId>
@@ -64,18 +92,22 @@
             <tag>latest</tag>
           </imageTags>
           <baseImage>openjdk:8-jre-alpine</baseImage>
-          <resources>
-            <resource>
-              <directory>${project.build.directory}</directory>
-              <include>${project.artifactId}.jar</include>
-              <targetPath>/opt</targetPath>
-            </resource>
-          </resources>
           <exposes>
             <expose>8100</expose>
             <expose>8433</expose>
           </exposes>
-          <cmd>["java", "-jar", "/opt/${project.artifactId}.jar"]</cmd>
+          <cmd>java -cp ${docker.artifact.dir}/${dependency.dir.name}/*:${docker.artifact.dir}/${project.build.finalName}.jar ${prh.main.class}</cmd>
+          <resources>
+            <resource>
+              <directory>${dependency.dir.location}</directory>
+              <targetPath>${docker.artifact.dir}/${dependency.dir.name}</targetPath>
+            </resource>
+            <resource>
+              <directory>${project.build.directory}</directory>
+              <include>${project.build.finalName}.jar</include>
+              <targetPath>${docker.artifact.dir}</targetPath>
+            </resource>
+          </resources>
         </configuration>
         <executions>
           <execution>

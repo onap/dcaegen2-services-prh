@@ -96,7 +96,7 @@
             <expose>8100</expose>
             <expose>8433</expose>
           </exposes>
-          <entryPoint>java -cp ${docker.artifact.dir}/${dependency.dir.name}/*:${docker.artifact.dir}/${project.build.finalName}.jar ${prh.main.class}</entryPoint>
+          <entryPoint>["java", "-cp", "${docker.artifact.dir}/${dependency.dir.name}/*:${docker.artifact.dir}/${project.build.finalName}.jar", "${prh.main.class}"]</entryPoint>
           <resources>
             <resource>
               <directory>${dependency.dir.location}</directory>

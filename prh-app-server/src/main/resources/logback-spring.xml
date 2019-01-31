@@ -40,6 +40,7 @@
     </appender>
 
     <logger name="org.onap.dcaegen2.services.prh" level="${logLevelPrh}"/>
+    <logger name="org.onap.dcaegen2.services.sdk" level="${logLevelPrh}"/>
 
     <root level="${logLevel}">
       <appender-ref ref="CONSOLE"/>

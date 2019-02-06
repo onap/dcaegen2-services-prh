@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1b535469_f70e5ec6",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/PnfRegistrationFields.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2019-02-06T10:56:05Z",
+      "side": 1,
+      "message": "Can this class be final?",
+      "revId": "a9a8333e3fbd8671c12cc72d07ecc3d9d5078c70",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ef500ea0_d5b3159c",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/ConsumerDmaapModel.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2019-02-06T10:56:05Z",
+      "side": 1,
+      "message": "Should not it be a map instead of plain values?",
+      "revId": "a9a8333e3fbd8671c12cc72d07ecc3d9d5078c70",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

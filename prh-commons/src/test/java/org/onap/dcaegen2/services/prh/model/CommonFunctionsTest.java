@@ -28,8 +28,62 @@ class CommonFunctionsTest {
 
     @Test
     void createJsonBody_shouldReturnJsonInString() {
-        String expectedResult = "{\"correlationId\":\"NOKnhfsadhff\",\"ipaddress-v4-oam\":\"256.22.33.155\""
-            + ",\"ipaddress-v6-oam\":\"200J:0db8:85a3:0000:0000:8a2e:0370:7334\"}";
-        assertEquals(expectedResult, new JsonBodyBuilderImpl().createJsonBody(new ConsumerDmaapModelForUnitTest()));
+
+        ConsumerDmaapModel model = ImmutableConsumerDmaapModel.builder()
+                .correlationId("NOKnhfsadhff")
+                .ipv4("256.22.33.155")
+                .ipv6("200J:0db8:85a3:0000:0000:8a2e:0370:7334")
+                .serialNumber("1234")
+                .equipVendor("NOKIA")
+                .equipModel("3310")
+                .equipType("cell")
+                .nfRole("role")
+                .swVersion("1.2.3")
+                .build();
+
+
+        String expectedResult = "{"
+                + "\"correlationId\":\"NOKnhfsadhff\","
+                + "\"ipaddress-v4-oam\":\"256.22.33.155\","
+                + "\"ipaddress-v6-oam\":\"200J:0db8:85a3:0000:0000:8a2e:0370:7334\","
+                + "\"serial-number\":\"1234\","
+                + "\"equip-vendor\":\"NOKIA\","
+                + "\"equip-model\":\"3310\","
+                + "\"equip-type\":\"cell\","
+                + "\"nf-role\":\"role\","
+                + "\"sw-version\":\"1.2.3\""
+                + "}";
+
+        assertEquals(expectedResult, new JsonBodyBuilderImpl().createJsonBody(model));
+    }
+
+    @Test
+    void createJsonBodyWithEmptyAdditionalFields_shouldReturnJsonInString() {
+        ConsumerDmaapModel model = ImmutableConsumerDmaapModel.builder()
+                .correlationId("NOKnhfsadhff")
+                .ipv4("256.22.33.155")
+                .ipv6("200J:0db8:85a3:0000:0000:8a2e:0370:7334")
+                .serialNumber("1234")
+                .equipVendor("NOKIA")
+                .equipModel("3310")
+                .equipType("cell")
+                .nfRole("role")
+                .swVersion("1.2.3")
+                .build();
+
+
+        String expectedResult = "{"
+                + "\"correlationId\":\"NOKnhfsadhff\","
+                + "\"ipaddress-v4-oam\":\"256.22.33.155\","
+                + "\"ipaddress-v6-oam\":\"200J:0db8:85a3:0000:0000:8a2e:0370:7334\","
+                + "\"serial-number\":\"1234\","
+                + "\"equip-vendor\":\"NOKIA\","
+                + "\"equip-model\":\"3310\","
+                + "\"equip-type\":\"cell\","
+                + "\"nf-role\":\"role\","
+                + "\"sw-version\":\"1.2.3\""
+                + "}";
+
+        assertEquals(expectedResult, new JsonBodyBuilderImpl().createJsonBody(model));
     }
 }

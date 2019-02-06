@@ -42,4 +42,22 @@ public interface ConsumerDmaapModel extends AaiModel, DmaapModel {
 
     @SerializedName(value = "ipaddress-v6-oam", alternate = "ipaddress-v6-oam")
     String getIpv6();
+
+    @SerializedName(value = "serial-number", alternate = "serial-number")
+    String getSerialNumber();
+
+    @SerializedName(value = "equip-vendor", alternate = "equip-vendor")
+    String getEquipVendor();
+
+    @SerializedName(value = "equip-model", alternate = "equip-model")
+    String getEquipModel();
+
+    @SerializedName(value = "equip-type", alternate = "equip-type")
+    String getEquipType();
+
+    @SerializedName(value = "nf-role", alternate = "nf-role")
+    String getNfRole();
+
+    @SerializedName(value = "sw-version", alternate = "sw-version")
+    String getSwVersion();
 }

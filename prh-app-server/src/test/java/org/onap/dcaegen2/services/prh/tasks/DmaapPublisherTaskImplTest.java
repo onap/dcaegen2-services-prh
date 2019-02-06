@@ -60,9 +60,17 @@ class DmaapPublisherTaskImplTest {
     @BeforeAll
     static void setUp() {
         dmaapPublisherConfiguration = createDefaultDmaapPublisherConfiguration();
-        consumerDmaapModel = ImmutableConsumerDmaapModel.builder().ipv4("10.16.123.234")
-            .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
-            .correlationId("NOKQTFCOC540002E").build();
+        consumerDmaapModel = ImmutableConsumerDmaapModel.builder()
+                .ipv4("10.16.123.234")
+                .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
+                .correlationId("NOKQTFCOC540002E")
+                .serialNumber("QTFCOC540002E")
+                .equipVendor("nokia")
+                .equipModel("3310")
+                .equipType("type")
+                .nfRole("role")
+                .swVersion("v4.5.0.1")
+                .build();
         appConfig = mock(AppConfig.class);
     }
 

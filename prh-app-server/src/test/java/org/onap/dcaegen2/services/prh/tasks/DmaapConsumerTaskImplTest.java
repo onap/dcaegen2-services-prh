@@ -59,30 +59,37 @@ class DmaapConsumerTaskImplTest {
     static void setUp() {
         dmaapConsumerConfiguration = createDefaultDmaapConsumerConfiguration();
 
-        consumerDmaapModel = ImmutableConsumerDmaapModel.builder().ipv4("10.16.123.234")
+        consumerDmaapModel = ImmutableConsumerDmaapModel.builder()
+            .ipv4("10.16.123.234")
             .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
-            .correlationId("NOKQTFCOC540002E").build();
+            .correlationId("NOKQTFCOC540002E")
+            .serialNumber("QTFCOC540002E")
+            .equipVendor("nokia")
+            .equipModel("3310")
+            .equipType("type")
+            .nfRole("role")
+            .swVersion("v4.5.0.1")
+            .build();
         appConfig = mock(AppConfig.class);
 
         message = "[{\"event\": {"
             + "\"commonEventHeader\": { \"sourceName\":\"NOKQTFCOC540002E\"},"
             + "\"pnfRegistrationFields\": {"
-            + " \"unitType\": \"AirScale\","
-            + " \"serialNumber\": \"QTFCOC540002E\","
+            + " \"equip-vendor\": \"nokia\","
+            + " \"serial-number\": \"QTFCOC540002E\","
             + " \"pnfRegistrationFieldsVersion\": \"2.0\","
-            + " \"manufactureDate\": \"1535014037024\","
-            + " \"modelNumber\": \"7BEA\",\n"
-            + " \"lastServiceDate\": \"1535014037024\","
+            + " \"equip-model\": \"3310\","
+            + " \"equip-type\": \"type\",\n"
+            + " \"nf-role\": \"role\","
             + " \"unitFamily\": \"BBU\","
-            + " \"vendorName\": \"Nokia\","
             + " \"oamV4IpAddress\": \"10.16.123.234\","
-            + " \"softwareVersion\": \"v4.5.0.1\","
+            + " \"sw-version\": \"v4.5.0.1\","
             + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
             + "}}}]";
     }
 
     @Test
-    void whenPassedObjectDoesntFit_DoesNotThrowPrhTaskException() throws Exception {
+    void whenPassedObjectDoesNotFit_DoesNotThrowPrhTaskException() throws Exception {
         //given
         prepareMocksForDmaapConsumer(Optional.empty());
 

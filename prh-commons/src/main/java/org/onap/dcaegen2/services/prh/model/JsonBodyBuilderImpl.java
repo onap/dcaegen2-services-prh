@@ -29,7 +29,6 @@ import java.util.ServiceLoader;
 
 public class JsonBodyBuilderImpl implements JsonBodyBuilder<ConsumerDmaapModel> {
 
-    public JsonBodyBuilderImpl() {}
 
     /**
      * Method for serialization object by GSON.
@@ -40,7 +39,16 @@ public class JsonBodyBuilderImpl implements JsonBodyBuilder<ConsumerDmaapModel> 
     public String createJsonBody(ConsumerDmaapModel consumerDmaapModel) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         ServiceLoader.load(TypeAdapterFactory.class).forEach(gsonBuilder::registerTypeAdapterFactory);
-        return gsonBuilder.create().toJson(ImmutableConsumerDmaapModel.builder().ipv4(consumerDmaapModel.getIpv4())
-            .ipv6(consumerDmaapModel.getIpv6()).correlationId(consumerDmaapModel.getCorrelationId()).build());
+        return gsonBuilder.create().toJson(ImmutableConsumerDmaapModel.builder()
+                .ipv4(consumerDmaapModel.getIpv4())
+                .ipv6(consumerDmaapModel.getIpv6())
+                .correlationId(consumerDmaapModel.getCorrelationId())
+                .serialNumber(consumerDmaapModel.getSerialNumber())
+                .equipVendor(consumerDmaapModel.getEquipVendor())
+                .equipModel(consumerDmaapModel.getEquipModel())
+                .equipType(consumerDmaapModel.getEquipType())
+                .nfRole(consumerDmaapModel.getNfRole())
+                .swVersion(consumerDmaapModel.getSwVersion())
+                .build());
     }
 }

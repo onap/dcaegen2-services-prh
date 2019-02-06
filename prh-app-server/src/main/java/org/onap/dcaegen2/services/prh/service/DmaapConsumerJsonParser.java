@@ -23,8 +23,6 @@ package org.onap.dcaegen2.services.prh.service;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import java.util.Optional;
-import java.util.stream.StreamSupport;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
@@ -34,6 +32,24 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
+import java.util.stream.StreamSupport;
+
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.COMMON_EVENT_HEADER;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.COMMON_FORMAT;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.CORRELATION_ID;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.EQUIP_MODEL;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.EQUIP_TYPE;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.EQUIP_VENDOR;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.EVENT;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.NF_ROLE;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.OAM_IPV_4_ADDRESS;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.OAM_IPV_6_ADDRESS;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.PNF_REGISTRATION_FIELDS;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.SERIAL_NUMBER;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.SOURCE_NAME;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.SW_VERSION;
+
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/8/18
@@ -42,13 +58,15 @@ public class DmaapConsumerJsonParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DmaapConsumerJsonParser.class);
 
-    private static final String EVENT = "event";
-    private static final String COMMON_EVENT_HEADER = "commonEventHeader";
-    private static final String PNF_REGISTRATION_FIELDS = "pnfRegistrationFields";
-    private static final String OAM_IPV_4_ADDRESS = "oamV4IpAddress";
-    private static final String OAM_IPV_6_ADDRESS = "oamV6IpAddress";
-    private static final String SOURCE_NAME = "sourceName";
-    private static final String CORRELATION_ID = "correlationId";
+    private String pnfSourceName;
+    private String pnfOamIpv4Address;
+    private String pnfOamIpv6Address;
+    private String pnfSerialNumberAdditionalField;
+    private String pnfEquipVendorAdditionalField;
+    private String pnfEquipModelAdditionalField;
+    private String pnfEquipTypeAdditionalField;
+    private String pnfNfRoleAdditionalField;
+    private String pnfSwVersionAdditionalField;
 
     /**
      * Extract info from string and create @see {@link org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel}.
@@ -58,59 +76,71 @@ public class DmaapConsumerJsonParser {
      */
     public Flux<ConsumerDmaapModel> getJsonObject(Mono<String> monoMessage) {
         return monoMessage
-            .flatMapMany(this::getJsonParserMessage)
-            .flatMap(this::createJsonConsumerModel);
+                .flatMapMany(this::getJsonParserMessage)
+                .flatMap(this::createJsonConsumerModel);
     }
 
     private Mono<JsonElement> getJsonParserMessage(String message) {
         return StringUtils.isEmpty(message) ? logErrorAndReturnMonoEmpty("DmaaP response is empty")
-            : Mono.fromCallable(() -> new JsonParser().parse(message));
+                : Mono.fromCallable(() -> new JsonParser().parse(message));
     }
 
     private Flux<ConsumerDmaapModel> createJsonConsumerModel(JsonElement jsonElement) {
         return jsonElement.isJsonObject()
-            ? create(Flux.defer(() -> Flux.just(jsonElement.getAsJsonObject())))
-            : getConsumerDmaapModelFromJsonArray(jsonElement);
+                ? create(Flux.defer(() -> Flux.just(jsonElement.getAsJsonObject())))
+                : getConsumerDmaapModelFromJsonArray(jsonElement);
     }
 
     private Flux<ConsumerDmaapModel> getConsumerDmaapModelFromJsonArray(JsonElement jsonElement) {
         return create(
-            Flux.defer(() -> Flux.fromStream(StreamSupport.stream(jsonElement.getAsJsonArray().spliterator(), false)
-                .map(jsonElementFromArray -> getJsonObjectFromAnArray(jsonElementFromArray)
-                    .orElseGet(JsonObject::new)))));
+                Flux.defer(() -> Flux.fromStream(StreamSupport.stream(jsonElement.getAsJsonArray().spliterator(), false)
+                        .map(jsonElementFromArray -> getJsonObjectFromAnArray(jsonElementFromArray)
+                                .orElseGet(JsonObject::new)))));
     }
 
     public Optional<JsonObject> getJsonObjectFromAnArray(JsonElement element) {
         JsonParser jsonParser = new JsonParser();
         return element.isJsonPrimitive() ? Optional.of(jsonParser.parse(element.getAsString()).getAsJsonObject())
-            : Optional.of(jsonParser.parse(element.toString()).getAsJsonObject());
+                : Optional.of(jsonParser.parse(element.toString()).getAsJsonObject());
     }
 
     private Flux<ConsumerDmaapModel> create(Flux<JsonObject> jsonObject) {
         return jsonObject.flatMap(monoJsonP ->
-            !containsHeader(monoJsonP) ? logErrorAndReturnMonoEmpty("Incorrect JsonObject - missing header")
-                : transform(monoJsonP))
-            .onErrorResume(exception -> exception instanceof DmaapNotFoundException, e -> Mono.empty());
+                !containsHeader(monoJsonP) ? logErrorAndReturnMonoEmpty("Incorrect JsonObject - missing header")
+                        : transform(monoJsonP))
+                .onErrorResume(exception -> exception instanceof DmaapNotFoundException, e -> Mono.empty());
     }
 
     private Mono<ConsumerDmaapModel> transform(JsonObject responseFromDmaap) {
 
         JsonObject commonEventHeader = responseFromDmaap.getAsJsonObject(EVENT)
-            .getAsJsonObject(COMMON_EVENT_HEADER);
+                .getAsJsonObject(COMMON_EVENT_HEADER);
         JsonObject pnfRegistrationFields = responseFromDmaap.getAsJsonObject(EVENT)
-            .getAsJsonObject(PNF_REGISTRATION_FIELDS);
+                .getAsJsonObject(PNF_REGISTRATION_FIELDS);
 
-        String pnfSourceName = getValueFromJson(commonEventHeader, SOURCE_NAME);
-        String pnfOamIpv4Address = getValueFromJson(pnfRegistrationFields, OAM_IPV_4_ADDRESS);
-        String pnfOamIpv6Address = getValueFromJson(pnfRegistrationFields, OAM_IPV_6_ADDRESS);
+        this.pnfSourceName = getValueFromJson(commonEventHeader, SOURCE_NAME);
+        this.pnfOamIpv4Address = getValueFromJson(pnfRegistrationFields, OAM_IPV_4_ADDRESS);
+        this.pnfOamIpv6Address = getValueFromJson(pnfRegistrationFields, OAM_IPV_6_ADDRESS);
+        this.pnfSerialNumberAdditionalField = getValueFromJson(pnfRegistrationFields, SERIAL_NUMBER);
+        this.pnfEquipVendorAdditionalField = getValueFromJson(pnfRegistrationFields, EQUIP_VENDOR);
+        this.pnfEquipModelAdditionalField = getValueFromJson(pnfRegistrationFields, EQUIP_MODEL);
+        this.pnfEquipTypeAdditionalField = getValueFromJson(pnfRegistrationFields, EQUIP_TYPE);
+        this.pnfNfRoleAdditionalField = getValueFromJson(pnfRegistrationFields, NF_ROLE);
+        this.pnfSwVersionAdditionalField = getValueFromJson(pnfRegistrationFields, SW_VERSION);
 
         return (StringUtils.isEmpty(pnfSourceName) || !ipPropertiesNotEmpty(pnfOamIpv4Address, pnfOamIpv6Address))
-            ? logErrorAndReturnMonoEmpty("Incorrect json, consumerDmaapModel can not be created: "
-            + printMessage(pnfSourceName, pnfOamIpv4Address, pnfOamIpv6Address)) :
-            Mono.just(ImmutableConsumerDmaapModel.builder()
-                .correlationId(pnfSourceName)
-                .ipv4(pnfOamIpv4Address)
-                .ipv6(pnfOamIpv6Address).build());
+                ? logErrorAndReturnMonoEmpty("Incorrect json, consumerDmaapModel can not be created: "
+                + printMessage()) :
+                Mono.just(ImmutableConsumerDmaapModel.builder()
+                        .correlationId(pnfSourceName)
+                        .ipv4(pnfOamIpv4Address)
+                        .ipv6(pnfOamIpv6Address)
+                        .serialNumber(pnfSerialNumberAdditionalField)
+                        .equipVendor(pnfEquipVendorAdditionalField)
+                        .equipModel(pnfEquipModelAdditionalField)
+                        .equipType(pnfEquipTypeAdditionalField)
+                        .nfRole(pnfNfRoleAdditionalField)
+                        .swVersion(pnfSwVersionAdditionalField).build());
     }
 
     private String getValueFromJson(JsonObject jsonObject, String jsonKey) {
@@ -125,12 +155,22 @@ public class DmaapConsumerJsonParser {
         return jsonObject.has(EVENT) && jsonObject.getAsJsonObject(EVENT).has(PNF_REGISTRATION_FIELDS);
     }
 
-    private String printMessage(String sourceName, String oamIpv4Address, String oamIpv6Address) {
+    private String printMessage() {
         return String.format("%n{"
-            + "\"" + CORRELATION_ID + "\": \"%s\","
-            + "\"" + OAM_IPV_4_ADDRESS + "\": \"%s\","
-            + "\"" + OAM_IPV_6_ADDRESS + "\": \"%s\""
-            + "%n}", sourceName, oamIpv4Address, oamIpv6Address);
+                        + "\"" + CORRELATION_ID + COMMON_FORMAT + ","
+                        + "\"" + OAM_IPV_4_ADDRESS + COMMON_FORMAT + ","
+                        + "\"" + OAM_IPV_6_ADDRESS + COMMON_FORMAT + ","
+                        + "\"" + SERIAL_NUMBER + COMMON_FORMAT + ","
+                        + "\"" + EQUIP_VENDOR + COMMON_FORMAT + ","
+                        + "\"" + EQUIP_MODEL + COMMON_FORMAT + ","
+                        + "\"" + EQUIP_TYPE + COMMON_FORMAT + ","
+                        + "\"" + NF_ROLE + COMMON_FORMAT + ","
+                        + "\"" + SW_VERSION + COMMON_FORMAT
+                        + "%n}", this.pnfSourceName, this.pnfOamIpv4Address, this.pnfOamIpv6Address,
+                this.pnfSerialNumberAdditionalField, this.pnfEquipVendorAdditionalField,
+                this.pnfEquipModelAdditionalField, this.pnfEquipTypeAdditionalField,
+                this.pnfNfRoleAdditionalField, this.pnfSwVersionAdditionalField
+        );
     }
 
     private <T> Mono<T> logErrorAndReturnMonoEmpty(String messageForLogger) {

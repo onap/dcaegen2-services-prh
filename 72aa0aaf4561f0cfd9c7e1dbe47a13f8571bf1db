@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ea2ba82_271d8f7a",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonParser.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 2683
+      },
+      "writtenOn": "2019-02-07T12:16:42Z",
+      "side": 1,
+      "message": "Strictly speaking it\u0027s rather formatMessage - it doesn\u0027t print anything.",
+      "range": {
+        "startLine": 158,
+        "startChar": 19,
+        "endLine": 158,
+        "endChar": 31
+      },
+      "revId": "72aa0aaf4561f0cfd9c7e1dbe47a13f8571bf1db",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe9c5c7d_e02c83a5",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/service/PnfRegistrationFields.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 2683
+      },
+      "writtenOn": "2019-02-07T12:16:42Z",
+      "side": 1,
+      "message": "Make it final so it\u0027s obvious that you can\u0027t extend this class.",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 5
+      },
+      "revId": "72aa0aaf4561f0cfd9c7e1dbe47a13f8571bf1db",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "437fda9a_d2a4082a",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/service/DmaapConsumerJsonParserTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 2683
+      },
+      "writtenOn": "2019-02-07T12:16:42Z",
+      "side": 1,
+      "message": "Embedding JSON in Java doesn\u0027t look very well. For me it\u0027s OK but consider reading json files from resources. You may create utility method for this:\n\n```\nString resourceAsString(String url) {\n   return getClass().getResourceAsStream(url) ...;\n}\nresourceAsString(\"/msg1.json\")\n```",
+      "revId": "72aa0aaf4561f0cfd9c7e1dbe47a13f8571bf1db",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

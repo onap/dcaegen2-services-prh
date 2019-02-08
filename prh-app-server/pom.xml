@@ -3,7 +3,7 @@
   ~ ============LICENSE_START=======================================================
   ~ PNF-REGISTRATION-HANDLER
   ~ ================================================================================
-  ~ Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+  ~ Copyright (C) 2018-2019 NOKIA Intellectual Property. All rights reserved.
   ~ ================================================================================
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   ~ ============LICENSE_END=========================================================
-  -->
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -52,13 +52,36 @@
 
     <plugins>
       <plugin>
+        <groupId>pl.project13.maven</groupId>
+        <artifactId>git-commit-id-plugin</artifactId>
+        <configuration>
+          <dateFormat>${maven.build.timestamp.format}</dateFormat>
+          <generateGitPropertiesFile>true</generateGitPropertiesFile>
+          <format>json</format>
+          <generateGitPropertiesFilename>${project.build.outputDirectory}/git_info.json</generateGitPropertiesFilename>
+        </configuration>
+        <executions>
+          <execution>
+            <id>get-git-info</id>
+            <goals>
+              <goal>revision</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.0.2</version>
         <configuration>
           <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <classpathPrefix>./${dependency.dir.name}/</classpathPrefix>
+              <useUniqueVersions>false</useUniqueVersions>
+              <mainClass>${prh.main.class}</mainClass>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+            </manifest>
             <manifestEntries>
-              <Main-Class>${prh.main.class}</Main-Class>
               <Build-Time>${maven.build.timestamp}</Build-Time>
             </manifestEntries>
           </archive>
@@ -91,23 +114,23 @@
           <imageTags>
             <tag>latest</tag>
           </imageTags>
-          <baseImage>openjdk:8-jre-alpine</baseImage>
-          <exposes>
-            <expose>8100</expose>
-            <expose>8433</expose>
-          </exposes>
-          <entryPoint>["java", "-cp", "${docker.artifact.dir}/${dependency.dir.name}/*:${docker.artifact.dir}/${project.build.finalName}.jar", "${prh.main.class}"]</entryPoint>
+          <baseImage>openjdk:${java.version}-jre-alpine</baseImage>
+          <workdir>${docker.artifact.dir}</workdir>
           <resources>
             <resource>
               <directory>${dependency.dir.location}</directory>
-              <targetPath>${docker.artifact.dir}/${dependency.dir.name}</targetPath>
+              <targetPath>${dependency.dir.name}</targetPath>
             </resource>
             <resource>
               <directory>${project.build.directory}</directory>
               <include>${project.build.finalName}.jar</include>
-              <targetPath>${docker.artifact.dir}</targetPath>
             </resource>
           </resources>
+          <exposes>
+            <expose>8100</expose>
+            <expose>8433</expose>
+          </exposes>
+          <entryPoint>["java", "-jar", "${project.build.finalName}.jar"]</entryPoint>
         </configuration>
         <executions>
           <execution>
@@ -157,6 +180,7 @@
       </plugin>
     </plugins>
   </build>
+
   <dependencies>
     <dependency>
       <groupId>org.onap.dcaegen2.services.prh</groupId>

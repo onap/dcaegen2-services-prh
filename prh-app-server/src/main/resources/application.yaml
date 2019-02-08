@@ -9,11 +9,3 @@ server:
     key-store: classpath:keystore-local
     key-password: nokiapnf
     keyAlias: tomcat-localhost
-logging:
-  level:
-    ROOT: ERROR
-    org.onap.dcaegen2.services.prh: INFO
-    reactor.ipc.netty.http.client: WARN
-    org.springframework: ERROR
-    org.springframework.data: ERROR
-    org.springframework.web.reactive: WARN

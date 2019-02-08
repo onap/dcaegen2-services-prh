@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,17 +20,6 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
-import static java.lang.ClassLoader.getSystemResource;
-import static java.nio.file.Files.readAllBytes;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Paths;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,11 +27,18 @@ import org.onap.dcaegen2.services.prh.integration.junit5.mockito.MockitoExtensio
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 
+import java.io.*;
+import java.nio.file.Paths;
+
+import static java.lang.ClassLoader.getSystemResource;
+import static java.nio.file.Files.readAllBytes;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/9/18
  */
-@ExtendWith({MockitoExtension.class})
+@ExtendWith({ MockitoExtension.class })
 class PrhAppConfigTest {
 
     private static final String CORRECT_CONFIG_FILE = "correct_config.json";
@@ -58,7 +54,7 @@ class PrhAppConfigTest {
     @Test
     void whenTheConfigurationFits() throws Exception {
         InputStream inputStream = createInputStream(CORRECT_CONFIG_FILE);
-        appConfig.setResourceFile(new InputStreamResource(inputStream));
+        appConfig.setPrhEndpoints(new InputStreamResource(inputStream));
         appConfig.initFileStreamReader();
 
         assertNotNull(appConfig.getDmaapConsumerConfiguration());
@@ -71,7 +67,7 @@ class PrhAppConfigTest {
         InputStream inputStream = createInputStream(CORRECT_CONFIG_FILE);
         Resource resource = spy(new InputStreamResource(inputStream));
         when(resource.getInputStream()).thenThrow(new IOException());
-        appConfig.setResourceFile(resource);
+        appConfig.setPrhEndpoints(resource);
         appConfig.initFileStreamReader();
 
         assertNull(appConfig.getAaiClientConfiguration());
@@ -82,7 +78,7 @@ class PrhAppConfigTest {
     @Test
     void whenFileExistsButDmaapPublisherJsonConfigurationIsIncorrect() throws Exception {
         InputStream inputStream = createInputStream(INCORRECT_CONFIG_FILE);
-        appConfig.setResourceFile(new InputStreamResource(inputStream));
+        appConfig.setPrhEndpoints(new InputStreamResource(inputStream));
         appConfig.initFileStreamReader();
 
         assertNotNull(appConfig.getAaiClientConfiguration());
@@ -93,7 +89,7 @@ class PrhAppConfigTest {
     @Test
     void whenRootElementIsNotAJsonObject() throws Exception {
         InputStream inputStream = createInputStream(NOT_JSON_OBJECT_FILE);
-        appConfig.setResourceFile(new InputStreamResource(inputStream));
+        appConfig.setPrhEndpoints(new InputStreamResource(inputStream));
         appConfig.initFileStreamReader();
 
 

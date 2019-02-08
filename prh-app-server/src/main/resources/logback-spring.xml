@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
+<configuration debug="false" scan="false">
   <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
   <property name="outputFilename" value="prh-app-server_output"/>
   <property name="logPath" value="/var/log/ONAP/prh/prh-app-server"/>

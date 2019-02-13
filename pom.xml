@@ -50,7 +50,7 @@
     <spring-boot.version>2.1.2.RELEASE</spring-boot.version>
     <springfox.version>2.9.2</springfox.version>
     <immutables.version>2.7.5</immutables.version>
-    <sdk.version>1.1.0-SNAPSHOT</sdk.version>
+    <sdk.version>1.1.2-SNAPSHOT</sdk.version>
   </properties>
 
   <modules>

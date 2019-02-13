@@ -119,13 +119,14 @@ public class DmaapConsumerJsonParser {
                 .getAsJsonObject(PNF_REGISTRATION_FIELDS);
 
         this.pnfSourceName = getValueFromJson(commonEventHeader, SOURCE_NAME);
+        this.pnfNfRoleAdditionalField = getValueFromJson(commonEventHeader, NF_ROLE);
+
         this.pnfOamIpv4Address = getValueFromJson(pnfRegistrationFields, OAM_IPV_4_ADDRESS);
         this.pnfOamIpv6Address = getValueFromJson(pnfRegistrationFields, OAM_IPV_6_ADDRESS);
         this.pnfSerialNumberAdditionalField = getValueFromJson(pnfRegistrationFields, SERIAL_NUMBER);
         this.pnfEquipVendorAdditionalField = getValueFromJson(pnfRegistrationFields, EQUIP_VENDOR);
         this.pnfEquipModelAdditionalField = getValueFromJson(pnfRegistrationFields, EQUIP_MODEL);
         this.pnfEquipTypeAdditionalField = getValueFromJson(pnfRegistrationFields, EQUIP_TYPE);
-        this.pnfNfRoleAdditionalField = getValueFromJson(pnfRegistrationFields, NF_ROLE);
         this.pnfSwVersionAdditionalField = getValueFromJson(pnfRegistrationFields, SW_VERSION);
 
         return (StringUtils.isEmpty(pnfSourceName) || !ipPropertiesNotEmpty(pnfOamIpv4Address, pnfOamIpv6Address))

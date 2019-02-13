@@ -33,12 +33,12 @@ class PnfRegistrationFields {
     static final String CORRELATION_ID = "correlationId";
 
     // additional fields
-    static final String SERIAL_NUMBER = "serial-number";
-    static final String EQUIP_VENDOR = "equip-vendor";
-    static final String EQUIP_MODEL = "equip-model";
-    static final String EQUIP_TYPE = "equip-type";
-    static final String NF_ROLE = "nf-role";
-    static final String SW_VERSION = "sw-version";
+    static final String SERIAL_NUMBER = "serialNumber";
+    static final String EQUIP_VENDOR = "vendorName";
+    static final String EQUIP_MODEL = "modelNumber";
+    static final String EQUIP_TYPE = "unitType";
+    static final String NF_ROLE = "nfNamingCode";
+    static final String SW_VERSION = "softwareVersion";
 
     private PnfRegistrationFields() {}
 }

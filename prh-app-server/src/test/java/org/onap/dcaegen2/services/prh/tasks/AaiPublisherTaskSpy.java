@@ -28,7 +28,7 @@ import javax.net.ssl.SSLException;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.patch.AaiReactiveHttpPatchClient;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.patch.AaiHttpPatchClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -53,7 +53,7 @@ public class AaiPublisherTaskSpy {
         ConsumerDmaapModel consumerDmaapModel = spy(ConsumerDmaapModel.class);
         doReturn(mock(AaiClientConfiguration.class)).when(appConfig).getAaiClientConfiguration();
         AaiProducerTaskImpl aaiProducerTask = spy(new AaiProducerTaskImpl(appConfig));
-        AaiReactiveHttpPatchClient aaiReactiveHttpPatchClient = mock(AaiReactiveHttpPatchClient.class);
+        AaiHttpPatchClient aaiReactiveHttpPatchClient = mock(AaiHttpPatchClient.class);
         doReturn(mock(AaiClientConfiguration.class)).when(aaiProducerTask).resolveConfiguration();
         doReturn(aaiReactiveHttpPatchClient).when(aaiProducerTask).resolveClient();
         return aaiProducerTask;

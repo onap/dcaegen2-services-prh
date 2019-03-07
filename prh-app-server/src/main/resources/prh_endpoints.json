@@ -3,8 +3,8 @@
     "dmaap": {
       "dmaapConsumerConfiguration": {
         "dmaapHostName": "localhost",
-        "dmaapPortNumber": 2222,
-        "dmaapTopicName": "/events/unauthenticated.VES_PNFREG_OUTPUT",
+        "dmaapPortNumber": 8904,
+        "dmaapTopicName": "events/unauthenticated.VES_PNFREG_OUTPUT",
         "dmaapProtocol": "http",
         "dmaapUserName": "admin",
         "dmaapUserPassword": "admin",
@@ -16,8 +16,8 @@
       },
       "dmaapProducerConfiguration": {
         "dmaapHostName": "localhost",
-        "dmaapPortNumber": 2223,
-        "dmaapTopicName": "/events/unauthenticated.PNF_READY",
+        "dmaapPortNumber": 8904,
+        "dmaapTopicName": "events/unauthenticated.PNF_READY",
         "dmaapProtocol": "http",
         "dmaapUserName": "admin",
         "dmaapUserPassword": "admin",
@@ -27,7 +27,7 @@
     "aai": {
       "aaiClientConfiguration": {
         "aaiHost": "localhost",
-        "aaiPort": 8080,
+        "aaiPort": 8443,
         "aaiProtocol": "https",
         "aaiUserName": "AAI",
         "aaiUserPassword": "AAI",
@@ -39,7 +39,8 @@
           "X-TransactionId": "9999",
           "Accept": "application/json",
           "Real-Time": "true",
-          "Content-Type": "application/merge-patch+json"
+          "Content-Type": "application/merge-patch+json",
+          "Authorization": "Basic QUFJOkFBSQ=="
         }
       }
     },

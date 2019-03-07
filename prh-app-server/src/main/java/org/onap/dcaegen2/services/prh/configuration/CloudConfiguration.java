@@ -23,7 +23,8 @@ package org.onap.dcaegen2.services.prh.configuration;
 import com.google.gson.JsonObject;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.ImmutableAaiClientConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.http.configuration.EnvProperties;
+
+import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.model.EnvProperties;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.providers.CloudConfigurationClient;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapPublisherConfiguration;
@@ -59,7 +60,6 @@ public class CloudConfiguration extends AppConfig {
 
     @Value("#{systemEnvironment}")
     private Properties systemEnvironment;
-
 
     @Autowired
     public void setThreadPoolTaskScheduler(CloudConfigurationClient prhConfigurationProvider) {

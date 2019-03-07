@@ -20,11 +20,14 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
+import java.util.Optional;
+import javax.net.ssl.SSLException;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.PnfReadyJsonBodyBuilderImpl;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.producer.DMaaPPublisherReactiveHttpClient;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.producer.DmaaPRestTemplateFactory;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.producer.PublisherReactiveHttpClientFactory;
@@ -32,8 +35,8 @@ import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.produce
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import reactor.netty.http.client.HttpClientResponse;
 import reactor.core.publisher.Mono;
 
 /**
@@ -43,7 +46,8 @@ import reactor.core.publisher.Mono;
 public class DmaapPublisherTaskImpl implements DmaapPublisherTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DmaapPublisherTaskImpl.class);
-    private final Config config;
+    private DmaapPublisherConfiguration dmaapPublisherConfiguration;
+
     private final PublisherReactiveHttpClientFactory httpClientFactory;
 
     @Autowired
@@ -52,22 +56,23 @@ public class DmaapPublisherTaskImpl implements DmaapPublisherTask {
     }
 
     DmaapPublisherTaskImpl(Config config, PublisherReactiveHttpClientFactory httpClientFactory) {
-        this.config = config;
+        this.dmaapPublisherConfiguration = config.getDmaapPublisherConfiguration();
         this.httpClientFactory = httpClientFactory;
     }
 
     @Override
-    public Mono<ResponseEntity<String>> execute(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException {
+    public Mono<HttpClientResponse> execute(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException,SSLException {
         if (consumerDmaapModel == null) {
             throw new DmaapNotFoundException("Invoked null object to DMaaP task");
         }
         DMaaPPublisherReactiveHttpClient dmaapPublisherReactiveHttpClient = resolveClient();
         LOGGER.info("Method called with arg {}", consumerDmaapModel);
-        return dmaapPublisherReactiveHttpClient.getDMaaPProducerResponse(consumerDmaapModel);
+        return dmaapPublisherReactiveHttpClient.getDMaaPProducerResponse(consumerDmaapModel,Optional.empty());
     }
 
     @Override
-    public DMaaPPublisherReactiveHttpClient resolveClient() {
-        return httpClientFactory.create(config.getDmaapPublisherConfiguration());
+    public DMaaPPublisherReactiveHttpClient resolveClient() throws SSLException{
+            return httpClientFactory.create(dmaapPublisherConfiguration);
+
     }
 }

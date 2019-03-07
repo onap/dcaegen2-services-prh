@@ -31,7 +31,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.dcaegen2.services.prh.integration.junit5.mockito.MockitoExtension;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -41,7 +40,6 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/27/18
  */
 @Configuration
-@ComponentScan("org.onap.dcaegen2.services.sdk.rest.services.cbs.client.providers")
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
 @ContextConfiguration(locations = "classpath:scheduled-context.xml")
 class ScheduledXmlContextITest extends AbstractTestNGSpringContextTests {

@@ -43,6 +43,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.netty.http.client.HttpClientResponse;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
@@ -108,10 +109,13 @@ public class ScheduledTasks {
         logger.info("PRH tasks have been completed");
     }
 
-    private void onSuccess(ResponseEntity<String> responseCode) {
-        MDC.put(RESPONSE_CODE, responseCode.getStatusCode().toString());
+    private void onSuccess(HttpClientResponse response) {
+
+        String statusCode = Integer.toString(response.status().code());
+
+        MDC.put(RESPONSE_CODE, statusCode);
         logger.info("Prh consumed tasks successfully. HTTP Response code from DMaaPProducer {}",
-            responseCode.getStatusCode().value());
+            statusCode);
         MDC.remove(RESPONSE_CODE);
     }
 
@@ -148,7 +152,7 @@ public class ScheduledTasks {
         }
     }
 
-    private Mono<ResponseEntity<String>> publishToDmaapConfiguration(ConsumerDmaapModel monoAaiModel) {
+    private Mono<HttpClientResponse> publishToDmaapConfiguration(ConsumerDmaapModel monoAaiModel) {
         try {
             return dmaapProducerTask.execute(monoAaiModel);
         } catch (PrhTaskException e) {

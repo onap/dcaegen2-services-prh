@@ -99,7 +99,7 @@ class DmaapConsumerTaskImplTest {
         Flux<ConsumerDmaapModel> response = dmaapConsumerTask.execute("Sample input");
 
         //then
-        verify(dMaaPConsumerReactiveHttpClient).getDMaaPConsumerResponse();
+        verify(dMaaPConsumerReactiveHttpClient).getDMaaPConsumerResponse(Optional.empty());
         assertNull(response.blockFirst());
     }
 
@@ -112,7 +112,7 @@ class DmaapConsumerTaskImplTest {
         Flux<ConsumerDmaapModel> response = dmaapConsumerTask.execute("Sample input");
 
         //then
-        verify(dMaaPConsumerReactiveHttpClient).getDMaaPConsumerResponse();
+        verify(dMaaPConsumerReactiveHttpClient).getDMaaPConsumerResponse(Optional.empty());
         assertEquals(consumerDmaapModel, response.blockFirst());
     }
 
@@ -127,7 +127,7 @@ class DmaapConsumerTaskImplTest {
 
     private void prepareMocksForDmaapConsumer(Optional<String> message) throws Exception {
         dMaaPConsumerReactiveHttpClient = mock(DMaaPConsumerReactiveHttpClient.class);
-        when(dMaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse()).thenReturn(Mono.just(message.orElse("")));
+        when(dMaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse(Optional.empty())).thenReturn(Mono.just(message.orElse("")));
         when(appConfig.getDmaapConsumerConfiguration()).thenReturn(dmaapConsumerConfiguration);
         ConsumerReactiveHttpClientFactory httpClientFactory = mock(ConsumerReactiveHttpClientFactory.class);
         doReturn(dMaaPConsumerReactiveHttpClient).when(httpClientFactory).create(dmaapConsumerConfiguration);

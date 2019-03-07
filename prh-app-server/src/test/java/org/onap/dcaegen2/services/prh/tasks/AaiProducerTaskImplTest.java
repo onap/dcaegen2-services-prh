@@ -43,10 +43,10 @@ import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.patch.AaiReactiveHttpPatchClient;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.patch.AaiHttpPatchClient;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.reactive.function.client.ClientResponse;
+import reactor.netty.http.client.HttpClientResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -58,13 +58,13 @@ class AaiProducerTaskImplTest {
     private ConsumerDmaapModel consumerDmaapModel;
     private AaiProducerTaskImpl aaiProducerTask;
     private AaiClientConfiguration aaiClientConfiguration;
-    private AaiReactiveHttpPatchClient aaiReactiveHttpPatchClient;
+    private AaiHttpPatchClient aaiReactiveHttpPatchClient;
     private AppConfig appConfig;
-    private ClientResponse clientResponse;
+    private HttpClientResponse clientResponse;
 
     @BeforeEach
     void setUp() {
-        clientResponse = mock(ClientResponse.class);
+        clientResponse = mock(HttpClientResponse.class);
         aaiClientConfiguration = TestAppConfiguration.createDefaultAaiClientConfiguration();
         consumerDmaapModel = ImmutableConsumerDmaapModel.builder()
                 .ipv4("10.16.123.234")
@@ -97,11 +97,11 @@ class AaiProducerTaskImplTest {
     @Test
     void whenPassedObjectFits_ReturnsCorrectStatus() throws PrhTaskException, SSLException {
         //given/when
-        getAaiProducerTask_whenMockingResponseObject(200);
+        getAaiProducerTask_whenMockingResponseObject(HttpResponseStatus.OK);
         Mono<ConsumerDmaapModel> response = aaiProducerTask.execute(consumerDmaapModel);
 
         //then
-        verify(aaiReactiveHttpPatchClient, times(1)).getAaiProducerResponse(any());
+        verify(aaiReactiveHttpPatchClient, times(1)).getAaiResponse(any());
         verifyNoMoreInteractions(aaiReactiveHttpPatchClient);
         Assertions.assertEquals(consumerDmaapModel, response.block());
 
@@ -110,20 +110,20 @@ class AaiProducerTaskImplTest {
     @Test
     void whenPassedObjectFits_butIncorrectResponseReturns() throws PrhTaskException, SSLException {
         //given/when
-        getAaiProducerTask_whenMockingResponseObject(400);
+        getAaiProducerTask_whenMockingResponseObject(HttpResponseStatus.BAD_REQUEST);
         StepVerifier.create(aaiProducerTask.execute(consumerDmaapModel)).expectSubscription()
             .expectError(PrhTaskException.class).verify();
         //then
-        verify(aaiReactiveHttpPatchClient, times(1)).getAaiProducerResponse(any());
+        verify(aaiReactiveHttpPatchClient, times(1)).getAaiResponse(any());
         verifyNoMoreInteractions(aaiReactiveHttpPatchClient);
     }
 
-    private void getAaiProducerTask_whenMockingResponseObject(int statusCode) throws SSLException {
+    private void getAaiProducerTask_whenMockingResponseObject(HttpResponseStatus httpResponseStatus) throws SSLException {
         //given
-        doReturn(HttpStatus.valueOf(statusCode)).when(clientResponse).statusCode();
-        Mono<ClientResponse> clientResponseMono = Mono.just(clientResponse);
-        aaiReactiveHttpPatchClient = mock(AaiReactiveHttpPatchClient.class);
-        when(aaiReactiveHttpPatchClient.getAaiProducerResponse(any()))
+        doReturn(httpResponseStatus).when(clientResponse).status();
+        Mono<HttpClientResponse> clientResponseMono = Mono.just(clientResponse);
+        aaiReactiveHttpPatchClient = mock(AaiHttpPatchClient.class);
+        when(aaiReactiveHttpPatchClient.getAaiResponse(any()))
             .thenReturn(clientResponseMono);
         when(appConfig.getAaiClientConfiguration()).thenReturn(aaiClientConfiguration);
         aaiProducerTask = spy(new AaiProducerTaskImpl(appConfig));

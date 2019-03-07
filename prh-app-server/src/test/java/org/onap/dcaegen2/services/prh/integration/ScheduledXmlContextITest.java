@@ -26,6 +26,7 @@ import static org.mockito.Mockito.verify;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.dcaegen2.services.prh.integration.junit5.mockito.MockitoExtension;
@@ -44,7 +45,8 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 @ComponentScan("org.onap.dcaegen2.services.sdk.rest.services.cbs.client.providers")
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
 @ContextConfiguration(locations = "classpath:scheduled-context.xml")
-class ScheduledXmlContextITest extends AbstractTestNGSpringContextTests {
+class ScheduledXmlContextITest extends AbstractTestNGSpringContextTests
+{
 
     private static final int WAIT_FOR_SCHEDULING = 1;
 

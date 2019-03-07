@@ -20,11 +20,11 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
+import javax.net.ssl.SSLException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.producer.DMaaPPublisherReactiveHttpClient;
-
-import org.springframework.http.ResponseEntity;
+import reactor.netty.http.client.HttpClientResponse;
 import reactor.core.publisher.Mono;
 
 /**
@@ -32,7 +32,7 @@ import reactor.core.publisher.Mono;
  */
 interface DmaapPublisherTask {
 
-    Mono<ResponseEntity<String>> execute(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException;
+    Mono<HttpClientResponse> execute(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException, SSLException;
 
-    DMaaPPublisherReactiveHttpClient resolveClient();
+    DMaaPPublisherReactiveHttpClient resolveClient() throws SSLException;;
 }

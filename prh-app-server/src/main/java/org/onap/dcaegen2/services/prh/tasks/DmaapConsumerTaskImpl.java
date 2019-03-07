@@ -20,6 +20,7 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
+import java.util.Optional;
 import javax.net.ssl.SSLException;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
@@ -69,7 +70,8 @@ public class DmaapConsumerTaskImpl implements DmaapConsumerTask {
     public Flux<ConsumerDmaapModel> execute(String object) throws SSLException {
         DMaaPConsumerReactiveHttpClient dmaaPConsumerReactiveHttpClient = resolveClient();
         LOGGER.debug("Method called with arg {}", object);
-        return dmaapConsumerJsonParser.getJsonObject(dmaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse());
+        return dmaapConsumerJsonParser.getJsonObject(dmaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse(
+            Optional.empty()));
     }
 
     @Override

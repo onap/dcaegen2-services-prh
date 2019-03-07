@@ -37,6 +37,11 @@ import javax.net.ssl.TrustManagerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+/**
+ * Please use the one from SDK security
+ * */
+@Deprecated
 public class SslFactory {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SslFactory.class);

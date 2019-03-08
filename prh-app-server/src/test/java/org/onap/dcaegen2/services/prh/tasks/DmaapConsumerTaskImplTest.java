@@ -28,6 +28,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.onap.dcaegen2.services.prh.TestAppConfiguration.createDefaultDmaapConsumerConfiguration;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -59,9 +61,13 @@ class DmaapConsumerTaskImplTest {
     static void setUp() {
         dmaapConsumerConfiguration = createDefaultDmaapConsumerConfiguration();
 
+        JsonObject jsonObject = new JsonParser().parse("{\n"
+            + "        \"attachmentPoint\": \"bla-bla-30-3\",\n"
+            + "        \"cvlan\": \"678\",\n"
+            + "        \"svlan\": \"1005\"\n"
+            + "      }").getAsJsonObject();
+
         consumerDmaapModel = ImmutableConsumerDmaapModel.builder()
-            .ipv4("10.16.123.234")
-            .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
             .correlationId("NOKQTFCOC540002E")
             .serialNumber("QTFCOC540002E")
             .equipVendor("nokia")
@@ -69,6 +75,7 @@ class DmaapConsumerTaskImplTest {
             .equipType("type")
             .nfRole("gNB")
             .swVersion("v4.5.0.1")
+            .additionalFields(jsonObject)
             .build();
         appConfig = mock(AppConfig.class);
 
@@ -84,9 +91,8 @@ class DmaapConsumerTaskImplTest {
             + " \"modelNumber\": \"3310\","
             + " \"unitType\": \"type\",\n"
             + " \"unitFamily\": \"BBU\","
-            + " \"oamV4IpAddress\": \"10.16.123.234\","
             + " \"softwareVersion\": \"v4.5.0.1\","
-            + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
+            + " \"additionalFields\": {\"attachmentPoint\": \"bla-bla-30-3\",\"cvlan\": \"678\",\"svlan\": \"1005\"}"
             + "}}}]";
     }
 

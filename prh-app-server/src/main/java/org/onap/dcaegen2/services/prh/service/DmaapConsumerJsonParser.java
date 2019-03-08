@@ -36,19 +36,19 @@ import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.COMMON_EVENT_HEADER;
-import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.COMMON_FORMAT;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.COMMON_FORMAT_FOR_STRING;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.COMMON_FORMAT_FOR_JSON_OBJECT;
 import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.CORRELATION_ID;
 import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.EQUIP_MODEL;
 import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.EQUIP_TYPE;
 import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.EQUIP_VENDOR;
 import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.EVENT;
 import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.NF_ROLE;
-import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.OAM_IPV_4_ADDRESS;
-import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.OAM_IPV_6_ADDRESS;
 import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.PNF_REGISTRATION_FIELDS;
 import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.SERIAL_NUMBER;
 import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.SOURCE_NAME;
 import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.SW_VERSION;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.ADDITIONAL_FIELDS;
 
 
 /**
@@ -59,14 +59,13 @@ public class DmaapConsumerJsonParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(DmaapConsumerJsonParser.class);
 
     private String pnfSourceName;
-    private String pnfOamIpv4Address;
-    private String pnfOamIpv6Address;
-    private String pnfSerialNumberAdditionalField;
-    private String pnfEquipVendorAdditionalField;
-    private String pnfEquipModelAdditionalField;
-    private String pnfEquipTypeAdditionalField;
-    private String pnfNfRoleAdditionalField;
-    private String pnfSwVersionAdditionalField;
+    private String pnfSerialNumberOptionalField;
+    private String pnfEquipVendorOptionalField;
+    private String pnfEquipModelOptionalField;
+    private String pnfEquipTypeOptionalField;
+    private String pnfNfRoleOptionalField;
+    private String pnfSwVersionOptionalField;
+    private JsonObject pnfAdditionalFields;
 
     /**
      * Extract info from string and create @see {@link org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel}.
@@ -119,37 +118,31 @@ public class DmaapConsumerJsonParser {
                 .getAsJsonObject(PNF_REGISTRATION_FIELDS);
 
         this.pnfSourceName = getValueFromJson(commonEventHeader, SOURCE_NAME);
-        this.pnfNfRoleAdditionalField = getValueFromJson(commonEventHeader, NF_ROLE);
+        this.pnfNfRoleOptionalField = getValueFromJson(commonEventHeader, NF_ROLE);
 
-        this.pnfOamIpv4Address = getValueFromJson(pnfRegistrationFields, OAM_IPV_4_ADDRESS);
-        this.pnfOamIpv6Address = getValueFromJson(pnfRegistrationFields, OAM_IPV_6_ADDRESS);
-        this.pnfSerialNumberAdditionalField = getValueFromJson(pnfRegistrationFields, SERIAL_NUMBER);
-        this.pnfEquipVendorAdditionalField = getValueFromJson(pnfRegistrationFields, EQUIP_VENDOR);
-        this.pnfEquipModelAdditionalField = getValueFromJson(pnfRegistrationFields, EQUIP_MODEL);
-        this.pnfEquipTypeAdditionalField = getValueFromJson(pnfRegistrationFields, EQUIP_TYPE);
-        this.pnfSwVersionAdditionalField = getValueFromJson(pnfRegistrationFields, SW_VERSION);
+        this.pnfSerialNumberOptionalField = getValueFromJson(pnfRegistrationFields, SERIAL_NUMBER);
+        this.pnfEquipVendorOptionalField = getValueFromJson(pnfRegistrationFields, EQUIP_VENDOR);
+        this.pnfEquipModelOptionalField = getValueFromJson(pnfRegistrationFields, EQUIP_MODEL);
+        this.pnfEquipTypeOptionalField = getValueFromJson(pnfRegistrationFields, EQUIP_TYPE);
+        this.pnfSwVersionOptionalField = getValueFromJson(pnfRegistrationFields, SW_VERSION);
+        this.pnfAdditionalFields = pnfRegistrationFields.getAsJsonObject(ADDITIONAL_FIELDS);
 
-        return (StringUtils.isEmpty(pnfSourceName) || !ipPropertiesNotEmpty(pnfOamIpv4Address, pnfOamIpv6Address))
+        return (StringUtils.isEmpty(pnfSourceName))
                 ? logErrorAndReturnMonoEmpty("Incorrect json, consumerDmaapModel can not be created: "
                 + printMessage()) :
                 Mono.just(ImmutableConsumerDmaapModel.builder()
                         .correlationId(pnfSourceName)
-                        .ipv4(pnfOamIpv4Address)
-                        .ipv6(pnfOamIpv6Address)
-                        .serialNumber(pnfSerialNumberAdditionalField)
-                        .equipVendor(pnfEquipVendorAdditionalField)
-                        .equipModel(pnfEquipModelAdditionalField)
-                        .equipType(pnfEquipTypeAdditionalField)
-                        .nfRole(pnfNfRoleAdditionalField)
-                        .swVersion(pnfSwVersionAdditionalField).build());
+                        .serialNumber(pnfSerialNumberOptionalField)
+                        .equipVendor(pnfEquipVendorOptionalField)
+                        .equipModel(pnfEquipModelOptionalField)
+                        .equipType(pnfEquipTypeOptionalField)
+                        .nfRole(pnfNfRoleOptionalField)
+                        .swVersion(pnfSwVersionOptionalField)
+                        .additionalFields(Optional.ofNullable(pnfAdditionalFields).orElse(new JsonObject())).build());
     }
 
     private String getValueFromJson(JsonObject jsonObject, String jsonKey) {
         return jsonObject.has(jsonKey) ? jsonObject.get(jsonKey).getAsString() : "";
-    }
-
-    private boolean ipPropertiesNotEmpty(String ipv4, String ipv6) {
-        return (!StringUtils.isEmpty(ipv4)) || !(StringUtils.isEmpty(ipv6));
     }
 
     private boolean containsHeader(JsonObject jsonObject) {
@@ -158,19 +151,18 @@ public class DmaapConsumerJsonParser {
 
     private String printMessage() {
         return String.format("%n{"
-                        + "\"" + CORRELATION_ID + COMMON_FORMAT + ","
-                        + "\"" + OAM_IPV_4_ADDRESS + COMMON_FORMAT + ","
-                        + "\"" + OAM_IPV_6_ADDRESS + COMMON_FORMAT + ","
-                        + "\"" + SERIAL_NUMBER + COMMON_FORMAT + ","
-                        + "\"" + EQUIP_VENDOR + COMMON_FORMAT + ","
-                        + "\"" + EQUIP_MODEL + COMMON_FORMAT + ","
-                        + "\"" + EQUIP_TYPE + COMMON_FORMAT + ","
-                        + "\"" + NF_ROLE + COMMON_FORMAT + ","
-                        + "\"" + SW_VERSION + COMMON_FORMAT
-                        + "%n}", this.pnfSourceName, this.pnfOamIpv4Address, this.pnfOamIpv6Address,
-                this.pnfSerialNumberAdditionalField, this.pnfEquipVendorAdditionalField,
-                this.pnfEquipModelAdditionalField, this.pnfEquipTypeAdditionalField,
-                this.pnfNfRoleAdditionalField, this.pnfSwVersionAdditionalField
+                        + "\"" + CORRELATION_ID + COMMON_FORMAT_FOR_STRING + ","
+                        + "\"" + SERIAL_NUMBER + COMMON_FORMAT_FOR_STRING + ","
+                        + "\"" + EQUIP_VENDOR + COMMON_FORMAT_FOR_STRING + ","
+                        + "\"" + EQUIP_MODEL + COMMON_FORMAT_FOR_STRING + ","
+                        + "\"" + EQUIP_TYPE + COMMON_FORMAT_FOR_STRING + ","
+                        + "\"" + NF_ROLE + COMMON_FORMAT_FOR_STRING + ","
+                        + "\"" + SW_VERSION + COMMON_FORMAT_FOR_STRING + ","
+                        + "\"" + ADDITIONAL_FIELDS + COMMON_FORMAT_FOR_JSON_OBJECT
+                        + "%n}", this.pnfSourceName,
+                this.pnfSerialNumberOptionalField, this.pnfEquipVendorOptionalField,
+                this.pnfEquipModelOptionalField, this.pnfEquipTypeOptionalField,
+                this.pnfNfRoleOptionalField, this.pnfSwVersionOptionalField, this.pnfAdditionalFields
         );
     }
 

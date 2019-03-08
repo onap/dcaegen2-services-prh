@@ -21,6 +21,8 @@
 package org.onap.dcaegen2.services.prh.model;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.TypeAdapterFactory;
 import org.onap.dcaegen2.services.sdk.rest.services.model.JsonBodyBuilder;
 
@@ -29,6 +31,7 @@ import java.util.ServiceLoader;
 
 public class JsonBodyBuilderImpl implements JsonBodyBuilder<ConsumerDmaapModel> {
 
+    public static final String ADDITIONAL_FIELDS = "additionalFields";
 
     /**
      * Method for serialization object by GSON.
@@ -39,9 +42,7 @@ public class JsonBodyBuilderImpl implements JsonBodyBuilder<ConsumerDmaapModel> 
     public String createJsonBody(ConsumerDmaapModel consumerDmaapModel) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         ServiceLoader.load(TypeAdapterFactory.class).forEach(gsonBuilder::registerTypeAdapterFactory);
-        return gsonBuilder.create().toJson(ImmutableConsumerDmaapModel.builder()
-                .ipv4(consumerDmaapModel.getIpv4())
-                .ipv6(consumerDmaapModel.getIpv6())
+        return filterOutAdditionalFieldsIfEmpty(gsonBuilder.create().toJson(ImmutableConsumerDmaapModel.builder()
                 .correlationId(consumerDmaapModel.getCorrelationId())
                 .serialNumber(consumerDmaapModel.getSerialNumber())
                 .equipVendor(consumerDmaapModel.getEquipVendor())
@@ -49,6 +50,15 @@ public class JsonBodyBuilderImpl implements JsonBodyBuilder<ConsumerDmaapModel> 
                 .equipType(consumerDmaapModel.getEquipType())
                 .nfRole(consumerDmaapModel.getNfRole())
                 .swVersion(consumerDmaapModel.getSwVersion())
-                .build());
+                .additionalFields(consumerDmaapModel.getAdditionalFields())
+                .build()));
+    }
+
+    private String filterOutAdditionalFieldsIfEmpty(String json) {
+            JsonObject jsonObject = new JsonParser().parse(json).getAsJsonObject();
+            if(jsonObject.get(ADDITIONAL_FIELDS).equals(new JsonObject())) {
+                jsonObject.remove(ADDITIONAL_FIELDS);
+            }
+            return jsonObject.toString();
     }
 }

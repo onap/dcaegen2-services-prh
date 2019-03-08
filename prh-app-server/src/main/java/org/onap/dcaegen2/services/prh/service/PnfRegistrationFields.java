@@ -23,22 +23,22 @@ package org.onap.dcaegen2.services.prh.service;
 
 class PnfRegistrationFields {
 
-    static final String COMMON_FORMAT = "\": \"%s\"";
+    static final String COMMON_FORMAT_FOR_STRING = "\": \"%s\"";
+    static final String COMMON_FORMAT_FOR_JSON_OBJECT = "\": %s";
     static final String EVENT = "event";
     static final String COMMON_EVENT_HEADER = "commonEventHeader";
     static final String PNF_REGISTRATION_FIELDS = "pnfRegistrationFields";
-    static final String OAM_IPV_4_ADDRESS = "oamV4IpAddress";
-    static final String OAM_IPV_6_ADDRESS = "oamV6IpAddress";
     static final String SOURCE_NAME = "sourceName";
     static final String CORRELATION_ID = "correlationId";
 
-    // additional fields
+    // optional fields
     static final String SERIAL_NUMBER = "serialNumber";
     static final String EQUIP_VENDOR = "vendorName";
     static final String EQUIP_MODEL = "modelNumber";
     static final String EQUIP_TYPE = "unitType";
     static final String NF_ROLE = "nfNamingCode";
     static final String SW_VERSION = "softwareVersion";
+    static final String ADDITIONAL_FIELDS = "additionalFields";
 
     private PnfRegistrationFields() {}
 }

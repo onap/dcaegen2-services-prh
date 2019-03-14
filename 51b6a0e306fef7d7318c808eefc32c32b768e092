@@ -22,6 +22,30 @@
       "revId": "51b6a0e306fef7d7318c808eefc32c32b768e092",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "09bb3fef_074b4a53",
+        "filename": "prh-commons/src/test/java/org/onap/dcaegen2/services/prh/model/AaiJsonBodyBuilderTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 3699
+      },
+      "writtenOn": "2019-03-14T16:58:40Z",
+      "side": 1,
+      "message": "It\u0027s a good suggestion for a separate ticket improvement as it works like this in many junits.",
+      "parentUuid": "cae44ed9_36b682dc",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 22
+      },
+      "revId": "51b6a0e306fef7d7318c808eefc32c32b768e092",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

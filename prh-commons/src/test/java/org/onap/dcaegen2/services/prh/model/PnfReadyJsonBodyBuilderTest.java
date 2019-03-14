@@ -26,7 +26,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.junit.jupiter.api.Test;
 
-class CommonFunctionsTest {
+class PnfReadyJsonBodyBuilderTest {
 
     @Test
     void createJsonBody_shouldReturnJsonInString() {
@@ -61,7 +61,7 @@ class CommonFunctionsTest {
                 + "\"additionalFields\":{\"attachmentPoint\":\"bla-bla-30-3\",\"cvlan\":\"678\",\"svlan\":\"1005\"}"
                 + "}";
 
-        assertEquals(expectedResult, new JsonBodyBuilderImpl().createJsonBody(model));
+        assertEquals(expectedResult, new PnfReadyJsonBodyBuilderImpl().createJsonBody(model));
     }
 
     @Test
@@ -89,6 +89,6 @@ class CommonFunctionsTest {
                 + "\"sw-version\":\"\""
                 + "}";
 
-        assertEquals(expectedResult, new JsonBodyBuilderImpl().createJsonBody(model));
+        assertEquals(expectedResult, new PnfReadyJsonBodyBuilderImpl().createJsonBody(model));
     }
 }

@@ -29,7 +29,7 @@ import org.onap.dcaegen2.services.sdk.rest.services.model.JsonBodyBuilder;
 import java.util.ServiceLoader;
 
 
-public class JsonBodyBuilderImpl implements JsonBodyBuilder<ConsumerDmaapModel> {
+public class AaiJsonBodyBuilderImpl implements JsonBodyBuilder<ConsumerDmaapModel> {
 
     public static final String ADDITIONAL_FIELDS = "additionalFields";
 
@@ -43,26 +43,24 @@ public class JsonBodyBuilderImpl implements JsonBodyBuilder<ConsumerDmaapModel> 
         GsonBuilder gsonBuilder = new GsonBuilder();
         ServiceLoader.load(TypeAdapterFactory.class).forEach(gsonBuilder::registerTypeAdapterFactory);
         return filterOutRedundantFields(gsonBuilder.create().toJson(ImmutableConsumerDmaapModel.builder()
-                .ipv4(consumerDmaapModel.getIpv4())
-                .ipv6(consumerDmaapModel.getIpv6())
-                .correlationId(consumerDmaapModel.getCorrelationId())
-                .serialNumber(consumerDmaapModel.getSerialNumber())
-                .equipVendor(consumerDmaapModel.getEquipVendor())
-                .equipModel(consumerDmaapModel.getEquipModel())
-                .equipType(consumerDmaapModel.getEquipType())
-                .nfRole(consumerDmaapModel.getNfRole())
-                .swVersion(consumerDmaapModel.getSwVersion())
-                .additionalFields(consumerDmaapModel.getAdditionalFields())
-                .build()));
+            .ipv4(consumerDmaapModel.getIpv4())
+            .ipv6(consumerDmaapModel.getIpv6())
+            .correlationId(consumerDmaapModel.getCorrelationId())
+            .serialNumber(consumerDmaapModel.getSerialNumber())
+            .equipVendor(consumerDmaapModel.getEquipVendor())
+            .equipModel(consumerDmaapModel.getEquipModel())
+            .equipType(consumerDmaapModel.getEquipType())
+            .nfRole(consumerDmaapModel.getNfRole())
+            .swVersion(consumerDmaapModel.getSwVersion())
+            .additionalFields(consumerDmaapModel.getAdditionalFields())
+            .build()));
     }
 
     private String filterOutRedundantFields(String json) {
-            JsonObject jsonObject = new JsonParser().parse(json).getAsJsonObject();
-            if(jsonObject.get(ADDITIONAL_FIELDS).equals(new JsonObject())) {
-                jsonObject.remove(ADDITIONAL_FIELDS);
-            }
-            jsonObject.remove("ipaddress-v4-oam");
-            jsonObject.remove("ipaddress-v6-oam");
-            return jsonObject.toString();
+        JsonObject jsonObject = new JsonParser().parse(json).getAsJsonObject();
+        if(jsonObject.get(ADDITIONAL_FIELDS).equals(new JsonObject())) {
+            jsonObject.remove(ADDITIONAL_FIELDS);
+        }
+        return jsonObject.toString();
     }
 }

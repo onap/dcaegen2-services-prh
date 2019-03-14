@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "41e5b17d_c838c9c5",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/PnfReadyJsonBodyBuilderImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2019-03-14T13:33:04Z",
+      "side": 1,
+      "message": "Suggestion - it is best to completely avoid setting and then removing IP values in favor of just ignoring what is unwanted. Since the ImmutableConsumerDmaapModel fields are required and not setting a fields results in IllegalStateException, I\u0027d recommend adding @Nullable to ConsumerDmaapModel IP fields. This will make them optional and all ip set/remove lines can be removed.",
+      "revId": "e3998e7076e62839b74011d4cf2e6c7653c8b16c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "757bb59b_2d5b25d0",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/PnfReadyJsonBodyBuilderImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2019-03-14T13:33:04Z",
+      "side": 1,
+      "message": "if you remove the ip removal code, consider renaming the method name back to what it was before filterOutEmptyAdditionalField... etc :)",
+      "revId": "e3998e7076e62839b74011d4cf2e6c7653c8b16c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

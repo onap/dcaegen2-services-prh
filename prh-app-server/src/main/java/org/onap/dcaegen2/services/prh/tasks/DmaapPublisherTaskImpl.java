@@ -24,7 +24,7 @@ import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.model.JsonBodyBuilderImpl;
+import org.onap.dcaegen2.services.prh.model.PnfReadyJsonBodyBuilderImpl;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.producer.DMaaPPublisherReactiveHttpClient;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.producer.DmaaPRestTemplateFactory;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.producer.PublisherReactiveHttpClientFactory;
@@ -48,7 +48,7 @@ public class DmaapPublisherTaskImpl implements DmaapPublisherTask {
 
     @Autowired
     public DmaapPublisherTaskImpl(Config config) {
-        this(config, new PublisherReactiveHttpClientFactory(new DmaaPRestTemplateFactory(),new JsonBodyBuilderImpl()));
+        this(config, new PublisherReactiveHttpClientFactory(new DmaaPRestTemplateFactory(),new PnfReadyJsonBodyBuilderImpl()));
     }
 
     DmaapPublisherTaskImpl(Config config, PublisherReactiveHttpClientFactory httpClientFactory) {

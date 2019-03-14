@@ -22,6 +22,7 @@ package org.onap.dcaegen2.services.prh.model;
 
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
+import org.springframework.lang.Nullable;
 import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 import org.onap.dcaegen2.services.sdk.rest.services.model.AaiModel;
@@ -38,9 +39,11 @@ public interface ConsumerDmaapModel extends AaiModel, DmaapModel {
     @SerializedName(value = "correlationId", alternate = "correlationId")
     String getCorrelationId();
 
+    @Nullable
     @SerializedName(value = "ipaddress-v4-oam", alternate = "ipaddress-v4-oam")
     String getIpv4();
 
+    @Nullable
     @SerializedName(value = "ipaddress-v6-oam", alternate = "ipaddress-v6-oam")
     String getIpv6();
 
@@ -62,6 +65,7 @@ public interface ConsumerDmaapModel extends AaiModel, DmaapModel {
     @SerializedName(value = "sw-version", alternate = "sw-version")
     String getSwVersion();
 
+    @Nullable
     @SerializedName(value = "additionalFields", alternate = "additionalFields")
     JsonObject getAdditionalFields();
 }

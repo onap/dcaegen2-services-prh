@@ -155,7 +155,6 @@ class DmaapConsumerJsonParserTest {
             .equipType("type")
             .nfRole("gNB")
             .swVersion("v4.5.0.1")
-            .additionalFields(new JsonObject())
             .build();
         //when
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
@@ -418,7 +417,6 @@ class DmaapConsumerJsonParserTest {
             .equipType("type")
             .nfRole("gNB")
             .swVersion("v4.5.0.1")
-            .additionalFields(new JsonObject())
             .build();
         Assertions.assertNotNull(consumerDmaapModel);
         Assertions.assertEquals(expectedObject, consumerDmaapModel);
@@ -471,7 +469,6 @@ class DmaapConsumerJsonParserTest {
             .equipType("type")
             .nfRole("gNB")
             .swVersion("v4.5.0.1")
-            .additionalFields(new JsonObject())
             .build();
         //when
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());

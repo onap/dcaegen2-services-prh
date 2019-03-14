@@ -26,7 +26,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.junit.jupiter.api.Test;
 
-class CommonFunctionsTest {
+class PnfReadyJsonBodyBuilderTest {
 
     @Test
     void createJsonBody_shouldReturnJsonInString() {
@@ -61,7 +61,33 @@ class CommonFunctionsTest {
                 + "\"additionalFields\":{\"attachmentPoint\":\"bla-bla-30-3\",\"cvlan\":\"678\",\"svlan\":\"1005\"}"
                 + "}";
 
-        assertEquals(expectedResult, new JsonBodyBuilderImpl().createJsonBody(model));
+        assertEquals(expectedResult, new PnfReadyJsonBodyBuilderImpl().createJsonBody(model));
+    }
+
+    @Test
+    void createJsonBodyWithNullableFieldsNotSet_shouldReturnJsonInString() {
+
+        ConsumerDmaapModel model = ImmutableConsumerDmaapModel.builder()
+            .correlationId("NOKnhfsadhff")
+            .serialNumber("1234")
+            .equipVendor("NOKIA")
+            .equipModel("3310")
+            .equipType("cell")
+            .nfRole("role")
+            .swVersion("1.2.3")
+            .build();
+
+        String expectedResult = "{"
+            + "\"correlationId\":\"NOKnhfsadhff\","
+            + "\"serial-number\":\"1234\","
+            + "\"equip-vendor\":\"NOKIA\","
+            + "\"equip-model\":\"3310\","
+            + "\"equip-type\":\"cell\","
+            + "\"nf-role\":\"role\","
+            + "\"sw-version\":\"1.2.3\""
+            + "}";
+
+        assertEquals(expectedResult, new PnfReadyJsonBodyBuilderImpl().createJsonBody(model));
     }
 
     @Test
@@ -89,6 +115,6 @@ class CommonFunctionsTest {
                 + "\"sw-version\":\"\""
                 + "}";
 
-        assertEquals(expectedResult, new JsonBodyBuilderImpl().createJsonBody(model));
+        assertEquals(expectedResult, new PnfReadyJsonBodyBuilderImpl().createJsonBody(model));
     }
 }

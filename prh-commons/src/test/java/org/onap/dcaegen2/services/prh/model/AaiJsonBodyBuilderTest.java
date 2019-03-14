@@ -26,16 +26,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.junit.jupiter.api.Test;
 
-class CommonFunctionsTest {
+class AaiJsonBodyBuilderTest {
 
     @Test
     void createJsonBody_shouldReturnJsonInString() {
-
-        JsonObject jsonObject = new JsonParser().parse("{\n"
-            + "        \"attachmentPoint\": \"bla-bla-30-3\",\n"
-            + "        \"cvlan\": \"678\",\n"
-            + "        \"svlan\": \"1005\"\n"
-            + "      }").getAsJsonObject();
 
         ConsumerDmaapModel model = ImmutableConsumerDmaapModel.builder()
                 .correlationId("NOKnhfsadhff")
@@ -47,48 +41,20 @@ class CommonFunctionsTest {
                 .equipType("cell")
                 .nfRole("role")
                 .swVersion("1.2.3")
-                .additionalFields(jsonObject)
                 .build();
 
         String expectedResult = "{"
                 + "\"correlationId\":\"NOKnhfsadhff\","
+                + "\"ipaddress-v4-oam\":\"256.22.33.155\","
+                + "\"ipaddress-v6-oam\":\"200J:0db8:85a3:0000:0000:8a2e:0370:7334\","
                 + "\"serial-number\":\"1234\","
                 + "\"equip-vendor\":\"NOKIA\","
                 + "\"equip-model\":\"3310\","
                 + "\"equip-type\":\"cell\","
                 + "\"nf-role\":\"role\","
-                + "\"sw-version\":\"1.2.3\","
-                + "\"additionalFields\":{\"attachmentPoint\":\"bla-bla-30-3\",\"cvlan\":\"678\",\"svlan\":\"1005\"}"
+                + "\"sw-version\":\"1.2.3\""
                 + "}";
 
-        assertEquals(expectedResult, new JsonBodyBuilderImpl().createJsonBody(model));
-    }
-
-    @Test
-    void createJsonBodyWithEmptyOptionalPnfRegistrationFields_shouldReturnJsonInString() {
-        ConsumerDmaapModel model = ImmutableConsumerDmaapModel.builder()
-                .correlationId("NOKnhfsadhff")
-                .ipv4("256.22.33.155")
-                .ipv6("200J:0db8:85a3:0000:0000:8a2e:0370:7334")
-                .serialNumber("")
-                .equipVendor("")
-                .equipModel("")
-                .equipType("")
-                .nfRole("")
-                .swVersion("")
-                .additionalFields(new JsonObject())
-                .build();
-
-        String expectedResult = "{"
-                + "\"correlationId\":\"NOKnhfsadhff\","
-                + "\"serial-number\":\"\","
-                + "\"equip-vendor\":\"\","
-                + "\"equip-model\":\"\","
-                + "\"equip-type\":\"\","
-                + "\"nf-role\":\"\","
-                + "\"sw-version\":\"\""
-                + "}";
-
-        assertEquals(expectedResult, new JsonBodyBuilderImpl().createJsonBody(model));
+        assertEquals(expectedResult, new AaiJsonBodyBuilderImpl().createJsonBody(model));
     }
 }

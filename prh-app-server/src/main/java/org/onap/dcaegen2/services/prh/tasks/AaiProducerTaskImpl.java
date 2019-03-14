@@ -25,8 +25,8 @@ import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.AaiNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
+import org.onap.dcaegen2.services.prh.model.AaiJsonBodyBuilderImpl;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.model.JsonBodyBuilderImpl;
 import org.onap.dcaegen2.services.prh.model.utils.HttpUtils;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.patch.AaiReactiveHttpPatchClient;
@@ -69,7 +69,7 @@ public class AaiProducerTaskImpl extends AaiProducerTask {
 
     @Override
     AaiReactiveHttpPatchClient resolveClient() throws SSLException {
-        return new AaiReactiveHttpPatchClient(resolveConfiguration(), new JsonBodyBuilderImpl()).createAaiWebClient(buildWebClient());
+        return new AaiReactiveHttpPatchClient(resolveConfiguration(), new AaiJsonBodyBuilderImpl()).createAaiWebClient(buildWebClient());
     }
 
     @Override

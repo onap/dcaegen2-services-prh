@@ -146,7 +146,7 @@ public class DmaapConsumerJsonParser {
                         .equipType(pnfEquipTypeOptionalField)
                         .nfRole(pnfNfRoleOptionalField)
                         .swVersion(pnfSwVersionOptionalField)
-                        .additionalFields(Optional.ofNullable(pnfAdditionalFields).orElse(new JsonObject())).build());
+                        .additionalFields(pnfAdditionalFields).build());
     }
 
     private String getValueFromJson(JsonObject jsonObject, String jsonKey) {

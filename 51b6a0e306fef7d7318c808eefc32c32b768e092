@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cae44ed9_36b682dc",
+        "filename": "prh-commons/src/test/java/org/onap/dcaegen2/services/prh/model/AaiJsonBodyBuilderTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 2795
+      },
+      "writtenOn": "2019-03-14T16:33:09Z",
+      "side": 1,
+      "message": "I don\u0027t think it\u0027s the best way of testing json generation. Changing order of fields in generated json makes the test fail. From json spec: \"An object is an unordered set of name/value pairs.\"",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 22
+      },
+      "revId": "51b6a0e306fef7d7318c808eefc32c32b768e092",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

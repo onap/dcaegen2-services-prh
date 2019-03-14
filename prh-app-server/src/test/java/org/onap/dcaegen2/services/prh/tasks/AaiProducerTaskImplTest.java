@@ -67,6 +67,8 @@ class AaiProducerTaskImplTest {
         clientResponse = mock(ClientResponse.class);
         aaiClientConfiguration = TestAppConfiguration.createDefaultAaiClientConfiguration();
         consumerDmaapModel = ImmutableConsumerDmaapModel.builder()
+                .ipv4("10.16.123.234")
+                .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
                 .correlationId("NOKQTFCOC540002E")
                 .serialNumber("QTFCOC540002E")
                 .equipVendor("nokia")

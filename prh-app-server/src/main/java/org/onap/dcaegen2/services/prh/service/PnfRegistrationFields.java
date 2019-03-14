@@ -28,6 +28,8 @@ class PnfRegistrationFields {
     static final String EVENT = "event";
     static final String COMMON_EVENT_HEADER = "commonEventHeader";
     static final String PNF_REGISTRATION_FIELDS = "pnfRegistrationFields";
+    static final String OAM_IPV_4_ADDRESS = "oamV4IpAddress";
+    static final String OAM_IPV_6_ADDRESS = "oamV6IpAddress";
     static final String SOURCE_NAME = "sourceName";
     static final String CORRELATION_ID = "correlationId";
 

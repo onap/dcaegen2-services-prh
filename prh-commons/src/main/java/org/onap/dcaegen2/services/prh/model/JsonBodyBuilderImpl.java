@@ -42,7 +42,9 @@ public class JsonBodyBuilderImpl implements JsonBodyBuilder<ConsumerDmaapModel> 
     public String createJsonBody(ConsumerDmaapModel consumerDmaapModel) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         ServiceLoader.load(TypeAdapterFactory.class).forEach(gsonBuilder::registerTypeAdapterFactory);
-        return filterOutAdditionalFieldsIfEmpty(gsonBuilder.create().toJson(ImmutableConsumerDmaapModel.builder()
+        return filterOutRedundantFields(gsonBuilder.create().toJson(ImmutableConsumerDmaapModel.builder()
+                .ipv4(consumerDmaapModel.getIpv4())
+                .ipv6(consumerDmaapModel.getIpv6())
                 .correlationId(consumerDmaapModel.getCorrelationId())
                 .serialNumber(consumerDmaapModel.getSerialNumber())
                 .equipVendor(consumerDmaapModel.getEquipVendor())
@@ -54,11 +56,13 @@ public class JsonBodyBuilderImpl implements JsonBodyBuilder<ConsumerDmaapModel> 
                 .build()));
     }
 
-    private String filterOutAdditionalFieldsIfEmpty(String json) {
+    private String filterOutRedundantFields(String json) {
             JsonObject jsonObject = new JsonParser().parse(json).getAsJsonObject();
             if(jsonObject.get(ADDITIONAL_FIELDS).equals(new JsonObject())) {
                 jsonObject.remove(ADDITIONAL_FIELDS);
             }
+            jsonObject.remove("ipaddress-v4-oam");
+            jsonObject.remove("ipaddress-v6-oam");
             return jsonObject.toString();
     }
 }

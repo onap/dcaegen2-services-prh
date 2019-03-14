@@ -39,6 +39,8 @@ class CommonFunctionsTest {
 
         ConsumerDmaapModel model = ImmutableConsumerDmaapModel.builder()
                 .correlationId("NOKnhfsadhff")
+                .ipv4("256.22.33.155")
+                .ipv6("200J:0db8:85a3:0000:0000:8a2e:0370:7334")
                 .serialNumber("1234")
                 .equipVendor("NOKIA")
                 .equipModel("3310")
@@ -66,6 +68,8 @@ class CommonFunctionsTest {
     void createJsonBodyWithEmptyOptionalPnfRegistrationFields_shouldReturnJsonInString() {
         ConsumerDmaapModel model = ImmutableConsumerDmaapModel.builder()
                 .correlationId("NOKnhfsadhff")
+                .ipv4("256.22.33.155")
+                .ipv6("200J:0db8:85a3:0000:0000:8a2e:0370:7334")
                 .serialNumber("")
                 .equipVendor("")
                 .equipModel("")

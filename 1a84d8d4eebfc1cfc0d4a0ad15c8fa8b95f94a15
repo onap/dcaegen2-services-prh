@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a2622ad6_204bc184",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/JsonBodyBuilderImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2019-03-14T08:34:10Z",
+      "side": 1,
+      "message": "The method name is too specific now. I\u0027d suggest renaming it to just filterOutFields or something similar",
+      "revId": "1a84d8d4eebfc1cfc0d4a0ad15c8fa8b95f94a15",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

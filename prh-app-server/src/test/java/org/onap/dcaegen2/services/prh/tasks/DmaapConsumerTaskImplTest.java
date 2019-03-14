@@ -68,6 +68,8 @@ class DmaapConsumerTaskImplTest {
             + "      }").getAsJsonObject();
 
         consumerDmaapModel = ImmutableConsumerDmaapModel.builder()
+            .ipv4("10.16.123.234")
+            .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
             .correlationId("NOKQTFCOC540002E")
             .serialNumber("QTFCOC540002E")
             .equipVendor("nokia")
@@ -91,7 +93,9 @@ class DmaapConsumerTaskImplTest {
             + " \"modelNumber\": \"3310\","
             + " \"unitType\": \"type\",\n"
             + " \"unitFamily\": \"BBU\","
+            + " \"oamV4IpAddress\": \"10.16.123.234\","
             + " \"softwareVersion\": \"v4.5.0.1\","
+            + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\","
             + " \"additionalFields\": {\"attachmentPoint\": \"bla-bla-30-3\",\"cvlan\": \"678\",\"svlan\": \"1005\"}"
             + "}}}]";
     }

@@ -38,6 +38,12 @@ public interface ConsumerDmaapModel extends AaiModel, DmaapModel {
     @SerializedName(value = "correlationId", alternate = "correlationId")
     String getCorrelationId();
 
+    @SerializedName(value = "ipaddress-v4-oam", alternate = "ipaddress-v4-oam")
+    String getIpv4();
+
+    @SerializedName(value = "ipaddress-v6-oam", alternate = "ipaddress-v6-oam")
+    String getIpv6();
+
     @SerializedName(value = "serial-number", alternate = "serial-number")
     String getSerialNumber();
 

@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e8cfe96a_a385337b",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/AaiJsonBodyBuilderImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 3699
+      },
+      "writtenOn": "2019-03-15T07:03:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b43fe251_f879166c",
+      "revId": "51b6a0e306fef7d7318c808eefc32c32b768e092",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57107079_ffab718f",
         "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/PnfReadyJsonBodyBuilderImpl.java",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2019-03-15T06:27:17Z",
       "side": 1,
       "message": "wouldn\u0027t it be easier to check if the additionalFields is neither null nor an empty Json object, instead of relying on optional - which in fact is a another \u0027if\u0027 statement ?",
+      "revId": "51b6a0e306fef7d7318c808eefc32c32b768e092",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34b9e19b_20396beb",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/PnfReadyJsonBodyBuilderImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 3699
+      },
+      "writtenOn": "2019-03-15T07:03:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57107079_ffab718f",
       "revId": "51b6a0e306fef7d7318c808eefc32c32b768e092",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false

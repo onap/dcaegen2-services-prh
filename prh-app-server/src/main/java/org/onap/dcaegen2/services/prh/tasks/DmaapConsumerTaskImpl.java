@@ -21,7 +21,6 @@
 package org.onap.dcaegen2.services.prh.tasks;
 
 import com.google.gson.JsonArray;
-import java.util.Objects;
 import java.util.Optional;
 import javax.net.ssl.SSLException;
 import org.onap.dcaegen2.services.prh.configuration.Config;
@@ -30,7 +29,6 @@ import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.consumer.ConsumerReactiveHttpClientFactory;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.consumer.DMaaPConsumerReactiveHttpClient;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.consumer.DMaaPReactiveWebClientFactory;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,12 +51,12 @@ public class DmaapConsumerTaskImpl implements DmaapConsumerTask {
     @Autowired
     public DmaapConsumerTaskImpl(Config config) {
         this(config, new DmaapConsumerJsonParser(),
-                new ConsumerReactiveHttpClientFactory(new DMaaPReactiveWebClientFactory()));
+            new ConsumerReactiveHttpClientFactory(new DMaaPReactiveWebClientFactory()));
     }
 
     DmaapConsumerTaskImpl(Config prhAppConfig,
-                          DmaapConsumerJsonParser dmaapConsumerJsonParser,
-                          ConsumerReactiveHttpClientFactory httpClientFactory) {
+        DmaapConsumerJsonParser dmaapConsumerJsonParser,
+        ConsumerReactiveHttpClientFactory httpClientFactory) {
         this.config = prhAppConfig;
         this.dmaapConsumerJsonParser = dmaapConsumerJsonParser;
         this.httpClientFactory = httpClientFactory;
@@ -73,7 +71,6 @@ public class DmaapConsumerTaskImpl implements DmaapConsumerTask {
     public Flux<ConsumerDmaapModel> execute(String object) throws SSLException {
         DMaaPConsumerReactiveHttpClient dmaaPConsumerReactiveHttpClient = resolveClient();
         LOGGER.debug("Method called with arg {}", object);
-
         Mono<JsonArray> response = dmaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse(
             Optional.empty());
         return dmaapConsumerJsonParser.getJsonObject(response);

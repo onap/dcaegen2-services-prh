@@ -28,11 +28,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.onap.dcaegen2.services.prh.TestAppConfiguration.createDefaultDmaapConsumerConfiguration;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.prh.configuration.AppConfig;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
@@ -41,7 +41,6 @@ import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.consumer.ConsumerReactiveHttpClientFactory;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.consumer.DMaaPConsumerReactiveHttpClient;
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -57,6 +56,9 @@ class DmaapConsumerTaskImplTest {
     private static AppConfig appConfig;
     private static DmaapConsumerConfiguration dmaapConsumerConfiguration;
     private static String message;
+    private static String messageContentEmpty;
+    private static JsonArray jsonArray;
+    private static JsonArray jsonArrayWrongContent;
 
     @BeforeAll
     static void setUp() {
@@ -99,13 +101,18 @@ class DmaapConsumerTaskImplTest {
             + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\","
             + " \"additionalFields\": {\"attachmentPoint\": \"bla-bla-30-3\",\"cvlan\": \"678\",\"svlan\": \"1005\"}"
             + "}}}]";
+
+        messageContentEmpty = "[]";
+        JsonParser jsonParser = new JsonParser();
+        jsonArray = (JsonArray) jsonParser.parse(message);
+        jsonArrayWrongContent = (JsonArray) jsonParser.parse(messageContentEmpty);
+
     }
 
-    @Disabled
     @Test
     void whenPassedObjectDoesNotFit_DoesNotThrowPrhTaskException() throws Exception {
         //given
-        prepareMocksForDmaapConsumer(Optional.empty());
+        prepareMocksForDmaapConsumer(Optional.of(jsonArrayWrongContent));
 
         //when
         Flux<ConsumerDmaapModel> response = dmaapConsumerTask.execute("Sample input");
@@ -115,11 +122,10 @@ class DmaapConsumerTaskImplTest {
         assertNull(response.blockFirst());
     }
 
-    @Disabled
     @Test
     void whenPassedObjectFits_ReturnsCorrectResponse() throws Exception {
         //given
-        prepareMocksForDmaapConsumer(Optional.of(message));
+        prepareMocksForDmaapConsumer(Optional.of(jsonArray));
 
         //when
         Flux<ConsumerDmaapModel> response = dmaapConsumerTask.execute("Sample input");
@@ -129,7 +135,6 @@ class DmaapConsumerTaskImplTest {
         assertEquals(consumerDmaapModel, response.blockFirst());
     }
 
-    @Disabled
     @Test
     void whenInitConfigs_initStreamReader() {
         //when
@@ -139,9 +144,10 @@ class DmaapConsumerTaskImplTest {
         verify(appConfig).initFileStreamReader();
     }
 
-    private void prepareMocksForDmaapConsumer(Optional<String> message) throws Exception {
+    private void prepareMocksForDmaapConsumer(Optional<JsonArray> message) throws Exception {
         dMaaPConsumerReactiveHttpClient = mock(DMaaPConsumerReactiveHttpClient.class);
-        //when(dMaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse(Optional.empty())).thenReturn(Mono.just(message.orElse("")));
+        when(dMaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse(Optional.empty()))
+            .thenReturn(Mono.just(message.get()));
         when(appConfig.getDmaapConsumerConfiguration()).thenReturn(dmaapConsumerConfiguration);
         ConsumerReactiveHttpClientFactory httpClientFactory = mock(ConsumerReactiveHttpClientFactory.class);
         doReturn(dMaaPConsumerReactiveHttpClient).when(httpClientFactory).create(dmaapConsumerConfiguration);

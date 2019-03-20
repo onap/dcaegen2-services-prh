@@ -32,7 +32,6 @@ import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.logging.MdcVariables;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -109,9 +108,7 @@ public class ScheduledTasks {
     }
 
     private void onSuccess(HttpClientResponse response) {
-
         String statusCode = Integer.toString(response.status().code());
-
         MDC.put(RESPONSE_CODE, statusCode);
         logger.info("Prh consumed tasks successfully. HTTP Response code from DMaaPProducer {}",
             statusCode);

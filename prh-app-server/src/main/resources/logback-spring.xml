@@ -16,7 +16,7 @@
     |%replace(%replace(%marker){'\t','\\\\t'}){'\n','\\\\n'}
     |%thread
     |%n"/>
-  <variable name="logLevel" value="${LOG_LEVEL:-ERROR}"/>
+  <variable name="logLevel" value="${LOG_LEVEL:-INFO}"/>
   <variable name="logLevelPrh" value="${PRH_LOG_LEVEL:-WARN}"/>
 
   <springProfile name="prod">

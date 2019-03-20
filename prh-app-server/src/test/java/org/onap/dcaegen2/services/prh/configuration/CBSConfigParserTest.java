@@ -37,7 +37,7 @@ import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.Immutabl
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.ImmutableDmaapPublisherConfiguration;
 
 
-class CloudConfigParserTest {
+class CBSConfigParserTest {
 
     private final String correctJson =
             new String(Files.readAllBytes(Paths.get(getSystemResource("flattened_configuration.json").toURI())));
@@ -47,16 +47,16 @@ class CloudConfigParserTest {
             TestAppConfiguration.createDefaultDmaapConsumerConfiguration();
     private final ImmutableDmaapPublisherConfiguration correctDmaapPublisherConfig =
             TestAppConfiguration.createDefaultDmaapPublisherConfiguration();
-    private final CloudConfigParser cloudConfigParser = new CloudConfigParser(
+    private final CBSConfigParser cbsConfigParser = new CBSConfigParser(
             new Gson().fromJson(correctJson, JsonObject.class));
 
-    CloudConfigParserTest() throws Exception {
+    CBSConfigParserTest() throws Exception {
     }
 
     @Test
     void shouldCreateAaiConfigurationCorrectly() {
         // when
-        AaiClientConfiguration aaiClientConfig = cloudConfigParser.getAaiClientConfig();
+        AaiClientConfiguration aaiClientConfig = cbsConfigParser.getAaiClientConfig();
 
         // then
         assertThat(aaiClientConfig).isNotNull();
@@ -67,7 +67,7 @@ class CloudConfigParserTest {
     @Test
     void shouldCreateDmaapConsumerConfigurationCorrectly() {
         // when
-        DmaapConsumerConfiguration dmaapConsumerConfig = cloudConfigParser.getDmaapConsumerConfig();
+        DmaapConsumerConfiguration dmaapConsumerConfig = cbsConfigParser.getDmaapConsumerConfig();
 
         // then
         assertThat(dmaapConsumerConfig).isNotNull();
@@ -78,7 +78,7 @@ class CloudConfigParserTest {
     @Test
     void shouldCreateDmaapPublisherConfigurationCorrectly() {
         // when
-        DmaapPublisherConfiguration dmaapPublisherConfig = cloudConfigParser.getDmaapPublisherConfig();
+        DmaapPublisherConfiguration dmaapPublisherConfig = cbsConfigParser.getDmaapPublisherConfig();
 
         // then
         assertThat(dmaapPublisherConfig).isNotNull();

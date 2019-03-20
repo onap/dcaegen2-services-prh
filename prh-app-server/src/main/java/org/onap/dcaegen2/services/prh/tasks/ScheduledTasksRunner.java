@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import javax.annotation.PostConstruct;
 
-import org.onap.dcaegen2.services.prh.configuration.CloudConfiguration;
+import org.onap.dcaegen2.services.prh.configuration.CBSConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -57,15 +57,15 @@ public class ScheduledTasksRunner {
 
     private final TaskScheduler taskScheduler;
     private final ScheduledTasks scheduledTask;
-    private final CloudConfiguration cloudConfiguration;
+    private final CBSConfiguration cbsConfiguration;
 
     @Autowired
     public ScheduledTasksRunner(TaskScheduler taskScheduler,
                                 ScheduledTasks scheduledTask,
-                                CloudConfiguration cloudConfiguration) {
+                                CBSConfiguration cbsConfiguration) {
         this.taskScheduler = taskScheduler;
         this.scheduledTask = scheduledTask;
-        this.cloudConfiguration = cloudConfiguration;
+        this.cbsConfiguration = cbsConfiguration;
     }
 
     /**
@@ -94,7 +94,7 @@ public class ScheduledTasksRunner {
         LOGGER.info(ENTRY, "Start scheduling PRH workflow");
         if (scheduledPrhTaskFutureList.isEmpty()) {
             scheduledPrhTaskFutureList.add(taskScheduler
-                .scheduleAtFixedRate(cloudConfiguration::runTask, Instant.now(),
+                .scheduleAtFixedRate(cbsConfiguration::runTask, Instant.now(),
                     Duration.ofMinutes(SCHEDULING_REQUEST_FOR_CONFIGURATION_DELAY)));
             scheduledPrhTaskFutureList.add(taskScheduler
                 .scheduleWithFixedDelay(scheduledTask::scheduleMainPrhEventTask,

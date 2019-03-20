@@ -23,23 +23,21 @@ package org.onap.dcaegen2.services.prh.configuration;
 import com.google.gson.JsonObject;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.ImmutableAaiClientConfiguration;
-
+import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.CbsClientFactory;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.model.EnvProperties;
-import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.providers.CloudConfigurationClient;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapPublisherConfiguration;
+import org.onap.dcaegen2.services.sdk.rest.services.model.logging.RequestDiagnosticContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
-
-import java.util.Optional;
-import java.util.Properties;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 8/9/18
@@ -49,64 +47,55 @@ import java.util.Properties;
 @EnableConfigurationProperties
 @EnableScheduling
 @Primary
-public class CloudConfiguration extends AppConfig {
+public class CBSConfiguration extends PrhAppConfig {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CloudConfiguration.class);
-    private CloudConfigurationClient prhConfigurationProvider;
-
-    private AaiClientConfiguration aaiClientCloudConfiguration;
-    private DmaapPublisherConfiguration dmaapPublisherCloudConfiguration;
-    private DmaapConsumerConfiguration dmaapConsumerCloudConfiguration;
-
-    @Value("#{systemEnvironment}")
-    private Properties systemEnvironment;
-
-    @Autowired
-    public void setThreadPoolTaskScheduler(CloudConfigurationClient prhConfigurationProvider) {
-        this.prhConfigurationProvider = prhConfigurationProvider;
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(CBSConfiguration.class);
+    private AaiClientConfiguration aaiClientCBSConfiguration;
+    private DmaapPublisherConfiguration dmaapPublisherCBSConfiguration;
+    private DmaapConsumerConfiguration dmaapConsumerCBSConfiguration;
 
     public void runTask() {
-        Flux.defer(() -> EnvironmentProcessor.evaluate(systemEnvironment))
+        Flux.defer(() -> Mono.just(EnvProperties.fromEnvironment()))
             .subscribeOn(Schedulers.parallel())
             .subscribe(this::parsingConfigSuccess, this::parsingConfigError);
+    }
+
+    private void parsingConfigSuccess(EnvProperties envProperties) {
+        LOGGER.debug("Fetching PRH configuration from ConfigBindingService/Consul");
+        CbsClientFactory.createCbsClient(envProperties)
+            .flatMap(cbsClient -> cbsClient.get(RequestDiagnosticContext.create()))
+            .subscribe(this::parseCBSConfig, this::cbsConfigError);
+    }
+
+    private void parseCBSConfig(JsonObject jsonObject) {
+        LOGGER.info("Received application configuration: {}", jsonObject);
+        CBSConfigParser cbsConfigParser = new CBSConfigParser(jsonObject);
+        dmaapPublisherCBSConfiguration = cbsConfigParser.getDmaapPublisherConfig();
+        aaiClientCBSConfiguration = ImmutableAaiClientConfiguration.copyOf(cbsConfigParser.getAaiClientConfig())
+            .withAaiHeaders(aaiClientConfiguration.aaiHeaders());
+        dmaapConsumerCBSConfiguration = cbsConfigParser.getDmaapConsumerConfig();
     }
 
     private void parsingConfigError(Throwable throwable) {
         LOGGER.warn("Failed to process system environments", throwable);
     }
 
-    private void cloudConfigError(Throwable throwable) {
+    private void cbsConfigError(Throwable throwable) {
         LOGGER.warn("Failed to gather configuration from ConfigBindingService/Consul", throwable);
-    }
-
-    private void parsingConfigSuccess(EnvProperties envProperties) {
-        LOGGER.debug("Fetching PRH configuration from ConfigBindingService/Consul");
-        prhConfigurationProvider.callForServiceConfigurationReactive(envProperties)
-            .subscribe(this::parseCloudConfig, this::cloudConfigError);
-    }
-
-    private void parseCloudConfig(JsonObject jsonObject) {
-        LOGGER.info("Received application configuration: {}", jsonObject);
-        CloudConfigParser cloudConfigParser = new CloudConfigParser(jsonObject);
-        dmaapPublisherCloudConfiguration = cloudConfigParser.getDmaapPublisherConfig();
-        aaiClientCloudConfiguration = ImmutableAaiClientConfiguration.copyOf(cloudConfigParser.getAaiClientConfig())
-            .withAaiHeaders(aaiClientConfiguration.aaiHeaders());
-        dmaapConsumerCloudConfiguration = cloudConfigParser.getDmaapConsumerConfig();
     }
 
     @Override
     public DmaapPublisherConfiguration getDmaapPublisherConfiguration() {
-        return Optional.ofNullable(dmaapPublisherCloudConfiguration).orElse(super.getDmaapPublisherConfiguration());
+        return dmaapPublisherCBSConfiguration;
     }
 
     @Override
     public AaiClientConfiguration getAaiClientConfiguration() {
-        return Optional.ofNullable(aaiClientCloudConfiguration).orElse(super.getAaiClientConfiguration());
+        return aaiClientCBSConfiguration;
     }
 
     @Override
     public DmaapConsumerConfiguration getDmaapConsumerConfiguration() {
-        return Optional.ofNullable(dmaapConsumerCloudConfiguration).orElse(super.getDmaapConsumerConfiguration());
+        return dmaapConsumerCBSConfiguration;
     }
 }

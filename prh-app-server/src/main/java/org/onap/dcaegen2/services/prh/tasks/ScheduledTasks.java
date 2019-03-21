@@ -26,6 +26,7 @@ import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.RESPONSE
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import javax.net.ssl.SSLException;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
@@ -54,6 +55,7 @@ public class ScheduledTasks {
     private final DmaapConsumerTask dmaapConsumerTask;
     private final DmaapPublisherTask dmaapProducerTask;
     private final AaiProducerTask aaiProducerTask;
+    private final BbsLogicalLinkTask bbsLogicalLinkTask;
     private Map<String, String> mdcContextMap;
 
     /**
@@ -64,11 +66,16 @@ public class ScheduledTasks {
      * @param aaiPublisherTask - second task
      */
     @Autowired
-    public ScheduledTasks(DmaapConsumerTask dmaapConsumerTask, DmaapPublisherTask dmaapPublisherTask,
-        AaiProducerTask aaiPublisherTask, Map<String, String> mdcContextMap) {
+    public ScheduledTasks(
+        DmaapConsumerTask dmaapConsumerTask,
+        DmaapPublisherTask dmaapPublisherTask,
+        AaiProducerTask aaiPublisherTask,
+        BbsLogicalLinkTask bbsLogicalLinkTask,
+        Map<String, String> mdcContextMap) {
         this.dmaapConsumerTask = dmaapConsumerTask;
         this.dmaapProducerTask = dmaapPublisherTask;
         this.aaiProducerTask = aaiPublisherTask;
+        this.bbsLogicalLinkTask = bbsLogicalLinkTask;
         this.mdcContextMap = mdcContextMap;
     }
 
@@ -88,6 +95,9 @@ public class ScheduledTasks {
                 .doOnError(exception ->
                     logger.warn("AAIProducerTask exception has been registered: ", exception))
                 .onErrorResume(resumePrhPredicate(), exception -> Mono.empty())
+                .flatMap(this::processAdditionalFields)
+                .doOnError(exception ->
+                    logger.warn("AdditionalFieldsTask exception has been registered: ", exception))
                 .flatMap(this::publishToDmaapConfiguration)
                 .doOnError(exception ->
                     logger.warn("DMaaPProducerTask exception has been registered: ", exception))
@@ -101,7 +111,6 @@ public class ScheduledTasks {
             Thread.currentThread().interrupt();
         }
     }
-
 
     private void onComplete() {
         logger.info("PRH tasks have been completed");
@@ -120,7 +129,6 @@ public class ScheduledTasks {
             logger.warn("Chain of tasks have been aborted due to errors in PRH workflow", throwable);
         }
     }
-
 
     private Flux<ConsumerDmaapModel> consumeFromDMaaPMessage() {
         return Flux.defer(() -> {
@@ -146,6 +154,10 @@ public class ScheduledTasks {
         } catch (PrhTaskException | SSLException e) {
             return Mono.error(e);
         }
+    }
+
+    private Mono<ConsumerDmaapModel> processAdditionalFields(ConsumerDmaapModel consumerDmaapModel) {
+        return bbsLogicalLinkTask.execute(consumerDmaapModel);
     }
 
     private Mono<HttpClientResponse> publishToDmaapConfiguration(ConsumerDmaapModel monoAaiModel) {

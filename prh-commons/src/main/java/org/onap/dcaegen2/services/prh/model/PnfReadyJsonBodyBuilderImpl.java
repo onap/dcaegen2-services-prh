@@ -41,13 +41,7 @@ public class PnfReadyJsonBodyBuilderImpl implements JsonBodyBuilder<ConsumerDmaa
         GsonBuilder gsonBuilder = new GsonBuilder();
         ServiceLoader.load(TypeAdapterFactory.class).forEach(gsonBuilder::registerTypeAdapterFactory);
         Builder builder = ImmutableConsumerDmaapModel.builder()
-            .correlationId(consumerDmaapModel.getCorrelationId())
-            .serialNumber(consumerDmaapModel.getSerialNumber())
-            .equipVendor(consumerDmaapModel.getEquipVendor())
-            .equipModel(consumerDmaapModel.getEquipModel())
-            .equipType(consumerDmaapModel.getEquipType())
-            .nfRole(consumerDmaapModel.getNfRole())
-            .swVersion(consumerDmaapModel.getSwVersion());
+            .correlationId(consumerDmaapModel.getCorrelationId());
 
         JsonObject additionalFields =  consumerDmaapModel.getAdditionalFields();
         if(additionalFields != null && !additionalFields.equals(new JsonObject())) {

@@ -22,9 +22,11 @@ package org.onap.dcaegen2.services.prh.model;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapterFactory;
+import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel.Builder;
 import org.onap.dcaegen2.services.sdk.rest.services.model.JsonBodyBuilder;
 
 import java.util.ServiceLoader;
+import org.springframework.util.StringUtils;
 
 
 public class AaiJsonBodyBuilderImpl implements JsonBodyBuilder<ConsumerDmaapModel> {
@@ -39,9 +41,7 @@ public class AaiJsonBodyBuilderImpl implements JsonBodyBuilder<ConsumerDmaapMode
         GsonBuilder gsonBuilder = new GsonBuilder();
         ServiceLoader.load(TypeAdapterFactory.class).forEach(gsonBuilder::registerTypeAdapterFactory);
 
-        return gsonBuilder.create().toJson(ImmutableConsumerDmaapModel.builder()
-            .ipv4(consumerDmaapModel.getIpv4())
-            .ipv6(consumerDmaapModel.getIpv6())
+        Builder builder = ImmutableConsumerDmaapModel.builder()
             .correlationId(consumerDmaapModel.getCorrelationId())
             .serialNumber(consumerDmaapModel.getSerialNumber())
             .equipVendor(consumerDmaapModel.getEquipVendor())
@@ -49,7 +49,17 @@ public class AaiJsonBodyBuilderImpl implements JsonBodyBuilder<ConsumerDmaapMode
             .equipType(consumerDmaapModel.getEquipType())
             .nfRole(consumerDmaapModel.getNfRole())
             .swVersion(consumerDmaapModel.getSwVersion())
-            .additionalFields(consumerDmaapModel.getAdditionalFields())
-            .build());
+            .additionalFields(consumerDmaapModel.getAdditionalFields());
+
+        String ipv4 = consumerDmaapModel.getIpv4();
+        if (ipv4 != null && !StringUtils.isEmpty(ipv4)) {
+            builder.ipv4(ipv4);
+        }
+        String ipv6 = consumerDmaapModel.getIpv6();
+        if (ipv6 != null && !StringUtils.isEmpty(ipv6)) {
+            builder.ipv6(ipv6);
+        }
+
+        return gsonBuilder.create().toJson(builder.build());
     }
 }

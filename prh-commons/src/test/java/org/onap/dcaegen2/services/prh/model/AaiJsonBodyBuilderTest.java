@@ -57,4 +57,58 @@ class AaiJsonBodyBuilderTest {
 
         assertEquals(expectedResult, new AaiJsonBodyBuilderImpl().createJsonBody(model));
     }
+
+    @Test
+    void createJsonBodyWithoutIPs_shouldReturnJsonInString() {
+
+        ConsumerDmaapModel model = ImmutableConsumerDmaapModel.builder()
+            .correlationId("NOKnhfsadhff")
+            .serialNumber("1234")
+            .equipVendor("NOKIA")
+            .equipModel("3310")
+            .equipType("cell")
+            .nfRole("role")
+            .swVersion("1.2.3")
+            .build();
+
+        String expectedResult = "{"
+            + "\"correlationId\":\"NOKnhfsadhff\","
+            + "\"serial-number\":\"1234\","
+            + "\"equip-vendor\":\"NOKIA\","
+            + "\"equip-model\":\"3310\","
+            + "\"equip-type\":\"cell\","
+            + "\"nf-role\":\"role\","
+            + "\"sw-version\":\"1.2.3\""
+            + "}";
+
+        assertEquals(expectedResult, new AaiJsonBodyBuilderImpl().createJsonBody(model));
+    }
+
+    @Test
+    void createJsonBodyWithEmptyIPs_shouldReturnJsonInString() {
+
+        ConsumerDmaapModel model = ImmutableConsumerDmaapModel.builder()
+            .correlationId("NOKnhfsadhff")
+            .ipv4("")
+            .ipv6("")
+            .serialNumber("1234")
+            .equipVendor("NOKIA")
+            .equipModel("3310")
+            .equipType("cell")
+            .nfRole("role")
+            .swVersion("1.2.3")
+            .build();
+
+        String expectedResult = "{"
+            + "\"correlationId\":\"NOKnhfsadhff\","
+            + "\"serial-number\":\"1234\","
+            + "\"equip-vendor\":\"NOKIA\","
+            + "\"equip-model\":\"3310\","
+            + "\"equip-type\":\"cell\","
+            + "\"nf-role\":\"role\","
+            + "\"sw-version\":\"1.2.3\""
+            + "}";
+
+        assertEquals(expectedResult, new AaiJsonBodyBuilderImpl().createJsonBody(model));
+    }
 }

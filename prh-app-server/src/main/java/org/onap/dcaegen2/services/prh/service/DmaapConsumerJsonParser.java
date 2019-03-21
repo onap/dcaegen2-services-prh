@@ -120,7 +120,7 @@ public class DmaapConsumerJsonParser {
         this.pnfSwVersionOptionalField = getValueFromJson(pnfRegistrationFields, SW_VERSION);
         this.pnfAdditionalFields = pnfRegistrationFields.getAsJsonObject(ADDITIONAL_FIELDS);
 
-        return (StringUtils.isEmpty(pnfSourceName) || !ipPropertiesNotEmpty(pnfOamIpv4Address, pnfOamIpv6Address))
+        return (StringUtils.isEmpty(pnfSourceName))
                 ? logErrorAndReturnMonoEmpty("Incorrect json, consumerDmaapModel can not be created: "
                 + printMessage()) :
                 Mono.just(ImmutableConsumerDmaapModel.builder()
@@ -138,10 +138,6 @@ public class DmaapConsumerJsonParser {
 
     private String getValueFromJson(JsonObject jsonObject, String jsonKey) {
         return jsonObject.has(jsonKey) ? jsonObject.get(jsonKey).getAsString() : "";
-    }
-
-    private boolean ipPropertiesNotEmpty(String ipv4, String ipv6) {
-        return (!StringUtils.isEmpty(ipv4)) || !(StringUtils.isEmpty(ipv6));
     }
 
     private boolean containsHeader(JsonObject jsonObject) {

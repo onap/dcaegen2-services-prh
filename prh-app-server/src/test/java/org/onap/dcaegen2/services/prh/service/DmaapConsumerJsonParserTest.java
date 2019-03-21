@@ -22,6 +22,7 @@ package org.onap.dcaegen2.services.prh.service;
 
 import static org.mockito.Mockito.spy;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -39,44 +40,46 @@ import reactor.test.StepVerifier;
  */
 class DmaapConsumerJsonParserTest {
 
+    private JsonParser jsonParser = new JsonParser();
+
     @Test
     void whenPassingCorrectJson_validationNotThrowingAnException() {
         //given
         String message = "[{\"event\": {"
-                + "\"commonEventHeader\": { "
-                + " \"sourceName\":\"NOKQTFCOC540002E\","
-                + " \"nfNamingCode\":\"gNB\" "
-                + "},"
-                + "\"pnfRegistrationFields\": {"
-                + " \"vendorName\": \"nokia\","
-                + " \"serialNumber\": \"QTFCOC540002E\","
-                + " \"pnfRegistrationFieldsVersion\": \"2.0\","
-                + " \"modelNumber\": \"3310\","
-                + " \"unitType\": \"type\",\n"
-                + " \"unitFamily\": \"BBU\","
-                + " \"oamV4IpAddress\": \"10.16.123.234\","
-                + " \"softwareVersion\": \"v4.5.0.1\","
-                + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\","
-                + " \"additionalFields\": {\"attachmentPoint\":\"bla-bla-30-3\",\"cvlan\":\"678\",\"svlan\":\"1005\"}"
-                + "}}}]";
+            + "\"commonEventHeader\": { "
+            + " \"sourceName\":\"NOKQTFCOC540002E\","
+            + " \"nfNamingCode\":\"gNB\" "
+            + "},"
+            + "\"pnfRegistrationFields\": {"
+            + " \"vendorName\": \"nokia\","
+            + " \"serialNumber\": \"QTFCOC540002E\","
+            + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+            + " \"modelNumber\": \"3310\","
+            + " \"unitType\": \"type\",\n"
+            + " \"unitFamily\": \"BBU\","
+            + " \"oamV4IpAddress\": \"10.16.123.234\","
+            + " \"softwareVersion\": \"v4.5.0.1\","
+            + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\","
+            + " \"additionalFields\": {\"attachmentPoint\":\"bla-bla-30-3\",\"cvlan\":\"678\",\"svlan\":\"1005\"}"
+            + "}}}]";
 
         String parsed = "{\"event\": {"
-                + "\"commonEventHeader\": { "
-                + " \"sourceName\":\"NOKQTFCOC540002E\","
-                + " \"nfNamingCode\":\"gNB\" "
-                + "},"
-                + "\"pnfRegistrationFields\": {"
-                + " \"vendorName\": \"nokia\","
-                + " \"serialNumber\": \"QTFCOC540002E\","
-                + " \"pnfRegistrationFieldsVersion\": \"2.0\","
-                + " \"modelNumber\": \"3310\","
-                + " \"unitType\": \"type\",\n"
-                + " \"unitFamily\": \"BBU\","
-                + " \"oamV4IpAddress\": \"10.16.123.234\","
-                + " \"softwareVersion\": \"v4.5.0.1\","
-                + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\","
-                + " \"additionalFields\": {\"attachmentPoint\":\"bla-bla-30-3\",\"cvlan\":\"678\",\"svlan\":\"1005\"}"
-                + "}}}";
+            + "\"commonEventHeader\": { "
+            + " \"sourceName\":\"NOKQTFCOC540002E\","
+            + " \"nfNamingCode\":\"gNB\" "
+            + "},"
+            + "\"pnfRegistrationFields\": {"
+            + " \"vendorName\": \"nokia\","
+            + " \"serialNumber\": \"QTFCOC540002E\","
+            + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+            + " \"modelNumber\": \"3310\","
+            + " \"unitType\": \"type\",\n"
+            + " \"unitFamily\": \"BBU\","
+            + " \"oamV4IpAddress\": \"10.16.123.234\","
+            + " \"softwareVersion\": \"v4.5.0.1\","
+            + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\","
+            + " \"additionalFields\": {\"attachmentPoint\":\"bla-bla-30-3\",\"cvlan\":\"678\",\"svlan\":\"1005\"}"
+            + "}}}";
 
         JsonObject jsonObject = new JsonParser().parse("{\n"
             + "        \"attachmentPoint\": \"bla-bla-30-3\",\n"
@@ -85,27 +88,31 @@ class DmaapConsumerJsonParserTest {
             + "      }").getAsJsonObject();
 
         ConsumerDmaapModel expectedObject = ImmutableConsumerDmaapModel.builder()
-                .ipv4("10.16.123.234")
-                .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
-                .correlationId("NOKQTFCOC540002E")
-                .serialNumber("QTFCOC540002E")
-                .equipVendor("nokia")
-                .equipModel("3310")
-                .equipType("type")
-                .nfRole("gNB")
-                .swVersion("v4.5.0.1")
-                .additionalFields(jsonObject)
-                .build();
+            .ipv4("10.16.123.234")
+            .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
+            .correlationId("NOKQTFCOC540002E")
+            .serialNumber("QTFCOC540002E")
+            .equipVendor("nokia")
+            .equipModel("3310")
+            .equipType("type")
+            .nfRole("gNB")
+            .swVersion("v4.5.0.1")
+            .additionalFields(jsonObject)
+            .build();
+
+        JsonArray messageAsJsonArray = (JsonArray) jsonParser.parse(message);
+
         //when
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
-        JsonElement jsonElement = new JsonParser().parse(parsed);
+        JsonElement jsonElement = jsonParser.parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
-        //ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser
-        //    .getJsonObject(Mono.just((message))).blockFirst();
+
+        ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser
+            .getJsonObject(Mono.just((messageAsJsonArray))).blockFirst();
         //then
-        //Assertions.assertNotNull(consumerDmaapModel);
-        //Assertions.assertEquals(expectedObject, consumerDmaapModel);
+        Assertions.assertNotNull(consumerDmaapModel);
+        Assertions.assertEquals(expectedObject, consumerDmaapModel);
     }
 
     @Test
@@ -156,16 +163,18 @@ class DmaapConsumerJsonParserTest {
             .nfRole("gNB")
             .swVersion("v4.5.0.1")
             .build();
+        JsonArray mesageAsJsonArray = (JsonArray) jsonParser.parse(message);
+
         //when
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
-        //ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser
-        //    .getJsonObject(Mono.just((message))).blockFirst();
+        ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser
+            .getJsonObject(Mono.just((mesageAsJsonArray))).blockFirst();
         //then
-        //Assertions.assertNotNull(consumerDmaapModel);
-        //Assertions.assertEquals(expectedObject, consumerDmaapModel);
+        Assertions.assertNotNull(consumerDmaapModel);
+        Assertions.assertEquals(expectedObject, consumerDmaapModel);
     }
 
     @Test
@@ -219,16 +228,20 @@ class DmaapConsumerJsonParserTest {
             .swVersion("v4.5.0.1")
             .additionalFields(new JsonObject())
             .build();
+
+        JsonArray messageAsJsonArray = (JsonArray) jsonParser.parse(message);
+
         //when
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
-        JsonElement jsonElement = new JsonParser().parse(parsed);
+        JsonElement jsonElement = jsonParser.parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
-        //ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser
-        //    .getJsonObject(Mono.just((message))).blockFirst();
+
+        ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser
+            .getJsonObject(Mono.just((messageAsJsonArray))).blockFirst();
         //then
-       // Assertions.assertNotNull(consumerDmaapModel);
-       // Assertions.assertEquals(expectedObject, consumerDmaapModel);
+        Assertions.assertNotNull(consumerDmaapModel);
+        Assertions.assertEquals(expectedObject, consumerDmaapModel);
     }
 
     @Test
@@ -251,7 +264,7 @@ class DmaapConsumerJsonParserTest {
             + "}}}";
 
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
-        JsonElement jsonElement = new JsonParser().parse(parsed);
+        JsonElement jsonElement = jsonParser.parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
         String incorrectMessage = "[{\"event\": {"
@@ -270,8 +283,11 @@ class DmaapConsumerJsonParserTest {
             + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\","
             + " \"additionalFields\": {}"
             + "}}}]";
-        //StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(incorrectMessage)))
-        //    .expectSubscription().thenRequest(1).verifyComplete();
+
+        JsonArray incorrectMessageAsJsonArray = (JsonArray) jsonParser.parse(incorrectMessage);
+
+        StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(incorrectMessageAsJsonArray)))
+            .expectSubscription().thenRequest(1).verifyComplete();
     }
 
     @Test
@@ -293,7 +309,7 @@ class DmaapConsumerJsonParserTest {
             + "}}}";
 
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
-        JsonElement jsonElement = new JsonParser().parse(parsed);
+        JsonElement jsonElement = jsonParser.parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
         String jsonWithoutSourceName =
@@ -313,12 +329,12 @@ class DmaapConsumerJsonParserTest {
                 + " \"additionalFields\": {}"
                 + "}}}]";
 
-        /*
+        JsonArray jsonWithoutSourceNameAsJsonArray = (JsonArray) jsonParser.parse(jsonWithoutSourceName);
         StepVerifier
-            .create(dmaapConsumerJsonParser.getJsonObject(Mono.just(jsonWithoutSourceName)))
+            .create(dmaapConsumerJsonParser.getJsonObject(Mono.just(jsonWithoutSourceNameAsJsonArray)))
             .expectSubscription().thenRequest(1)
             .verifyComplete();
-            */
+
     }
 
     @Test
@@ -342,7 +358,7 @@ class DmaapConsumerJsonParserTest {
                 + "}}}";
 
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
-        JsonElement jsonElement = new JsonParser().parse(parsed);
+        JsonElement jsonElement = jsonParser.parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
         String jsonWithoutIpInformation =
@@ -362,8 +378,11 @@ class DmaapConsumerJsonParserTest {
                 + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\","
                 + " \"additionalFields\": {}"
                 + "}}}]";
-        //StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(jsonWithoutIpInformation)))
-        //    .expectSubscription().thenRequest(1).verifyComplete();
+
+        JsonArray jsonWithoutIpInformationAsJsonArray = (JsonArray) jsonParser.parse(jsonWithoutIpInformation);
+
+        StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(jsonWithoutIpInformationAsJsonArray)))
+            .expectSubscription().thenRequest(1).verifyComplete();
     }
 
     @Test
@@ -401,15 +420,16 @@ class DmaapConsumerJsonParserTest {
             + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\""
             + "}}}";
 
+        JsonArray messageAsJsonArray = (JsonArray) jsonParser.parse(message);
+
         //when
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
-        JsonElement jsonElement = new JsonParser().parse(parsed);
+        JsonElement jsonElement = jsonParser.parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
 
-        /*
-        dmaapConsumerJsonParser.getJsonObject(Mono.just((message)));
-        ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser.getJsonObject(Mono.just((message)))
+        dmaapConsumerJsonParser.getJsonObject(Mono.just((messageAsJsonArray)));
+        ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser.getJsonObject(Mono.just((messageAsJsonArray)))
             .blockFirst();
         //then
         ConsumerDmaapModel expectedObject = ImmutableConsumerDmaapModel.builder()
@@ -425,7 +445,7 @@ class DmaapConsumerJsonParserTest {
             .build();
         Assertions.assertNotNull(consumerDmaapModel);
         Assertions.assertEquals(expectedObject, consumerDmaapModel);
-        */
+
     }
 
     @Test
@@ -447,7 +467,6 @@ class DmaapConsumerJsonParserTest {
             + " \"softwareVersion\": \"v4.5.0.1\""
             + "}}}]";
 
-
         String parsed = "{\"event\": {"
             + "\"commonEventHeader\": { "
             + " \"sourceName\":\"NOKQTFCOC540002E\","
@@ -464,7 +483,6 @@ class DmaapConsumerJsonParserTest {
             + " \"softwareVersion\": \"v4.5.0.1\""
             + "}}}";
 
-
         ConsumerDmaapModel expectedObject = ImmutableConsumerDmaapModel.builder()
             .ipv4("10.16.123.234")
             .ipv6("")
@@ -476,19 +494,21 @@ class DmaapConsumerJsonParserTest {
             .nfRole("gNB")
             .swVersion("v4.5.0.1")
             .build();
+
+        JsonArray messageAsJsonArray = (JsonArray) jsonParser.parse(message);
+
         //when
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
-        JsonElement jsonElement = new JsonParser().parse(parsed);
+        JsonElement jsonElement = jsonParser.parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
-
-        /*
-        ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser.getJsonObject(Mono.just((message)))
+        ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser.getJsonObject(Mono.just((messageAsJsonArray)))
             .blockFirst();
+
         //then
         Assertions.assertNotNull(consumerDmaapModel);
         Assertions.assertEquals(expectedObject, consumerDmaapModel);
-        */
+
     }
 
     @Test
@@ -526,12 +546,15 @@ class DmaapConsumerJsonParserTest {
             + " \"additionalFields\": {}"
             + "}}}";
 
+        JsonArray messageAsJsonArray = (JsonArray) jsonParser.parse(message);
+
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
-        JsonElement jsonElement = new JsonParser().parse(parsed);
+        JsonElement jsonElement = jsonParser.parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
-       // StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(message)))
-       //     .expectSubscription().thenRequest(1).verifyComplete();
+
+        StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(messageAsJsonArray)))
+            .expectSubscription().thenRequest(1).verifyComplete();
 
     }
 
@@ -556,7 +579,7 @@ class DmaapConsumerJsonParserTest {
                 + "}}}";
 
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
-        JsonElement jsonElement = new JsonParser().parse(parsed);
+        JsonElement jsonElement = jsonParser.parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
         String jsonWithoutIpInformation =
@@ -576,8 +599,11 @@ class DmaapConsumerJsonParserTest {
                 + " \"oamV6IpAddress\": \"\","
                 + " \"additionalFields\": {}"
                 + "}}}]";
-        //StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(jsonWithoutIpInformation)))
-        //    .expectSubscription().thenRequest(1).verifyComplete();
+
+        JsonArray jsonWithoutOpInformationAsJsonArray = (JsonArray) jsonParser.parse(jsonWithoutIpInformation);
+
+        StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(jsonWithoutOpInformationAsJsonArray)))
+            .expectSubscription().thenRequest(1).verifyComplete();
     }
 
     @Test
@@ -628,11 +654,14 @@ class DmaapConsumerJsonParserTest {
             .swVersion("v4.5.0.1")
             .additionalFields(new JsonObject())
             .build();
+
+        JsonArray messageAsJsonArray = (JsonArray) jsonParser.parse(message);
+
         //when
         DmaapConsumerJsonParser dmaapConsumerJsonParser = new DmaapConsumerJsonParser();
 
         //then
-       // StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(message)))
-       //     .expectSubscription().expectNext(expectedObject).expectNext(expectedObject).verifyComplete();
+        StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(messageAsJsonArray)))
+            .expectSubscription().expectNext(expectedObject).expectNext(expectedObject).verifyComplete();
     }
 }

@@ -1,0 +1,8 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Michal Kabaj <michal.kabaj@nokia.com>
+Code-Review+2: Piotr Wielebski <piotr.wielebski@nokia.com>
+Submitted-by: Piotr Wielebski <piotr.wielebski@nokia.com>
+Submitted-at: Fri, 22 Mar 2019 08:35:28 +0000
+Reviewed-on: https://gerrit.onap.org/r/82924
+Project: dcaegen2/services/prh
+Branch: refs/heads/master

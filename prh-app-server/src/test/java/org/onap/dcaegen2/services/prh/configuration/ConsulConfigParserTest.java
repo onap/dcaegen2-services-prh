@@ -37,7 +37,7 @@ import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.Immutabl
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.ImmutableDmaapPublisherConfiguration;
 
 
-class CloudConfigParserTest {
+class ConsulConfigParserTest {
 
     private final String correctJson =
             new String(Files.readAllBytes(Paths.get(getSystemResource("flattened_configuration.json").toURI())));
@@ -47,16 +47,16 @@ class CloudConfigParserTest {
             TestAppConfiguration.createDefaultDmaapConsumerConfiguration();
     private final ImmutableDmaapPublisherConfiguration correctDmaapPublisherConfig =
             TestAppConfiguration.createDefaultDmaapPublisherConfiguration();
-    private final CloudConfigParser cloudConfigParser = new CloudConfigParser(
+    private final ConsulConfigParser consulConfigParser = new ConsulConfigParser(
             new Gson().fromJson(correctJson, JsonObject.class));
 
-    CloudConfigParserTest() throws Exception {
+    ConsulConfigParserTest() throws Exception {
     }
 
     @Test
     void shouldCreateAaiConfigurationCorrectly() {
         // when
-        AaiClientConfiguration aaiClientConfig = cloudConfigParser.getAaiClientConfig();
+        AaiClientConfiguration aaiClientConfig = consulConfigParser.getAaiClientConfig();
 
         // then
         assertThat(aaiClientConfig).isNotNull();
@@ -67,7 +67,7 @@ class CloudConfigParserTest {
     @Test
     void shouldCreateDmaapConsumerConfigurationCorrectly() {
         // when
-        DmaapConsumerConfiguration dmaapConsumerConfig = cloudConfigParser.getDmaapConsumerConfig();
+        DmaapConsumerConfiguration dmaapConsumerConfig = consulConfigParser.getDmaapConsumerConfig();
 
         // then
         assertThat(dmaapConsumerConfig).isNotNull();
@@ -78,7 +78,7 @@ class CloudConfigParserTest {
     @Test
     void shouldCreateDmaapPublisherConfigurationCorrectly() {
         // when
-        DmaapPublisherConfiguration dmaapPublisherConfig = cloudConfigParser.getDmaapPublisherConfig();
+        DmaapPublisherConfiguration dmaapPublisherConfig = consulConfigParser.getDmaapPublisherConfig();
 
         // then
         assertThat(dmaapPublisherConfig).isNotNull();

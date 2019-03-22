@@ -42,7 +42,7 @@ import java.util.function.BiFunction;
 @Configuration
 public class AaiHttpClientConfig {
     @Autowired
-    private CloudConfiguration cloudConfig;
+    private ConsulConfiguration consulConfiguration;
 
     @Bean
     public AaiHttpClient<AaiModel, HttpResponse> getPatchClientFactory() {
@@ -68,8 +68,8 @@ public class AaiHttpClientConfig {
             final BiFunction<AaiClientConfiguration, CloudHttpClient, AaiHttpClient<T, U>> factoryMethod) {
 
         return x -> factoryMethod.apply(
-                cloudConfig.getAaiClientConfiguration(),
-                new AaiHttpClientFactory(cloudConfig.getAaiClientConfiguration()).build()
+            consulConfiguration.getAaiClientConfiguration(),
+                new AaiHttpClientFactory(consulConfiguration.getAaiClientConfiguration()).build()
         ).getAaiResponse(x);
     }
 }

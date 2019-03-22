@@ -36,7 +36,6 @@ import org.springframework.context.annotation.Configuration;
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/9/18
  */
-
 @Configuration
 @EnableConfigurationProperties
 public class AppConfig extends PrhAppConfig {

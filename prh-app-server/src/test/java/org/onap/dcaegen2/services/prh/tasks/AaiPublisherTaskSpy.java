@@ -25,7 +25,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 
 import javax.net.ssl.SSLException;
-import org.onap.dcaegen2.services.prh.configuration.AppConfig;
+import org.onap.dcaegen2.services.prh.configuration.ConsulConfiguration;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.patch.AaiHttpPatchClient;
@@ -49,10 +49,10 @@ public class AaiPublisherTaskSpy {
     @Bean
     @Primary
     public AaiProducerTask registerSimpleAaiPublisherTask() throws SSLException {
-        AppConfig appConfig = spy(AppConfig.class);
+        ConsulConfiguration consulConfiguration = spy(ConsulConfiguration.class);
         ConsumerDmaapModel consumerDmaapModel = spy(ConsumerDmaapModel.class);
-        doReturn(mock(AaiClientConfiguration.class)).when(appConfig).getAaiClientConfiguration();
-        AaiProducerTaskImpl aaiProducerTask = spy(new AaiProducerTaskImpl(appConfig));
+        doReturn(mock(AaiClientConfiguration.class)).when(consulConfiguration).getAaiClientConfiguration();
+        AaiProducerTaskImpl aaiProducerTask = spy(new AaiProducerTaskImpl(consulConfiguration));
         AaiHttpPatchClient aaiReactiveHttpPatchClient = mock(AaiHttpPatchClient.class);
         doReturn(mock(AaiClientConfiguration.class)).when(aaiProducerTask).resolveConfiguration();
         doReturn(aaiReactiveHttpPatchClient).when(aaiProducerTask).resolveClient();

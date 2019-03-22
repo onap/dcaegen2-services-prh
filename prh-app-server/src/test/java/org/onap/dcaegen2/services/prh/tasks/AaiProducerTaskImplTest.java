@@ -29,25 +29,22 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-
 import com.google.gson.JsonObject;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import javax.net.ssl.SSLException;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.onap.dcaegen2.services.prh.TestAppConfiguration;
-import org.onap.dcaegen2.services.prh.configuration.AppConfig;
+import org.onap.dcaegen2.services.prh.configuration.ConsulConfiguration;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.patch.AaiHttpPatchClient;
-
-import reactor.netty.http.client.HttpClientResponse;
-import io.netty.handler.codec.http.HttpResponseStatus;
 import reactor.core.publisher.Mono;
+import reactor.netty.http.client.HttpClientResponse;
 import reactor.test.StepVerifier;
 
 /**
@@ -59,7 +56,7 @@ class AaiProducerTaskImplTest {
     private AaiProducerTaskImpl aaiProducerTask;
     private AaiClientConfiguration aaiClientConfiguration;
     private AaiHttpPatchClient aaiReactiveHttpPatchClient;
-    private AppConfig appConfig;
+    private ConsulConfiguration consulConfiguration;
     private HttpClientResponse clientResponse;
 
     @BeforeEach
@@ -78,15 +75,15 @@ class AaiProducerTaskImplTest {
                 .swVersion("v4.5.0.1")
                 .additionalFields(new JsonObject())
                 .build();
-        appConfig = mock(AppConfig.class);
+        consulConfiguration = mock(ConsulConfiguration.class);
 
     }
 
     @Test
     void whenPassedObjectDoesntFit_ThrowsPrhTaskException() {
         //given/when/
-        when(appConfig.getAaiClientConfiguration()).thenReturn(aaiClientConfiguration);
-        aaiProducerTask = new AaiProducerTaskImpl(appConfig);
+        when(consulConfiguration.getAaiClientConfiguration()).thenReturn(aaiClientConfiguration);
+        aaiProducerTask = new AaiProducerTaskImpl(consulConfiguration);
         Executable executableCode = () -> aaiProducerTask.execute(null);
 
         //then
@@ -125,8 +122,8 @@ class AaiProducerTaskImplTest {
         aaiReactiveHttpPatchClient = mock(AaiHttpPatchClient.class);
         when(aaiReactiveHttpPatchClient.getAaiResponse(any()))
             .thenReturn(clientResponseMono);
-        when(appConfig.getAaiClientConfiguration()).thenReturn(aaiClientConfiguration);
-        aaiProducerTask = spy(new AaiProducerTaskImpl(appConfig));
+        when(consulConfiguration.getAaiClientConfiguration()).thenReturn(aaiClientConfiguration);
+        aaiProducerTask = spy(new AaiProducerTaskImpl(consulConfiguration));
         when(aaiProducerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
         doReturn(aaiReactiveHttpPatchClient).when(aaiProducerTask).resolveClient();
     }

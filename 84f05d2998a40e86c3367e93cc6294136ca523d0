@@ -16,6 +16,24 @@
       "revId": "84f05d2998a40e86c3367e93cc6294136ca523d0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d4c9943_264ee056",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/AaiJsonBodyBuilderImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 3699
+      },
+      "writtenOn": "2019-03-22T07:20:24Z",
+      "side": 1,
+      "message": "Removed the null checks.",
+      "parentUuid": "572b622c_8db05eee",
+      "revId": "84f05d2998a40e86c3367e93cc6294136ca523d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

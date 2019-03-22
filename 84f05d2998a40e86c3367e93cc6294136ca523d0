@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "572b622c_8db05eee",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/AaiJsonBodyBuilderImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2019-03-22T06:47:16Z",
+      "side": 1,
+      "message": "Are these checks really necessary considering that the IP fields in ConsumerDmaapModel are Nullable now ?",
+      "revId": "84f05d2998a40e86c3367e93cc6294136ca523d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

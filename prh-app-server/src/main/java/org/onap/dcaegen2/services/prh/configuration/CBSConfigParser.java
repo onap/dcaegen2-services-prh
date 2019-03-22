@@ -31,15 +31,14 @@ import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.Immutabl
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 8/21/18
  */
-class CloudConfigParser {
-
+class CBSConfigParser {
     private static final String SECURITY_TRUST_STORE_PATH = "security.trustStorePath";
     private static final String SECURITY_TRUST_STORE_PASS_PATH = "security.trustStorePasswordPath";
     private static final String SECURITY_KEY_STORE_PATH = "security.keyStorePath";
     private static final String SECURITY_KEY_STORE_PASS_PATH = "security.keyStorePasswordPath";
     private final JsonObject jsonObject;
 
-    CloudConfigParser(JsonObject jsonObject) {
+    CBSConfigParser(JsonObject jsonObject) {
         this.jsonObject = jsonObject;
     }
 

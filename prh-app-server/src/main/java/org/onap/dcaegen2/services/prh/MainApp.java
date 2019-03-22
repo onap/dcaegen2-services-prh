@@ -25,6 +25,7 @@ import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.REQUEST_
 
 import java.util.Map;
 import java.util.UUID;
+import org.onap.dcaegen2.services.prh.configuration.ConsulConfigLoader;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.providers.CloudConfigurationClient;
 import org.slf4j.MDC;
 import org.springframework.boot.SpringApplication;
@@ -64,5 +65,10 @@ public class MainApp {
     @Bean
     CloudConfigurationClient getCloudConfigurationClient(){
         return new CloudConfigurationClient();
+    }
+
+    @Bean
+    ConsulConfigLoader getConfigFileLoader(){
+        return new ConsulConfigLoader();
     }
 }

@@ -35,7 +35,7 @@ import javax.net.ssl.SSLException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
-import org.onap.dcaegen2.services.prh.configuration.AppConfig;
+import org.onap.dcaegen2.services.prh.configuration.CBSConfiguration;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
@@ -58,7 +58,7 @@ class DmaapPublisherTaskImplTest {
     private static ConsumerDmaapModel consumerDmaapModel;
     private static DmaapPublisherTaskImpl dmaapPublisherTask;
     private static DMaaPPublisherReactiveHttpClient dMaaPPublisherReactiveHttpClient;
-    private static AppConfig appConfig;
+    private static CBSConfiguration cbsConfiguration;
     private static DmaapPublisherConfiguration dmaapPublisherConfiguration;
     private Optional<RequestDiagnosticContext> requestDiagnosticContextOptionalMock;
     private DmaapModel dmaapModel;
@@ -68,12 +68,12 @@ class DmaapPublisherTaskImplTest {
     public void beforeEach() throws SSLException {
         dmaapPublisherConfiguration = createDefaultDmaapPublisherConfiguration();
         consumerDmaapModel = mock(ConsumerDmaapModel.class);
-        appConfig = mock(AppConfig.class);
+        cbsConfiguration = mock(CBSConfiguration.class);
         requestDiagnosticContextOptionalMock = Optional.empty();
         dmaapModel = mock(DmaapModel.class);
         dMaaPPublisherReactiveHttpClient = mock(DMaaPPublisherReactiveHttpClient.class);
         publisherReactiveHttpClientFactory = mock(PublisherReactiveHttpClientFactory.class);
-        when(appConfig.getDmaapPublisherConfiguration()).thenReturn(dmaapPublisherConfiguration);
+        when(cbsConfiguration.getDmaapPublisherConfiguration()).thenReturn(dmaapPublisherConfiguration);
         when(publisherReactiveHttpClientFactory.create(dmaapPublisherConfiguration))
             .thenReturn(dMaaPPublisherReactiveHttpClient);
     }
@@ -81,7 +81,7 @@ class DmaapPublisherTaskImplTest {
     @Test
     void execute_whenPassedObjectDoesntFit_ThrowsPrhTaskException() {
         //given
-        dmaapPublisherTask = new DmaapPublisherTaskImpl(appConfig);
+        dmaapPublisherTask = new DmaapPublisherTaskImpl(cbsConfiguration);
         //when
         Executable executableFunction = () -> dmaapPublisherTask.execute(null);
         //then
@@ -94,7 +94,7 @@ class DmaapPublisherTaskImplTest {
         //given
         HttpResponseStatus httpResponseStatus = HttpResponseStatus.OK;
         HttpClientResponse httpClientReponse = prepareMocksForTests(httpResponseStatus);
-        dmaapPublisherTask = new DmaapPublisherTaskImpl(appConfig, publisherReactiveHttpClientFactory);
+        dmaapPublisherTask = new DmaapPublisherTaskImpl(cbsConfiguration, publisherReactiveHttpClientFactory);
 
         //when
         StepVerifier.create(dmaapPublisherTask.execute(consumerDmaapModel)).expectSubscription()
@@ -112,7 +112,7 @@ class DmaapPublisherTaskImplTest {
         //given
         HttpResponseStatus httpResponseStatus = HttpResponseStatus.UNAUTHORIZED;
         HttpClientResponse httpClientReponse = prepareMocksForTests(httpResponseStatus);
-        dmaapPublisherTask = new DmaapPublisherTaskImpl(appConfig, publisherReactiveHttpClientFactory);
+        dmaapPublisherTask = new DmaapPublisherTaskImpl(cbsConfiguration, publisherReactiveHttpClientFactory);
 
         //when
         StepVerifier.create(dmaapPublisherTask.execute(consumerDmaapModel)).expectSubscription()
@@ -129,7 +129,7 @@ class DmaapPublisherTaskImplTest {
         //given
         HttpResponseStatus httpResponseStatus = HttpResponseStatus.UNAUTHORIZED;
         HttpClientResponse httpClientReponse = prepareMocksForTests(httpResponseStatus);
-        dmaapPublisherTask = new DmaapPublisherTaskImpl(appConfig, publisherReactiveHttpClientFactory);
+        dmaapPublisherTask = new DmaapPublisherTaskImpl(cbsConfiguration, publisherReactiveHttpClientFactory);
         assertThrows(DmaapNotFoundException.class, () -> {
             dmaapPublisherTask.execute(null);
         });
@@ -138,7 +138,7 @@ class DmaapPublisherTaskImplTest {
     @Test
     public void resolveClient() throws SSLException {
         //given
-        dmaapPublisherTask = new DmaapPublisherTaskImpl(appConfig, publisherReactiveHttpClientFactory);
+        dmaapPublisherTask = new DmaapPublisherTaskImpl(cbsConfiguration, publisherReactiveHttpClientFactory);
         //when
         DMaaPPublisherReactiveHttpClient dMaaPPublisherReactiveHttpClientResolved = dmaapPublisherTask.resolveClient();
         //then

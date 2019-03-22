@@ -39,25 +39,11 @@ class PnfReadyJsonBodyBuilderTest {
 
         ConsumerDmaapModel model = ImmutableConsumerDmaapModel.builder()
             .correlationId("NOKnhfsadhff")
-            .ipv4("256.22.33.155")
-            .ipv6("200J:0db8:85a3:0000:0000:8a2e:0370:7334")
-            .serialNumber("1234")
-            .equipVendor("NOKIA")
-            .equipModel("3310")
-            .equipType("cell")
-            .nfRole("role")
-            .swVersion("1.2.3")
             .additionalFields(jsonObject)
             .build();
 
         String expectedResult = "{"
             + "\"correlationId\":\"NOKnhfsadhff\","
-            + "\"serial-number\":\"1234\","
-            + "\"equip-vendor\":\"NOKIA\","
-            + "\"equip-model\":\"3310\","
-            + "\"equip-type\":\"cell\","
-            + "\"nf-role\":\"role\","
-            + "\"sw-version\":\"1.2.3\","
             + "\"additionalFields\":{\"attachmentPoint\":\"bla-bla-30-3\",\"cvlan\":\"678\",\"svlan\":\"1005\"}"
             + "}";
 
@@ -69,23 +55,9 @@ class PnfReadyJsonBodyBuilderTest {
 
         ConsumerDmaapModel model = ImmutableConsumerDmaapModel.builder()
             .correlationId("NOKnhfsadhff")
-            .serialNumber("1234")
-            .equipVendor("NOKIA")
-            .equipModel("3310")
-            .equipType("cell")
-            .nfRole("role")
-            .swVersion("1.2.3")
             .build();
 
-        String expectedResult = "{"
-            + "\"correlationId\":\"NOKnhfsadhff\","
-            + "\"serial-number\":\"1234\","
-            + "\"equip-vendor\":\"NOKIA\","
-            + "\"equip-model\":\"3310\","
-            + "\"equip-type\":\"cell\","
-            + "\"nf-role\":\"role\","
-            + "\"sw-version\":\"1.2.3\""
-            + "}";
+        String expectedResult = "{\"correlationId\":\"NOKnhfsadhff\"}";
 
         assertEquals(expectedResult, new PnfReadyJsonBodyBuilderImpl().createJsonBody(model));
     }
@@ -96,26 +68,10 @@ class PnfReadyJsonBodyBuilderTest {
 
         ConsumerDmaapModel model = ImmutableConsumerDmaapModel.builder()
             .correlationId("NOKnhfsadhff")
-            .ipv4("256.22.33.155")
-            .ipv6("200J:0db8:85a3:0000:0000:8a2e:0370:7334")
-            .serialNumber("")
-            .equipVendor("")
-            .equipModel("")
-            .equipType("")
-            .nfRole("")
-            .swVersion("")
             .additionalFields(jsonObject)
             .build();
 
-        String expectedResult = "{"
-            + "\"correlationId\":\"NOKnhfsadhff\","
-            + "\"serial-number\":\"\","
-            + "\"equip-vendor\":\"\","
-            + "\"equip-model\":\"\","
-            + "\"equip-type\":\"\","
-            + "\"nf-role\":\"\","
-            + "\"sw-version\":\"\""
-            + "}";
+        String expectedResult = "{\"correlationId\":\"NOKnhfsadhff\"}";
 
         assertEquals(expectedResult, new PnfReadyJsonBodyBuilderImpl().createJsonBody(model));
     }

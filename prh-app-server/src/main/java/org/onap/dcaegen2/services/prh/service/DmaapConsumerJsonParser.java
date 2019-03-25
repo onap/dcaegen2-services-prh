@@ -84,6 +84,10 @@ public class DmaapConsumerJsonParser {
     }
 
     private Flux<ConsumerDmaapModel> getConsumerDmaapModelFromJsonArray(JsonArray jsonElement) {
+        if(jsonElement.size()<1) {
+            LOGGER.debug("Nothing to consume from DMaaP");
+            return Flux.empty();
+        }
         return create(
                 Flux.defer(() -> Flux.fromStream(StreamSupport.stream(jsonElement.spliterator(), false)
                         .map(jsonElementFromArray -> getJsonObjectFromAnArray(jsonElementFromArray)

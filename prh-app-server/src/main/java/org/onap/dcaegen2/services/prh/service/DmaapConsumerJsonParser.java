@@ -83,9 +83,13 @@ public class DmaapConsumerJsonParser {
                 .flatMapMany(this::getConsumerDmaapModelFromJsonArray);
     }
 
-    private Flux<ConsumerDmaapModel> getConsumerDmaapModelFromJsonArray(JsonArray jsonElement) {
+    private Flux<ConsumerDmaapModel> getConsumerDmaapModelFromJsonArray(JsonArray jsonArray) {
+        if(jsonArray.size() == 0) {
+            LOGGER.debug("Nothing to consume from DMaaP");
+            return Flux.empty();
+        }
         return create(
-                Flux.defer(() -> Flux.fromStream(StreamSupport.stream(jsonElement.spliterator(), false)
+                Flux.defer(() -> Flux.fromStream(StreamSupport.stream(jsonArray.spliterator(), false)
                         .map(jsonElementFromArray -> getJsonObjectFromAnArray(jsonElementFromArray)
                                 .orElseGet(JsonObject::new)))));
     }

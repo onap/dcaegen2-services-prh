@@ -69,8 +69,10 @@ public class AaiProducerTaskImpl extends AaiProducerTask {
 
     @Override
     AaiHttpPatchClient resolveClient() {
+
+        AaiHttpClientFactory aaiHttpClientFactory = new AaiHttpClientFactory(resolveConfiguration());
         return new AaiHttpPatchClient(resolveConfiguration(),
-                new AaiJsonBodyBuilderImpl(), new CloudHttpClient());
+                new AaiJsonBodyBuilderImpl(), aaiHttpClientFactory.build());
     }
 
     @Override

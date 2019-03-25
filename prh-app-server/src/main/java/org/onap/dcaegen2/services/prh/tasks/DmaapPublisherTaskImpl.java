@@ -46,7 +46,7 @@ import reactor.core.publisher.Mono;
 public class DmaapPublisherTaskImpl implements DmaapPublisherTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DmaapPublisherTaskImpl.class);
-    private DmaapPublisherConfiguration dmaapPublisherConfiguration;
+    private Config config;
 
     private final PublisherReactiveHttpClientFactory httpClientFactory;
 
@@ -56,7 +56,7 @@ public class DmaapPublisherTaskImpl implements DmaapPublisherTask {
     }
 
     DmaapPublisherTaskImpl(Config config, PublisherReactiveHttpClientFactory httpClientFactory) {
-        this.dmaapPublisherConfiguration = config.getDmaapPublisherConfiguration();
+        this.config = config;
         this.httpClientFactory = httpClientFactory;
     }
 
@@ -72,7 +72,7 @@ public class DmaapPublisherTaskImpl implements DmaapPublisherTask {
 
     @Override
     public DMaaPPublisherReactiveHttpClient resolveClient() throws SSLException{
-            return httpClientFactory.create(dmaapPublisherConfiguration);
+            return httpClientFactory.create(config.getDmaapPublisherConfiguration());
 
     }
 }

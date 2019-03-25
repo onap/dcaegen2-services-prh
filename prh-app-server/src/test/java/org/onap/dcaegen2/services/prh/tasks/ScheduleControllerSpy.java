@@ -45,12 +45,19 @@ public class ScheduleControllerSpy {
     private AaiProducerTask aaiPublisherTaskImplSpy;
 
     @Autowired
+    private BbsActionsTask bbsActionsTaskImplSpy;
+
+    @Autowired
     private Map<String, String> mdcContextMap;
 
     @Bean
     @Primary
     public ScheduledTasks registerSimpleScheduledTask() {
-        return spy(new ScheduledTasks(dmaapConsumerTaskImplSpy, dmaapPublisherTaskImplSpy, aaiPublisherTaskImplSpy,
+        return spy(new ScheduledTasks(
+            dmaapConsumerTaskImplSpy,
+            dmaapPublisherTaskImplSpy,
+            aaiPublisherTaskImplSpy,
+            bbsActionsTaskImplSpy,
             mdcContextMap));
     }
 }

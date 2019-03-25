@@ -54,6 +54,7 @@ public class ScheduledTasks {
     private final DmaapConsumerTask dmaapConsumerTask;
     private final DmaapPublisherTask dmaapProducerTask;
     private final AaiProducerTask aaiProducerTask;
+    private final BbsActionsTask bbsActionsTask;
     private Map<String, String> mdcContextMap;
 
     /**
@@ -64,11 +65,16 @@ public class ScheduledTasks {
      * @param aaiPublisherTask - second task
      */
     @Autowired
-    public ScheduledTasks(DmaapConsumerTask dmaapConsumerTask, DmaapPublisherTask dmaapPublisherTask,
-        AaiProducerTask aaiPublisherTask, Map<String, String> mdcContextMap) {
+    public ScheduledTasks(
+        DmaapConsumerTask dmaapConsumerTask,
+        DmaapPublisherTask dmaapPublisherTask,
+        AaiProducerTask aaiPublisherTask,
+        BbsActionsTask bbsActionsTask,
+        Map<String, String> mdcContextMap) {
         this.dmaapConsumerTask = dmaapConsumerTask;
         this.dmaapProducerTask = dmaapPublisherTask;
         this.aaiProducerTask = aaiPublisherTask;
+        this.bbsActionsTask = bbsActionsTask;
         this.mdcContextMap = mdcContextMap;
     }
 
@@ -88,6 +94,9 @@ public class ScheduledTasks {
                 .doOnError(exception ->
                     logger.warn("AAIProducerTask exception has been registered: ", exception))
                 .onErrorResume(resumePrhPredicate(), exception -> Mono.empty())
+                .flatMap(this::processAdditionalFields)
+                .doOnError(exception ->
+                    logger.warn("BBSActionsTask exception has been registered: ", exception))
                 .flatMap(this::publishToDmaapConfiguration)
                 .doOnError(exception ->
                     logger.warn("DMaaPProducerTask exception has been registered: ", exception))
@@ -101,7 +110,6 @@ public class ScheduledTasks {
             Thread.currentThread().interrupt();
         }
     }
-
 
     private void onComplete() {
         logger.info("PRH tasks have been completed");
@@ -120,7 +128,6 @@ public class ScheduledTasks {
             logger.warn("Chain of tasks have been aborted due to errors in PRH workflow", throwable);
         }
     }
-
 
     private Flux<ConsumerDmaapModel> consumeFromDMaaPMessage() {
         return Flux.defer(() -> {
@@ -146,6 +153,10 @@ public class ScheduledTasks {
         } catch (PrhTaskException | SSLException e) {
             return Mono.error(e);
         }
+    }
+
+    private Mono<ConsumerDmaapModel> processAdditionalFields(ConsumerDmaapModel consumerDmaapModel) {
+        return bbsActionsTask.execute(consumerDmaapModel);
     }
 
     private Mono<HttpClientResponse> publishToDmaapConfiguration(ConsumerDmaapModel monoAaiModel) {

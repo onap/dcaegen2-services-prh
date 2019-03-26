@@ -2,7 +2,7 @@
   "configs": {
     "dmaap": {
       "dmaapConsumerConfiguration": {
-        "dmaapHostName": "localhost",
+        "dmaapHostName": "10.42.111.3",
         "dmaapPortNumber": 8904,
         "dmaapTopicName": "events/unauthenticated.VES_PNFREG_OUTPUT",
         "dmaapProtocol": "http",
@@ -15,7 +15,7 @@
         "messageLimit": 1
       },
       "dmaapProducerConfiguration": {
-        "dmaapHostName": "localhost",
+        "dmaapHostName": "10.42.111.3",
         "dmaapPortNumber": 8904,
         "dmaapTopicName": "events/unauthenticated.PNF_READY",
         "dmaapProtocol": "http",
@@ -26,7 +26,7 @@
     },
     "aai": {
       "aaiClientConfiguration": {
-        "aaiHost": "localhost",
+        "aaiHost": "10.42.111.18",
         "aaiPort": 8443,
         "aaiProtocol": "https",
         "aaiUserName": "AAI",

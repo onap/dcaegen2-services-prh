@@ -26,13 +26,22 @@ import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.producer.DMaaPPublisherReactiveHttpClient;
 import reactor.netty.http.client.HttpClientResponse;
 import reactor.core.publisher.Mono;
+import org.apache.http.HttpResponse;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
 interface DmaapPublisherTask {
 
+    /**
+     *
+     * Does not work reactive version with DMaaP MR  - to be investigated why in future
+     * As WA plesae use Mono<HttpResponse> executeWithApache(ConsumerDmaapModel consumerDmaapModel);
+     * */
+    @Deprecated
     Mono<HttpClientResponse> execute(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException, SSLException;
+
+    Mono<HttpResponse> executeWithApache(ConsumerDmaapModel consumerDmaapModel);
 
     DMaaPPublisherReactiveHttpClient resolveClient() throws SSLException;;
 }

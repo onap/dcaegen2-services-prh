@@ -22,22 +22,24 @@ package org.onap.dcaegen2.services.prh.tasks;
 
 import java.util.Optional;
 import javax.net.ssl.SSLException;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
-
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.PnfReadyJsonBodyBuilderImpl;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.producer.DMaaPPublisherReactiveHttpClient;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.producer.DmaaPRestTemplateFactory;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.producer.PublisherReactiveHttpClientFactory;
-
+import org.onap.dcaegen2.services.sdk.rest.services.uri.URI.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import reactor.netty.http.client.HttpClientResponse;
 import reactor.core.publisher.Mono;
+import reactor.netty.http.client.HttpClientResponse;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
@@ -46,13 +48,14 @@ import reactor.core.publisher.Mono;
 public class DmaapPublisherTaskImpl implements DmaapPublisherTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DmaapPublisherTaskImpl.class);
+    private final PnfReadyJsonBodyBuilderImpl pnfReadyJsonBodyBuilder = new PnfReadyJsonBodyBuilderImpl();
     private Config config;
-
     private final PublisherReactiveHttpClientFactory httpClientFactory;
 
     @Autowired
     public DmaapPublisherTaskImpl(Config config) {
-        this(config, new PublisherReactiveHttpClientFactory(new DmaaPRestTemplateFactory(),new PnfReadyJsonBodyBuilderImpl()));
+        this(config,
+            new PublisherReactiveHttpClientFactory(new DmaaPRestTemplateFactory(), new PnfReadyJsonBodyBuilderImpl()));
     }
 
     DmaapPublisherTaskImpl(Config config, PublisherReactiveHttpClientFactory httpClientFactory) {
@@ -61,18 +64,55 @@ public class DmaapPublisherTaskImpl implements DmaapPublisherTask {
     }
 
     @Override
-    public Mono<HttpClientResponse> execute(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException,SSLException {
+    public Mono<HttpClientResponse> execute(ConsumerDmaapModel consumerDmaapModel)
+        throws DmaapNotFoundException, SSLException {
         if (consumerDmaapModel == null) {
             throw new DmaapNotFoundException("Invoked null object to DMaaP task");
         }
         DMaaPPublisherReactiveHttpClient dmaapPublisherReactiveHttpClient = resolveClient();
         LOGGER.info("Method called with arg {}", consumerDmaapModel);
-        return dmaapPublisherReactiveHttpClient.getDMaaPProducerResponse(consumerDmaapModel,Optional.empty());
+        return dmaapPublisherReactiveHttpClient.getDMaaPProducerResponse(consumerDmaapModel, Optional.empty());
     }
+
 
     @Override
-    public DMaaPPublisherReactiveHttpClient resolveClient() throws SSLException{
-            return httpClientFactory.create(config.getDmaapPublisherConfiguration());
+    public DMaaPPublisherReactiveHttpClient resolveClient() throws SSLException {
+        return httpClientFactory.create(config.getDmaapPublisherConfiguration());
 
     }
+
+    /**
+     *
+     * Does not work reactive version with DMaaP MR  - to be investigated why in future
+     * As WA plesae use Mono<HttpResponse> executeWithApache(ConsumerDmaapModel consumerDmaapModel);
+     * */
+    @Override
+    public Mono<HttpResponse> executeWithApache(ConsumerDmaapModel consumerDmaapModel) {
+        String json = pnfReadyJsonBodyBuilder.createJsonBody(consumerDmaapModel);
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+        HttpPost postRequest = new HttpPost(getUrl());
+        try {
+            StringEntity input = new StringEntity(json);
+            input.setContentType(config.getDmaapPublisherConfiguration().dmaapContentType());
+            postRequest.setEntity(input);
+            HttpResponse response = httpClient.execute(postRequest);
+            return Mono.just(response);
+        } catch (Exception e) {
+            LOGGER.warn("Publishing to DMaaP MR failed: {}", e);
+            return Mono.error(e);
+        }
+    }
+
+    private String getUrl() {
+        return (new URIBuilder()).scheme(config.getDmaapPublisherConfiguration().dmaapProtocol())
+            .host(config.getDmaapPublisherConfiguration().dmaapHostName())
+            .port(config.getDmaapPublisherConfiguration().dmaapPortNumber()).path(this.createRequestPath()).build()
+            .toString();
+    }
+
+    private String createRequestPath() {
+        return "/" + config.getDmaapPublisherConfiguration().dmaapTopicName();
+    }
+
+
 }

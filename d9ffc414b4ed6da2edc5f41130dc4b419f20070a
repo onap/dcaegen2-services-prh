@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fa5ba66d_c805e581",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTask.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2019-03-26T09:51:24Z",
+      "side": 1,
+      "message": "Should be *ScheduledTasks* not ScheduleController",
+      "parentUuid": "5b4176eb_0e501258",
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "be10e342_98760110",
         "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTask.java",
         "patchSetId": 6

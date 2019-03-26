@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "eaaf51a5_9b718ec6",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTask.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 2731
+      },
+      "writtenOn": "2019-03-26T11:11:13Z",
+      "side": 1,
+      "message": "It involves more changes, at this moment keep it as is",
+      "parentUuid": "fa5ba66d_c805e581",
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "be10e342_98760110",
         "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTask.java",
         "patchSetId": 6
@@ -48,6 +66,24 @@
       "writtenOn": "2019-03-26T09:36:51Z",
       "side": 1,
       "message": "As a general thought, this defensive approach with null and empty checks made on additionalFields and attachmnetPoint wouldn\u0027t be necessary if the ConsumerDmaapModel passed into the execute method would represent the final state of data model in combination with a polymorphic method invocation.",
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f475fea_1399606f",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTask.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 2731
+      },
+      "writtenOn": "2019-03-26T11:11:13Z",
+      "side": 1,
+      "message": "Ok, we can back to this later",
+      "parentUuid": "be10e342_98760110",
       "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -71,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "26c0aaf0_4beb292a",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTask.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 2731
+      },
+      "writtenOn": "2019-03-26T11:11:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0e96d6dd_70773a1f",
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e7be3168_bd8447af",
         "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTask.java",
         "patchSetId": 6
@@ -82,6 +136,24 @@
       "writtenOn": "2019-03-26T09:36:51Z",
       "side": 1,
       "message": "Extract all PNF endpoints as field constants. This type of information should not be in-lined as it\u0027s actually a physical representation of the external component\u0027s address.\nPreferably this should be taken from a property/config file.",
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1334aad8_84e95b34",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTask.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 2731
+      },
+      "writtenOn": "2019-03-26T11:11:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7be3168_bd8447af",
       "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -105,6 +177,24 @@
     },
     {
       "key": {
+        "uuid": "b64b21bf_0478c0f5",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTask.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 2731
+      },
+      "writtenOn": "2019-03-26T11:11:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8681b020_5e984857",
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "896da2b6_0d34d15b",
         "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTask.java",
         "patchSetId": 6
@@ -116,6 +206,24 @@
       "writtenOn": "2019-03-26T09:36:51Z",
       "side": 1,
       "message": "Please consider switching from this custom implementation of URI to what is provided by JDK. This is reinventing the wheel, there is no benefit in having and maintaining a crippled implementation of URI class which does not even verify if the URI is valid. \nAs for the URIBuilder - I understand the intent, but there is a lot of room for improvement - what\u0027s  the point of having a builder that still requires raw string concatenation ?",
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fbdad372_4c3acad0",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTask.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 2731
+      },
+      "writtenOn": "2019-03-26T11:11:13Z",
+      "side": 1,
+      "message": "I\u0027m not convinced, anyway this could be resolved as separate change",
+      "parentUuid": "896da2b6_0d34d15b",
       "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -139,6 +247,24 @@
     },
     {
       "key": {
+        "uuid": "18bbb388_88f310ee",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 2731
+      },
+      "writtenOn": "2019-03-26T11:11:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "034d8aad_3a921144",
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a02482a3_af4c8b01",
         "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskTest.java",
         "patchSetId": 6
@@ -150,6 +276,24 @@
       "writtenOn": "2019-03-26T09:36:51Z",
       "side": 1,
       "message": "Typo: Returns --\u003e Return. This applies to all method names",
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08b27f8c_98bd4914",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 2731
+      },
+      "writtenOn": "2019-03-26T11:11:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a02482a3_af4c8b01",
       "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -179,6 +323,30 @@
     },
     {
       "key": {
+        "uuid": "1c2c0c0a_33cf2cbe",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 2731
+      },
+      "writtenOn": "2019-03-26T11:11:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "257de6df_94467c09",
+      "range": {
+        "startLine": 78,
+        "startChar": 9,
+        "endLine": 78,
+        "endChar": 10
+      },
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ce496c32_95740869",
         "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskTest.java",
         "patchSetId": 6
@@ -190,6 +358,24 @@
       "writtenOn": "2019-03-26T09:36:51Z",
       "side": 1,
       "message": "typo - whenPassedObjectHas...",
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b46c0b18_d903e4dc",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 2731
+      },
+      "writtenOn": "2019-03-26T11:11:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ce496c32_95740869",
       "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -241,6 +427,24 @@
       "writtenOn": "2019-03-26T09:36:51Z",
       "side": 1,
       "message": "Suggestion - Use relative paths to read resources (instead of src/test). resources should be the starting point. Try using the classloader to get the resource.",
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e872df34_75fc6547",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 2731
+      },
+      "writtenOn": "2019-03-26T11:11:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d58eb5c4_71890462",
       "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false

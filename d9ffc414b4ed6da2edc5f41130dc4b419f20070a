@@ -1,0 +1,231 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5b4176eb_0e501258",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTask.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2019-03-26T09:36:51Z",
+      "side": 1,
+      "message": "Remove all Spring usages in this class. There is no need to use Spring based injection(autowired) on this level, as this class can be constructed and managed by ScheduleConstroller.",
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "be10e342_98760110",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTask.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2019-03-26T09:36:51Z",
+      "side": 1,
+      "message": "As a general thought, this defensive approach with null and empty checks made on additionalFields and attachmnetPoint wouldn\u0027t be necessary if the ConsumerDmaapModel passed into the execute method would represent the final state of data model in combination with a polymorphic method invocation.",
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e96d6dd_70773a1f",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTask.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2019-03-26T09:36:51Z",
+      "side": 1,
+      "message": "method name too generic - build what type of request?",
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7be3168_bd8447af",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTask.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2019-03-26T09:36:51Z",
+      "side": 1,
+      "message": "Extract all PNF endpoints as field constants. This type of information should not be in-lined as it\u0027s actually a physical representation of the external component\u0027s address.\nPreferably this should be taken from a property/config file.",
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8681b020_5e984857",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTask.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2019-03-26T09:36:51Z",
+      "side": 1,
+      "message": "buildUri method name too generic, what type of URI ? This is specific to logical-link and should be stated",
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "896da2b6_0d34d15b",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTask.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2019-03-26T09:36:51Z",
+      "side": 1,
+      "message": "Please consider switching from this custom implementation of URI to what is provided by JDK. This is reinventing the wheel, there is no benefit in having and maintaining a crippled implementation of URI class which does not even verify if the URI is valid. \nAs for the URIBuilder - I understand the intent, but there is a lot of room for improvement - what\u0027s  the point of having a builder that still requires raw string concatenation ?",
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "034d8aad_3a921144",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2019-03-26T09:36:51Z",
+      "side": 1,
+      "message": "Is is necessary to create the mocks each time in the @BeforeEach setUp method especially when nothing really changes? This could be simply done on the field level. Each test method is already run on a new instance.\n\nAlso the when() clause is duplicated in first test. I\u0027d consider removing this method and doing everything in the tests.",
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a02482a3_af4c8b01",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2019-03-26T09:36:51Z",
+      "side": 1,
+      "message": "Typo: Returns --\u003e Return. This applies to all method names",
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "257de6df_94467c09",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2019-03-26T09:36:51Z",
+      "side": 1,
+      "message": "Again -\u003e never use Mockito.when if you want to have a BDD style test. Instead use BDDMockito.given. Please change this everywhere.",
+      "range": {
+        "startLine": 78,
+        "startChar": 9,
+        "endLine": 78,
+        "endChar": 10
+      },
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce496c32_95740869",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2019-03-26T09:36:51Z",
+      "side": 1,
+      "message": "typo - whenPassedObjectHas...",
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7af77cf3_428c8e67",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2019-03-26T09:36:51Z",
+      "side": 1,
+      "message": "avoid any() matchers. If something goes",
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "931ac9f1_db37bae2",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2019-03-26T09:36:51Z",
+      "side": 1,
+      "message": "Pro-tip: Instead of verify() use BDDMockito.then() :)",
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d58eb5c4_71890462",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2019-03-26T09:36:51Z",
+      "side": 1,
+      "message": "Suggestion - Use relative paths to read resources (instead of src/test). resources should be the starting point. Try using the classloader to get the resource.",
+      "revId": "d9ffc414b4ed6da2edc5f41130dc4b419f20070a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

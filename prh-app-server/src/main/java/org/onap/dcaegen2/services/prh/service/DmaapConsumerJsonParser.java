@@ -85,6 +85,8 @@ public class DmaapConsumerJsonParser {
 
     private Flux<ConsumerDmaapModel> getConsumerDmaapModelFromJsonArray(JsonElement jsonElement) {
 
+        LOGGER.debug("DmaapConsumerJsonParser input for parsing: {}",jsonElement);
+
         if(jsonElement instanceof JsonObject)
             return create(Flux.just((JsonObject) jsonElement));
 

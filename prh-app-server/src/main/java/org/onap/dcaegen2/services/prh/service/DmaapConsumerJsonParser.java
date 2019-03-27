@@ -78,12 +78,17 @@ public class DmaapConsumerJsonParser {
      * @param monoMessage - results from DMaaP
      * @return reactive DMaaPModel
      */
-    public Flux<ConsumerDmaapModel> getJsonObject(Mono<JsonArray> monoMessage) {
+    public Flux<ConsumerDmaapModel> getJsonObject(Mono<JsonElement> monoMessage) {
         return monoMessage
                 .flatMapMany(this::getConsumerDmaapModelFromJsonArray);
     }
 
-    private Flux<ConsumerDmaapModel> getConsumerDmaapModelFromJsonArray(JsonArray jsonArray) {
+    private Flux<ConsumerDmaapModel> getConsumerDmaapModelFromJsonArray(JsonElement jsonElement) {
+
+        if(jsonElement instanceof JsonObject)
+            return create(Flux.just((JsonObject) jsonElement));
+
+        JsonArray jsonArray = (JsonArray) jsonElement;
         if(jsonArray.size() == 0) {
             LOGGER.debug("Nothing to consume from DMaaP");
             return Flux.empty();

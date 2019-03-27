@@ -20,7 +20,7 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import java.util.Optional;
 import javax.net.ssl.SSLException;
 import org.onap.dcaegen2.services.prh.configuration.Config;
@@ -71,7 +71,7 @@ public class DmaapConsumerTaskImpl implements DmaapConsumerTask {
     public Flux<ConsumerDmaapModel> execute(String object) throws SSLException {
         DMaaPConsumerReactiveHttpClient dmaaPConsumerReactiveHttpClient = resolveClient();
         LOGGER.debug("Method called with arg {}", object);
-        Mono<JsonArray> response = dmaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse(
+        Mono<JsonElement> response = dmaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse(
             Optional.empty());
         return dmaapConsumerJsonParser.getJsonObject(response);
     }

@@ -74,6 +74,7 @@ public class TestAppConfiguration {
                 .aaiIgnoreSslCertificateErrors(true)
                 .aaiBasePath("/aai/v12")
                 .aaiPnfPath("/network/pnfs/pnf")
+                .aaiServiceInstancePath("/business/customers/customer/${customer}/service-subscriptions/service-subscription/${serviceType}/service-instances/service-instance/${serviceInstanceId}")
                 .trustStorePath("/opt/app/prh/local/org.onap.prh.trust.jks")
                 .trustStorePasswordPath("change_it")
                 .keyStorePath("/opt/app/prh/local/org.onap.prh.p12")

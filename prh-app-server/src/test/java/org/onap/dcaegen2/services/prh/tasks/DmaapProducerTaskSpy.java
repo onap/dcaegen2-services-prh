@@ -32,6 +32,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+import java.util.function.Supplier;
+
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
@@ -46,10 +48,11 @@ public class DmaapProducerTaskSpy {
     @Bean
     @Primary
     public DmaapPublisherTask registerSimpleDmaapPublisherTask() throws SSLException {
-        AppConfig appConfig = spy(AppConfig.class);
+        final AppConfig appConfig = spy(AppConfig.class);
+        final Supplier<DmaapPublisherConfiguration> configSupplier = () -> appConfig.getDmaapPublisherConfiguration();
         doReturn(mock(DmaapPublisherConfiguration.class)).when(appConfig).getDmaapPublisherConfiguration();
-        DmaapPublisherTaskImpl dmaapPublisherTask = spy(new DmaapPublisherTaskImpl(appConfig));
-        DMaaPPublisherReactiveHttpClient extendedDmaapProducerHttpClient = mock(
+        final DmaapPublisherTaskImpl dmaapPublisherTask = spy(new DmaapPublisherTaskImpl(configSupplier));
+        final DMaaPPublisherReactiveHttpClient extendedDmaapProducerHttpClient = mock(
             DMaaPPublisherReactiveHttpClient.class);
         doReturn(extendedDmaapProducerHttpClient).when(dmaapPublisherTask).resolveClient();
         return dmaapPublisherTask;

@@ -20,25 +20,23 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapPublisherConfiguration;
-import org.springframework.core.io.Resource;
+import org.onap.dcaegen2.services.prh.tasks.DmaapPublisherTask;
+import org.onap.dcaegen2.services.prh.tasks.DmaapPublisherTaskImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-/**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/25/18
- */
-public interface Config {
+@Configuration
+public class DmaapPublisherTaskConfig {
+    @Bean(name = "ReadyPublisherTask")
+    @Autowired
+    public DmaapPublisherTask getReadyPublisherTask(final Config config) {
+        return new DmaapPublisherTaskImpl(config::getDmaapPublisherConfiguration);
+    }
 
-    Resource getGitInfo();
-
-    DmaapConsumerConfiguration getDmaapConsumerConfiguration();
-
-    AaiClientConfiguration getAaiClientConfiguration();
-
-    DmaapPublisherConfiguration getDmaapPublisherConfiguration();
-
-    DmaapPublisherConfiguration getDmaapUpdatePublisherConfiguration();
-
-    void initFileStreamReader();
+    @Bean(name = "UpdatePublisherTask")
+    @Autowired
+    public DmaapPublisherTask getUpdatePublisherTask(final Config config) {
+        return new DmaapPublisherTaskImpl(config::getDmaapUpdatePublisherConfiguration);
+    }
 }

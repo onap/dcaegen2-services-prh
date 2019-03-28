@@ -37,6 +37,8 @@ import org.springframework.util.StreamUtils;
 import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotNull;
 import java.io.*;
+import java.net.URI;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ServiceLoader;
@@ -55,6 +57,7 @@ public abstract class PrhAppConfig implements Config {
     private static final String DMAAP = "dmaap";
     private static final String AAI_CONFIG = "aaiClientConfiguration";
     private static final String DMAAP_PRODUCER = "dmaapProducerConfiguration";
+    private static final String DMAAP_UPDATE_PRODUCER = "dmaapUpdateProducerConfiguration";
     private static final String DMAAP_CONSUMER = "dmaapConsumerConfiguration";
     private static final String SECURITY = "security";
 
@@ -63,6 +66,8 @@ public abstract class PrhAppConfig implements Config {
     DmaapConsumerConfiguration dmaapConsumerConfiguration;
 
     DmaapPublisherConfiguration dmaapPublisherConfiguration;
+
+    DmaapPublisherConfiguration dmaapUpdatePublisherConfiguration;
 
     @Value("classpath:prh_endpoints.json")
     private Resource prhEndpoints;
@@ -96,6 +101,11 @@ public abstract class PrhAppConfig implements Config {
     }
 
     @Override
+    public DmaapPublisherConfiguration getDmaapUpdatePublisherConfiguration() {
+        return dmaapUpdatePublisherConfiguration;
+    }
+
+    @Override
     public void initFileStreamReader() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         ServiceLoader.load(TypeAdapterFactory.class).forEach(gsonBuilder::registerTypeAdapterFactory);
@@ -106,17 +116,23 @@ public abstract class PrhAppConfig implements Config {
             if (rootElement.isJsonObject()) {
                 deserializeAaiConfiguration(gsonBuilder, rootElement);
                 deserializeDmaapConsumerConfiguration(gsonBuilder, rootElement);
-                deserializeDmaapPublisherConfiguration(gsonBuilder, rootElement);
+                dmaapPublisherConfiguration =
+                        deserializeDmaapPublisherConfiguration(DMAAP_PRODUCER, gsonBuilder, rootElement);
+                dmaapUpdatePublisherConfiguration =
+                        deserializeDmaapPublisherConfiguration(DMAAP_UPDATE_PRODUCER, gsonBuilder, rootElement);
             }
         } catch (IOException e) {
             LOGGER.warn("Failed to load/parse file", e);
         }
     }
 
-    private void deserializeDmaapPublisherConfiguration(GsonBuilder gsonBuilder, JsonElement rootElement) {
-        dmaapPublisherConfiguration = deserializeType(gsonBuilder, concatenateJsonObjects(
+    private DmaapPublisherConfiguration deserializeDmaapPublisherConfiguration(
+            final String dmaapProducerType,
+            final GsonBuilder gsonBuilder,
+            final JsonElement rootElement) {
+         return deserializeType(gsonBuilder, concatenateJsonObjects(
                 rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(DMAAP)
-                        .getAsJsonObject(DMAAP_PRODUCER),
+                        .getAsJsonObject(dmaapProducerType),
                 rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(SECURITY)),
                 DmaapPublisherConfiguration.class);
     }

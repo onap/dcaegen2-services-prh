@@ -29,7 +29,11 @@ import org.onap.dcaegen2.services.prh.model.AaiJsonBodyBuilderImpl;
 import org.onap.dcaegen2.services.prh.model.utils.HttpUtils;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.AaiHttpClientFactory;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.AaiHttpClient;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.patch.AaiHttpPatchClient;
+import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.CloudHttpClient;
+import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
+import org.onap.dcaegen2.services.sdk.rest.services.model.AaiModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,35 +50,23 @@ public class AaiProducerTaskImpl extends AaiProducerTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AaiProducerTaskImpl.class);
 
-    private final Config config;
-    private AaiHttpPatchClient aaiHttpPatchClient;
+    private final AaiHttpClient<AaiModel, HttpResponse> aaiHttpPatchClient;
 
     @Autowired
-    public AaiProducerTaskImpl(Config config) {
-        this.config = config;
+    public AaiProducerTaskImpl(final AaiHttpClient<AaiModel, HttpResponse> aaiHttpPatchClient) {
+        this.aaiHttpPatchClient = aaiHttpPatchClient;
     }
 
     @Override
     Mono<ConsumerDmaapModel> publish(ConsumerDmaapModel consumerDmaapModel) {
-        Mono<HttpClientResponse> resposne =  aaiHttpPatchClient.getAaiResponse(consumerDmaapModel);
+        Mono<HttpResponse> resposne = aaiHttpPatchClient.getAaiResponse(consumerDmaapModel);
         return resposne.flatMap(response -> {
-            if (HttpUtils.isSuccessfulResponseCode(response.status().code())) {
+            if (HttpUtils.isSuccessfulResponseCode(response.statusCode())) {
                 return Mono.just(consumerDmaapModel);
             }
             return Mono
-                    .error(new AaiNotFoundException("Incorrect response code for continuation of tasks workflow" + response.status().code()));
+                    .error(new AaiNotFoundException("Incorrect response code for continuation of tasks workflow" + response.statusCode()));
         });
-    }
-
-    @Override
-    AaiHttpPatchClient resolveClient() {
-        return new AaiHttpPatchClient(resolveConfiguration(),
-                new AaiJsonBodyBuilderImpl(), new AaiHttpClientFactory(resolveConfiguration()).build());
-    }
-
-    @Override
-    protected AaiClientConfiguration resolveConfiguration() {
-        return config.getAaiClientConfiguration();
     }
 
     @Override
@@ -82,7 +74,6 @@ public class AaiProducerTaskImpl extends AaiProducerTask {
         if (consumerDmaapModel == null) {
             throw new DmaapNotFoundException("Invoked null object to DMaaP task");
         }
-        aaiHttpPatchClient = resolveClient();
         LOGGER.debug("Method called with arg {}", consumerDmaapModel);
         return publish(consumerDmaapModel);
     }

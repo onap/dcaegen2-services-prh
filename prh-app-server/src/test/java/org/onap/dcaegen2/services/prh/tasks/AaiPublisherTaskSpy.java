@@ -52,10 +52,9 @@ public class AaiPublisherTaskSpy {
         AppConfig appConfig = spy(AppConfig.class);
         ConsumerDmaapModel consumerDmaapModel = spy(ConsumerDmaapModel.class);
         doReturn(mock(AaiClientConfiguration.class)).when(appConfig).getAaiClientConfiguration();
-        AaiProducerTaskImpl aaiProducerTask = spy(new AaiProducerTaskImpl(appConfig));
         AaiHttpPatchClient aaiReactiveHttpPatchClient = mock(AaiHttpPatchClient.class);
-        doReturn(mock(AaiClientConfiguration.class)).when(aaiProducerTask).resolveConfiguration();
-        doReturn(aaiReactiveHttpPatchClient).when(aaiProducerTask).resolveClient();
+        AaiProducerTaskImpl aaiProducerTask = spy(new AaiProducerTaskImpl(aaiReactiveHttpPatchClient));
+
         return aaiProducerTask;
     }
 }

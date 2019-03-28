@@ -20,19 +20,12 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import javax.net.ssl.SSLException;
 import org.onap.dcaegen2.services.prh.exceptions.AaiNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
-
-
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.AaiHttpClientFactory;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.patch.AaiHttpPatchClient;
-import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.CloudHttpClient;
-import org.onap.dcaegen2.services.sdk.rest.services.ssl.SslFactory;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import javax.net.ssl.SSLException;
 
 
 /**
@@ -42,14 +35,6 @@ public abstract class AaiProducerTask {
 
     abstract Mono<ConsumerDmaapModel> publish(ConsumerDmaapModel message) throws AaiNotFoundException;
 
-    abstract AaiHttpPatchClient resolveClient();
-
-    protected abstract AaiClientConfiguration resolveConfiguration();
-
     protected abstract Mono<ConsumerDmaapModel> execute(ConsumerDmaapModel consumerDmaapModel)
-        throws PrhTaskException, SSLException;
-
-    CloudHttpClient buildHttpClient() {
-        return new AaiHttpClientFactory(resolveConfiguration()).build();
-    }
+            throws PrhTaskException, SSLException;
 }

@@ -68,7 +68,7 @@ class BbsActionsTaskTest {
         ConsumerDmaapModel consumerDmaapModel = buildConsumerDmaapModel(null);
 
         // when
-        ConsumerDmaapModel result = new BbsActionsTask(appConfig, httpClient).execute(consumerDmaapModel).block();
+        ConsumerDmaapModel result = new BbsActionsTaskImpl(appConfig, httpClient).execute(consumerDmaapModel).block();
 
         // then
         verifyZeroInteractions(httpClient);
@@ -85,7 +85,7 @@ class BbsActionsTaskTest {
         ConsumerDmaapModel consumerDmaapModel = buildConsumerDmaapModel(additionalFields);
 
         // when
-        ConsumerDmaapModel result = new BbsActionsTask(appConfig, httpClient).execute(consumerDmaapModel).block();
+        ConsumerDmaapModel result = new BbsActionsTaskImpl(appConfig, httpClient).execute(consumerDmaapModel).block();
 
         // then
         verifyZeroInteractions(httpClient);
@@ -104,7 +104,7 @@ class BbsActionsTaskTest {
         given(httpClient.call(any())).willReturn(Mono.just(buildAaiResponse(HttpResponseStatus.OK)));
 
         // when
-        Mono<ConsumerDmaapModel> response = new BbsActionsTask(appConfig, httpClient).execute(consumerDmaapModel);
+        Mono<ConsumerDmaapModel> response = new BbsActionsTaskImpl(appConfig, httpClient).execute(consumerDmaapModel);
 
         // then
         ArgumentCaptor<HttpRequest> captor = ArgumentCaptor.forClass(HttpRequest.class);
@@ -131,7 +131,7 @@ class BbsActionsTaskTest {
         given(httpClient.call(any())).willReturn(Mono.just(buildAaiResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR)));
 
         // when
-        Mono<ConsumerDmaapModel> response = new BbsActionsTask(appConfig, httpClient).execute(consumerDmaapModel);
+        Mono<ConsumerDmaapModel> response = new BbsActionsTaskImpl(appConfig, httpClient).execute(consumerDmaapModel);
 
         // then
         ArgumentCaptor<HttpRequest> captor = ArgumentCaptor.forClass(HttpRequest.class);

@@ -55,7 +55,7 @@ public class MainApp {
         return MDC.getCopyOfContextMap();
     }
 
-    @Bean
+    @Bean()
     TaskScheduler concurrentTaskScheduler() {
         return new ConcurrentTaskScheduler();
     }

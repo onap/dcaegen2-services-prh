@@ -25,6 +25,7 @@ import static org.mockito.Mockito.spy;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -38,8 +39,16 @@ public class ScheduleControllerSpy {
     @Autowired
     private DmaapConsumerTask dmaapConsumerTaskImplSpy;
 
+    @Qualifier("ReadyPublisherTask")
     @Autowired
-    private DmaapPublisherTask dmaapPublisherTaskImplSpy;
+    private DmaapPublisherTask dmaapReadyPublisherTaskImplSpy;
+
+    @Qualifier("UpdatePublisherTask")
+    @Autowired
+    private DmaapPublisherTask dmaapUpdatePublisherTaskImplSpy;
+
+    @Autowired
+    private AaiQueryTask aaiQueryTaskImplSpy;
 
     @Autowired
     private AaiProducerTask aaiPublisherTaskImplSpy;
@@ -54,10 +63,12 @@ public class ScheduleControllerSpy {
     @Primary
     public ScheduledTasks registerSimpleScheduledTask() {
         return spy(new ScheduledTasks(
-            dmaapConsumerTaskImplSpy,
-            dmaapPublisherTaskImplSpy,
-            aaiPublisherTaskImplSpy,
-            bbsActionsTaskImplSpy,
-            mdcContextMap));
+                dmaapConsumerTaskImplSpy,
+                dmaapReadyPublisherTaskImplSpy,
+                dmaapUpdatePublisherTaskImplSpy,
+                aaiQueryTaskImplSpy,
+                aaiPublisherTaskImplSpy,
+                bbsActionsTaskImplSpy,
+                mdcContextMap));
     }
 }

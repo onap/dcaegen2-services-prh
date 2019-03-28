@@ -56,6 +56,7 @@ public class CloudConfiguration extends AppConfig {
 
     private AaiClientConfiguration aaiClientCloudConfiguration;
     private DmaapPublisherConfiguration dmaapPublisherCloudConfiguration;
+    private DmaapPublisherConfiguration dmaapUpdatePublisherCloudConfiguration;
     private DmaapConsumerConfiguration dmaapConsumerCloudConfiguration;
 
     @Value("#{systemEnvironment}")
@@ -90,6 +91,7 @@ public class CloudConfiguration extends AppConfig {
         LOGGER.info("Received application configuration: {}", jsonObject);
         CloudConfigParser cloudConfigParser = new CloudConfigParser(jsonObject);
         dmaapPublisherCloudConfiguration = cloudConfigParser.getDmaapPublisherConfig();
+        dmaapUpdatePublisherCloudConfiguration = cloudConfigParser.getDmaapUpdatePublisherConfig();
         aaiClientCloudConfiguration = ImmutableAaiClientConfiguration.copyOf(cloudConfigParser.getAaiClientConfig())
             .withAaiHeaders(aaiClientConfiguration.aaiHeaders());
         dmaapConsumerCloudConfiguration = cloudConfigParser.getDmaapConsumerConfig();
@@ -98,6 +100,11 @@ public class CloudConfiguration extends AppConfig {
     @Override
     public DmaapPublisherConfiguration getDmaapPublisherConfiguration() {
         return Optional.ofNullable(dmaapPublisherCloudConfiguration).orElse(super.getDmaapPublisherConfiguration());
+    }
+
+    @Override
+    public DmaapPublisherConfiguration getDmaapUpdatePublisherConfiguration() {
+        return Optional.ofNullable(dmaapUpdatePublisherCloudConfiguration).orElse(super.getDmaapPublisherConfiguration());
     }
 
     @Override

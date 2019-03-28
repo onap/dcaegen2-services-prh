@@ -22,6 +22,15 @@
         "dmaapUserName": "admin",
         "dmaapUserPassword": "admin",
         "dmaapContentType": "application/json"
+      },
+      "dmaapUpdateProducerConfiguration": {
+        "dmaapHostName": "localhost",
+        "dmaapPortNumber": 8904,
+        "dmaapTopicName": "events/unauthenticated.PNF_UPDATE",
+        "dmaapProtocol": "http",
+        "dmaapUserName": "admin",
+        "dmaapUserPassword": "admin",
+        "dmaapContentType": "application/json"
       }
     },
     "aai": {
@@ -34,6 +43,7 @@
         "aaiIgnoreSslCertificateErrors": true,
         "aaiBasePath": "/aai/v12",
         "aaiPnfPath": "/network/pnfs/pnf",
+        "aaiServiceInstancePath": "/business/customers/customer/${customer}/service-subscriptions/service-subscription/${serviceType}/service-instances/service-instance/${serviceInstanceId}",
         "aaiHeaders": {
           "X-FromAppId": "prh",
           "X-TransactionId": "9999",

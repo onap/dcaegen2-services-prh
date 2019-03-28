@@ -25,6 +25,7 @@ import static org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMet
 import com.google.gson.JsonObject;
 import io.netty.buffer.ByteBuf;
 import io.vavr.collection.HashMap;
+import io.vavr.collection.Map;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
@@ -37,12 +38,12 @@ import org.onap.dcaegen2.services.prh.model.bbs.ImmutableRelationshipWrapper;
 import org.onap.dcaegen2.services.prh.model.bbs.RelationshipWrapper;
 import org.onap.dcaegen2.services.prh.model.utils.GsonSerializer;
 import org.onap.dcaegen2.services.prh.model.utils.HttpUtils;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.ImmutableHttpRequest;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RequestBody;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RxHttpClient;
 import org.onap.dcaegen2.services.sdk.rest.services.uri.URI.URIBuilder;
+import org.onap.dcaegen2.services.sdk.security.ssl.SslFactory;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,20 +59,22 @@ public class BbsActionsTask {
     private static final String LOGICAL_LINK_URI = "/network/logical-links/logical-link/";
     private static final String PNF_URI = "/network/pnfs/pnf/";
 
-    private final AaiClientConfiguration aaiConfig;
     private final RxHttpClient httpClient;
+    private final Config config;
 
     @Autowired
     BbsActionsTask(Config config) {
-        this(config, RxHttpClient.create());
+        this(config, RxHttpClient.create(new SslFactory().createInsecureClientContext()));
     }
 
     BbsActionsTask(Config config, RxHttpClient httpClient) {
-        this.aaiConfig = config.getAaiClientConfiguration();
+        this.config = config;
         this.httpClient = httpClient;
     }
 
     public Mono<ConsumerDmaapModel> execute(ConsumerDmaapModel consumerDmaapModel) {
+        config.initFileStreamReader();
+
         JsonObject additionalFields = consumerDmaapModel.getAdditionalFields();
         if (additionalFields == null || !additionalFields.has(ATTACHMENT_POINT)) {
             return Mono.just(consumerDmaapModel);
@@ -103,12 +106,17 @@ public class BbsActionsTask {
         ImmutableLogicalLink logicalLink = buildModel(linkName, pnfName);
         Publisher<ByteBuf> jsonPayload = RequestBody.fromString(GsonSerializer.createJsonBody(logicalLink));
 
+        // FIXME: AAI headers for PUT are different than PATCH (taken from prh_endpoints.json)
+        Map<String, String> aaiHeaders = HashMap
+            .ofAll(config.getAaiClientConfiguration().aaiHeaders())
+            .replaceValue("Content-Type", "application/json");
+
         return ImmutableHttpRequest
             .builder()
             .method(PUT)
             .url(uri)
             .body(jsonPayload)
-            .customHeaders(HashMap.ofAll(aaiConfig.aaiHeaders()))
+            .customHeaders(aaiHeaders)
             .build();
     }
 
@@ -135,10 +143,10 @@ public class BbsActionsTask {
 
     private String buildLogicalLinkUri(String linkName) {
         return new URIBuilder()
-            .scheme(aaiConfig.aaiProtocol())
-            .host(aaiConfig.aaiHost())
-            .port(aaiConfig.aaiPort())
-            .path(aaiConfig.aaiBasePath() + LOGICAL_LINK_URI + linkName)
+            .scheme(config.getAaiClientConfiguration().aaiProtocol())
+            .host(config.getAaiClientConfiguration().aaiHost())
+            .port(config.getAaiClientConfiguration().aaiPort())
+            .path(config.getAaiClientConfiguration().aaiBasePath() + LOGICAL_LINK_URI + linkName)
             .build()
             .toString();
     }

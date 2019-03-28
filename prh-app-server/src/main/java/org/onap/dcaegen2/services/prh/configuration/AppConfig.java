@@ -96,6 +96,27 @@ public class AppConfig extends PrhAppConfig {
     @Value("${dmaap.dmaapProducerConfiguration.dmaapContentType:}")
     public String producerDmaapContentType;
 
+    @Value("${dmaap.dmaapUpdateProducerConfiguration.dmaapHostName:}")
+    public String updateProducerDmaapHostName;
+
+    @Value("${dmaap.dmaapUpdateProducerConfiguration.dmaapPortNumber:}")
+    public Integer updateProducerDmaapPortNumber;
+
+    @Value("${dmaap.dmaapUpdateProducerConfiguration.dmaapTopicName:}")
+    public String updateProducerDmaapTopicName;
+
+    @Value("${dmaap.dmaapUpdateProducerConfiguration.dmaapProtocol:}")
+    public String updateProducerDmaapProtocol;
+
+    @Value("${dmaap.dmaapUpdateProducerConfiguration.dmaapUserName:}")
+    public String updateProducerDmaapUserName;
+
+    @Value("${dmaap.dmaapUpdateProducerConfiguration.dmaapUserPassword:}")
+    public String updateProducerDmaapUserPassword;
+
+    @Value("${dmaap.dmaapUpdateProducerConfiguration.dmaapContentType:}")
+    public String updateProducerDmaapContentType;
+
     @Value("${aai.aaiClientConfiguration.aaiHost:}")
     public String aaiHost;
 
@@ -119,6 +140,9 @@ public class AppConfig extends PrhAppConfig {
 
     @Value("${aai.aaiClientConfiguration.aaiPnfPath:}")
     public String aaiPnfPath;
+
+    @Value("${aai.aaiClientConfiguration.aaiServiceInstancePath:}")
+    public String aaiServiceInstancePath;
 
     @Value("${security.trustStorePath:}")
     public String trustStorePath;
@@ -215,6 +239,8 @@ public class AppConfig extends PrhAppConfig {
                 .orElse(aaiClientConfiguration.aaiBasePath()))
             .aaiPnfPath(
                 Optional.ofNullable(aaiPnfPath).filter(isEmpty.negate()).orElse(aaiClientConfiguration.aaiPnfPath()))
+            .aaiServiceInstancePath(
+                Optional.ofNullable(aaiServiceInstancePath).filter(isEmpty.negate()).orElse(aaiClientConfiguration.aaiServiceInstancePath()))
             .aaiHeaders(aaiClientConfiguration.aaiHeaders())
             .trustStorePath(
                 Optional.ofNullable(trustStorePath).filter(isEmpty.negate())
@@ -276,6 +302,51 @@ public class AppConfig extends PrhAppConfig {
             .enableDmaapCertAuth(
                 Optional.ofNullable(enableDmaapCertAuth).filter(p -> !p.toString().isEmpty())
                     .orElse(dmaapPublisherConfiguration.enableDmaapCertAuth()))
+            .build();
+    }
+
+    @Override
+    public DmaapPublisherConfiguration getDmaapUpdatePublisherConfiguration() {
+        if (noFileConfiguration(dmaapUpdatePublisherConfiguration)) {
+            return null;
+        }
+        return new ImmutableDmaapPublisherConfiguration.Builder()
+            .dmaapContentType(
+                Optional.ofNullable(updateProducerDmaapContentType).filter(isEmpty.negate())
+                    .orElse(dmaapUpdatePublisherConfiguration.dmaapContentType()))
+            .dmaapHostName(
+                Optional.ofNullable(updateProducerDmaapHostName).filter(isEmpty.negate())
+                    .orElse(dmaapUpdatePublisherConfiguration.dmaapHostName()))
+            .dmaapPortNumber(
+                Optional.ofNullable(updateProducerDmaapPortNumber).filter(p -> !p.toString().isEmpty())
+                    .orElse(dmaapPublisherConfiguration.dmaapPortNumber()))
+            .dmaapProtocol(
+                Optional.ofNullable(updateProducerDmaapProtocol).filter(isEmpty.negate())
+                    .orElse(dmaapUpdatePublisherConfiguration.dmaapProtocol()))
+            .dmaapTopicName(
+                Optional.ofNullable(updateProducerDmaapTopicName).filter(isEmpty.negate())
+                    .orElse(dmaapUpdatePublisherConfiguration.dmaapTopicName()))
+            .dmaapUserName(
+                Optional.ofNullable(updateProducerDmaapUserName).filter(isEmpty.negate())
+                    .orElse(dmaapUpdatePublisherConfiguration.dmaapUserName()))
+            .dmaapUserPassword(
+                Optional.ofNullable(updateProducerDmaapUserPassword).filter(isEmpty.negate())
+                    .orElse(dmaapUpdatePublisherConfiguration.dmaapUserPassword()))
+            .trustStorePath(
+                Optional.ofNullable(trustStorePath).filter(isEmpty.negate())
+                    .orElse(dmaapUpdatePublisherConfiguration.trustStorePath()))
+            .trustStorePasswordPath(
+                Optional.ofNullable(trustStorePasswordPath).filter(isEmpty.negate())
+                    .orElse(dmaapUpdatePublisherConfiguration.trustStorePasswordPath()))
+            .keyStorePath(
+                Optional.ofNullable(keyStorePath).filter(isEmpty.negate())
+                    .orElse(dmaapUpdatePublisherConfiguration.keyStorePath()))
+            .keyStorePasswordPath(
+                Optional.ofNullable(keyStorePasswordPath).filter(isEmpty.negate())
+                    .orElse(dmaapUpdatePublisherConfiguration.keyStorePasswordPath()))
+            .enableDmaapCertAuth(
+                Optional.ofNullable(enableDmaapCertAuth).filter(p -> !p.toString().isEmpty())
+                    .orElse(dmaapUpdatePublisherConfiguration.enableDmaapCertAuth()))
             .build();
     }
 

@@ -20,19 +20,8 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
-
 import com.google.gson.JsonObject;
-import javax.net.ssl.SSLException;
-
+import io.netty.handler.codec.http.HttpResponseStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,11 +33,14 @@ import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.patch.AaiHttpPatchClient;
-
-import reactor.netty.http.client.HttpClientResponse;
-import io.netty.handler.codec.http.HttpResponseStatus;
+import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import javax.net.ssl.SSLException;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/14/18
@@ -60,11 +52,11 @@ class AaiProducerTaskImplTest {
     private AaiClientConfiguration aaiClientConfiguration;
     private AaiHttpPatchClient aaiReactiveHttpPatchClient;
     private AppConfig appConfig;
-    private HttpClientResponse clientResponse;
+    private HttpResponse clientResponse;
 
     @BeforeEach
     void setUp() {
-        clientResponse = mock(HttpClientResponse.class);
+        clientResponse = mock(HttpResponse.class);
         aaiClientConfiguration = TestAppConfiguration.createDefaultAaiClientConfiguration();
         consumerDmaapModel = ImmutableConsumerDmaapModel.builder()
                 .ipv4("10.16.123.234")
@@ -86,7 +78,7 @@ class AaiProducerTaskImplTest {
     void whenPassedObjectDoesntFit_ThrowsPrhTaskException() {
         //given/when/
         when(appConfig.getAaiClientConfiguration()).thenReturn(aaiClientConfiguration);
-        aaiProducerTask = new AaiProducerTaskImpl(appConfig);
+        aaiProducerTask = new AaiProducerTaskImpl(aaiReactiveHttpPatchClient);
         Executable executableCode = () -> aaiProducerTask.execute(null);
 
         //then
@@ -120,14 +112,12 @@ class AaiProducerTaskImplTest {
 
     private void getAaiProducerTask_whenMockingResponseObject(HttpResponseStatus httpResponseStatus) throws SSLException {
         //given
-        doReturn(httpResponseStatus).when(clientResponse).status();
-        Mono<HttpClientResponse> clientResponseMono = Mono.just(clientResponse);
+        doReturn(httpResponseStatus.code()).when(clientResponse).statusCode();
+        Mono<HttpResponse> clientResponseMono = Mono.just(clientResponse);
         aaiReactiveHttpPatchClient = mock(AaiHttpPatchClient.class);
         when(aaiReactiveHttpPatchClient.getAaiResponse(any()))
             .thenReturn(clientResponseMono);
         when(appConfig.getAaiClientConfiguration()).thenReturn(aaiClientConfiguration);
-        aaiProducerTask = spy(new AaiProducerTaskImpl(appConfig));
-        when(aaiProducerTask.resolveConfiguration()).thenReturn(aaiClientConfiguration);
-        doReturn(aaiReactiveHttpPatchClient).when(aaiProducerTask).resolveClient();
+        aaiProducerTask = spy(new AaiProducerTaskImpl(aaiReactiveHttpPatchClient));
     }
 }

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "46dd0009_aa265e5c",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTask.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2019-03-28T12:48:21Z",
+      "side": 1,
+      "message": "as agreed this is a temporary solution, to be reimplemented in next release :)",
+      "revId": "3a3f19a74d62567a703d2b9cf01de0cde463a557",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

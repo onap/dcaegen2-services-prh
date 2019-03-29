@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "31da11a2_484ec4d1",
+        "filename": "prh-app-server/src/main/resources/logback-spring.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2019-03-29T16:50:36Z",
+      "side": 1,
+      "message": "Sciezka do poprawy",
+      "revId": "ed35dde5ffd0ff5b5ec485a859336b33a868d426",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

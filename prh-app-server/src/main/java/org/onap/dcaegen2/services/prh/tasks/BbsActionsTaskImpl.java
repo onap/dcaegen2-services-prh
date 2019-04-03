@@ -21,7 +21,6 @@
 package org.onap.dcaegen2.services.prh.tasks;
 
 import com.google.gson.JsonObject;
-import io.netty.buffer.ByteBuf;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
 import org.onap.dcaegen2.services.prh.configuration.Config;
@@ -39,12 +38,14 @@ import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RequestBody;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RxHttpClient;
 import org.onap.dcaegen2.services.sdk.rest.services.uri.URI.URIBuilder;
 import org.onap.dcaegen2.services.sdk.security.ssl.SslFactory;
-import org.reactivestreams.Publisher;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
+
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -105,7 +106,7 @@ public class BbsActionsTaskImpl implements BbsActionsTask {
     private ImmutableHttpRequest buildLogicalLinkRequest(String linkName, String pnfName) {
         String uri = buildLogicalLinkUri(linkName);
         ImmutableLogicalLink logicalLink = buildModel(linkName, pnfName);
-        Publisher<ByteBuf> jsonPayload = RequestBody.fromString(GsonSerializer.createJsonBody(logicalLink));
+        RequestBody requestBody = RequestBody.fromString(GsonSerializer.createJsonBody(logicalLink));
 
         // FIXME: AAI headers for PUT are different than PATCH (taken from prh_endpoints.json)
         Map<String, String> aaiHeaders = HashMap
@@ -116,7 +117,7 @@ public class BbsActionsTaskImpl implements BbsActionsTask {
             .builder()
             .method(PUT)
             .url(uri)
-            .body(jsonPayload)
+            .body(requestBody)
             .customHeaders(aaiHeaders)
             .build();
     }

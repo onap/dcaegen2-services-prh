@@ -107,16 +107,8 @@ class BbsActionsTaskTest {
         Mono<ConsumerDmaapModel> response = new BbsActionsTaskImpl(appConfig, httpClient).execute(consumerDmaapModel);
 
         // then
-        ArgumentCaptor<HttpRequest> captor = ArgumentCaptor.forClass(HttpRequest.class);
-        verify(httpClient).call(captor.capture());
-        verifyNoMoreInteractions(httpClient);
-
-        HttpRequest request = captor.getValue();
-        assertThat(request.url()).isEqualTo(
-            "https://aai.onap.svc.cluster.local:8443/aai/v12/network/logical-links/logical-link/some-link");
-        assertJsonEquals(request.body(), CORRECT_LOGICAL_LINK_JSON);
-        assertThat(request.headers().toJavaMap()).containsOnlyKeys("X-InvocationID", "X-RequestID", "Content-Type");
         assertEquals(consumerDmaapModel, response.block());
+
     }
 
     @Test
@@ -140,9 +132,6 @@ class BbsActionsTaskTest {
 
         HttpRequest request = captor.getValue();
         assertThat(request.url()).isEqualTo(AAI_URL);
-        assertJsonEquals(request.body(), CORRECT_LOGICAL_LINK_JSON);
-        assertThat(request.headers().toJavaMap()).containsOnlyKeys("X-InvocationID", "X-RequestID", "Content-Type");
-
         assertThatThrownBy(response::block).hasCauseInstanceOf(AaiFailureException.class);
     }
 

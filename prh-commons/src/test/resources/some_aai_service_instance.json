@@ -1,0 +1,39 @@
+{
+  "service-instance-id": "some serviceInstanceId",
+  "service-instance-name": "some serviceInstanceName",
+  "service-type": "some serviceType",
+  "service-role": "some serviceRole",
+  "environment-context": "some environmentContext",
+  "workload-context": "some workloadContext",
+  "created-at": "some createdAt",
+  "updated-at": "some updatedAt",
+  "description": "some description",
+  "model-invariant-id": "some modelInvariantId",
+  "model-version-id": "some modelVersionId",
+  "persona-model-version": "some personaModelVersion",
+  "widget-model-id": "some widgetModelId",
+  "widget-model-version": "some widgetModelVersion",
+  "bandwidth-total": "some bandwidthTotal",
+  "bandwidth-up-wan1": "some bandwidthUpWan1",
+  "bandwidth-down-wan1": "some bandwidthDownWan1",
+  "bandwidth-up-wan2": "some bandwidthUpWan2",
+  "bandwidth-down-wan2": "some bandwidthDownWan2",
+  "vhn-portal-url": "some vhnPortalUrl",
+  "service-instance-location-id": "some serviceInstanceLocationId",
+  "resource-version": "some resourceVersion",
+  "selflink": "some selflink",
+  "orchestration-status": "some orchestrationStatus",
+  "relationship-list": {
+    "relationship": [
+      {
+        "related-to": "some relatedTo",
+        "relationship-data": [
+          {
+            "relationship-key": "some relationshipKey",
+            "relationship-value": "some relationshipValue"
+          }
+        ]
+      }
+    ]
+  }
+}

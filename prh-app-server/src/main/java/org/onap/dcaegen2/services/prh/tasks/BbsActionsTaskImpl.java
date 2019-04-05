@@ -30,8 +30,8 @@ import org.onap.dcaegen2.services.prh.model.bbs.ImmutableLogicalLink;
 import org.onap.dcaegen2.services.prh.model.bbs.ImmutableRelationship;
 import org.onap.dcaegen2.services.prh.model.bbs.ImmutableRelationshipWrapper;
 import org.onap.dcaegen2.services.prh.model.bbs.RelationshipWrapper;
-import org.onap.dcaegen2.services.prh.model.utils.GsonSerializer;
 import org.onap.dcaegen2.services.prh.model.utils.HttpUtils;
+import org.onap.dcaegen2.services.prh.model.utils.PrhModelAwareGsonBuilder;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.*;
 import org.onap.dcaegen2.services.sdk.rest.services.uri.URI.URIBuilder;
 import org.slf4j.Logger;
@@ -98,7 +98,7 @@ public class BbsActionsTaskImpl implements BbsActionsTask {
     private ImmutableHttpRequest buildLogicalLinkRequest(String linkName, String pnfName) {
         String uri = buildLogicalLinkUri(linkName);
         ImmutableLogicalLink logicalLink = buildModel(linkName, pnfName);
-        RequestBody requestBody = RequestBody.fromString(GsonSerializer.createJsonBody(logicalLink));
+        RequestBody requestBody = RequestBody.fromString(PrhModelAwareGsonBuilder.createGson().toJson(logicalLink));
 
         // FIXME: AAI headers for PUT are different than PATCH (taken from prh_endpoints.json)
         Map<String, String> aaiHeaders = HashMap

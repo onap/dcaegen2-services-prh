@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2019 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,32 +18,22 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.model;
+package org.onap.dcaegen2.services.prh.model.utils;
 
-import com.google.gson.annotations.SerializedName;
-import org.immutables.gson.Gson;
-import org.immutables.value.Value;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapterFactory;
 
-/**
- * RelationshipData
- */
-@Value.Immutable
-@Gson.TypeAdapters(fieldNamingStrategy = true)
-public interface RelationshipData {
+import java.util.ServiceLoader;
 
-    /**
-     * A keyword provided by A&amp;AI to indicate an attribute.
-     *
-     * @return relationshipKey
-     **/
-    @SerializedName("relationship-key")
-    String getRelationshipKey();
+public class PrhModelAwareGsonBuilder {
 
-    /**
-     * Value of the attribute.
-     *
-     * @return relationshipValue
-     **/
-    @SerializedName("relationship-value")
-    String getRelationshipValue();
+    private static final Iterable<TypeAdapterFactory> TYPE_ADAPTER_FACTORIES =
+            ServiceLoader.load(TypeAdapterFactory.class);
+
+    public static Gson createGson() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        TYPE_ADAPTER_FACTORIES.forEach(gsonBuilder::registerTypeAdapterFactory);
+        return gsonBuilder.create();
+    }
 }

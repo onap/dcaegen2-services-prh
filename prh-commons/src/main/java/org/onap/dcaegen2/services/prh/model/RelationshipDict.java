@@ -21,109 +21,48 @@
 package org.onap.dcaegen2.services.prh.model;
 
 import com.google.gson.annotations.SerializedName;
+import org.immutables.gson.Gson;
+import org.immutables.value.Value;
+import org.springframework.lang.Nullable;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * RelationshipDict
  */
-public class RelationshipDict {
-    @SerializedName("related-to")
-    private String relatedTo = null;
-
-    @SerializedName("relationship-label")
-    private String relationshipLabel = null;
-
-    @SerializedName("related-link")
-    private String relatedLink = null;
-
-    @SerializedName("relationship-data")
-    private List<RelationshipData> relationshipData = null;
+@Value.Immutable
+@Gson.TypeAdapters(fieldNamingStrategy = true)
+public interface RelationshipDict {
 
     /**
      * A keyword provided by A&amp;AI to indicate type of node.
-     *
-     * @return relatedTo
      **/
-    public String getRelatedTo() {
-        return relatedTo;
-    }
-
-    public void setRelatedTo(String relatedTo) {
-        this.relatedTo = relatedTo;
-    }
+    @Nullable
+    @SerializedName("related-to")
+    String getRelatedTo();
 
     /**
      * The edge label for this relationship.
-     *
-     * @return relationshipLabel
      **/
-    public String getRelationshipLabel() {
-        return relationshipLabel;
-    }
-
-    public void setRelationshipLabel(String relationshipLabel) {
-        this.relationshipLabel = relationshipLabel;
-    }
+    @Nullable
+    @SerializedName("relationship-label")
+    String getRelationshipLabel();
 
     /**
      * URL to the object in A&amp;AI.
-     *
-     * @return relatedLink
      **/
-    public String getRelatedLink() {
-        return relatedLink;
-    }
-
-    public void setRelatedLink(String relatedLink) {
-        this.relatedLink = relatedLink;
-    }
-
-    public RelationshipDict addRelationshipDataItem(RelationshipData relationshipDataItem) {
-        if (this.relationshipData == null) {
-            this.relationshipData = new ArrayList<RelationshipData>();
-        }
-        this.relationshipData.add(relationshipDataItem);
-        return this;
-    }
+    @Nullable
+    @SerializedName("related-link")
+    String getRelatedLink();
 
     /**
-     * Get relationshipData
-     *
-     * @return relationshipData
+     * relationship Data
      **/
-    public List<RelationshipData> getRelationshipData() {
-        return relationshipData;
-    }
-
-    public void setRelationshipData(List<RelationshipData> relationshipData) {
-        this.relationshipData = relationshipData;
-    }
-
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class RelationshipDict {\n");
-
-        sb.append("    relatedTo: ").append(toIndentedString(relatedTo)).append("\n");
-        sb.append("    relationshipLabel: ").append(toIndentedString(relationshipLabel)).append("\n");
-        sb.append("    relatedLink: ").append(toIndentedString(relatedLink)).append("\n");
-        sb.append("    relationshipData: ").append(toIndentedString(relationshipData)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
-    private String toIndentedString(java.lang.Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+    @SerializedName("relationship-data")
+    @Value.Default
+    default List<RelationshipData> getRelationshipData() {
+        return Collections.emptyList();
     }
 
 }

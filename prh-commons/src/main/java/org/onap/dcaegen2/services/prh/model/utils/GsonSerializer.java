@@ -20,18 +20,12 @@
 
 package org.onap.dcaegen2.services.prh.model.utils;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapterFactory;
-import java.util.ServiceLoader;
-
 public class GsonSerializer {
 
     private GsonSerializer() {
     }
 
     public static <T> String createJsonBody(T type) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        ServiceLoader.load(TypeAdapterFactory.class).forEach(gsonBuilder::registerTypeAdapterFactory);
-        return gsonBuilder.create().toJson(type);
+        return PrhModelAwareGsonBuilder.createGson().toJson(type);
     }
 }

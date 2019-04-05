@@ -21,62 +21,15 @@
 package org.onap.dcaegen2.services.prh.model;
 
 import com.google.gson.annotations.SerializedName;
+import org.immutables.gson.Gson;
+import org.immutables.value.Value;
 
-import java.util.ArrayList;
 import java.util.List;
 
-/**
- * dictionary of relationship
- */
-public class Relationship {
+@Value.Immutable
+@Gson.TypeAdapters(fieldNamingStrategy = true)
+public interface Relationship {
+
     @SerializedName("relationship")
-    private List<RelationshipDict> relationship = null;
-
-    public Relationship relationship(List<RelationshipDict> relationship) {
-        this.relationship = relationship;
-        return this;
-    }
-
-    public Relationship addRelationshipItem(RelationshipDict relationshipItem) {
-        if (this.relationship == null) {
-            this.relationship = new ArrayList<>();
-        }
-        this.relationship.add(relationshipItem);
-        return this;
-    }
-
-    /**
-     * Get relationship
-     *
-     * @return relationship
-     **/
-    public List<RelationshipDict> getRelationship() {
-        return relationship;
-    }
-
-    public void setRelationship(List<RelationshipDict> relationship) {
-        this.relationship = relationship;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class Relationship {\n");
-
-        sb.append("    relationship: ").append(toIndentedString(relationship)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
-    private String toIndentedString(java.lang.Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
-    }
-
+    List<RelationshipDict> getRelationship();
 }

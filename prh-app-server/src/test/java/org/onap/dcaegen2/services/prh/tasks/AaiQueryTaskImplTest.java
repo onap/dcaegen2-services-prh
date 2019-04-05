@@ -38,6 +38,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class AaiQueryTaskImplTest {
@@ -59,9 +60,14 @@ public class AaiQueryTaskImplTest {
     @Mock
     private AaiServiceInstanceResultModel serviceModel;
 
-    private final RelationshipData customer = new RelationshipData();
-    private final RelationshipData serviceType = new RelationshipData();
-    private final RelationshipData serviceInstanceId = new RelationshipData();
+    @Mock
+    private RelationshipData customer;
+
+    @Mock
+    private RelationshipData serviceType;
+
+    @Mock
+    private RelationshipData serviceInstanceId;
 
     private List<RelationshipData> allRelationData;
 
@@ -71,14 +77,14 @@ public class AaiQueryTaskImplTest {
 
     @BeforeEach
     void setUp() {
-        customer.setRelationshipKey(AaiQueryTaskImpl.CUSTOMER);
-        customer.setRelationshipValue("Foo");
+        when(customer.getRelationshipKey()).thenReturn(AaiQueryTaskImpl.CUSTOMER);
+        when(customer.getRelationshipValue()).thenReturn("Foo");
 
-        serviceType.setRelationshipKey(AaiQueryTaskImpl.SERVICE_TYPE);
-        serviceType.setRelationshipValue("Bar");
+        when(serviceType.getRelationshipKey()).thenReturn(AaiQueryTaskImpl.SERVICE_TYPE);
+        when(serviceType.getRelationshipValue()).thenReturn("Bar");
 
-        serviceInstanceId.setRelationshipKey(AaiQueryTaskImpl.SERVICE_INSTANCE_ID);
-        serviceInstanceId.setRelationshipValue("Baz");
+        when(serviceInstanceId.getRelationshipKey()).thenReturn(AaiQueryTaskImpl.SERVICE_INSTANCE_ID);
+        when(serviceInstanceId.getRelationshipValue()).thenReturn("Baz");
 
         allRelationData = Lists.list(customer, serviceType, serviceInstanceId);
 

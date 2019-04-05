@@ -23,6 +23,7 @@ package org.onap.dcaegen2.services.prh.configuration;
 import org.onap.dcaegen2.services.prh.model.AaiJsonBodyBuilderImpl;
 import org.onap.dcaegen2.services.prh.model.AaiPnfResultModel;
 import org.onap.dcaegen2.services.prh.model.AaiServiceInstanceResultModel;
+import org.onap.dcaegen2.services.prh.model.utils.PrhModelAwareGsonBuilder;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.AaiHttpClientFactory;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.AaiHttpClient;
@@ -37,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.nio.charset.StandardCharsets;
 import java.util.function.BiFunction;
 
 @Configuration
@@ -54,14 +56,16 @@ public class AaiHttpClientConfig {
     public AaiHttpClient<AaiServiceInstanceQueryModel, AaiServiceInstanceResultModel> getServiceInstanceClient() {
         return createLazyConfigClient(
                 (config, client) -> new AaiGetServiceInstanceClient(config, client)
-                        .map(x -> x.bodyAsJson(AaiServiceInstanceResultModel.class)));
+                        .map(httpResponse -> httpResponse.bodyAsJson(StandardCharsets.UTF_8,
+                                PrhModelAwareGsonBuilder.createGson(), AaiServiceInstanceResultModel.class)));
     }
 
     @Bean
     public AaiHttpClient<AaiModel, AaiPnfResultModel> getGetClient() {
         return createLazyConfigClient(
                 (config, client) -> new AaiHttpGetClient(config, client)
-                        .map(x -> x.bodyAsJson(AaiPnfResultModel.class)));
+                        .map(httpResponse -> httpResponse.bodyAsJson(StandardCharsets.UTF_8,
+                                PrhModelAwareGsonBuilder.createGson(), AaiPnfResultModel.class)));
     }
 
     private <T, U> AaiHttpClient<T, U> createLazyConfigClient(

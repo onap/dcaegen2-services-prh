@@ -4,6 +4,7 @@
   "dmaap.dmaapUpdateProducerConfiguration.dmaapTopicName": "/events/unauthenticated.PNF_UPDATE",
   "dmaap.dmaapConsumerConfiguration.timeoutMs": -1,
   "dmaap.dmaapConsumerConfiguration.dmaapHostName": "message-router.onap.svc.cluster.local",
+  "aai.aaiClientConfiguration.pnfUrl": "https://aai.onap.svc.cluster.local:8443/aai/v12/network/pnfs/pnf",
   "aai.aaiClientConfiguration.aaiPnfPath": "/network/pnfs/pnf",
   "aai.aaiClientConfiguration.aaiServiceInstancePath": "/business/customers/customer/${customer}/service-subscriptions/service-subscription/${serviceType}/service-instances/service-instance/${serviceInstanceId}",
   "aai.aaiClientConfiguration.aaiUserPassword": "AAI",

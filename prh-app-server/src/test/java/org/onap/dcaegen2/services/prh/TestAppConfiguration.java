@@ -66,6 +66,7 @@ public class TestAppConfiguration {
 
     public static ImmutableAaiClientConfiguration createDefaultAaiClientConfiguration() {
         return new ImmutableAaiClientConfiguration.Builder()
+                .pnfUrl("https://aai.onap.svc.cluster.local:8443/aai/v12/network/pnfs/pnf")
                 .aaiHost("aai.onap.svc.cluster.local")
                 .aaiPort(8443)
                 .aaiProtocol("https")

@@ -2,6 +2,7 @@
   "configs": {
     "aai": {
       "aaiClientConfiguration": {
+        "pnfUrl": "https://localhost:8080/aai/v11/network/pnfs/pnf",
         "aaiHost": "localhost",
         "aaiPort": 8080,
         "aaiIgnoreSslCertificateErrors": true,

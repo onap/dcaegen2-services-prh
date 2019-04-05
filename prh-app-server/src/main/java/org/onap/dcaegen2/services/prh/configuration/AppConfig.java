@@ -117,6 +117,9 @@ public class AppConfig extends PrhAppConfig {
     @Value("${dmaap.dmaapUpdateProducerConfiguration.dmaapContentType:}")
     public String updateProducerDmaapContentType;
 
+    @Value("${aai.aaiClientConfiguration.pnfUrl:}")
+    public String pnfUrl;
+
     @Value("${aai.aaiClientConfiguration.aaiHost:}")
     public String aaiHost;
 
@@ -222,6 +225,7 @@ public class AppConfig extends PrhAppConfig {
             return null;
         }
         return new ImmutableAaiClientConfiguration.Builder()
+            .pnfUrl(Optional.ofNullable(pnfUrl).filter(isEmpty.negate()).orElse(aaiClientConfiguration.pnfUrl()))
             .aaiHost(Optional.ofNullable(aaiHost).filter(isEmpty.negate()).orElse(aaiClientConfiguration.aaiHost()))
             .aaiPort(
                 Optional.ofNullable(aaiPort).filter(p -> !p.toString().isEmpty())

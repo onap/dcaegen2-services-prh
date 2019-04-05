@@ -81,6 +81,7 @@ class CloudConfigParser {
 
     AaiClientConfiguration getAaiClientConfig() {
         return new ImmutableAaiClientConfiguration.Builder()
+            .pnfUrl(jsonObject.get("aai.aaiClientConfiguration.pnfUrl").getAsString())
             .aaiHost(jsonObject.get("aai.aaiClientConfiguration.aaiHost").getAsString())
             .aaiPort(jsonObject.get("aai.aaiClientConfiguration.aaiHostPortNumber").getAsInt())
             .aaiUserName(jsonObject.get("aai.aaiClientConfiguration.aaiUserName").getAsString())

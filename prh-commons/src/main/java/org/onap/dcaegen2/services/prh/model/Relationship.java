@@ -24,7 +24,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * dictionary of relationship
@@ -40,7 +39,7 @@ public class Relationship {
 
     public Relationship addRelationshipItem(RelationshipDict relationshipItem) {
         if (this.relationship == null) {
-            this.relationship = new ArrayList<RelationshipDict>();
+            this.relationship = new ArrayList<>();
         }
         this.relationship.add(relationshipItem);
         return this;
@@ -58,25 +57,6 @@ public class Relationship {
     public void setRelationship(List<RelationshipDict> relationship) {
         this.relationship = relationship;
     }
-
-
-    @Override
-    public boolean equals(java.lang.Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Relationship relationship = (Relationship) o;
-        return Objects.equals(this.relationship, relationship.relationship);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(relationship);
-    }
-
 
     @Override
     public String toString() {

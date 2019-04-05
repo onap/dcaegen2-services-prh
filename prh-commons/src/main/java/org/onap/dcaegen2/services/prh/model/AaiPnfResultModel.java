@@ -22,8 +22,6 @@ package org.onap.dcaegen2.services.prh.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Objects;
-
 /**
  * PNF represents a physical network function. typically equipment used in the D1 world. in 1607, this will be populated by SDN-C to represent a premises router that a uCPE connects to. But this can be used to represent any physical device that is not an AIC node or uCPE. ###### Related Nodes - TO complex( pnf LocatedIn complex, MANY2ONE) - TO instance-group( pnf MemberOf instance-group, MANY2MANY) - TO zone( pnf LocatedIn zone, MANY2ONE) - FROM configuration( configuration AppliesTo pnf, ONE2MANY) - FROM esr-thirdparty-sdnc( esr-thirdparty-sdnc AppliesTo pnf, ONE2MANY) - FROM generic-vnf( generic-vnf HostedOn pnf, MANY2MANY) - FROM lag-interface (CHILD of pnf, lag-interface BindsTo pnf, MANY2ONE)(1) - FROM logical-link( logical-link BridgedTo pnf, MANY2MANY) - FROM p-interface (CHILD of pnf, p-interface BindsTo pnf, MANY2ONE)(1) - FROM service-instance( service-instance ComposedOf pnf, ONE2MANY)  -(1) IF this PNF node is deleted, this FROM node is DELETED also
  */
@@ -101,11 +99,6 @@ public class AaiPnfResultModel {
     @SerializedName("relationship-list")
     private Relationship relationshipList = null;
 
-    public AaiPnfResultModel pnfName(String pnfName) {
-        this.pnfName = pnfName;
-        return this;
-    }
-
     /**
      * unique name of Physical Network Function.
      *
@@ -117,11 +110,6 @@ public class AaiPnfResultModel {
 
     public void setPnfName(String pnfName) {
         this.pnfName = pnfName;
-    }
-
-    public AaiPnfResultModel pnfName2(String pnfName2) {
-        this.pnfName2 = pnfName2;
-        return this;
     }
 
     /**
@@ -137,11 +125,6 @@ public class AaiPnfResultModel {
         this.pnfName2 = pnfName2;
     }
 
-    public AaiPnfResultModel selflink(String selflink) {
-        this.selflink = selflink;
-        return this;
-    }
-
     /**
      * URL to endpoint where AAI can get more details.
      *
@@ -153,11 +136,6 @@ public class AaiPnfResultModel {
 
     public void setSelflink(String selflink) {
         this.selflink = selflink;
-    }
-
-    public AaiPnfResultModel pnfName2Source(String pnfName2Source) {
-        this.pnfName2Source = pnfName2Source;
-        return this;
     }
 
     /**
@@ -173,11 +151,6 @@ public class AaiPnfResultModel {
         this.pnfName2Source = pnfName2Source;
     }
 
-    public AaiPnfResultModel pnfId(String pnfId) {
-        this.pnfId = pnfId;
-        return this;
-    }
-
     /**
      * id of pnf
      *
@@ -189,11 +162,6 @@ public class AaiPnfResultModel {
 
     public void setPnfId(String pnfId) {
         this.pnfId = pnfId;
-    }
-
-    public AaiPnfResultModel equipType(String equipType) {
-        this.equipType = equipType;
-        return this;
     }
 
     /**
@@ -209,11 +177,6 @@ public class AaiPnfResultModel {
         this.equipType = equipType;
     }
 
-    public AaiPnfResultModel equipVendor(String equipVendor) {
-        this.equipVendor = equipVendor;
-        return this;
-    }
-
     /**
      * Equipment vendor.  Source of truth should define valid values.
      *
@@ -225,11 +188,6 @@ public class AaiPnfResultModel {
 
     public void setEquipVendor(String equipVendor) {
         this.equipVendor = equipVendor;
-    }
-
-    public AaiPnfResultModel equipModel(String equipModel) {
-        this.equipModel = equipModel;
-        return this;
     }
 
     /**
@@ -245,11 +203,6 @@ public class AaiPnfResultModel {
         this.equipModel = equipModel;
     }
 
-    public AaiPnfResultModel managementOption(String managementOption) {
-        this.managementOption = managementOption;
-        return this;
-    }
-
     /**
      * identifier of managed by ATT or customer
      *
@@ -261,11 +214,6 @@ public class AaiPnfResultModel {
 
     public void setManagementOption(String managementOption) {
         this.managementOption = managementOption;
-    }
-
-    public AaiPnfResultModel ipaddressV4Oam(String ipaddressV4Oam) {
-        this.ipaddressV4Oam = ipaddressV4Oam;
-        return this;
     }
 
     /**
@@ -281,11 +229,6 @@ public class AaiPnfResultModel {
         this.ipaddressV4Oam = ipaddressV4Oam;
     }
 
-    public AaiPnfResultModel swVersion(String swVersion) {
-        this.swVersion = swVersion;
-        return this;
-    }
-
     /**
      * sw-version is the version of SW for the hosted application on the PNF.
      *
@@ -297,11 +240,6 @@ public class AaiPnfResultModel {
 
     public void setSwVersion(String swVersion) {
         this.swVersion = swVersion;
-    }
-
-    public AaiPnfResultModel inMaint(Boolean inMaint) {
-        this.inMaint = inMaint;
-        return this;
     }
 
     /**
@@ -317,11 +255,6 @@ public class AaiPnfResultModel {
         this.inMaint = inMaint;
     }
 
-    public AaiPnfResultModel frameId(String frameId) {
-        this.frameId = frameId;
-        return this;
-    }
-
     /**
      * ID of the physical frame (relay rack) where pnf is installed.
      *
@@ -333,11 +266,6 @@ public class AaiPnfResultModel {
 
     public void setFrameId(String frameId) {
         this.frameId = frameId;
-    }
-
-    public AaiPnfResultModel serialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
-        return this;
     }
 
     /**
@@ -353,11 +281,6 @@ public class AaiPnfResultModel {
         this.serialNumber = serialNumber;
     }
 
-    public AaiPnfResultModel ipaddressV4Loopback0(String ipaddressV4Loopback0) {
-        this.ipaddressV4Loopback0 = ipaddressV4Loopback0;
-        return this;
-    }
-
     /**
      * IPV4 Loopback 0 address
      *
@@ -369,11 +292,6 @@ public class AaiPnfResultModel {
 
     public void setIpaddressV4Loopback0(String ipaddressV4Loopback0) {
         this.ipaddressV4Loopback0 = ipaddressV4Loopback0;
-    }
-
-    public AaiPnfResultModel ipaddressV6Loopback0(String ipaddressV6Loopback0) {
-        this.ipaddressV6Loopback0 = ipaddressV6Loopback0;
-        return this;
     }
 
     /**
@@ -389,11 +307,6 @@ public class AaiPnfResultModel {
         this.ipaddressV6Loopback0 = ipaddressV6Loopback0;
     }
 
-    public AaiPnfResultModel ipaddressV4Aim(String ipaddressV4Aim) {
-        this.ipaddressV4Aim = ipaddressV4Aim;
-        return this;
-    }
-
     /**
      * IPV4 AIM address
      *
@@ -405,11 +318,6 @@ public class AaiPnfResultModel {
 
     public void setIpaddressV4Aim(String ipaddressV4Aim) {
         this.ipaddressV4Aim = ipaddressV4Aim;
-    }
-
-    public AaiPnfResultModel ipaddressV6Aim(String ipaddressV6Aim) {
-        this.ipaddressV6Aim = ipaddressV6Aim;
-        return this;
     }
 
     /**
@@ -425,11 +333,6 @@ public class AaiPnfResultModel {
         this.ipaddressV6Aim = ipaddressV6Aim;
     }
 
-    public AaiPnfResultModel ipaddressV6Oam(String ipaddressV6Oam) {
-        this.ipaddressV6Oam = ipaddressV6Oam;
-        return this;
-    }
-
     /**
      * IPV6 OAM address
      *
@@ -441,11 +344,6 @@ public class AaiPnfResultModel {
 
     public void setIpaddressV6Oam(String ipaddressV6Oam) {
         this.ipaddressV6Oam = ipaddressV6Oam;
-    }
-
-    public AaiPnfResultModel invStatus(String invStatus) {
-        this.invStatus = invStatus;
-        return this;
     }
 
     /**
@@ -461,11 +359,6 @@ public class AaiPnfResultModel {
         this.invStatus = invStatus;
     }
 
-    public AaiPnfResultModel resourceVersion(String resourceVersion) {
-        this.resourceVersion = resourceVersion;
-        return this;
-    }
-
     /**
      * Used for optimistic concurrency.  Must be empty on create, valid on update and delete.
      *
@@ -477,11 +370,6 @@ public class AaiPnfResultModel {
 
     public void setResourceVersion(String resourceVersion) {
         this.resourceVersion = resourceVersion;
-    }
-
-    public AaiPnfResultModel provStatus(String provStatus) {
-        this.provStatus = provStatus;
-        return this;
     }
 
     /**
@@ -497,11 +385,6 @@ public class AaiPnfResultModel {
         this.provStatus = provStatus;
     }
 
-    public AaiPnfResultModel nfRole(String nfRole) {
-        this.nfRole = nfRole;
-        return this;
-    }
-
     /**
      * Nf Role is the role performed by this instance in the network.
      *
@@ -513,11 +396,6 @@ public class AaiPnfResultModel {
 
     public void setNfRole(String nfRole) {
         this.nfRole = nfRole;
-    }
-
-    public AaiPnfResultModel relationshipList(Relationship relationshipList) {
-        this.relationshipList = relationshipList;
-        return this;
     }
 
     /**
@@ -532,47 +410,6 @@ public class AaiPnfResultModel {
     public void setRelationshipList(Relationship relationshipList) {
         this.relationshipList = relationshipList;
     }
-
-    @Override
-    public boolean equals(java.lang.Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        AaiPnfResultModel pnf = (AaiPnfResultModel) o;
-        return Objects.equals(this.pnfName, pnf.pnfName) &&
-                Objects.equals(this.pnfName2, pnf.pnfName2) &&
-                Objects.equals(this.selflink, pnf.selflink) &&
-                Objects.equals(this.pnfName2Source, pnf.pnfName2Source) &&
-                Objects.equals(this.pnfId, pnf.pnfId) &&
-                Objects.equals(this.equipType, pnf.equipType) &&
-                Objects.equals(this.equipVendor, pnf.equipVendor) &&
-                Objects.equals(this.equipModel, pnf.equipModel) &&
-                Objects.equals(this.managementOption, pnf.managementOption) &&
-                Objects.equals(this.ipaddressV4Oam, pnf.ipaddressV4Oam) &&
-                Objects.equals(this.swVersion, pnf.swVersion) &&
-                Objects.equals(this.inMaint, pnf.inMaint) &&
-                Objects.equals(this.frameId, pnf.frameId) &&
-                Objects.equals(this.serialNumber, pnf.serialNumber) &&
-                Objects.equals(this.ipaddressV4Loopback0, pnf.ipaddressV4Loopback0) &&
-                Objects.equals(this.ipaddressV6Loopback0, pnf.ipaddressV6Loopback0) &&
-                Objects.equals(this.ipaddressV4Aim, pnf.ipaddressV4Aim) &&
-                Objects.equals(this.ipaddressV6Aim, pnf.ipaddressV6Aim) &&
-                Objects.equals(this.ipaddressV6Oam, pnf.ipaddressV6Oam) &&
-                Objects.equals(this.invStatus, pnf.invStatus) &&
-                Objects.equals(this.resourceVersion, pnf.resourceVersion) &&
-                Objects.equals(this.provStatus, pnf.provStatus) &&
-                Objects.equals(this.nfRole, pnf.nfRole) &&
-                Objects.equals(this.relationshipList, pnf.relationshipList);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(pnfName, pnfName2, selflink, pnfName2Source, pnfId, equipType, equipVendor, equipModel, managementOption, ipaddressV4Oam, swVersion, inMaint, frameId, serialNumber, ipaddressV4Loopback0, ipaddressV6Loopback0, ipaddressV4Aim, ipaddressV6Aim, ipaddressV6Oam, invStatus, resourceVersion, provStatus, nfRole, relationshipList);
-    }
-
 
     @Override
     public String toString() {

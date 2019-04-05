@@ -24,7 +24,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * RelationshipDict
@@ -42,11 +41,6 @@ public class RelationshipDict {
     @SerializedName("relationship-data")
     private List<RelationshipData> relationshipData = null;
 
-    public RelationshipDict relatedTo(String relatedTo) {
-        this.relatedTo = relatedTo;
-        return this;
-    }
-
     /**
      * A keyword provided by A&amp;AI to indicate type of node.
      *
@@ -58,11 +52,6 @@ public class RelationshipDict {
 
     public void setRelatedTo(String relatedTo) {
         this.relatedTo = relatedTo;
-    }
-
-    public RelationshipDict relationshipLabel(String relationshipLabel) {
-        this.relationshipLabel = relationshipLabel;
-        return this;
     }
 
     /**
@@ -78,11 +67,6 @@ public class RelationshipDict {
         this.relationshipLabel = relationshipLabel;
     }
 
-    public RelationshipDict relatedLink(String relatedLink) {
-        this.relatedLink = relatedLink;
-        return this;
-    }
-
     /**
      * URL to the object in A&amp;AI.
      *
@@ -94,11 +78,6 @@ public class RelationshipDict {
 
     public void setRelatedLink(String relatedLink) {
         this.relatedLink = relatedLink;
-    }
-
-    public RelationshipDict relationshipData(List<RelationshipData> relationshipData) {
-        this.relationshipData = relationshipData;
-        return this;
     }
 
     public RelationshipDict addRelationshipDataItem(RelationshipData relationshipDataItem) {
@@ -120,27 +99,6 @@ public class RelationshipDict {
 
     public void setRelationshipData(List<RelationshipData> relationshipData) {
         this.relationshipData = relationshipData;
-    }
-
-
-    @Override
-    public boolean equals(java.lang.Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        RelationshipDict relationshipDict = (RelationshipDict) o;
-        return Objects.equals(this.relatedTo, relationshipDict.relatedTo) &&
-                Objects.equals(this.relationshipLabel, relationshipDict.relationshipLabel) &&
-                Objects.equals(this.relatedLink, relationshipDict.relatedLink) &&
-                Objects.equals(this.relationshipData, relationshipDict.relationshipData);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(relatedTo, relationshipLabel, relatedLink, relationshipData);
     }
 
 

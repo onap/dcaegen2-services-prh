@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9ccf560b_28610e00",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/AaiPnfResultModel.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 535,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2019-04-08T20:57:55Z",
+      "side": 0,
+      "message": "Is this class used in any maps in application?",
+      "revId": "2abfecad9aeb88ba95d62d718376535fb6e00325",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5e36d85f_f35312f7",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/AaiServiceInstanceResultModel.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2019-04-08T20:57:55Z",
+      "side": 0,
+      "message": "Is this class used as Key in maps?",
+      "revId": "2abfecad9aeb88ba95d62d718376535fb6e00325",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f8e5354b_2392fc53",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/Relationship.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2019-04-08T20:57:55Z",
+      "side": 0,
+      "message": "is this class used as Key in maps?",
+      "revId": "2abfecad9aeb88ba95d62d718376535fb6e00325",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

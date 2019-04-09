@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "15a2c1ec_6a162e36",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/AaiPnfResultModel.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 2807
+      },
+      "writtenOn": "2019-04-09T08:25:12Z",
+      "side": 0,
+      "message": "To be consistent with other models in PRH I recommend to use Immutables lib in this case.",
+      "range": {
+        "startLine": 31,
+        "startChar": 13,
+        "endLine": 31,
+        "endChar": 30
+      },
+      "revId": "2abfecad9aeb88ba95d62d718376535fb6e00325",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9ccf560b_28610e00",
         "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/AaiPnfResultModel.java",
         "patchSetId": 2
@@ -13,6 +36,29 @@
       "writtenOn": "2019-04-08T20:57:55Z",
       "side": 0,
       "message": "Is this class used in any maps in application?",
+      "revId": "2abfecad9aeb88ba95d62d718376535fb6e00325",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f192e1a4_c362b7b5",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/AaiServiceInstanceResultModel.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 2807
+      },
+      "writtenOn": "2019-04-09T08:25:12Z",
+      "side": 0,
+      "message": "To be consistent with other models in PRH I recommend to use Immutables lib in this case.",
+      "range": {
+        "startLine": 27,
+        "startChar": 13,
+        "endLine": 27,
+        "endChar": 42
+      },
       "revId": "2abfecad9aeb88ba95d62d718376535fb6e00325",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false

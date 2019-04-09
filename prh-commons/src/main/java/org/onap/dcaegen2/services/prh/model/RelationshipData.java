@@ -22,8 +22,6 @@ package org.onap.dcaegen2.services.prh.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Objects;
-
 /**
  * RelationshipData
  */
@@ -33,11 +31,6 @@ public class RelationshipData {
 
     @SerializedName("relationship-value")
     private String relationshipValue = null;
-
-    public RelationshipData relationshipKey(String relationshipKey) {
-        this.relationshipKey = relationshipKey;
-        return this;
-    }
 
     /**
      * A keyword provided by A&amp;AI to indicate an attribute.
@@ -52,11 +45,6 @@ public class RelationshipData {
         this.relationshipKey = relationshipKey;
     }
 
-    public RelationshipData relationshipValue(String relationshipValue) {
-        this.relationshipValue = relationshipValue;
-        return this;
-    }
-
     /**
      * Value of the attribute.
      *
@@ -68,25 +56,6 @@ public class RelationshipData {
 
     public void setRelationshipValue(String relationshipValue) {
         this.relationshipValue = relationshipValue;
-    }
-
-
-    @Override
-    public boolean equals(java.lang.Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        RelationshipData relationshipData = (RelationshipData) o;
-        return Objects.equals(this.relationshipKey, relationshipData.relationshipKey) &&
-                Objects.equals(this.relationshipValue, relationshipData.relationshipValue);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(relationshipKey, relationshipValue);
     }
 
 

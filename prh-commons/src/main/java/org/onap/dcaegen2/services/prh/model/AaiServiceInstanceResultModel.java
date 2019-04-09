@@ -22,8 +22,6 @@ package org.onap.dcaegen2.services.prh.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Objects;
-
 public class AaiServiceInstanceResultModel {
     @SerializedName("service-instance-id")
     private String serviceInstanceId = null;
@@ -100,11 +98,6 @@ public class AaiServiceInstanceResultModel {
     @SerializedName("relationship-list")
     private Relationship relationshipList = null;
 
-    public AaiServiceInstanceResultModel serviceInstanceId(String serviceInstanceId) {
-        this.serviceInstanceId = serviceInstanceId;
-        return this;
-    }
-
     /**
      * Uniquely identifies this instance of a service
      *
@@ -116,11 +109,6 @@ public class AaiServiceInstanceResultModel {
 
     public void setServiceInstanceId(String serviceInstanceId) {
         this.serviceInstanceId = serviceInstanceId;
-    }
-
-    public AaiServiceInstanceResultModel serviceInstanceName(String serviceInstanceName) {
-        this.serviceInstanceName = serviceInstanceName;
-        return this;
     }
 
     /**
@@ -136,11 +124,6 @@ public class AaiServiceInstanceResultModel {
         this.serviceInstanceName = serviceInstanceName;
     }
 
-    public AaiServiceInstanceResultModel serviceType(String serviceType) {
-        this.serviceType = serviceType;
-        return this;
-    }
-
     /**
      * String capturing type of service.
      *
@@ -152,11 +135,6 @@ public class AaiServiceInstanceResultModel {
 
     public void setServiceType(String serviceType) {
         this.serviceType = serviceType;
-    }
-
-    public AaiServiceInstanceResultModel serviceRole(String serviceRole) {
-        this.serviceRole = serviceRole;
-        return this;
     }
 
     /**
@@ -172,11 +150,6 @@ public class AaiServiceInstanceResultModel {
         this.serviceRole = serviceRole;
     }
 
-    public AaiServiceInstanceResultModel environmentContext(String environmentContext) {
-        this.environmentContext = environmentContext;
-        return this;
-    }
-
     /**
      * This field will store the environment context assigned to the service-instance.
      *
@@ -188,11 +161,6 @@ public class AaiServiceInstanceResultModel {
 
     public void setEnvironmentContext(String environmentContext) {
         this.environmentContext = environmentContext;
-    }
-
-    public AaiServiceInstanceResultModel workloadContext(String workloadContext) {
-        this.workloadContext = workloadContext;
-        return this;
     }
 
     /**
@@ -208,11 +176,6 @@ public class AaiServiceInstanceResultModel {
         this.workloadContext = workloadContext;
     }
 
-    public AaiServiceInstanceResultModel createdAt(String createdAt) {
-        this.createdAt = createdAt;
-        return this;
-    }
-
     /**
      * create time of Network Service.
      *
@@ -224,11 +187,6 @@ public class AaiServiceInstanceResultModel {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public AaiServiceInstanceResultModel updatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
-        return this;
     }
 
     /**
@@ -244,11 +202,6 @@ public class AaiServiceInstanceResultModel {
         this.updatedAt = updatedAt;
     }
 
-    public AaiServiceInstanceResultModel description(String description) {
-        this.description = description;
-        return this;
-    }
-
     /**
      * short description for service-instance.
      *
@@ -260,11 +213,6 @@ public class AaiServiceInstanceResultModel {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public AaiServiceInstanceResultModel modelInvariantId(String modelInvariantId) {
-        this.modelInvariantId = modelInvariantId;
-        return this;
     }
 
     /**
@@ -280,11 +228,6 @@ public class AaiServiceInstanceResultModel {
         this.modelInvariantId = modelInvariantId;
     }
 
-    public AaiServiceInstanceResultModel modelVersionId(String modelVersionId) {
-        this.modelVersionId = modelVersionId;
-        return this;
-    }
-
     /**
      * the ASDC model version for this resource or service model.
      *
@@ -296,11 +239,6 @@ public class AaiServiceInstanceResultModel {
 
     public void setModelVersionId(String modelVersionId) {
         this.modelVersionId = modelVersionId;
-    }
-
-    public AaiServiceInstanceResultModel personaModelVersion(String personaModelVersion) {
-        this.personaModelVersion = personaModelVersion;
-        return this;
     }
 
     /**
@@ -316,11 +254,6 @@ public class AaiServiceInstanceResultModel {
         this.personaModelVersion = personaModelVersion;
     }
 
-    public AaiServiceInstanceResultModel widgetModelId(String widgetModelId) {
-        this.widgetModelId = widgetModelId;
-        return this;
-    }
-
     /**
      * the ASDC data dictionary widget model. This maps directly to the A&amp;AI widget.
      *
@@ -332,11 +265,6 @@ public class AaiServiceInstanceResultModel {
 
     public void setWidgetModelId(String widgetModelId) {
         this.widgetModelId = widgetModelId;
-    }
-
-    public AaiServiceInstanceResultModel widgetModelVersion(String widgetModelVersion) {
-        this.widgetModelVersion = widgetModelVersion;
-        return this;
     }
 
     /**
@@ -352,11 +280,6 @@ public class AaiServiceInstanceResultModel {
         this.widgetModelVersion = widgetModelVersion;
     }
 
-    public AaiServiceInstanceResultModel bandwidthTotal(String bandwidthTotal) {
-        this.bandwidthTotal = bandwidthTotal;
-        return this;
-    }
-
     /**
      * Indicates the total bandwidth to be used for this service.
      *
@@ -368,11 +291,6 @@ public class AaiServiceInstanceResultModel {
 
     public void setBandwidthTotal(String bandwidthTotal) {
         this.bandwidthTotal = bandwidthTotal;
-    }
-
-    public AaiServiceInstanceResultModel bandwidthUpWan1(String bandwidthUpWan1) {
-        this.bandwidthUpWan1 = bandwidthUpWan1;
-        return this;
     }
 
     /**
@@ -388,11 +306,6 @@ public class AaiServiceInstanceResultModel {
         this.bandwidthUpWan1 = bandwidthUpWan1;
     }
 
-    public AaiServiceInstanceResultModel bandwidthDownWan1(String bandwidthDownWan1) {
-        this.bandwidthDownWan1 = bandwidthDownWan1;
-        return this;
-    }
-
     /**
      * indicates the downstream bandwidth this service will use on the WAN1 port of the physical device.
      *
@@ -404,11 +317,6 @@ public class AaiServiceInstanceResultModel {
 
     public void setBandwidthDownWan1(String bandwidthDownWan1) {
         this.bandwidthDownWan1 = bandwidthDownWan1;
-    }
-
-    public AaiServiceInstanceResultModel bandwidthUpWan2(String bandwidthUpWan2) {
-        this.bandwidthUpWan2 = bandwidthUpWan2;
-        return this;
     }
 
     /**
@@ -424,11 +332,6 @@ public class AaiServiceInstanceResultModel {
         this.bandwidthUpWan2 = bandwidthUpWan2;
     }
 
-    public AaiServiceInstanceResultModel bandwidthDownWan2(String bandwidthDownWan2) {
-        this.bandwidthDownWan2 = bandwidthDownWan2;
-        return this;
-    }
-
     /**
      * indicates the downstream bandwidth this service will use on the WAN2 port of the physical device.
      *
@@ -440,11 +343,6 @@ public class AaiServiceInstanceResultModel {
 
     public void setBandwidthDownWan2(String bandwidthDownWan2) {
         this.bandwidthDownWan2 = bandwidthDownWan2;
-    }
-
-    public AaiServiceInstanceResultModel vhnPortalUrl(String vhnPortalUrl) {
-        this.vhnPortalUrl = vhnPortalUrl;
-        return this;
     }
 
     /**
@@ -460,11 +358,6 @@ public class AaiServiceInstanceResultModel {
         this.vhnPortalUrl = vhnPortalUrl;
     }
 
-    public AaiServiceInstanceResultModel serviceInstanceLocationId(String serviceInstanceLocationId) {
-        this.serviceInstanceLocationId = serviceInstanceLocationId;
-        return this;
-    }
-
     /**
      * An identifier that customers assign to the location where this service is being used.
      *
@@ -476,11 +369,6 @@ public class AaiServiceInstanceResultModel {
 
     public void setServiceInstanceLocationId(String serviceInstanceLocationId) {
         this.serviceInstanceLocationId = serviceInstanceLocationId;
-    }
-
-    public AaiServiceInstanceResultModel resourceVersion(String resourceVersion) {
-        this.resourceVersion = resourceVersion;
-        return this;
     }
 
     /**
@@ -496,11 +384,6 @@ public class AaiServiceInstanceResultModel {
         this.resourceVersion = resourceVersion;
     }
 
-    public AaiServiceInstanceResultModel selflink(String selflink) {
-        this.selflink = selflink;
-        return this;
-    }
-
     /**
      * Path to the controller object.
      *
@@ -512,11 +395,6 @@ public class AaiServiceInstanceResultModel {
 
     public void setSelflink(String selflink) {
         this.selflink = selflink;
-    }
-
-    public AaiServiceInstanceResultModel orchestrationStatus(String orchestrationStatus) {
-        this.orchestrationStatus = orchestrationStatus;
-        return this;
     }
 
     /**
@@ -532,10 +410,6 @@ public class AaiServiceInstanceResultModel {
         this.orchestrationStatus = orchestrationStatus;
     }
 
-    public AaiServiceInstanceResultModel relationshipList(Relationship relationshipList) {
-        this.relationshipList = relationshipList;
-        return this;
-    }
 
     /**
      * Get relationshipList
@@ -549,48 +423,6 @@ public class AaiServiceInstanceResultModel {
     public void setRelationshipList(Relationship relationshipList) {
         this.relationshipList = relationshipList;
     }
-
-    @Override
-    public boolean equals(java.lang.Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        AaiServiceInstanceResultModel serviceInstance = (AaiServiceInstanceResultModel) o;
-        return Objects.equals(this.serviceInstanceId, serviceInstance.serviceInstanceId) &&
-                Objects.equals(this.serviceInstanceName, serviceInstance.serviceInstanceName) &&
-                Objects.equals(this.serviceType, serviceInstance.serviceType) &&
-                Objects.equals(this.serviceRole, serviceInstance.serviceRole) &&
-                Objects.equals(this.environmentContext, serviceInstance.environmentContext) &&
-                Objects.equals(this.workloadContext, serviceInstance.workloadContext) &&
-                Objects.equals(this.createdAt, serviceInstance.createdAt) &&
-                Objects.equals(this.updatedAt, serviceInstance.updatedAt) &&
-                Objects.equals(this.description, serviceInstance.description) &&
-                Objects.equals(this.modelInvariantId, serviceInstance.modelInvariantId) &&
-                Objects.equals(this.modelVersionId, serviceInstance.modelVersionId) &&
-                Objects.equals(this.personaModelVersion, serviceInstance.personaModelVersion) &&
-                Objects.equals(this.widgetModelId, serviceInstance.widgetModelId) &&
-                Objects.equals(this.widgetModelVersion, serviceInstance.widgetModelVersion) &&
-                Objects.equals(this.bandwidthTotal, serviceInstance.bandwidthTotal) &&
-                Objects.equals(this.bandwidthUpWan1, serviceInstance.bandwidthUpWan1) &&
-                Objects.equals(this.bandwidthDownWan1, serviceInstance.bandwidthDownWan1) &&
-                Objects.equals(this.bandwidthUpWan2, serviceInstance.bandwidthUpWan2) &&
-                Objects.equals(this.bandwidthDownWan2, serviceInstance.bandwidthDownWan2) &&
-                Objects.equals(this.vhnPortalUrl, serviceInstance.vhnPortalUrl) &&
-                Objects.equals(this.serviceInstanceLocationId, serviceInstance.serviceInstanceLocationId) &&
-                Objects.equals(this.resourceVersion, serviceInstance.resourceVersion) &&
-                Objects.equals(this.selflink, serviceInstance.selflink) &&
-                Objects.equals(this.orchestrationStatus, serviceInstance.orchestrationStatus) &&
-                Objects.equals(this.relationshipList, serviceInstance.relationshipList);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(serviceInstanceId, serviceInstanceName, serviceType, serviceRole, environmentContext, workloadContext, createdAt, updatedAt, description, modelInvariantId, modelVersionId, personaModelVersion, widgetModelId, widgetModelVersion, bandwidthTotal, bandwidthUpWan1, bandwidthDownWan1, bandwidthUpWan2, bandwidthDownWan2, vhnPortalUrl, serviceInstanceLocationId, resourceVersion, selflink, orchestrationStatus, relationshipList);
-    }
-
 
     @Override
     public String toString() {

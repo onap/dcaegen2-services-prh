@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c4d7d701_11dccf09",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/PrhAppConfig.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 3773
+      },
+      "writtenOn": "2019-04-10T14:13:13Z",
+      "side": 1,
+      "message": "is it used anywhere?",
+      "range": {
+        "startLine": 104,
+        "startChar": 0,
+        "endLine": 147,
+        "endChar": 9
+      },
+      "revId": "315fbc568d80baa85ad5989b3faae9aa199c3d9c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

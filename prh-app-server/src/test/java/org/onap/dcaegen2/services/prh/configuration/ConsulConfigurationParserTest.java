@@ -47,7 +47,7 @@ class ConsulConfigurationParserTest {
             TestAppConfiguration.createDefaultDmaapConsumerConfiguration();
     private final ImmutableDmaapPublisherConfiguration correctDmaapPublisherConfig =
             TestAppConfiguration.createDefaultDmaapPublisherConfiguration();
-    private final ConsulConfigurationParser consulConfigurationParser = new ConsulConfigurationParser(
+    private final CbsContentParser consulConfigurationParser = new CbsContentParser(
             new Gson().fromJson(correctJson, JsonObject.class));
 
     ConsulConfigurationParserTest() throws Exception {

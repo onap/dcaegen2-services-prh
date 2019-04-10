@@ -63,11 +63,6 @@ public class DmaapConsumerTaskImpl implements DmaapConsumerTask {
     }
 
     @Override
-    public void initConfigs() {
-        config.initFileStreamReader();
-    }
-
-    @Override
     public Flux<ConsumerDmaapModel> execute(String object) throws SSLException {
         DMaaPConsumerReactiveHttpClient dmaaPConsumerReactiveHttpClient = resolveClient();
         LOGGER.debug("Method called with arg {}", object);

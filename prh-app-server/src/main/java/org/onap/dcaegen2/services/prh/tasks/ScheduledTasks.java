@@ -48,7 +48,7 @@ import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.RESPONSE
 @Component
 public class ScheduledTasks {
 
-    private static final Logger logger = LoggerFactory.getLogger(ScheduledTasks.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledTasks.class);
     private static final Marker INVOKE = MarkerFactory.getMarker("INVOKE");
     private final DmaapConsumerTask dmaapConsumerTask;
     private final DmaapPublisherTask dmaapReadyProducerTask;
@@ -100,36 +100,36 @@ public class ScheduledTasks {
     public void scheduleMainPrhEventTask() {
         MdcVariables.setMdcContextMap(mdcContextMap);
         try {
-            logger.trace("Execution of tasks was registered");
+            LOGGER.trace("Execution of tasks was registered");
             CountDownLatch mainCountDownLatch = new CountDownLatch(1);
             consumeFromDMaaPMessage()
                     .doOnError(DmaapEmptyResponseException.class, error ->
-                            logger.warn("Nothing to consume from DMaaP")
+                            LOGGER.warn("Nothing to consume from DMaaP")
                     )
                     .flatMap(this::queryAaiForConfiguration)
                     .flatMap(this::publishToAaiConfiguration)
                     .doOnError(exception ->
-                            logger.warn("AAIProducerTask exception has been registered: ", exception))
+                            LOGGER.warn("AAIProducerTask exception has been registered: ", exception))
                     .onErrorResume(resumePrhPredicate(), exception -> Mono.empty())
                     .flatMap(this::processAdditionalFields)
                     .doOnError(exception ->
-                            logger.warn("BBSActionsTask exception has been registered: ", exception))
+                            LOGGER.warn("BBSActionsTask exception has been registered: ", exception))
                     .flatMap(this::publishToDmaapConfigurationWithApache)
                     .doOnError(exception ->
-                            logger.warn("DMaaPProducerTask exception has been registered: ", exception))
+                            LOGGER.warn("DMaaPProducerTask exception has been registered: ", exception))
                     .onErrorResume(resumePrhPredicate(), exception -> Mono.empty())
                     .doOnTerminate(mainCountDownLatch::countDown)
                     .subscribe(this::onSuccess, this::onError, this::onComplete);
 
             mainCountDownLatch.await();
         } catch (InterruptedException e) {
-            logger.warn("Interruption problem on countDownLatch ", e);
+            LOGGER.warn("Interruption problem on countDownLatch ", e);
             Thread.currentThread().interrupt();
         }
     }
 
     private void onComplete() {
-        logger.info("PRH tasks have been completed");
+        LOGGER.info("PRH tasks have been completed");
     }
 
     /**
@@ -139,7 +139,7 @@ public class ScheduledTasks {
     private void onSuccess(HttpClientResponse response) {
         String statusCode = Integer.toString(response.status().code());
         MDC.put(RESPONSE_CODE, statusCode);
-        logger.info("Prh consumed tasks successfully. HTTP Response code from DMaaPProducer {}",
+        LOGGER.info("Prh consumed tasks successfully. HTTP Response code from DMaaPProducer {}",
                 statusCode);
         MDC.remove(RESPONSE_CODE);
     }
@@ -147,7 +147,7 @@ public class ScheduledTasks {
     private void onSuccess(HttpResponse response) {
         String statusCode = Integer.toString(response.getStatusLine().getStatusCode());
         MDC.put(RESPONSE_CODE, statusCode);
-        logger.info("Prh consumed tasks successfully. HTTP Response code from DMaaPProducer {}",
+        LOGGER.info("Prh consumed tasks successfully. HTTP Response code from DMaaPProducer {}",
                 statusCode);
         MDC.remove(RESPONSE_CODE);
     }
@@ -155,7 +155,7 @@ public class ScheduledTasks {
 
     private void onError(Throwable throwable) {
         if (!(throwable instanceof DmaapEmptyResponseException)) {
-            logger.warn("Chain of tasks have been aborted due to errors in PRH workflow", throwable);
+            LOGGER.warn("Chain of tasks have been aborted due to errors in PRH workflow", throwable);
         }
     }
 
@@ -163,8 +163,7 @@ public class ScheduledTasks {
         return Flux.defer(() -> {
             MdcVariables.setMdcContextMap(mdcContextMap);
             MDC.put(INSTANCE_UUID, UUID.randomUUID().toString());
-            logger.info(INVOKE, "Init configs");
-            dmaapConsumerTask.initConfigs();
+            LOGGER.info(INVOKE, "Init configs");
             return consumeFromDMaaP();
         });
     }
@@ -197,7 +196,7 @@ public class ScheduledTasks {
 
     private Mono<State> processAdditionalFields(final State state) {
         if (state.ActivationStatus) {
-            logger.debug("Re-registration - Logical links won't be updated.");
+            LOGGER.debug("Re-registration - Logical links won't be updated.");
 
             return Mono.just(state);
         }
@@ -213,7 +212,7 @@ public class ScheduledTasks {
     publishToDmaapConfiguration(final State state) {
         try {
             if (state.ActivationStatus) {
-                logger.debug("Re-registration - Using PNF_UPDATE DMaaP topic.");
+                LOGGER.debug("Re-registration - Using PNF_UPDATE DMaaP topic.");
                 return dmaapUpdateProducerTask.execute(state.DmaapModel);
             }
 
@@ -227,7 +226,7 @@ public class ScheduledTasks {
     publishToDmaapConfigurationWithApache(final State state) {
         try {
             if (state.ActivationStatus) {
-                logger.debug("Re-registration - Using PNF_UPDATE DMaaP topic.");
+                LOGGER.debug("Re-registration - Using PNF_UPDATE DMaaP topic.");
                 return dmaapUpdateProducerTask.executeWithApache(state.DmaapModel);
             }
 

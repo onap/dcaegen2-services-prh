@@ -27,7 +27,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.onap.dcaegen2.services.prh.TestAppConfiguration;
-import org.onap.dcaegen2.services.prh.configuration.AppConfig;
+import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
@@ -51,7 +51,7 @@ class AaiProducerTaskImplTest {
     private AaiProducerTaskImpl aaiProducerTask;
     private AaiClientConfiguration aaiClientConfiguration;
     private AaiHttpPatchClient aaiReactiveHttpPatchClient;
-    private AppConfig appConfig;
+    private CbsConfiguration cbsConfiguration;
     private HttpResponse clientResponse;
 
     @BeforeEach
@@ -70,14 +70,14 @@ class AaiProducerTaskImplTest {
                 .swVersion("v4.5.0.1")
                 .additionalFields(new JsonObject())
                 .build();
-        appConfig = mock(AppConfig.class);
+        cbsConfiguration = mock(CbsConfiguration.class);
 
     }
 
     @Test
     void whenPassedObjectDoesntFit_ThrowsPrhTaskException() {
         //given/when/
-        when(appConfig.getAaiClientConfiguration()).thenReturn(aaiClientConfiguration);
+        when(cbsConfiguration.getAaiClientConfiguration()).thenReturn(aaiClientConfiguration);
         aaiProducerTask = new AaiProducerTaskImpl(aaiReactiveHttpPatchClient);
         Executable executableCode = () -> aaiProducerTask.execute(null);
 
@@ -117,7 +117,7 @@ class AaiProducerTaskImplTest {
         aaiReactiveHttpPatchClient = mock(AaiHttpPatchClient.class);
         when(aaiReactiveHttpPatchClient.getAaiResponse(any()))
             .thenReturn(clientResponseMono);
-        when(appConfig.getAaiClientConfiguration()).thenReturn(aaiClientConfiguration);
+        when(cbsConfiguration.getAaiClientConfiguration()).thenReturn(aaiClientConfiguration);
         aaiProducerTask = spy(new AaiProducerTaskImpl(aaiReactiveHttpPatchClient));
     }
 }

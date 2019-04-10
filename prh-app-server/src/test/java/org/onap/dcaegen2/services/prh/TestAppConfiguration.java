@@ -28,6 +28,7 @@ import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.Immutabl
 public class TestAppConfiguration {
     public static ImmutableDmaapConsumerConfiguration createDefaultDmaapConsumerConfiguration() {
         return new ImmutableDmaapConsumerConfiguration.Builder()
+                .endpointUrl("http://dmaap-mr:2222/events/unauthenticated.VES_PNFREG_OUTPUT")
                 .consumerGroup("OpenDCAE-c12")
                 .consumerId("c12")
                 .dmaapContentType("application/json")
@@ -49,6 +50,7 @@ public class TestAppConfiguration {
 
     public static ImmutableDmaapPublisherConfiguration createDefaultDmaapPublisherConfiguration() {
         return new ImmutableDmaapPublisherConfiguration.Builder()
+                .endpointUrl("http://dmaap-mr:2222/events/unauthenticated.PNF_READY")
                 .dmaapContentType("application/json")
                 .dmaapHostName("message-router.onap.svc.cluster.local")
                 .dmaapPortNumber(3904)
@@ -81,6 +83,11 @@ public class TestAppConfiguration {
                 .keyStorePath("/opt/app/prh/local/org.onap.prh.p12")
                 .keyStorePasswordPath("change_it")
                 .enableAaiCertAuth(false)
+                .putAaiHeaders("X-FromAppId","prh")
+                .putAaiHeaders("X-TransactionId","9999")
+                .putAaiHeaders("Accept","application/json")
+                .putAaiHeaders("Real-Time","true")
+                .putAaiHeaders("Authorization","Basic QUFJOkFBSQ==")
                 .build();
     }
 }

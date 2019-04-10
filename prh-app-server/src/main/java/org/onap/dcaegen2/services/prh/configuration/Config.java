@@ -40,5 +40,4 @@ public interface Config {
 
     DmaapPublisherConfiguration getDmaapUpdatePublisherConfiguration();
 
-    void initFileStreamReader();
 }

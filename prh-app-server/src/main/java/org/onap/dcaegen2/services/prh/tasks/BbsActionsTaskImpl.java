@@ -75,7 +75,6 @@ public class BbsActionsTaskImpl implements BbsActionsTask {
     }
 
     public Mono<ConsumerDmaapModel> execute(ConsumerDmaapModel consumerDmaapModel) {
-        config.initFileStreamReader();
 
         JsonObject additionalFields = consumerDmaapModel.getAdditionalFields();
         if (additionalFields == null || !additionalFields.has(ATTACHMENT_POINT)) {

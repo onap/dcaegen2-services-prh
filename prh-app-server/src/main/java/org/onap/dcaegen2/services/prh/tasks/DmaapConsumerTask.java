@@ -33,8 +33,6 @@ import reactor.core.publisher.Flux;
  */
 interface DmaapConsumerTask {
 
-    void initConfigs();
-
     Flux<ConsumerDmaapModel> execute(String object) throws SSLException;
 
     DMaaPConsumerReactiveHttpClient resolveClient() throws SSLException;

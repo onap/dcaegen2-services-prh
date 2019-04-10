@@ -20,6 +20,8 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.ImmutableAaiClientConfiguration;
@@ -28,10 +30,12 @@ import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapPub
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.ImmutableDmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.ImmutableDmaapPublisherConfiguration;
 
+import java.util.Map;
+
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 8/21/18
  */
-class ConsulConfigurationParser {
+class CbsContentParser {
     private static final String SECURITY_TRUST_STORE_PATH = "security.trustStorePath";
     private static final String SECURITY_TRUST_STORE_PASS_PATH = "security.trustStorePasswordPath";
     private static final String SECURITY_KEY_STORE_PATH = "security.keyStorePath";
@@ -39,12 +43,13 @@ class ConsulConfigurationParser {
     private static final String CONFIG = "config";
     private final JsonObject jsonObject;
 
-    ConsulConfigurationParser(JsonObject jsonObject) {
+    CbsContentParser(JsonObject jsonObject) {
         this.jsonObject = jsonObject.getAsJsonObject(CONFIG);
     }
 
     DmaapPublisherConfiguration getDmaapPublisherConfig() {
         return new ImmutableDmaapPublisherConfiguration.Builder()
+            .endpointUrl("http://dmaap-mr:2222/events/unauthenticated.PNF_READY")
             .dmaapTopicName(jsonObject.get("dmaap.dmaapProducerConfiguration.dmaapTopicName").getAsString())
             .dmaapUserPassword(jsonObject.get("dmaap.dmaapProducerConfiguration.dmaapUserPassword").getAsString())
             .dmaapPortNumber(jsonObject.get("dmaap.dmaapProducerConfiguration.dmaapPortNumber").getAsInt())
@@ -63,7 +68,8 @@ class ConsulConfigurationParser {
 
     DmaapPublisherConfiguration getDmaapUpdatePublisherConfig() {
         return new ImmutableDmaapPublisherConfiguration.Builder()
-             .dmaapTopicName(jsonObject.get("dmaap.dmaapUpdateProducerConfiguration.dmaapTopicName").getAsString())
+            .endpointUrl("http://dmaap-mr:2222/events/unauthenticated.PNF_READY")
+            .dmaapTopicName(jsonObject.get("dmaap.dmaapUpdateProducerConfiguration.dmaapTopicName").getAsString())
             .dmaapUserPassword(jsonObject.get("dmaap.dmaapUpdateProducerConfiguration.dmaapUserPassword").getAsString())
             .dmaapPortNumber(jsonObject.get("dmaap.dmaapUpdateProducerConfiguration.dmaapPortNumber").getAsInt())
             .dmaapProtocol(jsonObject.get("dmaap.dmaapUpdateProducerConfiguration.dmaapProtocol").getAsString())
@@ -88,7 +94,7 @@ class ConsulConfigurationParser {
             .aaiPnfPath(jsonObject.get("aai.aaiClientConfiguration.aaiPnfPath").getAsString())
             .aaiServiceInstancePath(jsonObject.get("aai.aaiClientConfiguration.aaiServiceInstancePath").getAsString())
             .aaiIgnoreSslCertificateErrors(
-                jsonObject.get("aai.aaiClientConfiguration.aaiIgnoreSslCertificateErrors").getAsBoolean())
+                    jsonObject.get("aai.aaiClientConfiguration.aaiIgnoreSslCertificateErrors").getAsBoolean())
             .aaiUserPassword(jsonObject.get("aai.aaiClientConfiguration.aaiUserPassword").getAsString())
             .aaiProtocol(jsonObject.get("aai.aaiClientConfiguration.aaiProtocol").getAsString())
             .aaiBasePath(jsonObject.get("aai.aaiClientConfiguration.aaiBasePath").getAsString())
@@ -97,11 +103,14 @@ class ConsulConfigurationParser {
             .keyStorePath(jsonObject.get(SECURITY_KEY_STORE_PATH).getAsString())
             .keyStorePasswordPath(jsonObject.get(SECURITY_KEY_STORE_PASS_PATH).getAsString())
             .enableAaiCertAuth(jsonObject.get("security.enableAaiCertAuth").getAsBoolean())
+            .aaiHeaders(new Gson().fromJson(jsonObject.get("aai.aaiClientConfiguration.aaiHeaders"),
+                    new TypeToken<Map<String, String>>(){}.getType()))
             .build();
     }
 
     DmaapConsumerConfiguration getDmaapConsumerConfig() {
         return new ImmutableDmaapConsumerConfiguration.Builder()
+            .endpointUrl("http://dmaap-mr:2222/events/unauthenticated.VES_PNFREG_OUTPUT")
             .timeoutMs(jsonObject.get("dmaap.dmaapConsumerConfiguration.timeoutMs").getAsInt())
             .dmaapHostName(jsonObject.get("dmaap.dmaapConsumerConfiguration.dmaapHostName").getAsString())
             .dmaapUserName(jsonObject.get("dmaap.dmaapConsumerConfiguration.dmaapUserName").getAsString())

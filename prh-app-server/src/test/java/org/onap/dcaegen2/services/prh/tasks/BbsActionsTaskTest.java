@@ -40,7 +40,7 @@ import java.io.InputStreamReader;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.onap.dcaegen2.services.prh.TestAppConfiguration;
-import org.onap.dcaegen2.services.prh.configuration.AppConfig;
+import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
 import org.onap.dcaegen2.services.prh.exceptions.AaiFailureException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
@@ -57,18 +57,19 @@ class BbsActionsTaskTest {
     private static final String CORRECT_LOGICAL_LINK_JSON = "bbs_action/correct_logical_link.json";
     public static final String AAI_URL = "https://aai.onap.svc.cluster.local:8443/aai/v12/network/logical-links/logical-link/some-link";
 
+    private CbsConfiguration cbsConfiguration = mock(CbsConfiguration.class);
+
     private AaiClientConfiguration aaiClientConfiguration = TestAppConfiguration.createDefaultAaiClientConfiguration();
-    private AppConfig appConfig = mock(AppConfig.class);
     private RxHttpClient httpClient = mock(RxHttpClient.class);
 
     @Test
     void whenPassedObjectDoesntHaveAdditionalFields_ReturnPayloadTransparently() {
         // given
-        given(appConfig.getAaiClientConfiguration()).willReturn(aaiClientConfiguration);
+        given(cbsConfiguration.getAaiClientConfiguration()).willReturn(aaiClientConfiguration);
         ConsumerDmaapModel consumerDmaapModel = buildConsumerDmaapModel(null);
 
         // when
-        ConsumerDmaapModel result = new BbsActionsTaskImpl(appConfig, httpClient).execute(consumerDmaapModel).block();
+        ConsumerDmaapModel result = new BbsActionsTaskImpl(cbsConfiguration, httpClient).execute(consumerDmaapModel).block();
 
         // then
         verifyZeroInteractions(httpClient);
@@ -78,14 +79,14 @@ class BbsActionsTaskTest {
     @Test
     void whenPassedObjectHasEmptyLogicalLink_ReturnPayloadTransparently() {
         // given
-        given(appConfig.getAaiClientConfiguration()).willReturn(aaiClientConfiguration);
+        given(cbsConfiguration.getAaiClientConfiguration()).willReturn(aaiClientConfiguration);
 
         JsonObject additionalFields = new JsonObject();
         additionalFields.addProperty("attachmentPoint", "");
         ConsumerDmaapModel consumerDmaapModel = buildConsumerDmaapModel(additionalFields);
 
         // when
-        ConsumerDmaapModel result = new BbsActionsTaskImpl(appConfig, httpClient).execute(consumerDmaapModel).block();
+        ConsumerDmaapModel result = new BbsActionsTaskImpl(cbsConfiguration, httpClient).execute(consumerDmaapModel).block();
 
         // then
         verifyZeroInteractions(httpClient);
@@ -95,7 +96,7 @@ class BbsActionsTaskTest {
     @Test
     void whenPassedObjectHasLogicalLink_createLogicalLink_and_associateWithPnf_and_ReturnPayloadTransparently() {
         // given
-        given(appConfig.getAaiClientConfiguration()).willReturn(aaiClientConfiguration);
+        given(cbsConfiguration.getAaiClientConfiguration()).willReturn(aaiClientConfiguration);
 
         JsonObject additionalFields = new JsonObject();
         additionalFields.addProperty("attachmentPoint", "some-link");
@@ -104,7 +105,7 @@ class BbsActionsTaskTest {
         given(httpClient.call(any())).willReturn(Mono.just(buildAaiResponse(HttpResponseStatus.OK)));
 
         // when
-        Mono<ConsumerDmaapModel> response = new BbsActionsTaskImpl(appConfig, httpClient).execute(consumerDmaapModel);
+        Mono<ConsumerDmaapModel> response = new BbsActionsTaskImpl(cbsConfiguration, httpClient).execute(consumerDmaapModel);
 
         // then
         assertEquals(consumerDmaapModel, response.block());
@@ -114,7 +115,7 @@ class BbsActionsTaskTest {
     @Test
     void whenPassedObjectHasLogicalLink_butAaiQueryFails_returnError() {
         // given
-        given(appConfig.getAaiClientConfiguration()).willReturn(aaiClientConfiguration);
+        given(cbsConfiguration.getAaiClientConfiguration()).willReturn(aaiClientConfiguration);
 
         JsonObject additionalFields = new JsonObject();
         additionalFields.addProperty("attachmentPoint", "some-link");
@@ -123,7 +124,7 @@ class BbsActionsTaskTest {
         given(httpClient.call(any())).willReturn(Mono.just(buildAaiResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR)));
 
         // when
-        Mono<ConsumerDmaapModel> response = new BbsActionsTaskImpl(appConfig, httpClient).execute(consumerDmaapModel);
+        Mono<ConsumerDmaapModel> response = new BbsActionsTaskImpl(cbsConfiguration, httpClient).execute(consumerDmaapModel);
 
         // then
         ArgumentCaptor<HttpRequest> captor = ArgumentCaptor.forClass(HttpRequest.class);

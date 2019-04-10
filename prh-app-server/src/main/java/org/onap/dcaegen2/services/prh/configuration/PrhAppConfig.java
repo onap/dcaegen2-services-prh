@@ -56,8 +56,6 @@ public abstract class PrhAppConfig implements Config {
     private static final String AAI = "aai";
     private static final String DMAAP = "dmaap";
     private static final String AAI_CONFIG = "aaiClientConfiguration";
-    private static final String DMAAP_PRODUCER = "dmaapProducerConfiguration";
-    private static final String DMAAP_UPDATE_PRODUCER = "dmaapUpdateProducerConfiguration";
     private static final String DMAAP_CONSUMER = "dmaapConsumerConfiguration";
     private static final String SECURITY = "security";
 
@@ -68,9 +66,6 @@ public abstract class PrhAppConfig implements Config {
     DmaapPublisherConfiguration dmaapPublisherConfiguration;
 
     DmaapPublisherConfiguration dmaapUpdatePublisherConfiguration;
-
-    @Value("classpath:prh_endpoints.json")
-    private Resource prhEndpoints;
 
     @Value("classpath:git_info.json")
     private Resource gitInfo;
@@ -105,26 +100,6 @@ public abstract class PrhAppConfig implements Config {
         return dmaapUpdatePublisherConfiguration;
     }
 
-    @Override
-    public void initFileStreamReader() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        ServiceLoader.load(TypeAdapterFactory.class).forEach(gsonBuilder::registerTypeAdapterFactory);
-        JsonParser parser = new JsonParser();
-
-        try (InputStream inputStream = prhEndpoints.getInputStream()) {
-            JsonElement rootElement = getJsonElement(parser, inputStream);
-            if (rootElement.isJsonObject()) {
-                deserializeAaiConfiguration(gsonBuilder, rootElement);
-                deserializeDmaapConsumerConfiguration(gsonBuilder, rootElement);
-                dmaapPublisherConfiguration =
-                        deserializeDmaapPublisherConfiguration(DMAAP_PRODUCER, gsonBuilder, rootElement);
-                dmaapUpdatePublisherConfiguration =
-                        deserializeDmaapPublisherConfiguration(DMAAP_UPDATE_PRODUCER, gsonBuilder, rootElement);
-            }
-        } catch (IOException e) {
-            LOGGER.warn("Failed to load/parse file", e);
-        }
-    }
 
     private DmaapPublisherConfiguration deserializeDmaapPublisherConfiguration(
             final String dmaapProducerType,
@@ -170,10 +145,5 @@ public abstract class PrhAppConfig implements Config {
             LOGGER.warn("Failed to parse JSON={}", jsonObject, e);
             return null;
         }
-    }
-
-    @VisibleForTesting
-    void setPrhEndpoints(Resource prhEndpoints) {
-        this.prhEndpoints = prhEndpoints;
     }
 }

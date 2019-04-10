@@ -24,7 +24,7 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
-import org.onap.dcaegen2.services.prh.configuration.AppConfig;
+import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
@@ -54,7 +54,7 @@ class DmaapPublisherTaskImplTest {
     private static ConsumerDmaapModel consumerDmaapModel;
     private static DmaapPublisherTaskImpl dmaapPublisherTask;
     private static DMaaPPublisherReactiveHttpClient dMaaPPublisherReactiveHttpClient;
-    private static AppConfig appConfig;
+    private static CbsConfiguration cbsConfiguration;
     private static DmaapPublisherConfiguration dmaapPublisherConfiguration;
     private Optional<RequestDiagnosticContext> requestDiagnosticContextOptionalMock;
     private DmaapModel dmaapModel;
@@ -65,15 +65,15 @@ class DmaapPublisherTaskImplTest {
     public void beforeEach() throws SSLException {
         dmaapPublisherConfiguration = createDefaultDmaapPublisherConfiguration();
         consumerDmaapModel = mock(ConsumerDmaapModel.class);
-        appConfig = mock(AppConfig.class);
+        cbsConfiguration = mock(CbsConfiguration.class);
         requestDiagnosticContextOptionalMock = Optional.empty();
         dmaapModel = mock(DmaapModel.class);
         dMaaPPublisherReactiveHttpClient = mock(DMaaPPublisherReactiveHttpClient.class);
         publisherReactiveHttpClientFactory = mock(PublisherReactiveHttpClientFactory.class);
-        when(appConfig.getDmaapPublisherConfiguration()).thenReturn(dmaapPublisherConfiguration);
+        when(cbsConfiguration.getDmaapPublisherConfiguration()).thenReturn(dmaapPublisherConfiguration);
         when(publisherReactiveHttpClientFactory.create(dmaapPublisherConfiguration))
             .thenReturn(dMaaPPublisherReactiveHttpClient);
-        configSupplier = () -> appConfig.getDmaapPublisherConfiguration();
+        configSupplier = () -> cbsConfiguration.getDmaapPublisherConfiguration();
     }
 
     @Test

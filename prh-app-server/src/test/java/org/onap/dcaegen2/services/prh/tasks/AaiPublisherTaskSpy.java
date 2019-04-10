@@ -25,7 +25,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 
 import javax.net.ssl.SSLException;
-import org.onap.dcaegen2.services.prh.configuration.AppConfig;
+
+import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.patch.AaiHttpPatchClient;
@@ -49,9 +50,9 @@ public class AaiPublisherTaskSpy {
     @Bean
     @Primary
     public AaiProducerTask registerSimpleAaiPublisherTask() throws SSLException {
-        AppConfig appConfig = spy(AppConfig.class);
+        CbsConfiguration cbsConfiguration = spy(CbsConfiguration.class);
         ConsumerDmaapModel consumerDmaapModel = spy(ConsumerDmaapModel.class);
-        doReturn(mock(AaiClientConfiguration.class)).when(appConfig).getAaiClientConfiguration();
+        doReturn(mock(AaiClientConfiguration.class)).when(cbsConfiguration).getAaiClientConfiguration();
         AaiHttpPatchClient aaiReactiveHttpPatchClient = mock(AaiHttpPatchClient.class);
         AaiProducerTaskImpl aaiProducerTask = spy(new AaiProducerTaskImpl(aaiReactiveHttpPatchClient));
 

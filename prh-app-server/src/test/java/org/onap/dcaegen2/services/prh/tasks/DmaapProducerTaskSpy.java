@@ -25,7 +25,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 
 import javax.net.ssl.SSLException;
-import org.onap.dcaegen2.services.prh.configuration.AppConfig;
+import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.producer.DMaaPPublisherReactiveHttpClient;
 import org.springframework.context.annotation.Bean;
@@ -48,7 +48,7 @@ public class DmaapProducerTaskSpy {
     @Bean
     @Primary
     public DmaapPublisherTask registerSimpleDmaapPublisherTask() throws SSLException {
-        final AppConfig appConfig = spy(AppConfig.class);
+        final CbsConfiguration appConfig = spy(CbsConfiguration.class);
         final Supplier<DmaapPublisherConfiguration> configSupplier = () -> appConfig.getDmaapPublisherConfiguration();
         doReturn(mock(DmaapPublisherConfiguration.class)).when(appConfig).getDmaapPublisherConfiguration();
         final DmaapPublisherTaskImpl dmaapPublisherTask = spy(new DmaapPublisherTaskImpl(configSupplier));

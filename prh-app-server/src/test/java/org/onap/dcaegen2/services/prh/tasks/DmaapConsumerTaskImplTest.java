@@ -34,7 +34,7 @@ import com.google.gson.JsonParser;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.onap.dcaegen2.services.prh.configuration.AppConfig;
+import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
@@ -53,12 +53,13 @@ class DmaapConsumerTaskImplTest {
     private static ConsumerDmaapModel consumerDmaapModel;
     private static DmaapConsumerTaskImpl dmaapConsumerTask;
     private static DMaaPConsumerReactiveHttpClient dMaaPConsumerReactiveHttpClient;
-    private static AppConfig appConfig;
     private static DmaapConsumerConfiguration dmaapConsumerConfiguration;
     private static String message;
     private static String messageContentEmpty;
     private static JsonArray jsonArray;
     private static JsonArray jsonArrayWrongContent;
+
+    private static CbsConfiguration cbsConfiguration;
 
     @BeforeAll
     static void setUp() {
@@ -82,7 +83,7 @@ class DmaapConsumerTaskImplTest {
             .swVersion("v4.5.0.1")
             .additionalFields(jsonObject)
             .build();
-        appConfig = mock(AppConfig.class);
+        cbsConfiguration = mock(CbsConfiguration.class);
 
         message = "[{\"event\": {"
             + "\"commonEventHeader\": { "
@@ -135,22 +136,15 @@ class DmaapConsumerTaskImplTest {
         assertEquals(consumerDmaapModel, response.blockFirst());
     }
 
-    @Test
-    void whenInitConfigs_initStreamReader() {
-        //when
-        dmaapConsumerTask.initConfigs();
 
-        //then
-        verify(appConfig).initFileStreamReader();
-    }
 
     private void prepareMocksForDmaapConsumer(Optional<JsonArray> message) throws Exception {
         dMaaPConsumerReactiveHttpClient = mock(DMaaPConsumerReactiveHttpClient.class);
         when(dMaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse(Optional.empty()))
             .thenReturn(Mono.just(message.get()));
-        when(appConfig.getDmaapConsumerConfiguration()).thenReturn(dmaapConsumerConfiguration);
+        when(cbsConfiguration.getDmaapConsumerConfiguration()).thenReturn(dmaapConsumerConfiguration);
         ConsumerReactiveHttpClientFactory httpClientFactory = mock(ConsumerReactiveHttpClientFactory.class);
         doReturn(dMaaPConsumerReactiveHttpClient).when(httpClientFactory).create(dmaapConsumerConfiguration);
-        dmaapConsumerTask = new DmaapConsumerTaskImpl(appConfig, new DmaapConsumerJsonParser(), httpClientFactory);
+        dmaapConsumerTask = new DmaapConsumerTaskImpl(cbsConfiguration, new DmaapConsumerJsonParser(), httpClientFactory);
     }
 }

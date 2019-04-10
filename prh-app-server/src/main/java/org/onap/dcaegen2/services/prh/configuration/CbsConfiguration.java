@@ -22,11 +22,9 @@ package org.onap.dcaegen2.services.prh.configuration;
 
 import com.google.gson.JsonObject;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.ImmutableAaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.CbsClientFactory;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.CbsRequests;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.model.EnvProperties;
-import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.providers.CloudConfigurationClient;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.model.logging.RequestDiagnosticContext;
@@ -49,8 +47,8 @@ import java.util.Optional;
 @EnableConfigurationProperties
 @EnableScheduling
 @Primary
-public class ConsulConfiguration extends PrhAppConfig {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ConsulConfiguration.class);
+public class CbsConfiguration extends PrhAppConfig {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CbsConfiguration.class);
     private AaiClientConfiguration aaiClientCBSConfiguration;
     private DmaapPublisherConfiguration dmaapPublisherCBSConfiguration;
     private DmaapConsumerConfiguration dmaapConsumerCBSConfiguration;
@@ -83,11 +81,10 @@ public class ConsulConfiguration extends PrhAppConfig {
 
     private void parseCBSConfig(JsonObject jsonObject) {
         LOGGER.info("Received application configuration: {}", jsonObject);
-        ConsulConfigurationParser consulConfigurationParser = new ConsulConfigurationParser(jsonObject);
+        CbsContentParser consulConfigurationParser = new CbsContentParser(jsonObject);
         dmaapPublisherCBSConfiguration = consulConfigurationParser.getDmaapPublisherConfig();
         dmaapUpdatePublisherCBSConfiguration = consulConfigurationParser.getDmaapUpdatePublisherConfig();
-        aaiClientCBSConfiguration = ImmutableAaiClientConfiguration.copyOf(consulConfigurationParser.getAaiClientConfig())
-            .withAaiHeaders(aaiClientConfiguration.aaiHeaders());
+        aaiClientCBSConfiguration = consulConfigurationParser.getAaiClientConfig();
         dmaapConsumerCBSConfiguration = consulConfigurationParser.getDmaapConsumerConfig();
     }
 

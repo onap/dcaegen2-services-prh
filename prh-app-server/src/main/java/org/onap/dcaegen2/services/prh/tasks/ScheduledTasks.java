@@ -164,7 +164,6 @@ public class ScheduledTasks {
             MdcVariables.setMdcContextMap(mdcContextMap);
             MDC.put(INSTANCE_UUID, UUID.randomUUID().toString());
             logger.info(INVOKE, "Init configs");
-            dmaapConsumerTask.initConfigs();
             return consumeFromDMaaP();
         });
     }

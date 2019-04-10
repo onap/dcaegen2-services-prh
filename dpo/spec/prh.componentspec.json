@@ -1,0 +1,60 @@
+{
+  "self": {
+    "version": "1.1.0",
+    "name": "dcae-hv-ves-collector",
+    "description": "Collector for receiving stream of High Volume VES events through socket interface",
+    "component_type": "docker"
+  },
+  "streams": {
+    "subscribes": [],
+    "publishes": [
+      {
+        "format": "hv-ves-event",
+        "version": "7.1.0",
+        "type": "kafka",
+        "config_key": "perf3gpp"
+      }
+    ]
+  },
+  "services": {
+    "calls": [],
+    "provides": []
+  },
+  "parameters": [],
+  "auxilary": {
+    "healthcheck": {
+      "type": "script",
+      "interval": "15s",
+      "timeout": "2s",
+      "script": "/opt/ves-hv-collector/healthcheck.sh"
+    },
+    "volumes": [
+      {
+        "container": {
+          "bind": "/etc/ves-hv/ssl"
+        },
+        "host": {
+          "path": "/opt/app/dcae-certificate"
+        }
+      },
+      {
+        "container": {
+          "bind": "/var/log/ONAP/dcae-hv-ves-collector"
+        },
+        "host": {
+          "path": "/var/log/ONAP/dcae-hv-ves-collector"
+        }
+      }
+    ],
+    "ports": [
+      "6060:6060",
+      "6061:6061"
+    ]
+  },
+  "artifacts": [
+    {
+      "type": "docker image",
+      "uri": "nexus.onap.org:10001/onap/org.onap.dcaegen2.collectors.hv-ves.hv-collector-main:1.1.0-SNAPSHOT"
+    }
+  ]
+}

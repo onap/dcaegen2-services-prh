@@ -20,8 +20,6 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.gson.*;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapPublisherConfiguration;
@@ -35,13 +33,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.StreamUtils;
 
 import javax.annotation.PostConstruct;
-import javax.validation.constraints.NotNull;
-import java.io.*;
-import java.net.URI;
-import java.net.URL;
+import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.ServiceLoader;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/9/18
@@ -51,13 +44,6 @@ import java.util.ServiceLoader;
 @ConfigurationProperties("app")
 public abstract class PrhAppConfig implements Config {
     private static final Logger LOGGER = LoggerFactory.getLogger(PrhAppConfig.class);
-
-    private static final String CONFIG = "configs";
-    private static final String AAI = "aai";
-    private static final String DMAAP = "dmaap";
-    private static final String AAI_CONFIG = "aaiClientConfiguration";
-    private static final String DMAAP_CONSUMER = "dmaapConsumerConfiguration";
-    private static final String SECURITY = "security";
 
     AaiClientConfiguration aaiClientConfiguration;
 
@@ -98,52 +84,5 @@ public abstract class PrhAppConfig implements Config {
     @Override
     public DmaapPublisherConfiguration getDmaapUpdatePublisherConfiguration() {
         return dmaapUpdatePublisherConfiguration;
-    }
-
-
-    private DmaapPublisherConfiguration deserializeDmaapPublisherConfiguration(
-            final String dmaapProducerType,
-            final GsonBuilder gsonBuilder,
-            final JsonElement rootElement) {
-         return deserializeType(gsonBuilder, concatenateJsonObjects(
-                rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(DMAAP)
-                        .getAsJsonObject(dmaapProducerType),
-                rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(SECURITY)),
-                DmaapPublisherConfiguration.class);
-    }
-
-    private void deserializeDmaapConsumerConfiguration(GsonBuilder gsonBuilder, JsonElement rootElement) {
-        dmaapConsumerConfiguration = deserializeType(gsonBuilder, concatenateJsonObjects(
-                rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(DMAAP)
-                        .getAsJsonObject(DMAAP_CONSUMER),
-                rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(SECURITY)),
-                DmaapConsumerConfiguration.class);
-    }
-
-    private void deserializeAaiConfiguration(GsonBuilder gsonBuilder, JsonElement rootElement) {
-        aaiClientConfiguration = deserializeType(gsonBuilder, concatenateJsonObjects(
-                rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(AAI).getAsJsonObject(AAI_CONFIG),
-                rootElement.getAsJsonObject().getAsJsonObject(CONFIG).getAsJsonObject(SECURITY)),
-                AaiClientConfiguration.class);
-    }
-
-    JsonElement getJsonElement(JsonParser parser, InputStream inputStream) {
-        return parser.parse(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-    }
-
-    private JsonObject concatenateJsonObjects(JsonObject target, JsonObject source) {
-        source.entrySet()
-                .forEach(entry -> target.add(entry.getKey(), entry.getValue()));
-        return target;
-    }
-
-    private <T> T deserializeType(@NotNull GsonBuilder gsonBuilder, @NotNull JsonObject jsonObject,
-                                  @NotNull Class<T> type) {
-        try {
-            return gsonBuilder.create().fromJson(jsonObject, type);
-        } catch (JsonSyntaxException e) {
-            LOGGER.warn("Failed to parse JSON={}", jsonObject, e);
-            return null;
-        }
     }
 }

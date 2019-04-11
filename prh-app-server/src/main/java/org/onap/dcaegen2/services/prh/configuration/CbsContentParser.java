@@ -23,14 +23,21 @@ package org.onap.dcaegen2.services.prh.configuration;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.onap.dcaegen2.services.sdk.model.streams.RawDataStream;
+import org.onap.dcaegen2.services.sdk.model.streams.dmaap.MessageRouterSink;
+import org.onap.dcaegen2.services.sdk.model.streams.dmaap.MessageRouterSource;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.ImmutableAaiClientConfiguration;
+import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.streams.DataStreams;
+import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.streams.StreamFromGsonParsers;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapPublisherConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.ImmutableDmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.ImmutableDmaapPublisherConfiguration;
 
 import java.util.Map;
+
+import static org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.streams.StreamPredicates.streamWithName;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 8/21/18
@@ -40,7 +47,12 @@ class CbsContentParser {
     private static final String SECURITY_TRUST_STORE_PASS_PATH = "security.trustStorePasswordPath";
     private static final String SECURITY_KEY_STORE_PATH = "security.keyStorePath";
     private static final String SECURITY_KEY_STORE_PASS_PATH = "security.keyStorePasswordPath";
+    private static final String SECURITY_ENABLE_DMAAP_CERT_AUTH = "security.enableDmaapCertAuth";
     private static final String CONFIG = "config";
+    private static final String PNF_UPDATE = "pnf-update";
+    private static final String PNF_READY = "pnf-ready";
+    private static final String VES_REG_OUTPUT = "ves-reg-output";
+
     private final JsonObject jsonObject;
 
     CbsContentParser(JsonObject jsonObject) {
@@ -48,8 +60,11 @@ class CbsContentParser {
     }
 
     DmaapPublisherConfiguration getDmaapPublisherConfig() {
+        RawDataStream<JsonObject> sink = DataStreams.namedSinks(jsonObject).find(streamWithName(PNF_READY)).get();
+        MessageRouterSink parsedSink = StreamFromGsonParsers.messageRouterSinkParser().unsafeParse(sink);
+
         return new ImmutableDmaapPublisherConfiguration.Builder()
-            .endpointUrl("http://dmaap-mr:2222/events/unauthenticated.PNF_READY")
+            .endpointUrl(parsedSink.topicUrl())
             .dmaapTopicName(jsonObject.get("dmaap.dmaapProducerConfiguration.dmaapTopicName").getAsString())
             .dmaapUserPassword(jsonObject.get("dmaap.dmaapProducerConfiguration.dmaapUserPassword").getAsString())
             .dmaapPortNumber(jsonObject.get("dmaap.dmaapProducerConfiguration.dmaapPortNumber").getAsInt())
@@ -62,13 +77,16 @@ class CbsContentParser {
             .trustStorePasswordPath(jsonObject.get(SECURITY_TRUST_STORE_PASS_PATH).getAsString())
             .keyStorePath(jsonObject.get(SECURITY_KEY_STORE_PATH).getAsString())
             .keyStorePasswordPath(jsonObject.get(SECURITY_KEY_STORE_PASS_PATH).getAsString())
-            .enableDmaapCertAuth(jsonObject.get("security.enableDmaapCertAuth").getAsBoolean())
+            .enableDmaapCertAuth(jsonObject.get(SECURITY_ENABLE_DMAAP_CERT_AUTH).getAsBoolean())
             .build();
     }
 
     DmaapPublisherConfiguration getDmaapUpdatePublisherConfig() {
+        RawDataStream<JsonObject> sink = DataStreams.namedSinks(jsonObject).find(streamWithName(PNF_UPDATE)).get();
+        MessageRouterSink parsedSink = StreamFromGsonParsers.messageRouterSinkParser().unsafeParse(sink);
+
         return new ImmutableDmaapPublisherConfiguration.Builder()
-            .endpointUrl("http://dmaap-mr:2222/events/unauthenticated.PNF_READY")
+            .endpointUrl(parsedSink.topicUrl())
             .dmaapTopicName(jsonObject.get("dmaap.dmaapUpdateProducerConfiguration.dmaapTopicName").getAsString())
             .dmaapUserPassword(jsonObject.get("dmaap.dmaapUpdateProducerConfiguration.dmaapUserPassword").getAsString())
             .dmaapPortNumber(jsonObject.get("dmaap.dmaapUpdateProducerConfiguration.dmaapPortNumber").getAsInt())
@@ -81,7 +99,7 @@ class CbsContentParser {
             .trustStorePasswordPath(jsonObject.get(SECURITY_TRUST_STORE_PASS_PATH).getAsString())
             .keyStorePath(jsonObject.get(SECURITY_KEY_STORE_PATH).getAsString())
             .keyStorePasswordPath(jsonObject.get(SECURITY_KEY_STORE_PASS_PATH).getAsString())
-            .enableDmaapCertAuth(jsonObject.get("security.enableDmaapCertAuth").getAsBoolean())
+            .enableDmaapCertAuth(jsonObject.get(SECURITY_ENABLE_DMAAP_CERT_AUTH).getAsBoolean())
             .build();
     }
 
@@ -109,8 +127,11 @@ class CbsContentParser {
     }
 
     DmaapConsumerConfiguration getDmaapConsumerConfig() {
+        RawDataStream<JsonObject> source = DataStreams.namedSources(jsonObject).find(streamWithName(VES_REG_OUTPUT)).get();
+        MessageRouterSource parsedSource = StreamFromGsonParsers.messageRouterSourceParser().unsafeParse(source);
+
         return new ImmutableDmaapConsumerConfiguration.Builder()
-            .endpointUrl("http://dmaap-mr:2222/events/unauthenticated.VES_PNFREG_OUTPUT")
+            .endpointUrl(parsedSource.topicUrl())
             .timeoutMs(jsonObject.get("dmaap.dmaapConsumerConfiguration.timeoutMs").getAsInt())
             .dmaapHostName(jsonObject.get("dmaap.dmaapConsumerConfiguration.dmaapHostName").getAsString())
             .dmaapUserName(jsonObject.get("dmaap.dmaapConsumerConfiguration.dmaapUserName").getAsString())
@@ -126,7 +147,7 @@ class CbsContentParser {
             .trustStorePasswordPath(jsonObject.get(SECURITY_TRUST_STORE_PASS_PATH).getAsString())
             .keyStorePath(jsonObject.get(SECURITY_KEY_STORE_PATH).getAsString())
             .keyStorePasswordPath(jsonObject.get(SECURITY_KEY_STORE_PASS_PATH).getAsString())
-            .enableDmaapCertAuth(jsonObject.get("security.enableDmaapCertAuth").getAsBoolean())
+            .enableDmaapCertAuth(jsonObject.get(SECURITY_ENABLE_DMAAP_CERT_AUTH).getAsBoolean())
             .build();
     }
 }

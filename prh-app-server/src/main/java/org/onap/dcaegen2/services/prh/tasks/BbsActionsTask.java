@@ -23,6 +23,7 @@ package org.onap.dcaegen2.services.prh.tasks;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import reactor.core.publisher.Mono;
 
+@FunctionalInterface
 public interface BbsActionsTask {
     Mono<ConsumerDmaapModel> execute(ConsumerDmaapModel consumerDmaapModel);
 }

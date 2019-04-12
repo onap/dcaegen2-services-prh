@@ -1,5 +1,5 @@
 {
-      "consulHost": "10.42.111.11",
+      "consulHost": "consul",
       "cbsName": "cbs",
       "appName": "dcae-prh"
 }

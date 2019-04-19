@@ -1,18 +1,43 @@
 {
   "self": {
-    "version": "1.1.0",
-    "name": "dcae-hv-ves-collector",
-    "description": "Collector for receiving stream of High Volume VES events through socket interface",
+    "version": "1.2.1",
+    "name": "dcaegen2-services-prh",
+    "description": "PNF Registration Handler",
     "component_type": "docker"
   },
   "streams": {
-    "subscribes": [],
+    "subscribes": [
+      {
+        "format": "ves_event",
+        "version": "7.1.0",
+        "config_key": "unauthenticated.VES_PNFREG_OUTPUT",
+        "type": "message_router"
+      }
+    ],
     "publishes": [
       {
-        "format": "hv-ves-event",
+        "format": "ves_event",
         "version": "7.1.0",
-        "type": "kafka",
-        "config_key": "perf3gpp"
+        "config_key": "unauthenticated.PNF_READY",
+        "type": "message_router"
+      },
+      {
+        "format": "ves_event",
+        "version": "7.1.0",
+        "config_key": "unauthenticated.PNF_UPDATE",
+        "type": "message_router"
+      },
+      {
+        "format": "ves_event",
+        "version": "7.1.0",
+        "config_key": "/aai/v12/network/pnfs/pnf/pnf_name",
+        "type": "message_router"
+      },
+      {
+        "format": "ves_event",
+        "version": "7.1.0",
+        "config_key": "/aai/v12/network/pnfs/pnf/pnf_name",
+        "type": "message_router"
       }
     ]
   },
@@ -20,41 +45,94 @@
     "calls": [],
     "provides": []
   },
-  "parameters": [],
+  "parameters": [
+    {
+      "name": "server.port",
+      "value": "8433",
+      "description": "PRH server port",
+      "sourced_at_deployment": false,
+      "policy_editable": false,
+      "designer_editable": false
+    },
+    {
+      "name": "server.ssl.key-store-type",
+      "value": "PKCS12",
+      "description": "Key store type required for ssl",
+      "sourced_at_deployment": false,
+      "policy_editable": false,
+      "designer_editable": false
+    },
+    {
+      "name": "server.ssl.key-store-password",
+      "value": "nokiapnf",
+      "description": "Key store password required for ssl",
+      "sourced_at_deployment": false,
+      "policy_editable": false,
+      "designer_editable": false
+    },
+    {
+      "name": "server.ssl.key-store",
+      "value": "classpath:keystore-local",
+      "description": "Key store local required for ssl",
+      "sourced_at_deployment": false,
+      "policy_editable": false,
+      "designer_editable": false
+    },
+    {
+      "name": "server.ssl.key-password",
+      "value": "nokiapnf",
+      "description": "Key password required for ssl",
+      "sourced_at_deployment": false,
+      "policy_editable": false,
+      "designer_editable": false
+    },
+    {
+      "name": "server.ssl.keyAlias",
+      "value": "tomcat-localhost",
+      "description": "Key alias required for ssl",
+      "sourced_at_deployment": false,
+      "policy_editable": false,
+      "designer_editable": false
+    },
+    {
+      "name": "consulHost",
+      "value": "10.42.111.9",
+      "description": "The host pointing to consul",
+      "sourced_at_deployment": false,
+      "policy_editable": false,
+      "designer_editable": false
+    },
+    {
+      "name": "cbsName",
+      "value": "cbs",
+      "description": "The name of cbs",
+      "sourced_at_deployment": false,
+      "policy_editable": false,
+      "designer_editable": false
+    },
+    {
+      "name": "appName",
+      "value": "dcae-prh",
+      "description": "The name of application",
+      "sourced_at_deployment": false,
+      "policy_editable": false,
+      "designer_editable": false
+    }
+  ],
   "auxilary": {
     "healthcheck": {
-      "type": "script",
-      "interval": "15s",
-      "timeout": "2s",
-      "script": "/opt/ves-hv-collector/healthcheck.sh"
+      "type": "http",
+      "endpoint": "/heartbeat"
     },
-    "volumes": [
-      {
-        "container": {
-          "bind": "/etc/ves-hv/ssl"
-        },
-        "host": {
-          "path": "/opt/app/dcae-certificate"
-        }
-      },
-      {
-        "container": {
-          "bind": "/var/log/ONAP/dcae-hv-ves-collector"
-        },
-        "host": {
-          "path": "/var/log/ONAP/dcae-hv-ves-collector"
-        }
-      }
-    ],
     "ports": [
-      "6060:6060",
-      "6061:6061"
+      "8100:8100",
+      "8433:8433"
     ]
   },
   "artifacts": [
     {
       "type": "docker image",
-      "uri": "nexus.onap.org:10001/onap/org.onap.dcaegen2.collectors.hv-ves.hv-collector-main:1.1.0-SNAPSHOT"
+      "uri": "nexus3.onap.org:10003/onap/org.onap.dcaegen2.services.prh.prh-app-server:1.2.1-SNAPSHOT"
     }
   ]
 }

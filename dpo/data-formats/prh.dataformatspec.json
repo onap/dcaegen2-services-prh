@@ -1,15 +1,14 @@
 {
     "self": {
         "name": "prh",
-        "version": "1.2.",
+        "version": "1.2.1",
         "description": "Physical Resource Handler (PRH)"
 
     },
     "dataformatversion": "1.0.0",
     "reference": {
-        "name": "VES (NF Event Streaming) Specification",
-        "version": "30.0.1",
-        "format": "json",
-        "url": "https://gerrit.onap.org/r/gitweb?p=dcaegen2/collectors/ves.git;a=blob;f=etc/CommonEventFormat_30.0.1.json;hb=HEAD"
+        "name": "PNF Registration Handler",
+        "version": "7.1.0",
+        "format": "JSON"
     }
 }

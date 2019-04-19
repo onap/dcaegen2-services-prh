@@ -1,0 +1,11 @@
+{
+  "self": {
+    "name": "PNF_Reregistration_internal",
+    "version": "1.0.0",
+    "description": "Internal event sent by PRH for PNF re-registration"
+  },
+  "dataformatversion": "1.0.0",
+  "unstructured": {
+    "encoding": "UTF-8"
+  }
+}

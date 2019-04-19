@@ -1,0 +1,11 @@
+{
+  "self": {
+    "name": "AAI_Interaction",
+    "version": "1.0.0",
+    "description": "Messages exchanged between a microservice and AAI"
+  },
+  "dataformatversion": "1.0.0",
+  "unstructured": {
+    "encoding": "UTF-8"
+  }
+}

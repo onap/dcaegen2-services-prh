@@ -41,7 +41,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
@@ -85,18 +84,14 @@ public class DmaapConsumerJsonParser {
 
     private Flux<ConsumerDmaapModel> getConsumerDmaapModelFromJsonArray(JsonElement jsonElement) {
         LOGGER.debug("DmaapConsumerJsonParser input for parsing: {}", jsonElement);
-        if (jsonElement instanceof JsonPrimitive) {
-            LOGGER.debug("Response from DMaaP is Json primitive");
-            return Flux.empty();
-        }
 
         if (jsonElement instanceof JsonObject) {
-            LOGGER.debug("Response from DMaaP is JsonObject");
+            LOGGER.debug("Element is JsonObject");
             return create(Flux.just((JsonObject) jsonElement));
         }
 
         if (jsonElement instanceof JsonArray) {
-            LOGGER.debug("Response from DMaaP is JsonArray");
+            LOGGER.debug("Element is JsonArray");
             JsonArray jsonArray = (JsonArray) jsonElement;
             if (jsonArray.size() == 0) {
                 LOGGER.debug("Nothing to consume from DMaaP");
@@ -108,11 +103,11 @@ public class DmaapConsumerJsonParser {
                         .orElseGet(JsonObject::new)))));
         }
 
-        LOGGER.debug("DmaapConsumerJsonParser input object type not recognized ");
+        LOGGER.warn("Element is neither JSON Object or Array");
         return Flux.empty();
     }
 
-    public Optional<JsonObject> getJsonObjectFromAnArray(JsonElement element) {
+    Optional<JsonObject> getJsonObjectFromAnArray(JsonElement element) {
         JsonParser jsonParser = new JsonParser();
         return element.isJsonPrimitive() ? Optional.of(jsonParser.parse(element.getAsString()).getAsJsonObject())
             : Optional.of(jsonParser.parse(element.toString()).getAsJsonObject());

@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c9bcaa0_c6b5e58f",
+        "filename": "dpo/data-formats/prh.dataformatspec.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2019-04-25T18:57:27Z",
+      "side": 1,
+      "message": "Following data-format could be used. https://git.onap.org/dcaegen2/collectors/ves/tree/dpo/data-formats/VES-7.30.1-dataformat.json",
+      "range": {
+        "startLine": 10,
+        "startChar": 8,
+        "endLine": 12,
+        "endChar": 24
+      },
+      "revId": "690c601fc269a6ed5628091d6412460265d807fa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e625b84f_2c4ddb73",
+        "filename": "dpo/spec/prh.componentspec.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2019-04-25T18:57:27Z",
+      "side": 1,
+      "message": "This doesn\u0027t match the data-format defined",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 27
+      },
+      "revId": "690c601fc269a6ed5628091d6412460265d807fa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf78ba64_bf9b8c8a",
+        "filename": "dpo/spec/prh.componentspec.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2019-04-25T18:57:27Z",
+      "side": 1,
+      "message": "This structure is not VES if I recall; separate data-format should be defined",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 8
+      },
+      "revId": "690c601fc269a6ed5628091d6412460265d807fa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

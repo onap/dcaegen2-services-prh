@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0e91cccd_066254fe",
+        "filename": "dpo/spec/prh.componentspec.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 3773
+      },
+      "writtenOn": "2019-05-08T08:26:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1e5a05ff_03dcc9c6",
+      "range": {
+        "startLine": 3,
+        "startChar": 16,
+        "endLine": 3,
+        "endChar": 21
+      },
+      "revId": "53ad092e0245e7bcc5156a9b25840cb13ef86b7d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4908c91a_186c6135",
         "filename": "dpo/spec/prh.componentspec.json",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2019-05-07T21:27:04Z",
       "side": 1,
       "message": "to be updated to latest master image tag",
+      "range": {
+        "startLine": 135,
+        "startChar": 87,
+        "endLine": 135,
+        "endChar": 100
+      },
+      "revId": "53ad092e0245e7bcc5156a9b25840cb13ef86b7d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "af445dfa_5269f21f",
+        "filename": "dpo/spec/prh.componentspec.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 3773
+      },
+      "writtenOn": "2019-05-08T08:26:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4908c91a_186c6135",
       "range": {
         "startLine": 135,
         "startChar": 87,

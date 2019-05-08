@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0dfb116b_2384fa9c",
+        "filename": "dpo/spec/prh.componentspec.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2019-05-08T16:33:55Z",
+      "side": 1,
+      "message": "remove snapshot",
+      "range": {
+        "startLine": 135,
+        "startChar": 92,
+        "endLine": 135,
+        "endChar": 101
+      },
+      "revId": "bb77831d247d760fc6028cdf6201df969be39221",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

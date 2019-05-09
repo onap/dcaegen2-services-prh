@@ -22,6 +22,30 @@
       "revId": "bb77831d247d760fc6028cdf6201df969be39221",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6cda7309_18cb5653",
+        "filename": "dpo/spec/prh.componentspec.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 3773
+      },
+      "writtenOn": "2019-05-09T08:28:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0dfb116b_2384fa9c",
+      "range": {
+        "startLine": 135,
+        "startChar": 92,
+        "endLine": 135,
+        "endChar": 101
+      },
+      "revId": "bb77831d247d760fc6028cdf6201df969be39221",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

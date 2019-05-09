@@ -1,0 +1,10 @@
+Code-Review+1: Michal Dziedzic <michal.1.dziedzic@nokia.com>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Piotr Wielebski <piotr.wielebski@nokia.com>
+Code-Review+1: Marcin Migdal <marcin.migdal@nokia.com>
+Code-Review+2: Vijay Venkatesh Kumar <vv770d@att.com>
+Submitted-by: Vijay Venkatesh Kumar <vv770d@att.com>
+Submitted-at: Thu, 09 May 2019 20:16:00 +0000
+Reviewed-on: https://gerrit.onap.org/r/87242
+Project: dcaegen2/services/prh
+Branch: refs/heads/dublin

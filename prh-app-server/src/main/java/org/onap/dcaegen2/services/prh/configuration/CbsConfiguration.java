@@ -35,7 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import java.util.Optional;
@@ -51,25 +50,16 @@ public class CbsConfiguration implements Config {
     private MessageRouterSubscribeRequest messageRouterCBSSubscribeRequest;
     private MessageRouterPublishRequest messageRouterCBSUpdatePublishRequest;
 
-    private final ConsulConfigFileReader consulConfigFileReader;
+    private final CbsClientConfigurationResolver cbsClientConfigurationResolver;
 
-    public CbsConfiguration(ConsulConfigFileReader consulConfigFileReader) {
-        this.consulConfigFileReader = consulConfigFileReader;
+    public CbsConfiguration(CbsClientConfigurationResolver cbsClientConfigurationResolver) {
+        this.cbsClientConfigurationResolver = cbsClientConfigurationResolver;
     }
 
     public void runTask() {
-        Flux.defer(this::resolveCbsClientConfiguration)
+        Flux.defer(cbsClientConfigurationResolver::resolveCbsClientConfiguration)
             .subscribeOn(Schedulers.parallel())
             .subscribe(this::parsingConfigSuccess, this::parsingConfigError);
-    }
-
-    private Mono<CbsClientConfiguration> resolveCbsClientConfiguration() {
-        try {
-            return Mono.just(CbsClientConfiguration.fromEnvironment());
-        } catch(Exception e){
-            parsingConfigError(e);
-            return consulConfigFileReader.evaluate();
-        }
     }
 
     private void parsingConfigSuccess(CbsClientConfiguration cbsClientConfiguration) {

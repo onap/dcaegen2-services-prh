@@ -22,7 +22,7 @@ package org.onap.dcaegen2.services.prh;
 
 import java.util.Map;
 import java.util.UUID;
-import org.onap.dcaegen2.services.prh.configuration.ConsulConfigFileReader;
+
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.providers.CloudConfigurationClient;
 import org.slf4j.MDC;
 import org.springframework.boot.SpringApplication;
@@ -65,8 +65,4 @@ public class MainApp {
         return new CloudConfigurationClient();
     }
 
-    @Bean
-    ConsulConfigFileReader getConfigFileLoader(){
-        return new ConsulConfigFileReader();
-    }
 }

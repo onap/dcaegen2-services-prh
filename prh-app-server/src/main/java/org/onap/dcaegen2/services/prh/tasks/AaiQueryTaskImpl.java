@@ -20,7 +20,11 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.prh.model.*;
+import org.onap.dcaegen2.services.prh.model.AaiPnfResultModel;
+import org.onap.dcaegen2.services.prh.model.AaiServiceInstanceResultModel;
+import org.onap.dcaegen2.services.prh.model.Relationship;
+import org.onap.dcaegen2.services.prh.model.RelationshipData;
+import org.onap.dcaegen2.services.prh.model.RelationshipDict;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.AaiHttpClient;
 import org.onap.dcaegen2.services.sdk.rest.services.model.AaiModel;
 import org.onap.dcaegen2.services.sdk.rest.services.model.AaiServiceInstanceQueryModel;
@@ -35,11 +39,11 @@ import java.util.stream.Stream;
 
 @Component
 public class AaiQueryTaskImpl implements AaiQueryTask {
-    public final static String ACTIVE_STATUS = "Active";
-    public final static String RELATED_TO = "service-instance";
-    public final static String CUSTOMER = "customer.global-customer-id";
-    public final static String SERVICE_TYPE = "service-subscription.service-type";
-    public final static String SERVICE_INSTANCE_ID = "service-instance.service-instance-id";
+    static final String ACTIVE_STATUS = "Active";
+    static final String RELATED_TO = "service-instance";
+    static final String CUSTOMER = "customer.global-customer-id";
+    static final  String SERVICE_TYPE = "service-subscription.service-type";
+    static final String SERVICE_INSTANCE_ID = "service-instance.service-instance-id";
 
     private final AaiHttpClient<AaiModel, AaiPnfResultModel> getPnfModelClient;
     private final AaiHttpClient<AaiServiceInstanceQueryModel, AaiServiceInstanceResultModel> getServiceClient;

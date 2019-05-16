@@ -25,8 +25,8 @@ import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientC
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.CbsClientFactory;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.CbsRequests;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.model.EnvProperties;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapPublisherConfiguration;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeRequest;
 import org.onap.dcaegen2.services.sdk.rest.services.model.logging.RequestDiagnosticContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,9 +50,9 @@ import java.util.Optional;
 public class CbsConfiguration extends PrhAppConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(CbsConfiguration.class);
     private AaiClientConfiguration aaiClientCBSConfiguration;
-    private DmaapPublisherConfiguration dmaapPublisherCBSConfiguration;
-    private DmaapConsumerConfiguration dmaapConsumerCBSConfiguration;
-    private DmaapPublisherConfiguration dmaapUpdatePublisherCBSConfiguration;
+    private MessageRouterPublishRequest messageRouterCBSPublishRequest;
+    private MessageRouterSubscribeRequest messageRouterCBSSubscribeRequest;
+    private MessageRouterPublishRequest messageRouterCBSUpdatePublishRequest;
 
     @Autowired
     private ConsulConfigFileReader consulConfigFileReader;
@@ -82,10 +82,10 @@ public class CbsConfiguration extends PrhAppConfig {
     private void parseCBSConfig(JsonObject jsonObject) {
         LOGGER.info("Received application configuration: {}", jsonObject);
         CbsContentParser consulConfigurationParser = new CbsContentParser(jsonObject);
-        dmaapPublisherCBSConfiguration = consulConfigurationParser.getDmaapPublisherConfig();
-        dmaapUpdatePublisherCBSConfiguration = consulConfigurationParser.getDmaapUpdatePublisherConfig();
+        messageRouterCBSPublishRequest = consulConfigurationParser.getMessageRouterPublishRequest();
+        messageRouterCBSUpdatePublishRequest = consulConfigurationParser.getMessageRouterUpdatePublishRequest();
         aaiClientCBSConfiguration = consulConfigurationParser.getAaiClientConfig();
-        dmaapConsumerCBSConfiguration = consulConfigurationParser.getDmaapConsumerConfig();
+        messageRouterCBSSubscribeRequest = consulConfigurationParser.getMessageRouterSubscribeRequest();
     }
 
     private void parsingConfigError(Throwable throwable) {
@@ -97,13 +97,13 @@ public class CbsConfiguration extends PrhAppConfig {
     }
 
     @Override
-    public DmaapPublisherConfiguration getDmaapPublisherConfiguration() {
-        return Optional.ofNullable(dmaapPublisherCBSConfiguration).orElse(super.getDmaapPublisherConfiguration());
+    public MessageRouterPublishRequest getMessageRouterPublishRequest() {
+        return Optional.ofNullable(messageRouterCBSPublishRequest).orElse(super.getMessageRouterPublishRequest());
     }
 
     @Override
-    public DmaapPublisherConfiguration getDmaapUpdatePublisherConfiguration() {
-        return Optional.ofNullable(dmaapUpdatePublisherCBSConfiguration).orElse(super.getDmaapPublisherConfiguration());
+    public MessageRouterPublishRequest getMessageRouterUpdatePublishRequest() {
+        return Optional.ofNullable(messageRouterCBSUpdatePublishRequest).orElse(super.getMessageRouterUpdatePublishRequest());
     }
 
     @Override
@@ -112,7 +112,7 @@ public class CbsConfiguration extends PrhAppConfig {
     }
 
     @Override
-    public DmaapConsumerConfiguration getDmaapConsumerConfiguration() {
-        return Optional.ofNullable(dmaapConsumerCBSConfiguration).orElse(super.getDmaapConsumerConfiguration());
+    public MessageRouterSubscribeRequest getMessageRouterSubscribeRequest() {
+        return Optional.ofNullable(messageRouterCBSSubscribeRequest).orElse(super.getMessageRouterSubscribeRequest());
     }
 }

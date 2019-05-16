@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d139a8e3_2b62d0d6",
+        "filename": "pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2019-05-16T12:40:46Z",
+      "side": 1,
+      "message": "This version should be released first and snapshot should be removed before PRH container can be released.",
+      "range": {
+        "startLine": 53,
+        "startChar": 17,
+        "endLine": 53,
+        "endChar": 31
+      },
+      "revId": "82314ee7f47d6d8a21cc183f8994fe5c42174150",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

@@ -20,19 +20,17 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-
-import javax.net.ssl.SSLException;
 import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapPublisherConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.producer.DMaaPPublisherReactiveHttpClient;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
 import java.util.function.Supplier;
+
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
@@ -47,14 +45,10 @@ public class DmaapProducerTaskSpy {
      */
     @Bean
     @Primary
-    public DmaapPublisherTask registerSimpleDmaapPublisherTask() throws SSLException {
-        final CbsConfiguration cbsConfiguration = spy(CbsConfiguration.class);
-        final Supplier<DmaapPublisherConfiguration> configSupplier = () -> cbsConfiguration.getDmaapPublisherConfiguration();
-        doReturn(mock(DmaapPublisherConfiguration.class)).when(cbsConfiguration).getDmaapPublisherConfiguration();
-        final DmaapPublisherTaskImpl dmaapPublisherTask = spy(new DmaapPublisherTaskImpl(configSupplier));
-        final DMaaPPublisherReactiveHttpClient extendedDmaapProducerHttpClient = mock(
-            DMaaPPublisherReactiveHttpClient.class);
-        doReturn(extendedDmaapProducerHttpClient).when(dmaapPublisherTask).resolveClient();
-        return dmaapPublisherTask;
+    public DmaapPublisherTask registerSimpleDmaapPublisherTask() {
+        final CbsConfiguration cbsConfiguration = mock(CbsConfiguration.class);
+        final Supplier<MessageRouterPublishRequest> configSupplier = cbsConfiguration::getMessageRouterPublishRequest;
+        doReturn(mock(MessageRouterPublishRequest.class)).when(cbsConfiguration).getMessageRouterPublishRequest();
+        return spy(new DmaapPublisherTaskImpl(configSupplier, new MessageRouterPublisherResolver()));
     }
 }

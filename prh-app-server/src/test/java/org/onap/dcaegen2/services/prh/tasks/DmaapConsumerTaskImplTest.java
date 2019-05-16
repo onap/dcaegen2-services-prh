@@ -20,29 +20,29 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.onap.dcaegen2.services.prh.TestAppConfiguration.createDefaultDmaapConsumerConfiguration;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.consumer.ConsumerReactiveHttpClientFactory;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.consumer.DMaaPConsumerReactiveHttpClient;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.DmaapClientFactory;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterSubscribeResponse;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeRequest;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeResponse;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.config.MessageRouterSubscriberConfig;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.*;
+import static org.onap.dcaegen2.services.prh.TestAppConfiguration.createDefaultMessageRouterSubscribeRequest;
 
 
 /**
@@ -52,18 +52,17 @@ class DmaapConsumerTaskImplTest {
 
     private static ConsumerDmaapModel consumerDmaapModel;
     private static DmaapConsumerTaskImpl dmaapConsumerTask;
-    private static DMaaPConsumerReactiveHttpClient dMaaPConsumerReactiveHttpClient;
-    private static DmaapConsumerConfiguration dmaapConsumerConfiguration;
+    private static MessageRouterSubscribeRequest messageRouterSubscribeRequest;
     private static String message;
     private static String messageContentEmpty;
     private static JsonArray jsonArray;
     private static JsonArray jsonArrayWrongContent;
-
+    private static MessageRouterSubscribeResponse messageRouterSubscribeResponse;
     private static CbsConfiguration cbsConfiguration;
 
     @BeforeAll
     static void setUp() {
-        dmaapConsumerConfiguration = createDefaultDmaapConsumerConfiguration();
+        messageRouterSubscribeRequest = createDefaultMessageRouterSubscribeRequest();
 
         JsonObject jsonObject = new JsonParser().parse("{\n"
             + "        \"attachmentPoint\": \"bla-bla-30-3\",\n"
@@ -119,7 +118,7 @@ class DmaapConsumerTaskImplTest {
         Flux<ConsumerDmaapModel> response = dmaapConsumerTask.execute("Sample input");
 
         //then
-        verify(dMaaPConsumerReactiveHttpClient).getDMaaPConsumerResponse(Optional.empty());
+        verify(DmaapClientFactory.createMessageRouterSubscriber(MessageRouterSubscriberConfig.createDefault())).get(messageRouterSubscribeRequest);
         assertNull(response.blockFirst());
     }
 
@@ -132,19 +131,15 @@ class DmaapConsumerTaskImplTest {
         Flux<ConsumerDmaapModel> response = dmaapConsumerTask.execute("Sample input");
 
         //then
-        verify(dMaaPConsumerReactiveHttpClient).getDMaaPConsumerResponse(Optional.empty());
+        verify(DmaapClientFactory.createMessageRouterSubscriber(MessageRouterSubscriberConfig.createDefault())).get(messageRouterSubscribeRequest);
         assertEquals(consumerDmaapModel, response.blockFirst());
     }
 
 
-
-    private void prepareMocksForDmaapConsumer(Optional<JsonArray> message) throws Exception {
-        dMaaPConsumerReactiveHttpClient = mock(DMaaPConsumerReactiveHttpClient.class);
-        when(dMaaPConsumerReactiveHttpClient.getDMaaPConsumerResponse(Optional.empty()))
-            .thenReturn(Mono.just(message.get()));
-        when(cbsConfiguration.getDmaapConsumerConfiguration()).thenReturn(dmaapConsumerConfiguration);
-        ConsumerReactiveHttpClientFactory httpClientFactory = mock(ConsumerReactiveHttpClientFactory.class);
-        doReturn(dMaaPConsumerReactiveHttpClient).when(httpClientFactory).create(dmaapConsumerConfiguration);
-        dmaapConsumerTask = new DmaapConsumerTaskImpl(cbsConfiguration, new DmaapConsumerJsonParser(), httpClientFactory);
+    private void prepareMocksForDmaapConsumer(Optional<JsonArray> message) {
+        when(verify(DmaapClientFactory.createMessageRouterSubscriber(MessageRouterSubscriberConfig.createDefault())).get(messageRouterSubscribeRequest))
+                .thenReturn(Mono.just(ImmutableMessageRouterSubscribeResponse.builder().items(message.get()).build()));
+        when(cbsConfiguration.getMessageRouterSubscribeRequest()).thenReturn(messageRouterSubscribeRequest);
+        dmaapConsumerTask = new DmaapConsumerTaskImpl(cbsConfiguration, new DmaapConsumerJsonParser());
     }
 }

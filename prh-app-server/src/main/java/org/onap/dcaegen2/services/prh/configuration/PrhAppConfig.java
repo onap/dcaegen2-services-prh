@@ -21,8 +21,8 @@
 package org.onap.dcaegen2.services.prh.configuration;
 
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapPublisherConfiguration;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,11 +47,11 @@ public abstract class PrhAppConfig implements Config {
 
     AaiClientConfiguration aaiClientConfiguration;
 
-    DmaapConsumerConfiguration dmaapConsumerConfiguration;
+    MessageRouterSubscribeRequest messageRouterSubscribeRequest;
 
-    DmaapPublisherConfiguration dmaapPublisherConfiguration;
+    MessageRouterPublishRequest messageRouterPublishRequest;
 
-    DmaapPublisherConfiguration dmaapUpdatePublisherConfiguration;
+    MessageRouterPublishRequest messageRouterUpdatePublishRequest;
 
     @Value("classpath:git_info.json")
     private Resource gitInfo;
@@ -67,8 +67,8 @@ public abstract class PrhAppConfig implements Config {
     }
 
     @Override
-    public DmaapConsumerConfiguration getDmaapConsumerConfiguration() {
-        return dmaapConsumerConfiguration;
+    public MessageRouterSubscribeRequest getMessageRouterSubscribeRequest() {
+        return messageRouterSubscribeRequest;
     }
 
     @Override
@@ -77,12 +77,12 @@ public abstract class PrhAppConfig implements Config {
     }
 
     @Override
-    public DmaapPublisherConfiguration getDmaapPublisherConfiguration() {
-        return dmaapPublisherConfiguration;
+    public MessageRouterPublishRequest getMessageRouterPublishRequest() {
+        return messageRouterPublishRequest;
     }
 
     @Override
-    public DmaapPublisherConfiguration getDmaapUpdatePublisherConfiguration() {
-        return dmaapUpdatePublisherConfiguration;
+    public MessageRouterPublishRequest getMessageRouterUpdatePublishRequest() {
+        return messageRouterUpdatePublishRequest;
     }
 }

@@ -30,11 +30,12 @@ import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientC
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.ImmutableAaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.streams.DataStreams;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.streams.StreamFromGsonParsers;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapPublisherConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.ImmutableDmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.ImmutableDmaapPublisherConfiguration;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterPublishRequest;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterSubscribeRequest;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeRequest;
 
+import java.time.Duration;
 import java.util.Map;
 
 import static org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.streams.StreamPredicates.streamWithName;
@@ -47,7 +48,6 @@ class CbsContentParser {
     private static final String SECURITY_TRUST_STORE_PASS_PATH = "security.trustStorePasswordPath";
     private static final String SECURITY_KEY_STORE_PATH = "security.keyStorePath";
     private static final String SECURITY_KEY_STORE_PASS_PATH = "security.keyStorePasswordPath";
-    private static final String SECURITY_ENABLE_DMAAP_CERT_AUTH = "security.enableDmaapCertAuth";
     private static final String CONFIG = "config";
     private static final String PNF_UPDATE = "pnf-update";
     private static final String PNF_READY = "pnf-ready";
@@ -59,48 +59,24 @@ class CbsContentParser {
         this.jsonObject = jsonObject.getAsJsonObject(CONFIG);
     }
 
-    DmaapPublisherConfiguration getDmaapPublisherConfig() {
+    MessageRouterPublishRequest getMessageRouterPublishRequest() {
         RawDataStream<JsonObject> sink = DataStreams.namedSinks(jsonObject).find(streamWithName(PNF_READY)).get();
         MessageRouterSink parsedSink = StreamFromGsonParsers.messageRouterSinkParser().unsafeParse(sink);
 
-        return new ImmutableDmaapPublisherConfiguration.Builder()
-            .endpointUrl(parsedSink.topicUrl())
-            .dmaapTopicName(jsonObject.get("dmaap.dmaapProducerConfiguration.dmaapTopicName").getAsString())
-            .dmaapUserPassword(jsonObject.get("dmaap.dmaapProducerConfiguration.dmaapUserPassword").getAsString())
-            .dmaapPortNumber(jsonObject.get("dmaap.dmaapProducerConfiguration.dmaapPortNumber").getAsInt())
-            .dmaapProtocol(jsonObject.get("dmaap.dmaapProducerConfiguration.dmaapProtocol").getAsString())
-            .dmaapContentType(jsonObject.get("dmaap.dmaapProducerConfiguration.dmaapContentType").getAsString())
-            .dmaapHostName(jsonObject.get("dmaap.dmaapProducerConfiguration.dmaapHostName").getAsString())
-            .dmaapUserName(jsonObject.get("dmaap.dmaapProducerConfiguration.dmaapUserName").getAsString())
-            .dmaapUserPassword(jsonObject.get("dmaap.dmaapProducerConfiguration.dmaapUserPassword").getAsString())
-            .trustStorePath(jsonObject.get(SECURITY_TRUST_STORE_PATH).getAsString())
-            .trustStorePasswordPath(jsonObject.get(SECURITY_TRUST_STORE_PASS_PATH).getAsString())
-            .keyStorePath(jsonObject.get(SECURITY_KEY_STORE_PATH).getAsString())
-            .keyStorePasswordPath(jsonObject.get(SECURITY_KEY_STORE_PASS_PATH).getAsString())
-            .enableDmaapCertAuth(jsonObject.get(SECURITY_ENABLE_DMAAP_CERT_AUTH).getAsBoolean())
-            .build();
+        return ImmutableMessageRouterPublishRequest.builder()
+                .contentType(jsonObject.get("dmaap.dmaapProducerConfiguration.dmaapContentType").getAsString())
+                .sinkDefinition(parsedSink)
+                .build();
     }
 
-    DmaapPublisherConfiguration getDmaapUpdatePublisherConfig() {
+    MessageRouterPublishRequest getMessageRouterUpdatePublishRequest() {
         RawDataStream<JsonObject> sink = DataStreams.namedSinks(jsonObject).find(streamWithName(PNF_UPDATE)).get();
         MessageRouterSink parsedSink = StreamFromGsonParsers.messageRouterSinkParser().unsafeParse(sink);
 
-        return new ImmutableDmaapPublisherConfiguration.Builder()
-            .endpointUrl(parsedSink.topicUrl())
-            .dmaapTopicName(jsonObject.get("dmaap.dmaapUpdateProducerConfiguration.dmaapTopicName").getAsString())
-            .dmaapUserPassword(jsonObject.get("dmaap.dmaapUpdateProducerConfiguration.dmaapUserPassword").getAsString())
-            .dmaapPortNumber(jsonObject.get("dmaap.dmaapUpdateProducerConfiguration.dmaapPortNumber").getAsInt())
-            .dmaapProtocol(jsonObject.get("dmaap.dmaapUpdateProducerConfiguration.dmaapProtocol").getAsString())
-            .dmaapContentType(jsonObject.get("dmaap.dmaapUpdateProducerConfiguration.dmaapContentType").getAsString())
-            .dmaapHostName(jsonObject.get("dmaap.dmaapUpdateProducerConfiguration.dmaapHostName").getAsString())
-            .dmaapUserName(jsonObject.get("dmaap.dmaapUpdateProducerConfiguration.dmaapUserName").getAsString())
-            .dmaapUserPassword(jsonObject.get("dmaap.dmaapUpdateProducerConfiguration.dmaapUserPassword").getAsString())
-            .trustStorePath(jsonObject.get(SECURITY_TRUST_STORE_PATH).getAsString())
-            .trustStorePasswordPath(jsonObject.get(SECURITY_TRUST_STORE_PASS_PATH).getAsString())
-            .keyStorePath(jsonObject.get(SECURITY_KEY_STORE_PATH).getAsString())
-            .keyStorePasswordPath(jsonObject.get(SECURITY_KEY_STORE_PASS_PATH).getAsString())
-            .enableDmaapCertAuth(jsonObject.get(SECURITY_ENABLE_DMAAP_CERT_AUTH).getAsBoolean())
-            .build();
+        return ImmutableMessageRouterPublishRequest.builder()
+                .contentType(jsonObject.get("dmaap.dmaapProducerConfiguration.dmaapContentType").getAsString())
+                .sinkDefinition(parsedSink)
+                .build();
     }
 
     AaiClientConfiguration getAaiClientConfig() {
@@ -126,28 +102,15 @@ class CbsContentParser {
             .build();
     }
 
-    DmaapConsumerConfiguration getDmaapConsumerConfig() {
+    MessageRouterSubscribeRequest getMessageRouterSubscribeRequest() {
         RawDataStream<JsonObject> source = DataStreams.namedSources(jsonObject).find(streamWithName(VES_REG_OUTPUT)).get();
         MessageRouterSource parsedSource = StreamFromGsonParsers.messageRouterSourceParser().unsafeParse(source);
 
-        return new ImmutableDmaapConsumerConfiguration.Builder()
-            .endpointUrl(parsedSource.topicUrl())
-            .timeoutMs(jsonObject.get("dmaap.dmaapConsumerConfiguration.timeoutMs").getAsInt())
-            .dmaapHostName(jsonObject.get("dmaap.dmaapConsumerConfiguration.dmaapHostName").getAsString())
-            .dmaapUserName(jsonObject.get("dmaap.dmaapConsumerConfiguration.dmaapUserName").getAsString())
-            .dmaapUserPassword(jsonObject.get("dmaap.dmaapConsumerConfiguration.dmaapUserPassword").getAsString())
-            .dmaapTopicName(jsonObject.get("dmaap.dmaapConsumerConfiguration.dmaapTopicName").getAsString())
-            .dmaapPortNumber(jsonObject.get("dmaap.dmaapConsumerConfiguration.dmaapPortNumber").getAsInt())
-            .dmaapContentType(jsonObject.get("dmaap.dmaapConsumerConfiguration.dmaapContentType").getAsString())
-            .messageLimit(jsonObject.get("dmaap.dmaapConsumerConfiguration.messageLimit").getAsInt())
-            .dmaapProtocol(jsonObject.get("dmaap.dmaapConsumerConfiguration.dmaapProtocol").getAsString())
-            .consumerId(jsonObject.get("dmaap.dmaapConsumerConfiguration.consumerId").getAsString())
-            .consumerGroup(jsonObject.get("dmaap.dmaapConsumerConfiguration.consumerGroup").getAsString())
-            .trustStorePath(jsonObject.get(SECURITY_TRUST_STORE_PATH).getAsString())
-            .trustStorePasswordPath(jsonObject.get(SECURITY_TRUST_STORE_PASS_PATH).getAsString())
-            .keyStorePath(jsonObject.get(SECURITY_KEY_STORE_PATH).getAsString())
-            .keyStorePasswordPath(jsonObject.get(SECURITY_KEY_STORE_PASS_PATH).getAsString())
-            .enableDmaapCertAuth(jsonObject.get(SECURITY_ENABLE_DMAAP_CERT_AUTH).getAsBoolean())
-            .build();
+        return ImmutableMessageRouterSubscribeRequest.builder()
+                .consumerGroup(jsonObject.get("dmaap.dmaapConsumerConfiguration.consumerGroup").getAsString())
+                .sourceDefinition(parsedSource)
+                .consumerId(jsonObject.get("dmaap.dmaapConsumerConfiguration.consumerId").getAsString())
+                .timeout(Duration.ofMillis(jsonObject.get("dmaap.dmaapConsumerConfiguration.timeoutMs").getAsLong()))
+                .build();
     }
 }

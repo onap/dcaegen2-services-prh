@@ -20,10 +20,10 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import javax.net.ssl.SSLException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.producer.DMaaPPublisherReactiveHttpClient;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishResponse;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -31,16 +31,8 @@ import reactor.core.publisher.Mono;
  */
 public interface DmaapPublisherTask {
 
-    /**
-     *
-     * Does not work reactive version with DMaaP MR  - to be investigated why in future
-     * As WA plesae use Mono<HttpResponse> executeWithApache(ConsumerDmaapModel consumerDmaapModel);
-     * */
-    @Deprecated
-    Mono<org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse>
-        execute(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException, SSLException;
+
+    Flux<MessageRouterPublishResponse> execute(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException;
 
     Mono<org.apache.http.HttpResponse> executeWithApache(ConsumerDmaapModel consumerDmaapModel);
-
-    DMaaPPublisherReactiveHttpClient resolveClient() throws SSLException;;
 }

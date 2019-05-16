@@ -32,20 +32,13 @@ import org.onap.dcaegen2.services.prh.model.bbs.ImmutableRelationshipWrapper;
 import org.onap.dcaegen2.services.prh.model.bbs.RelationshipWrapper;
 import org.onap.dcaegen2.services.prh.model.utils.GsonSerializer;
 import org.onap.dcaegen2.services.prh.model.utils.HttpUtils;
-import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
-import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.ImmutableHttpRequest;
-import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RequestBody;
-import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RxHttpClient;
+import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.*;
 import org.onap.dcaegen2.services.sdk.rest.services.uri.URI.URIBuilder;
-import org.onap.dcaegen2.services.sdk.security.ssl.SslFactory;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-
-
 
 import java.util.Arrays;
 import java.util.List;
@@ -66,7 +59,7 @@ public class BbsActionsTaskImpl implements BbsActionsTask {
 
     @Autowired
     BbsActionsTaskImpl(Config config) {
-        this(config, RxHttpClient.create(new SslFactory().createInsecureClientContext()));
+        this(config, RxHttpClientFactory.createInsecure());
     }
 
     BbsActionsTaskImpl(Config config, RxHttpClient httpClient) {

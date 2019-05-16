@@ -46,6 +46,7 @@ import java.util.stream.StreamSupport;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -77,9 +78,8 @@ public class DmaapConsumerJsonParser {
      * @param monoMessage - results from DMaaP
      * @return reactive DMaaPModel
      */
-    public Flux<ConsumerDmaapModel> getJsonObject(Mono<JsonElement> monoMessage) {
-        return monoMessage
-            .flatMapMany(this::getConsumerDmaapModelFromJsonArray);
+    public Flux<ConsumerDmaapModel> getJsonObject(Mono<MessageRouterSubscribeResponse> monoMessage) {
+        return monoMessage.flatMapMany(msgRouterResponse -> getConsumerDmaapModelFromJsonArray(msgRouterResponse.items()));
     }
 
     private Flux<ConsumerDmaapModel> getConsumerDmaapModelFromJsonArray(JsonElement jsonElement) {

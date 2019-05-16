@@ -23,6 +23,8 @@ package org.onap.dcaegen2.services.prh.configuration;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapConsumerConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapPublisherConfiguration;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeRequest;
 import org.springframework.core.io.Resource;
 
 /**
@@ -32,12 +34,12 @@ public interface Config {
 
     Resource getGitInfo();
 
-    DmaapConsumerConfiguration getDmaapConsumerConfiguration();
+    MessageRouterSubscribeRequest getMessageRouterSubscribeRequest();
 
     AaiClientConfiguration getAaiClientConfiguration();
 
-    DmaapPublisherConfiguration getDmaapPublisherConfiguration();
+    MessageRouterPublishRequest getMessageRouterPublishRequest();
 
-    DmaapPublisherConfiguration getDmaapUpdatePublisherConfiguration();
+    MessageRouterPublishRequest getMessageRouterUpdatePublishRequest();
 
 }

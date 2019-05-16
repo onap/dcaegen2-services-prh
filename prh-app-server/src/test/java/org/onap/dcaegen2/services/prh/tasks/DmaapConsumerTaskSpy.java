@@ -20,18 +20,15 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-
-import javax.net.ssl.SSLException;
-
 import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.consumer.DMaaPConsumerReactiveHttpClient;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 
 
 /**
@@ -47,13 +44,10 @@ public class DmaapConsumerTaskSpy {
      */
     @Bean
     @Primary
-    public DmaapConsumerTask registerSimpleDmaapConsumerTask() throws SSLException {
+    public DmaapConsumerTask registerSimpleDmaapConsumerTask() {
         CbsConfiguration cbsConfiguration = spy(CbsConfiguration.class);
-        doReturn(mock(DmaapConsumerConfiguration.class)).when(cbsConfiguration).getDmaapConsumerConfiguration();
+        doReturn(mock(MessageRouterPublishRequest.class)).when(cbsConfiguration).getMessageRouterPublishRequest();
         DmaapConsumerTaskImpl dmaapConsumerTask = spy(new DmaapConsumerTaskImpl(cbsConfiguration));
-        DMaaPConsumerReactiveHttpClient dmaapConsumerReactiveHttpClient = mock(
-            DMaaPConsumerReactiveHttpClient.class);
-        doReturn(dmaapConsumerReactiveHttpClient).when(dmaapConsumerTask).resolveClient();
         return dmaapConsumerTask;
     }
 }

@@ -31,12 +31,12 @@ public class DmaapPublisherTaskConfig {
     @Bean(name = "ReadyPublisherTask")
     @Autowired
     public DmaapPublisherTask getReadyPublisherTask(final Config config) {
-        return new DmaapPublisherTaskImpl(config::getDmaapPublisherConfiguration);
+        return new DmaapPublisherTaskImpl(config::getMessageRouterPublishRequest);
     }
 
     @Bean(name = "UpdatePublisherTask")
     @Autowired
     public DmaapPublisherTask getUpdatePublisherTask(final Config config) {
-        return new DmaapPublisherTaskImpl(config::getDmaapUpdatePublisherConfiguration);
+        return new DmaapPublisherTaskImpl(config::getMessageRouterUpdatePublishRequest);
     }
 }

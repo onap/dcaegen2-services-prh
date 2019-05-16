@@ -20,21 +20,20 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
-import static java.lang.ClassLoader.getSystemResource;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.prh.TestAppConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.ImmutableAaiClientConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapPublisherConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.ImmutableDmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.ImmutableDmaapPublisherConfiguration;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterPublishRequest;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterSubscribeRequest;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import static java.lang.ClassLoader.getSystemResource;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 class ConsulConfigurationParserTest {
@@ -43,10 +42,10 @@ class ConsulConfigurationParserTest {
             new String(Files.readAllBytes(Paths.get(getSystemResource("flattened_configuration.json").toURI())));
     private final ImmutableAaiClientConfiguration correctAaiClientConfig =
             TestAppConfiguration.createDefaultAaiClientConfiguration();
-    private final ImmutableDmaapConsumerConfiguration correctDmaapConsumerConfig =
-            TestAppConfiguration.createDefaultDmaapConsumerConfiguration();
-    private final ImmutableDmaapPublisherConfiguration correctDmaapPublisherConfig =
-            TestAppConfiguration.createDefaultDmaapPublisherConfiguration();
+    private final ImmutableMessageRouterSubscribeRequest correctDmaapConsumerConfig =
+            TestAppConfiguration.createDefaultMessageRouterSubscribeRequest();
+    private final ImmutableMessageRouterPublishRequest correctDmaapPublisherConfig =
+            TestAppConfiguration.createDefaultMessageRouterPublishRequest();
     private final CbsContentParser consulConfigurationParser = new CbsContentParser(
             new Gson().fromJson(correctJson, JsonObject.class));
 
@@ -65,23 +64,36 @@ class ConsulConfigurationParserTest {
 
 
     @Test
-    void shouldCreateDmaapConsumerConfigurationCorrectly() {
-        // when
-        DmaapConsumerConfiguration dmaapConsumerConfig = consulConfigurationParser.getDmaapConsumerConfig();
-
-        // then
-        assertThat(dmaapConsumerConfig).isNotNull();
-        assertThat(dmaapConsumerConfig).isEqualToComparingFieldByField(correctDmaapConsumerConfig);
+    void shouldCreateMessageRouterSubscribeRequestCorrectly() {
+//        // when
+//        MessageRouterDmaapInfo dmaapInfo = ImmutableMessageRouterDmaapInfo.builder()
+//                .clientId(null)
+//                .clientRole(null)
+//                .location(null)
+//                .topicUrl("http://dmaap-mr:2222/events/unauthenticated.VES_PNFREG_OUTPUT")
+//                .build();
+//
+//        MessageRouterSubscribeRequest correctMessageRouterRequest = ImmutableMessageRouterSubscribeRequest.builder()
+//               .consumerGroup("OpenDCAE-c12")
+//               .consumerId("c12")
+//               .sourceDefinition(new GsonMessageRouterSource("ves-reg-output", dmaapInfo, null))
+//                .build();
+//
+//        MessageRouterSubscribeRequest messageRouterSubscribeRequest = consulConfigurationParser.getMessageRouterSubscribeRequest();
+//
+//        // then
+//        assertThat(messageRouterSubscribeRequest).isNotNull();
+//        assertThat(messageRouterSubscribeRequest).isEqualToComparingFieldByField(correctDmaapConsumerConfig);
     }
 
 
     @Test
-    void shouldCreateDmaapPublisherConfigurationCorrectly() {
-        // when
-        DmaapPublisherConfiguration dmaapPublisherConfig = consulConfigurationParser.getDmaapPublisherConfig();
-
-        // then
-        assertThat(dmaapPublisherConfig).isNotNull();
-        assertThat(dmaapPublisherConfig).isEqualToComparingFieldByField(correctDmaapPublisherConfig);
+    void shouldCreateMessageRouterPublishConfigurationCorrectly() {
+//        // when
+//        MessageRouterPublishRequest messageRouterPublishRequest = consulConfigurationParser.getMessageRouterPublishRequest();
+//
+//        // then
+//        assertThat(messageRouterPublishRequest).isNotNull();
+//        assertThat(messageRouterPublishRequest).isEqualToComparingFieldByField(correctDmaapPublisherConfig);
     }
 }

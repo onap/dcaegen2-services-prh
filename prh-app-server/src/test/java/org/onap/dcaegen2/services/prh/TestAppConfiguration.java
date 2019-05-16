@@ -20,51 +20,38 @@
 
 package org.onap.dcaegen2.services.prh;
 
+import org.onap.dcaegen2.services.sdk.model.streams.dmaap.ImmutableMessageRouterSink;
+import org.onap.dcaegen2.services.sdk.model.streams.dmaap.ImmutableMessageRouterSource;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.ImmutableAaiClientConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.ImmutableDmaapConsumerConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.ImmutableDmaapPublisherConfiguration;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterPublishRequest;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterSubscribeRequest;
+
+import java.time.Duration;
 
 
 public class TestAppConfiguration {
-    public static ImmutableDmaapConsumerConfiguration createDefaultDmaapConsumerConfiguration() {
-        return new ImmutableDmaapConsumerConfiguration.Builder()
-                .endpointUrl("http://dmaap-mr:2222/events/unauthenticated.VES_PNFREG_OUTPUT")
+    public static ImmutableMessageRouterSubscribeRequest createDefaultMessageRouterSubscribeRequest() {
+        return ImmutableMessageRouterSubscribeRequest.builder()
                 .consumerGroup("OpenDCAE-c12")
+                .sourceDefinition(ImmutableMessageRouterSource.builder()
+                        .name("the topic")
+                        .topicUrl(String.format("http://%s:%d/events/TOPIC", "www", 1234))
+                        .build())
                 .consumerId("c12")
-                .dmaapContentType("application/json")
-                .dmaapHostName("message-router.onap.svc.cluster.local")
-                .dmaapPortNumber(3904)
-                .dmaapProtocol("http")
-                .dmaapUserName("admin")
-                .dmaapUserPassword("admin")
-                .trustStorePath("/opt/app/prh/local/org.onap.prh.trust.jks")
-                .trustStorePasswordPath("change_it")
-                .keyStorePath("/opt/app/prh/local/org.onap.prh.p12")
-                .keyStorePasswordPath("change_it")
-                .enableDmaapCertAuth(false)
-                .dmaapTopicName("/events/unauthenticated.SEC_OTHER_OUTPUT")
-                .timeoutMs(-1)
-                .messageLimit(-1)
+                .timeout(Duration.ofMillis(1))
                 .build();
     }
 
-    public static ImmutableDmaapPublisherConfiguration createDefaultDmaapPublisherConfiguration() {
-        return new ImmutableDmaapPublisherConfiguration.Builder()
-                .endpointUrl("http://dmaap-mr:2222/events/unauthenticated.PNF_READY")
-                .dmaapContentType("application/json")
-                .dmaapHostName("message-router.onap.svc.cluster.local")
-                .dmaapPortNumber(3904)
-                .dmaapProtocol("http")
-                .dmaapUserName("admin")
-                .dmaapUserPassword("admin")
-                .trustStorePath("/opt/app/prh/local/org.onap.prh.trust.jks")
-                .trustStorePasswordPath("change_it")
-                .keyStorePath("/opt/app/prh/local/org.onap.prh.p12")
-                .keyStorePasswordPath("change_it")
-                .enableDmaapCertAuth(false)
-                .dmaapTopicName("/events/unauthenticated.PNF_READY")
+    public static ImmutableMessageRouterPublishRequest createDefaultMessageRouterPublishRequest() {
+        return ImmutableMessageRouterPublishRequest.builder()
+                .contentType("application/json")
+                .sinkDefinition(ImmutableMessageRouterSink.builder()
+                        .name("the topic")
+                        .topicUrl(String.format("http://%s:%d/events/TOPIC", "www", 1234))
+                        .build())
                 .build();
-    }
+
+  }
 
     public static ImmutableAaiClientConfiguration createDefaultAaiClientConfiguration() {
         return new ImmutableAaiClientConfiguration.Builder()

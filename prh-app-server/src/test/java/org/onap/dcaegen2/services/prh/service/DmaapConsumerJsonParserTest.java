@@ -20,20 +20,23 @@
 
 package org.onap.dcaegen2.services.prh.service;
 
-import static org.mockito.Mockito.spy;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterSubscribeResponse;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeResponse;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import java.util.Optional;
+
+import static org.mockito.Mockito.spy;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/8/18
@@ -101,6 +104,7 @@ class DmaapConsumerJsonParserTest {
             .build();
 
         JsonArray messageAsJsonArray = (JsonArray) jsonParser.parse(message);
+        MessageRouterSubscribeResponse response = ImmutableMessageRouterSubscribeResponse.builder().items(messageAsJsonArray).build();
 
         //when
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
@@ -109,7 +113,7 @@ class DmaapConsumerJsonParserTest {
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
 
         ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser
-            .getJsonObject(Mono.just((messageAsJsonArray))).blockFirst();
+            .getJsonObject(Mono.just((response))).blockFirst();
         //then
         Assertions.assertNotNull(consumerDmaapModel);
         Assertions.assertEquals(expectedObject, consumerDmaapModel);
@@ -163,15 +167,15 @@ class DmaapConsumerJsonParserTest {
             .nfRole("gNB")
             .swVersion("v4.5.0.1")
             .build();
-        JsonArray mesageAsJsonArray = (JsonArray) jsonParser.parse(message);
-
+        JsonArray messageAsJsonArray = (JsonArray) jsonParser.parse(message);
+        MessageRouterSubscribeResponse response = ImmutableMessageRouterSubscribeResponse.builder().items(messageAsJsonArray).build();
         //when
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
         JsonElement jsonElement = new JsonParser().parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
         ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser
-            .getJsonObject(Mono.just((mesageAsJsonArray))).blockFirst();
+            .getJsonObject(Mono.just((response))).blockFirst();
         //then
         Assertions.assertNotNull(consumerDmaapModel);
         Assertions.assertEquals(expectedObject, consumerDmaapModel);
@@ -230,6 +234,7 @@ class DmaapConsumerJsonParserTest {
             .build();
 
         JsonArray messageAsJsonArray = (JsonArray) jsonParser.parse(message);
+        MessageRouterSubscribeResponse response = ImmutableMessageRouterSubscribeResponse.builder().items(messageAsJsonArray).build();
 
         //when
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
@@ -238,7 +243,7 @@ class DmaapConsumerJsonParserTest {
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
 
         ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser
-            .getJsonObject(Mono.just((messageAsJsonArray))).blockFirst();
+            .getJsonObject(Mono.just((response))).blockFirst();
         //then
         Assertions.assertNotNull(consumerDmaapModel);
         Assertions.assertEquals(expectedObject, consumerDmaapModel);
@@ -293,6 +298,7 @@ class DmaapConsumerJsonParserTest {
             .build();
 
         JsonArray messageAsJsonArray = (JsonArray) jsonParser.parse(message);
+        MessageRouterSubscribeResponse response = ImmutableMessageRouterSubscribeResponse.builder().items(messageAsJsonArray).build();
 
         //when
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
@@ -301,7 +307,7 @@ class DmaapConsumerJsonParserTest {
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
 
         ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser
-            .getJsonObject(Mono.just((messageAsJsonArray))).blockFirst();
+            .getJsonObject(Mono.just((response))).blockFirst();
         //then
         Assertions.assertNotNull(consumerDmaapModel);
         Assertions.assertEquals(expectedObject, consumerDmaapModel);
@@ -349,8 +355,9 @@ class DmaapConsumerJsonParserTest {
             + "}}}]";
 
         JsonArray incorrectMessageAsJsonArray = (JsonArray) jsonParser.parse(incorrectMessage);
+        MessageRouterSubscribeResponse response = ImmutableMessageRouterSubscribeResponse.builder().items(incorrectMessageAsJsonArray).build();
 
-        StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(incorrectMessageAsJsonArray)))
+        StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(response)))
             .expectSubscription().thenRequest(1).verifyComplete();
     }
 
@@ -394,8 +401,9 @@ class DmaapConsumerJsonParserTest {
                 + "}}}]";
 
         JsonArray jsonWithoutSourceNameAsJsonArray = (JsonArray) jsonParser.parse(jsonWithoutSourceName);
+        MessageRouterSubscribeResponse response = ImmutableMessageRouterSubscribeResponse.builder().items(jsonWithoutSourceNameAsJsonArray).build();
         StepVerifier
-            .create(dmaapConsumerJsonParser.getJsonObject(Mono.just(jsonWithoutSourceNameAsJsonArray)))
+            .create(dmaapConsumerJsonParser.getJsonObject(Mono.just(response)))
             .expectSubscription().thenRequest(1)
             .verifyComplete();
 
@@ -444,8 +452,9 @@ class DmaapConsumerJsonParserTest {
                 + "}}}]";
 
         JsonArray jsonWithoutIpInformationAsJsonArray = (JsonArray) jsonParser.parse(jsonWithoutIpInformation);
+        MessageRouterSubscribeResponse response = ImmutableMessageRouterSubscribeResponse.builder().items(jsonWithoutIpInformationAsJsonArray).build();
 
-        StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(jsonWithoutIpInformationAsJsonArray)))
+        StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(response)))
             .expectSubscription().thenRequest(1).verifyComplete();
     }
 
@@ -485,15 +494,15 @@ class DmaapConsumerJsonParserTest {
             + "}}}";
 
         JsonArray messageAsJsonArray = (JsonArray) jsonParser.parse(message);
-
+        MessageRouterSubscribeResponse response = ImmutableMessageRouterSubscribeResponse.builder().items(messageAsJsonArray).build();
         //when
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
         JsonElement jsonElement = jsonParser.parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
 
-        dmaapConsumerJsonParser.getJsonObject(Mono.just((messageAsJsonArray)));
-        ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser.getJsonObject(Mono.just((messageAsJsonArray)))
+        dmaapConsumerJsonParser.getJsonObject(Mono.just((response)));
+        ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser.getJsonObject(Mono.just(response))
             .blockFirst();
         //then
         ConsumerDmaapModel expectedObject = ImmutableConsumerDmaapModel.builder()
@@ -560,13 +569,14 @@ class DmaapConsumerJsonParserTest {
             .build();
 
         JsonArray messageAsJsonArray = (JsonArray) jsonParser.parse(message);
+        MessageRouterSubscribeResponse response = ImmutableMessageRouterSubscribeResponse.builder().items(messageAsJsonArray).build();
 
         //when
         DmaapConsumerJsonParser dmaapConsumerJsonParser = spy(new DmaapConsumerJsonParser());
         JsonElement jsonElement = jsonParser.parse(parsed);
         Mockito.doReturn(Optional.of(jsonElement.getAsJsonObject()))
             .when(dmaapConsumerJsonParser).getJsonObjectFromAnArray(jsonElement);
-        ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser.getJsonObject(Mono.just((messageAsJsonArray)))
+        ConsumerDmaapModel consumerDmaapModel = dmaapConsumerJsonParser.getJsonObject(Mono.just(response))
             .blockFirst();
 
         //then
@@ -625,12 +635,12 @@ class DmaapConsumerJsonParserTest {
             .build();
 
         JsonArray messageAsJsonArray = (JsonArray) jsonParser.parse(message);
+        MessageRouterSubscribeResponse response = ImmutableMessageRouterSubscribeResponse.builder().items(messageAsJsonArray).build();
 
         //when
         DmaapConsumerJsonParser dmaapConsumerJsonParser = new DmaapConsumerJsonParser();
 
         //then
-        StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(messageAsJsonArray)))
-            .expectSubscription().expectNext(expectedObject).expectNext(expectedObject).verifyComplete();
+        StepVerifier.create(dmaapConsumerJsonParser.getJsonObject(Mono.just(response))).expectSubscription().expectNext(expectedObject).expectNext(expectedObject).verifyComplete();
     }
 }

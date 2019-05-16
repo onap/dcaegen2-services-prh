@@ -20,12 +20,11 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import javax.net.ssl.SSLException;
-
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.consumer.DMaaPConsumerReactiveHttpClient;
-
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterSubscriber;
 import reactor.core.publisher.Flux;
+
+import javax.net.ssl.SSLException;
 
 
 /**
@@ -35,5 +34,5 @@ interface DmaapConsumerTask {
 
     Flux<ConsumerDmaapModel> execute(String object) throws SSLException;
 
-    DMaaPConsumerReactiveHttpClient resolveClient() throws SSLException;
+    MessageRouterSubscriber resolveClient() throws SSLException;
 }

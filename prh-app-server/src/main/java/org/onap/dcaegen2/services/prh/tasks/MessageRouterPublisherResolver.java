@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PROJECT
  * ================================================================================
- * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2019 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,15 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import reactor.core.publisher.Flux;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.DmaapClientFactory;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterPublisher;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.config.MessageRouterPublisherConfig;
+import org.springframework.stereotype.Component;
 
-import javax.net.ssl.SSLException;
+@Component
+public class MessageRouterPublisherResolver {
 
-
-/**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
- */
-interface DmaapConsumerTask {
-    Flux<ConsumerDmaapModel> execute(String object) throws SSLException;
+    public MessageRouterPublisher resolveClient() {
+        return DmaapClientFactory.createMessageRouterPublisher(MessageRouterPublisherConfig.createDefault());
+    }
 }

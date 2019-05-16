@@ -20,136 +20,105 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import io.netty.handler.codec.http.HttpResponseStatus;
+import com.google.gson.JsonPrimitive;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
-import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.config.DmaapPublisherConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.producer.DMaaPPublisherReactiveHttpClient;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.service.producer.PublisherReactiveHttpClientFactory;
-import org.onap.dcaegen2.services.sdk.rest.services.model.DmaapModel;
-import org.onap.dcaegen2.services.sdk.rest.services.model.logging.RequestDiagnosticContext;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
+import org.onap.dcaegen2.services.prh.integration.junit5.mockito.MockitoExtension;
+import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
+import org.onap.dcaegen2.services.sdk.model.streams.dmaap.ImmutableMessageRouterSink;
+import org.onap.dcaegen2.services.sdk.model.streams.dmaap.MessageRouterSink;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterPublisher;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterPublishRequest;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
+import reactor.core.publisher.Flux;
 
-import javax.net.ssl.SSLException;
-import java.util.Optional;
 import java.util.function.Supplier;
 
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
-import static org.onap.dcaegen2.services.prh.TestAppConfiguration.createDefaultDmaapPublisherConfiguration;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/17/18
  */
+@ExtendWith(MockitoExtension.class)
 class DmaapPublisherTaskImplTest {
 
-    private static ConsumerDmaapModel consumerDmaapModel;
     private static DmaapPublisherTaskImpl dmaapPublisherTask;
-    private static DMaaPPublisherReactiveHttpClient dMaaPPublisherReactiveHttpClient;
-    private static CbsConfiguration cbsConfiguration;
-    private static DmaapPublisherConfiguration dmaapPublisherConfiguration;
-    private Optional<RequestDiagnosticContext> requestDiagnosticContextOptionalMock;
-    private DmaapModel dmaapModel;
-    private PublisherReactiveHttpClientFactory publisherReactiveHttpClientFactory;
-    private Supplier<DmaapPublisherConfiguration> configSupplier;
+
+    @Mock
+    private static MessageRouterPublisherResolver messageRouterPublisherClientResolver;
+    @Mock
+    private static MessageRouterPublisher messageRouterPublisher;
+
+    private Supplier<MessageRouterPublishRequest> configSupplier;
+
+
+    @Captor
+    private ArgumentCaptor<Flux<JsonPrimitive>> fluxCaptor;
 
     @BeforeEach
-    public void beforeEach() throws SSLException {
-        dmaapPublisherConfiguration = createDefaultDmaapPublisherConfiguration();
-        consumerDmaapModel = mock(ConsumerDmaapModel.class);
-        cbsConfiguration = mock(CbsConfiguration.class);
-        requestDiagnosticContextOptionalMock = Optional.empty();
-        dmaapModel = mock(DmaapModel.class);
-        dMaaPPublisherReactiveHttpClient = mock(DMaaPPublisherReactiveHttpClient.class);
-        publisherReactiveHttpClientFactory = mock(PublisherReactiveHttpClientFactory.class);
-        when(cbsConfiguration.getDmaapPublisherConfiguration()).thenReturn(dmaapPublisherConfiguration);
-        when(publisherReactiveHttpClientFactory.create(dmaapPublisherConfiguration))
-            .thenReturn(dMaaPPublisherReactiveHttpClient);
-        configSupplier = () -> cbsConfiguration.getDmaapPublisherConfiguration();
+    void beforeEach() {
+        when(messageRouterPublisherClientResolver.resolveClient()).thenReturn(messageRouterPublisher);
+        MessageRouterPublishRequest mrRequest = createMRRequest();
+        configSupplier = () -> mrRequest;
     }
 
     @Test
     void execute_whenPassedObjectDoesntFit_ThrowsPrhTaskException() {
         //given
-        dmaapPublisherTask = new DmaapPublisherTaskImpl(configSupplier);
+        dmaapPublisherTask = new DmaapPublisherTaskImpl(configSupplier, messageRouterPublisherClientResolver);
         //when
         Executable executableFunction = () -> dmaapPublisherTask.execute(null);
         //then
         assertThrows(PrhTaskException.class, executableFunction, "The specified parameter is incorrect");
     }
 
-
     @Test
-    void execute_whenPassedObjectFits_ReturnsCorrectStatus() throws PrhTaskException, SSLException {
+    void execute_whenPassedObjectFits_ReturnsCorrectStatus() throws DmaapNotFoundException {
         //given
-        HttpResponseStatus httpResponseStatus = HttpResponseStatus.OK;
-        HttpResponse httpClientReponse = prepareMocksForTests(httpResponseStatus);
-        dmaapPublisherTask = new DmaapPublisherTaskImpl(configSupplier, publisherReactiveHttpClientFactory);
-
+        dmaapPublisherTask = new DmaapPublisherTaskImpl(configSupplier, messageRouterPublisherClientResolver);
         //when
-        StepVerifier.create(dmaapPublisherTask.execute(consumerDmaapModel)).expectSubscription()
-            .expectNext(httpClientReponse);
-
+        dmaapPublisherTask.execute(createConsumerDmaapModel());
         //then
-        verify(dMaaPPublisherReactiveHttpClient, times(1))
-            .getDMaaPProducerResponse(consumerDmaapModel, requestDiagnosticContextOptionalMock);
-
-        verifyNoMoreInteractions(dMaaPPublisherReactiveHttpClient);
+        verify(messageRouterPublisher).put(eq(configSupplier.get()), fluxCaptor.capture());
+        assertEquals(new JsonPrimitive("{\"correlationId\":\"NOKQTFCOC540002E\"}"), fluxCaptor.getValue().blockFirst());
     }
 
-    @Test
-    void execute_whenPassedObjectFits_butIncorrectResponseReturns() throws DmaapNotFoundException, SSLException {
-        //given
-        HttpResponseStatus httpResponseStatus = HttpResponseStatus.UNAUTHORIZED;
-        HttpResponse httpClientReponse = prepareMocksForTests(httpResponseStatus);
-        dmaapPublisherTask = new DmaapPublisherTaskImpl(configSupplier, publisherReactiveHttpClientFactory);
 
-        //when
-        StepVerifier.create(dmaapPublisherTask.execute(consumerDmaapModel)).expectSubscription()
-            .expectNext(httpClientReponse);
-
-        //then
-        verify(dMaaPPublisherReactiveHttpClient, times(1))
-            .getDMaaPProducerResponse(consumerDmaapModel, requestDiagnosticContextOptionalMock);
-        verifyNoMoreInteractions(dMaaPPublisherReactiveHttpClient);
+    private ImmutableConsumerDmaapModel createConsumerDmaapModel() {
+        return ImmutableConsumerDmaapModel.builder()
+                .ipv4("10.16.123.234")
+                .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
+                .correlationId("NOKQTFCOC540002E")
+                .serialNumber("QTFCOC540002E")
+                .equipVendor("nokia")
+                .equipModel("3310")
+                .equipType("type")
+                .nfRole("gNB")
+                .swVersion("v4.5.0.1")
+                .additionalFields(null)
+                .build();
     }
 
-    @Test()
-    void execute_whenConsumerDmaapModelIsNull() {
-        //given
-        HttpResponseStatus httpResponseStatus = HttpResponseStatus.UNAUTHORIZED;
-        HttpResponse httpClientReponse = prepareMocksForTests(httpResponseStatus);
-        dmaapPublisherTask = new DmaapPublisherTaskImpl(configSupplier, publisherReactiveHttpClientFactory);
-        assertThrows(DmaapNotFoundException.class, () -> {
-            dmaapPublisherTask.execute(null);
-        });
-    }
+    private MessageRouterPublishRequest createMRRequest() {
+        final MessageRouterSink sinkDefinition = ImmutableMessageRouterSink.builder()
+                .name("the topic")
+                .topicUrl("http://dmaap-mr:2222/events/unauthenticated.PNF_READY")
+                .build();
 
-    @Test
-    public void resolveClient() throws SSLException {
-        //given
-        dmaapPublisherTask = new DmaapPublisherTaskImpl(configSupplier, publisherReactiveHttpClientFactory);
-        //when
-        DMaaPPublisherReactiveHttpClient dMaaPPublisherReactiveHttpClientResolved = dmaapPublisherTask.resolveClient();
-        //then
-        assertSame(dMaaPPublisherReactiveHttpClientResolved, dMaaPPublisherReactiveHttpClient);
+        return ImmutableMessageRouterPublishRequest.builder()
+                .sinkDefinition(sinkDefinition)
+                .contentType("application/json")
+                .build();
     }
-
-    private HttpResponse prepareMocksForTests(HttpResponseStatus httpResponseStatus) {
-        HttpResponse httpClientResponse = mock(HttpResponse.class);
-        when(httpClientResponse.statusCode()).thenReturn(httpResponseStatus.code());
-        when(
-            dMaaPPublisherReactiveHttpClient.getDMaaPProducerResponse(dmaapModel, requestDiagnosticContextOptionalMock))
-            .thenReturn(Mono.just(httpClientResponse));
-        return httpClientResponse;
-    }
-
 }

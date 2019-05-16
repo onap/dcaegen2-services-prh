@@ -25,6 +25,7 @@ import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.logging.MdcVariables;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishResponse;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -50,6 +51,7 @@ public class ScheduledTasks {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledTasks.class);
     private static final Marker INVOKE = MarkerFactory.getMarker("INVOKE");
+
     private final DmaapConsumerTask dmaapConsumerTask;
     private final DmaapPublisherTask dmaapReadyProducerTask;
     private final DmaapPublisherTask dmaapUpdateProducerTask;
@@ -208,7 +210,7 @@ public class ScheduledTasks {
      * Marked as deprecated due to problems with DMaaP MR, to be fixed in future
      */
     @Deprecated
-    private Mono<org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse>
+    private Flux<MessageRouterPublishResponse>
     publishToDmaapConfiguration(final State state) {
         try {
             if (state.ActivationStatus) {
@@ -217,8 +219,8 @@ public class ScheduledTasks {
             }
 
             return dmaapReadyProducerTask.execute(state.DmaapModel);
-        } catch (PrhTaskException | SSLException e) {
-            return Mono.error(e);
+        } catch (PrhTaskException e) {
+            return Flux.error(e);
         }
     }
 

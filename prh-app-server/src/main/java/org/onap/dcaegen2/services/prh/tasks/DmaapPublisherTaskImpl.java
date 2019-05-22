@@ -21,10 +21,6 @@
 package org.onap.dcaegen2.services.prh.tasks;
 
 import com.google.gson.JsonPrimitive;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.PnfReadyJsonBodyBuilderImpl;
@@ -34,7 +30,6 @@ import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRo
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.util.function.Supplier;
 
@@ -67,29 +62,4 @@ public class DmaapPublisherTaskImpl implements DmaapPublisherTask {
                 config.get(),
                 Flux.just(json).map(JsonPrimitive::new));
     }
-
-    /**
-     *
-     * Does not work reactive version with DMaaP MR  - to be investigated why in future
-     * As WA please use Mono<HttpResponse> executeWithApache(ConsumerDmaapModel consumerDmaapModel);
-     * */
-    @Override
-    public Mono<org.apache.http.HttpResponse> executeWithApache(ConsumerDmaapModel consumerDmaapModel) {
-        String json = pnfReadyJsonBodyBuilder.createJsonBody(consumerDmaapModel);
-        try (DefaultHttpClient httpClient = new DefaultHttpClient()) {
-            HttpPost postRequest = new HttpPost(config.get().sinkDefinition().topicUrl());
-            try {
-                StringEntity input = new StringEntity(json);
-                input.setContentType(config.get().contentType());
-                postRequest.setEntity(input);
-                HttpResponse response = httpClient.execute(postRequest);
-                return Mono.just(response);
-            } catch (Exception e) {
-                LOGGER.warn("Publishing to DMaaP MR failed: {}", e);
-                return Mono.error(e);
-            }
-        }
-    }
-
-
 }

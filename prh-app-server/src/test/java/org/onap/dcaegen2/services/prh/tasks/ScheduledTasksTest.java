@@ -19,7 +19,6 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.apache.http.HttpResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +27,7 @@ import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.integration.junit5.mockito.MockitoExtension;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -38,7 +38,9 @@ import java.util.Map;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class ScheduledTasksTest {
@@ -151,20 +153,20 @@ public class ScheduledTasksTest {
         verifyThatPnfModelWasSentDmaapPnfUpdateTopic();
     }
 
-    private void verifyThatPnfModelWasNotSentDmaapPnfReadyTopic() {
-        verify(readyPublisher, never()).executeWithApache(DMAAP_MODEL);
+    private void verifyThatPnfModelWasNotSentDmaapPnfReadyTopic() throws PrhTaskException {
+        verify(readyPublisher, never()).execute(DMAAP_MODEL);
     }
 
-    private Mono<HttpResponse> verifyThatPnfModelWasNotSentDmaapPnfUpdateTopic() {
-        return verify(updatePublisher, never()).executeWithApache(DMAAP_MODEL);
+    private Flux<MessageRouterPublishResponse> verifyThatPnfModelWasNotSentDmaapPnfUpdateTopic() throws PrhTaskException {
+        return verify(updatePublisher, never()).execute(DMAAP_MODEL);
     }
 
-    private void verifyThatPnfModelWasSentDmaapPnfReadyTopic() {
-        verify(readyPublisher, atLeastOnce()).executeWithApache(DMAAP_MODEL);
+    private void verifyThatPnfModelWasSentDmaapPnfReadyTopic() throws PrhTaskException {
+        verify(readyPublisher, atLeastOnce()).execute(DMAAP_MODEL);
     }
 
-    private Mono<HttpResponse> verifyThatPnfModelWasSentDmaapPnfUpdateTopic() {
-        return verify(updatePublisher, atLeastOnce()).executeWithApache(DMAAP_MODEL);
+    private Flux<MessageRouterPublishResponse> verifyThatPnfModelWasSentDmaapPnfUpdateTopic() throws PrhTaskException {
+        return verify(updatePublisher, atLeastOnce()).execute(DMAAP_MODEL);
     }
 
     private void verifyThatPnfUpdateWasNotSentToAai() throws PrhTaskException, SSLException {

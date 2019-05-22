@@ -52,13 +52,13 @@ public class AaiProducerTaskImpl extends AaiProducerTask {
 
     @Override
     Mono<ConsumerDmaapModel> publish(ConsumerDmaapModel consumerDmaapModel) {
-        Mono<HttpResponse> resposne = aaiHttpPatchClient.getAaiResponse(consumerDmaapModel);
-        return resposne.flatMap(response -> {
-            if (HttpUtils.isSuccessfulResponseCode(response.statusCode())) {
+        Mono<HttpResponse> response = aaiHttpPatchClient.getAaiResponse(consumerDmaapModel);
+        return response.flatMap(r -> {
+            if (HttpUtils.isSuccessfulResponseCode(r.statusCode())) {
                 return Mono.just(consumerDmaapModel);
             }
             return Mono
-                    .error(new AaiNotFoundException("Incorrect response code for continuation of tasks workflow" + response.statusCode()));
+                    .error(new AaiNotFoundException("Incorrect response code for continuation of tasks workflow" + r.statusCode()));
         });
     }
 

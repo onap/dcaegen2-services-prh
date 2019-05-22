@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aeefce14_f8a21761",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/DmaapPublisherTaskImpl.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2019-05-22T11:06:38Z",
+      "side": 1,
+      "message": "remove comment",
+      "revId": "dd4544de32d87e4f3152162447debe11ff2566c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "67a26a2b_7c6967a6",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/utils/GsonSerializer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 5337
+      },
+      "writtenOn": "2019-05-22T13:47:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d71d2c40_34127901",
+      "revId": "b1c45ebd0cb0af33e1ec2e2f448d98807625529d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0e1eea9b_c8032292",
         "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/utils/PrhModelAwareGsonBuilder.java",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2019-05-22T13:26:47Z",
       "side": 1,
       "message": "final",
+      "revId": "b1c45ebd0cb0af33e1ec2e2f448d98807625529d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4f308fab_ab2e6d23",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/utils/PrhModelAwareGsonBuilder.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 5337
+      },
+      "writtenOn": "2019-05-22T13:47:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0e1eea9b_c8032292",
       "revId": "b1c45ebd0cb0af33e1ec2e2f448d98807625529d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false

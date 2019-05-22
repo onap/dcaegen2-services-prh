@@ -1,0 +1,8 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Marcin Migdal <marcin.migdal@nokia.com>
+Code-Review+2: Piotr Jaszczyk <piotr.jaszczyk@nokia.com>
+Submitted-by: Piotr Jaszczyk <piotr.jaszczyk@nokia.com>
+Submitted-at: Wed, 22 May 2019 14:56:16 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/dcaegen2/services/prh/+/88256
+Project: dcaegen2/services/prh
+Branch: refs/heads/master

@@ -20,6 +20,8 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
+import java.nio.charset.StandardCharsets;
+import java.util.function.BiFunction;
 import org.onap.dcaegen2.services.prh.model.AaiJsonBodyBuilderImpl;
 import org.onap.dcaegen2.services.prh.model.AaiPnfResultModel;
 import org.onap.dcaegen2.services.prh.model.AaiServiceInstanceResultModel;
@@ -30,16 +32,13 @@ import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.AaiH
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.get.AaiGetServiceInstanceClient;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.get.AaiHttpGetClient;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.patch.AaiHttpPatchClient;
-import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.CloudHttpClient;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
+import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RxHttpClient;
 import org.onap.dcaegen2.services.sdk.rest.services.model.AaiModel;
 import org.onap.dcaegen2.services.sdk.rest.services.model.AaiServiceInstanceQueryModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.nio.charset.StandardCharsets;
-import java.util.function.BiFunction;
 
 @Configuration
 public class AaiHttpClientConfig {
@@ -69,7 +68,7 @@ public class AaiHttpClientConfig {
     }
 
     private <T, U> AaiHttpClient<T, U> createLazyConfigClient(
-            final BiFunction<AaiClientConfiguration, CloudHttpClient, AaiHttpClient<T, U>> factoryMethod) {
+        final BiFunction<AaiClientConfiguration, RxHttpClient, AaiHttpClient<T, U>> factoryMethod) {
 
         return x -> factoryMethod.apply(
             cbsConfiguration.getAaiClientConfiguration(),

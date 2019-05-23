@@ -20,10 +20,9 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import com.google.gson.JsonPrimitive;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.model.PnfReadyJsonBodyBuilderImpl;
+import org.onap.dcaegen2.services.prh.model.PnfReadyJsonBodyBuilder;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterPublisher;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishResponse;
@@ -42,7 +41,7 @@ public class DmaapPublisherTaskImpl implements DmaapPublisherTask {
 
     private final Supplier<MessageRouterPublishRequest> config;
     private final MessageRouterPublisherResolver messageRouterPublisherClientResolver;
-    private final PnfReadyJsonBodyBuilderImpl pnfReadyJsonBodyBuilder = new PnfReadyJsonBodyBuilderImpl();
+    private final PnfReadyJsonBodyBuilder pnfReadyJsonBodyBuilder = new PnfReadyJsonBodyBuilder();
 
 
     public DmaapPublisherTaskImpl(Supplier<MessageRouterPublishRequest> config, MessageRouterPublisherResolver messageRouterPublisherClientResolver) {
@@ -57,9 +56,8 @@ public class DmaapPublisherTaskImpl implements DmaapPublisherTask {
         }
         MessageRouterPublisher messageRouterPublisher = messageRouterPublisherClientResolver.resolveClient();
         LOGGER.info("Method called with arg {}", consumerDmaapModel);
-        String json = pnfReadyJsonBodyBuilder.createJsonBody(consumerDmaapModel);
         return messageRouterPublisher.put(
                 config.get(),
-                Flux.just(json).map(JsonPrimitive::new));
+                Flux.just(pnfReadyJsonBodyBuilder.createJsonBody(consumerDmaapModel)));
     }
 }

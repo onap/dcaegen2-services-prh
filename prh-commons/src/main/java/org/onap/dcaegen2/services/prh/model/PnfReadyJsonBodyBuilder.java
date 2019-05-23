@@ -20,16 +20,13 @@
 
 package org.onap.dcaegen2.services.prh.model;
 
-import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.TypeAdapterFactory;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel.Builder;
-import org.onap.dcaegen2.services.sdk.rest.services.model.JsonBodyBuilder;
-
-import java.util.ServiceLoader;
+import org.onap.dcaegen2.services.prh.model.utils.PrhModelAwareGsonBuilder;
 
 
-public class PnfReadyJsonBodyBuilderImpl implements JsonBodyBuilder<ConsumerDmaapModel> {
+public class PnfReadyJsonBodyBuilder {
 
     /**
      * Method for serialization object by GSON.
@@ -37,9 +34,7 @@ public class PnfReadyJsonBodyBuilderImpl implements JsonBodyBuilder<ConsumerDmaa
      * @param consumerDmaapModel - object which will be serialized
      * @return string from serialization
      */
-    public String createJsonBody(ConsumerDmaapModel consumerDmaapModel) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        ServiceLoader.load(TypeAdapterFactory.class).forEach(gsonBuilder::registerTypeAdapterFactory);
+    public JsonElement createJsonBody(ConsumerDmaapModel consumerDmaapModel) {
         Builder builder = ImmutableConsumerDmaapModel.builder()
             .correlationId(consumerDmaapModel.getCorrelationId());
 
@@ -47,6 +42,6 @@ public class PnfReadyJsonBodyBuilderImpl implements JsonBodyBuilder<ConsumerDmaa
         if(additionalFields != null && !additionalFields.equals(new JsonObject())) {
             builder.additionalFields(additionalFields);
         }
-        return gsonBuilder.create().toJson(builder.build());
+        return PrhModelAwareGsonBuilder.createGson().toJsonTree(builder.build());
     }
 }

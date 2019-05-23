@@ -31,23 +31,23 @@ class PnfReadyJsonBodyBuilderTest {
     @Test
     void createJsonBody_shouldReturnJsonInString() {
 
-        JsonObject jsonObject = new JsonParser().parse("{\n"
+        JsonObject jsonObject = parse("{\n"
             + "        \"attachmentPoint\": \"bla-bla-30-3\",\n"
             + "        \"cvlan\": \"678\",\n"
             + "        \"svlan\": \"1005\"\n"
-            + "      }").getAsJsonObject();
+            + "      }");
 
         ConsumerDmaapModel model = ImmutableConsumerDmaapModel.builder()
             .correlationId("NOKnhfsadhff")
             .additionalFields(jsonObject)
             .build();
 
-        String expectedResult = "{"
+        JsonObject expectedResult = parse("{"
             + "\"correlationId\":\"NOKnhfsadhff\","
             + "\"additionalFields\":{\"attachmentPoint\":\"bla-bla-30-3\",\"cvlan\":\"678\",\"svlan\":\"1005\"}"
-            + "}";
+            + "}");
 
-        assertEquals(expectedResult, new PnfReadyJsonBodyBuilderImpl().createJsonBody(model));
+        assertEquals(expectedResult, new PnfReadyJsonBodyBuilder().createJsonBody(model));
     }
 
     @Test
@@ -57,22 +57,26 @@ class PnfReadyJsonBodyBuilderTest {
             .correlationId("NOKnhfsadhff")
             .build();
 
-        String expectedResult = "{\"correlationId\":\"NOKnhfsadhff\"}";
+        JsonObject expectedResult = parse("{\"correlationId\":\"NOKnhfsadhff\"}");
 
-        assertEquals(expectedResult, new PnfReadyJsonBodyBuilderImpl().createJsonBody(model));
+        assertEquals(expectedResult, new PnfReadyJsonBodyBuilder().createJsonBody(model));
     }
 
     @Test
     void createJsonBodyWithEmptyOptionalPnfRegistrationFields_shouldReturnJsonInString() {
-        JsonObject jsonObject = new JsonParser().parse("{}").getAsJsonObject();
+        JsonObject jsonObject = new JsonObject();
 
         ConsumerDmaapModel model = ImmutableConsumerDmaapModel.builder()
             .correlationId("NOKnhfsadhff")
             .additionalFields(jsonObject)
             .build();
 
-        String expectedResult = "{\"correlationId\":\"NOKnhfsadhff\"}";
+        JsonObject expectedResult = parse("{\"correlationId\":\"NOKnhfsadhff\"}");
 
-        assertEquals(expectedResult, new PnfReadyJsonBodyBuilderImpl().createJsonBody(model));
+        assertEquals(expectedResult, new PnfReadyJsonBodyBuilder().createJsonBody(model));
+    }
+
+    private static JsonObject parse(String jsonString) {
+        return new JsonParser().parse(jsonString).getAsJsonObject();
     }
 }

@@ -20,7 +20,8 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,10 +39,8 @@ import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRout
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterPublishRequest;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
 import reactor.core.publisher.Flux;
+import reactor.test.StepVerifier;
 
-import java.util.function.Supplier;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -53,30 +52,27 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class DmaapPublisherTaskImplTest {
 
-    private static DmaapPublisherTaskImpl dmaapPublisherTask;
+    private DmaapPublisherTaskImpl dmaapPublisherTask;
+
+    private MessageRouterPublishRequest mrRequest = createMRRequest();
 
     @Mock
     private static MessageRouterPublisherResolver messageRouterPublisherClientResolver;
     @Mock
     private static MessageRouterPublisher messageRouterPublisher;
 
-    private Supplier<MessageRouterPublishRequest> configSupplier;
-
-
     @Captor
-    private ArgumentCaptor<Flux<JsonPrimitive>> fluxCaptor;
+    private ArgumentCaptor<Flux<JsonElement>> fluxCaptor;
 
     @BeforeEach
     void beforeEach() {
         when(messageRouterPublisherClientResolver.resolveClient()).thenReturn(messageRouterPublisher);
-        MessageRouterPublishRequest mrRequest = createMRRequest();
-        configSupplier = () -> mrRequest;
     }
 
     @Test
     void execute_whenPassedObjectDoesntFit_ThrowsPrhTaskException() {
         //given
-        dmaapPublisherTask = new DmaapPublisherTaskImpl(configSupplier, messageRouterPublisherClientResolver);
+        dmaapPublisherTask = new DmaapPublisherTaskImpl(() -> mrRequest, messageRouterPublisherClientResolver);
         //when
         Executable executableFunction = () -> dmaapPublisherTask.execute(null);
         //then
@@ -86,12 +82,15 @@ class DmaapPublisherTaskImplTest {
     @Test
     void execute_whenPassedObjectFits_ReturnsCorrectStatus() throws DmaapNotFoundException {
         //given
-        dmaapPublisherTask = new DmaapPublisherTaskImpl(configSupplier, messageRouterPublisherClientResolver);
+        dmaapPublisherTask = new DmaapPublisherTaskImpl(() -> mrRequest, messageRouterPublisherClientResolver);
         //when
         dmaapPublisherTask.execute(createConsumerDmaapModel());
         //then
-        verify(messageRouterPublisher).put(eq(configSupplier.get()), fluxCaptor.capture());
-        assertEquals(new JsonPrimitive("{\"correlationId\":\"NOKQTFCOC540002E\"}"), fluxCaptor.getValue().blockFirst());
+        verify(messageRouterPublisher).put(eq(mrRequest), fluxCaptor.capture());
+
+        StepVerifier.create(fluxCaptor.getValue())
+                .expectNext(new JsonParser().parse("{\"correlationId\":\"NOKQTFCOC540002E\"}"))
+                .verifyComplete();
     }
 
 

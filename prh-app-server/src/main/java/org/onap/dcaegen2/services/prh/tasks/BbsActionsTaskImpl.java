@@ -137,10 +137,7 @@ public class BbsActionsTaskImpl implements BbsActionsTask {
 
     private String buildLogicalLinkUri(String linkName) {
         return new URIBuilder()
-            .scheme(config.getAaiClientConfiguration().aaiProtocol())
-            .host(config.getAaiClientConfiguration().aaiHost())
-            .port(config.getAaiClientConfiguration().aaiPort())
-            .path(config.getAaiClientConfiguration().aaiBasePath() + LOGICAL_LINK_URI + linkName)
+                .path(config.getAaiClientConfiguration().pnfUrl() + LOGICAL_LINK_URI + linkName)
             .build()
             .toString();
     }

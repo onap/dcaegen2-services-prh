@@ -29,8 +29,7 @@
     "dmaap.dmaapUpdateProducerConfiguration.dmaapUserName":"admin",
     "dmaap.dmaapUpdateProducerConfiguration.dmaapUserPassword":"admin",
     "dmaap.dmaapUpdateProducerConfiguration.dmaapContentType":"application/json",
-
-    "aai.aaiClientConfiguration.pnfUrl":"https://aai.onap.svc.cluster.local:8443/aai/v12/network/pnfs/pnf",
+    "aai.aaiClientConfiguration.pnfUrl": "https://aai.onap.svc.cluster.local:8443/aai/v12/network/logical-links/logical-link",
     "aai.aaiClientConfiguration.aaiHost":"aai.onap.svc.cluster.local",
     "aai.aaiClientConfiguration.aaiHostPortNumber":8443,
     "aai.aaiClientConfiguration.aaiProtocol":"https",

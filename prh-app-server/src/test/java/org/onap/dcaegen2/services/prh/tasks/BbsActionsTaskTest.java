@@ -20,23 +20,11 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpResponseStatus;
-import java.io.InputStreamReader;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.onap.dcaegen2.services.prh.TestAppConfiguration;
@@ -52,13 +40,21 @@ import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RxHttpClient;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 
+import java.io.InputStreamReader;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
+
 class BbsActionsTaskTest {
 
-    private static final String CORRECT_LOGICAL_LINK_JSON = "bbs_action/correct_logical_link.json";
-    public static final String AAI_URL = "https://aai.onap.svc.cluster.local:8443/aai/v12/network/logical-links/logical-link/some-link";
+    private static final String AAI_URL = "https://aai.onap.svc.cluster.local:8443/aai/v12/network/logical-links/logical-link/some-link";;
 
     private CbsConfiguration cbsConfiguration = mock(CbsConfiguration.class);
-
     private AaiClientConfiguration aaiClientConfiguration = TestAppConfiguration.createDefaultAaiClientConfiguration();
     private RxHttpClient httpClient = mock(RxHttpClient.class);
 

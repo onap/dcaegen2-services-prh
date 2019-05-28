@@ -51,8 +51,8 @@ public class BbsActionsTaskImpl implements BbsActionsTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BbsActionsTaskImpl.class);
     private static final String ATTACHMENT_POINT = "attachmentPoint";
-    private static final String LOGICAL_LINK_URI = "/network/logical-links/logical-link/";
-    private static final String PNF_URI = "/network/pnfs/pnf/";
+    private static final String LOGICAL_LINK_URI = "/network/logical-links/logical-link";
+    private static final String PNF_URI = "/network/pnfs/pnf";
 
     private final Config config;
     private final RxHttpClient httpClient;
@@ -130,18 +130,16 @@ public class BbsActionsTaskImpl implements BbsActionsTask {
             .builder()
             .relationship(ImmutableRelationship
                 .builder()
-                .relatedLink(PNF_URI + pnfName)
+                .relatedLink(PNF_URI + "/" + pnfName)
                 .build())
             .build());
     }
 
     private String buildLogicalLinkUri(String linkName) {
         return new URIBuilder()
-            .scheme(config.getAaiClientConfiguration().aaiProtocol())
-            .host(config.getAaiClientConfiguration().aaiHost())
-            .port(config.getAaiClientConfiguration().aaiPort())
-            .path(config.getAaiClientConfiguration().aaiBasePath() + LOGICAL_LINK_URI + linkName)
+                .path(config.getAaiClientConfiguration().pnfUrl().replace(PNF_URI, LOGICAL_LINK_URI) + "/" + linkName)
             .build()
             .toString();
     }
 }
+

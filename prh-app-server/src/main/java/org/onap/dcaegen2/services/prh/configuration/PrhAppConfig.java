@@ -20,9 +20,6 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,14 +42,6 @@ import java.nio.charset.Charset;
 public abstract class PrhAppConfig implements Config {
     private static final Logger LOGGER = LoggerFactory.getLogger(PrhAppConfig.class);
 
-    AaiClientConfiguration aaiClientConfiguration;
-
-    MessageRouterSubscribeRequest messageRouterSubscribeRequest;
-
-    MessageRouterPublishRequest messageRouterPublishRequest;
-
-    MessageRouterPublishRequest messageRouterUpdatePublishRequest;
-
     @Value("classpath:git_info.json")
     private Resource gitInfo;
 
@@ -64,25 +53,5 @@ public abstract class PrhAppConfig implements Config {
     @Override
     public Resource getGitInfo() {
         return gitInfo;
-    }
-
-    @Override
-    public MessageRouterSubscribeRequest getMessageRouterSubscribeRequest() {
-        return messageRouterSubscribeRequest;
-    }
-
-    @Override
-    public AaiClientConfiguration getAaiClientConfiguration() {
-        return aaiClientConfiguration;
-    }
-
-    @Override
-    public MessageRouterPublishRequest getMessageRouterPublishRequest() {
-        return messageRouterPublishRequest;
-    }
-
-    @Override
-    public MessageRouterPublishRequest getMessageRouterUpdatePublishRequest() {
-        return messageRouterUpdatePublishRequest;
     }
 }

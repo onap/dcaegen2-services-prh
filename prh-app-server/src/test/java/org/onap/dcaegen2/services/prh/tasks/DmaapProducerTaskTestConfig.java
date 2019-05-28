@@ -21,6 +21,7 @@
 package org.onap.dcaegen2.services.prh.tasks;
 
 import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterPublisher;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,18 +31,15 @@ import java.util.function.Supplier;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
 @Configuration
-public class DmaapProducerTaskSpy {
+public class DmaapProducerTaskTestConfig {
 
     /**
      * Mocking bean for tests.
-     *
-     * @return DMaaP PublisherTask spy
      */
     @Bean
     @Primary
@@ -49,6 +47,7 @@ public class DmaapProducerTaskSpy {
         final CbsConfiguration cbsConfiguration = mock(CbsConfiguration.class);
         final Supplier<MessageRouterPublishRequest> configSupplier = cbsConfiguration::getMessageRouterPublishRequest;
         doReturn(mock(MessageRouterPublishRequest.class)).when(cbsConfiguration).getMessageRouterPublishRequest();
-        return spy(new DmaapPublisherTaskImpl(configSupplier, new MessageRouterPublisherResolver()));
+        MessageRouterPublisher messageRouterPublisher = mock(MessageRouterPublisher.class);
+        return new DmaapPublisherTaskImpl(configSupplier, () -> messageRouterPublisher);
     }
 }

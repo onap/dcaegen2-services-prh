@@ -22,7 +22,6 @@ package org.onap.dcaegen2.services.prh.configuration;
 
 import org.onap.dcaegen2.services.prh.tasks.DmaapPublisherTask;
 import org.onap.dcaegen2.services.prh.tasks.DmaapPublisherTaskImpl;
-import org.onap.dcaegen2.services.prh.tasks.MessageRouterPublisherResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,13 +30,15 @@ import org.springframework.context.annotation.Configuration;
 public class DmaapPublisherTaskConfig {
     @Bean(name = "ReadyPublisherTask")
     @Autowired
-    public DmaapPublisherTask getReadyPublisherTask(final Config config) {
-        return new DmaapPublisherTaskImpl(config::getMessageRouterPublishRequest, new MessageRouterPublisherResolver());
+    public DmaapPublisherTask getReadyPublisherTask(Config config) {
+        return new DmaapPublisherTaskImpl(
+                config::getMessageRouterPublishRequest, config::getMessageRouterPublisher);
     }
 
     @Bean(name = "UpdatePublisherTask")
     @Autowired
-    public DmaapPublisherTask getUpdatePublisherTask(final Config config) {
-        return new DmaapPublisherTaskImpl(config::getMessageRouterUpdatePublishRequest, new MessageRouterPublisherResolver());
+    public DmaapPublisherTask getUpdatePublisherTask(Config config) {
+        return new DmaapPublisherTaskImpl(
+                config::getMessageRouterUpdatePublishRequest, config::getMessageRouterPublisher);
     }
 }

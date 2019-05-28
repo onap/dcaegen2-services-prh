@@ -21,6 +21,7 @@
 package org.onap.dcaegen2.services.prh.tasks;
 
 import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
+import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,26 +29,22 @@ import org.springframework.context.annotation.Primary;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/27/18
  */
 @Configuration
-public class DmaapConsumerTaskSpy {
+public class DmaapConsumerTaskTestConfig {
 
     /**
      * Mocking bean for tests.
-     *
-     * @return DMaaP ConsumerTask spy
      */
     @Bean
     @Primary
     public DmaapConsumerTask registerSimpleDmaapConsumerTask() {
-        CbsConfiguration cbsConfiguration = spy(CbsConfiguration.class);
+        CbsConfiguration cbsConfiguration = mock(CbsConfiguration.class);
+        DmaapConsumerJsonParser dmaapConsumerJsonParser = mock(DmaapConsumerJsonParser.class);
         doReturn(mock(MessageRouterPublishRequest.class)).when(cbsConfiguration).getMessageRouterPublishRequest();
-        DmaapConsumerTaskImpl dmaapConsumerTask = spy(new DmaapConsumerTaskImpl(cbsConfiguration));
-        return dmaapConsumerTask;
+        return new DmaapConsumerTaskImpl(cbsConfiguration, dmaapConsumerJsonParser);
     }
 }

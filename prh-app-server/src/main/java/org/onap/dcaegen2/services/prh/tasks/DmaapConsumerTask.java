@@ -23,12 +23,10 @@ package org.onap.dcaegen2.services.prh.tasks;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import reactor.core.publisher.Flux;
 
-import javax.net.ssl.SSLException;
-
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
 interface DmaapConsumerTask {
-    Flux<ConsumerDmaapModel> execute(String object) throws SSLException;
+    Flux<ConsumerDmaapModel> execute();
 }

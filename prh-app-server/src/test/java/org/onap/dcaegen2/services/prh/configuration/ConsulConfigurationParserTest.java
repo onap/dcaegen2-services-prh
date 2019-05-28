@@ -22,20 +22,25 @@ package org.onap.dcaegen2.services.prh.configuration;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.prh.TestAppConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.ImmutableAaiClientConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterPublishRequest;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeRequest;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.config.MessageRouterPublisherConfig;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.config.MessageRouterSubscriberConfig;
+import org.onap.dcaegen2.services.sdk.security.ssl.SecurityKeys;
 
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Duration;
 
 import static java.lang.ClassLoader.getSystemResource;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 
 class ConsulConfigurationParserTest {
@@ -44,10 +49,9 @@ class ConsulConfigurationParserTest {
             new String(Files.readAllBytes(Paths.get(getSystemResource("flattened_configuration.json").toURI())));
     private final ImmutableAaiClientConfiguration correctAaiClientConfig =
             TestAppConfiguration.createDefaultAaiClientConfiguration();
-    private final ImmutableMessageRouterPublishRequest correctDmaapPublisherConfig =
-            TestAppConfiguration.createDefaultMessageRouterPublishRequest();
-    private final CbsContentParser consulConfigurationParser = new CbsContentParser(
-            new Gson().fromJson(correctJson, JsonObject.class));
+
+    private final JsonObject correctConfig = new Gson().fromJson(correctJson, JsonObject.class);
+    private final CbsContentParser consulConfigurationParser = new CbsContentParser(correctConfig);
 
     ConsulConfigurationParserTest() throws Exception {
     }
@@ -83,4 +87,72 @@ class ConsulConfigurationParserTest {
         assertThat(messageRouterPublishRequest.contentType()).isEqualTo("application/json");
         assertThat(messageRouterPublishRequest.sinkDefinition().topicUrl()).isEqualTo("http://dmaap-mr:2222/events/unauthenticated.PNF_READY");
     }
+
+    @Test
+    void whenDmaapCertAuthIsDisabled_MessageRouterPublisherConfigSecurityKeysShouldBeIgnored() {
+        assumeFalse(correctConfig.getAsJsonObject("config").get("security.enableDmaapCertAuth").getAsBoolean());
+
+        MessageRouterPublisherConfig messageRouterPublisherConfig = consulConfigurationParser.getMessageRouterPublisherConfig();
+
+        assertThat(messageRouterPublisherConfig.securityKeys()).isNull();
+    }
+
+    @Test
+    void whenDmaapCertAuthIsDisabled_MessageRouterSubscriberConfigSecurityKeysShouldBeIgnored() {
+        assumeFalse(correctConfig.getAsJsonObject("config").get("security.enableDmaapCertAuth").getAsBoolean());
+
+        MessageRouterSubscriberConfig messageRouterSubscriberConfig = consulConfigurationParser.getMessageRouterSubscriberConfig();
+
+        assertThat(messageRouterSubscriberConfig.securityKeys()).isNull();
+    }
+
+
+    @Test
+    void whenDmaapCertAuthIsEnabled_MessageRouterPublisherConfigSecurityKeysShouldBeLoaded() {
+        CbsContentParser consulConfigurationParser = new CbsContentParser(getConfigWithSslEnabled(correctJson));
+
+        MessageRouterPublisherConfig messageRouterPublisherConfig = consulConfigurationParser.getMessageRouterPublisherConfig();
+
+        verifySecurityKeys(messageRouterPublisherConfig.securityKeys());
+    }
+
+
+    @Test
+    void whenDmaapCertAuthIsEnabled_MessageRouterSubscriberConfigSecurityKeysShouldBeLoaded() {
+        CbsContentParser consulConfigurationParser = new CbsContentParser(getConfigWithSslEnabled(correctJson));
+
+        MessageRouterSubscriberConfig messageRouterSubscriberConfig = consulConfigurationParser.getMessageRouterSubscriberConfig();
+
+        verifySecurityKeys(messageRouterSubscriberConfig.securityKeys());
+    }
+
+    private static void verifySecurityKeys(@Nullable SecurityKeys securityKeys) {
+        assertThat(securityKeys).isNotNull();
+        assertThat(securityKeys.trustStore().path().endsWith("org.onap.dcae.trust.jks")).isTrue();
+        assertThat(securityKeys.keyStore().path().endsWith("org.onap.dcae.jks")).isTrue();
+        securityKeys.trustStorePassword().use(chars -> assertThat(new String(chars)).isEqualTo("*TQH?Lnszprs4LmlAj38yds("));
+        securityKeys.keyStorePassword().use(chars -> assertThat(new String(chars)).isEqualTo("mYHC98!qX}7h?W}jRv}MIXTJ"));
+    }
+
+    private static JsonObject getConfigWithSslEnabled(String configJsonString) {
+        JsonObject configJson = new Gson().fromJson(configJsonString, JsonObject.class);
+        JsonObject config = configJson.getAsJsonObject("config");
+        config.addProperty("security.enableDmaapCertAuth", true);
+        config.addProperty("security.enableAaiCertAuth", true);
+        config.addProperty("security.trustStorePath", testResourceToPath("/org.onap.dcae.trust.jks"));
+        config.addProperty("security.trustStorePasswordPath", testResourceToPath("/truststore.password"));
+        config.addProperty("security.keyStorePath", testResourceToPath("/org.onap.dcae.jks"));
+        config.addProperty("security.keyStorePasswordPath", testResourceToPath("/keystore.password"));
+        return configJson;
+    }
+
+
+    private static String testResourceToPath(String resource) {
+        try {
+            return Paths.get(ConsulConfigurationParserTest.class.getResource(resource).toURI()).toString();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("Failed resolving test resource path", e);
+        }
+    }
+
 }

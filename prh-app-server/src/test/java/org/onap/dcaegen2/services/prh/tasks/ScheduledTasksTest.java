@@ -94,7 +94,7 @@ public class ScheduledTasksTest {
     @Test
     void whenEmptyResultFromDMaaPConsumer_NotActionShouldBePerformed() throws SSLException, PrhTaskException {
         //given
-        given(consumer.execute(anyString())).willReturn(Flux.empty());
+        given(consumer.execute()).willReturn(Flux.empty());
 
         //when
         sut.scheduleMainPrhEventTask();
@@ -109,7 +109,7 @@ public class ScheduledTasksTest {
     @Test
     void whenPnfNotFoundInAai_NotActionShouldBePerformed() throws SSLException, PrhTaskException {
         //given
-        given(consumer.execute(anyString())).willReturn(Flux.just(DMAAP_MODEL));
+        given(consumer.execute()).willReturn(Flux.just(DMAAP_MODEL));
         given(aaiQuery.execute(any())).willReturn(Mono.error(new PrhTaskException("404 Not Found")));
 
         //when
@@ -124,7 +124,7 @@ public class ScheduledTasksTest {
     @Test
     void whenPnfWithoutService_PatchToAaiAndPostToPnfReadyShouldBePerformed() throws SSLException, PrhTaskException {
         //given
-        given(consumer.execute(anyString())).willReturn(Flux.just(DMAAP_MODEL));
+        given(consumer.execute()).willReturn(Flux.just(DMAAP_MODEL));
         given(aaiQuery.execute(any())).willReturn(Mono.just(false));
 
         //when
@@ -140,7 +140,7 @@ public class ScheduledTasksTest {
     @Test
     void whenPnfHasActiveService_OnlyPostToPnfUpdateShouldBePerformed() throws SSLException, PrhTaskException {
         //given
-        given(consumer.execute(anyString())).willReturn(Flux.just(DMAAP_MODEL));
+        given(consumer.execute()).willReturn(Flux.just(DMAAP_MODEL));
         given(aaiQuery.execute(any())).willReturn(Mono.just(true));
 
         //when

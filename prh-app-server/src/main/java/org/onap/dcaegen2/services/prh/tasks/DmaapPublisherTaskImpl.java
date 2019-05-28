@@ -39,14 +39,15 @@ public class DmaapPublisherTaskImpl implements DmaapPublisherTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DmaapPublisherTaskImpl.class);
 
-    private final Supplier<MessageRouterPublishRequest> config;
-    private final MessageRouterPublisherResolver messageRouterPublisherClientResolver;
+    private final Supplier<MessageRouterPublishRequest> publishRequestSupplier;
+    private final Supplier<MessageRouterPublisher> publisherSupplier;
     private final PnfReadyJsonBodyBuilder pnfReadyJsonBodyBuilder = new PnfReadyJsonBodyBuilder();
 
 
-    public DmaapPublisherTaskImpl(Supplier<MessageRouterPublishRequest> config, MessageRouterPublisherResolver messageRouterPublisherClientResolver) {
-        this.config = config;
-        this.messageRouterPublisherClientResolver = messageRouterPublisherClientResolver;
+    public DmaapPublisherTaskImpl(Supplier<MessageRouterPublishRequest> publishRequestSupplier,
+                                  Supplier<MessageRouterPublisher> publisherSupplier) {
+        this.publishRequestSupplier = publishRequestSupplier;
+        this.publisherSupplier = publisherSupplier;
     }
 
     @Override
@@ -54,10 +55,11 @@ public class DmaapPublisherTaskImpl implements DmaapPublisherTask {
         if (consumerDmaapModel == null) {
             throw new DmaapNotFoundException("Invoked null object to DMaaP task");
         }
-        MessageRouterPublisher messageRouterPublisher = messageRouterPublisherClientResolver.resolveClient();
         LOGGER.info("Method called with arg {}", consumerDmaapModel);
+        MessageRouterPublisher messageRouterPublisher = publisherSupplier.get();
+        MessageRouterPublishRequest messageRouterPublishRequest = publishRequestSupplier.get();
         return messageRouterPublisher.put(
-                config.get(),
+                messageRouterPublishRequest,
                 Flux.just(pnfReadyJsonBodyBuilder.createJsonBody(consumerDmaapModel)));
     }
 }

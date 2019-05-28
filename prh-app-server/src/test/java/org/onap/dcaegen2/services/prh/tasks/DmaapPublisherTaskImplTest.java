@@ -22,7 +22,6 @@ package org.onap.dcaegen2.services.prh.tasks;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
@@ -44,7 +43,6 @@ import reactor.test.StepVerifier;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/17/18
@@ -57,22 +55,15 @@ class DmaapPublisherTaskImplTest {
     private MessageRouterPublishRequest mrRequest = createMRRequest();
 
     @Mock
-    private static MessageRouterPublisherResolver messageRouterPublisherClientResolver;
-    @Mock
     private static MessageRouterPublisher messageRouterPublisher;
 
     @Captor
     private ArgumentCaptor<Flux<JsonElement>> fluxCaptor;
 
-    @BeforeEach
-    void beforeEach() {
-        when(messageRouterPublisherClientResolver.resolveClient()).thenReturn(messageRouterPublisher);
-    }
-
     @Test
     void execute_whenPassedObjectDoesntFit_ThrowsPrhTaskException() {
         //given
-        dmaapPublisherTask = new DmaapPublisherTaskImpl(() -> mrRequest, messageRouterPublisherClientResolver);
+        dmaapPublisherTask = new DmaapPublisherTaskImpl(() -> mrRequest, () -> messageRouterPublisher);
         //when
         Executable executableFunction = () -> dmaapPublisherTask.execute(null);
         //then
@@ -82,7 +73,7 @@ class DmaapPublisherTaskImplTest {
     @Test
     void execute_whenPassedObjectFits_ReturnsCorrectStatus() throws DmaapNotFoundException {
         //given
-        dmaapPublisherTask = new DmaapPublisherTaskImpl(() -> mrRequest, messageRouterPublisherClientResolver);
+        dmaapPublisherTask = new DmaapPublisherTaskImpl(() -> mrRequest, () -> messageRouterPublisher);
         //when
         dmaapPublisherTask.execute(createConsumerDmaapModel());
         //then

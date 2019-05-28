@@ -30,6 +30,7 @@ import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -58,6 +59,7 @@ import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.SW_VE
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/8/18
  */
+@Component
 public class DmaapConsumerJsonParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DmaapConsumerJsonParser.class);

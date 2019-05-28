@@ -34,7 +34,16 @@ import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.Immutable
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterSubscribeRequest;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeRequest;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.config.ImmutableMessageRouterPublisherConfig;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.config.ImmutableMessageRouterSubscriberConfig;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.config.MessageRouterPublisherConfig;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.config.MessageRouterSubscriberConfig;
+import org.onap.dcaegen2.services.sdk.security.ssl.ImmutableSecurityKeys;
+import org.onap.dcaegen2.services.sdk.security.ssl.ImmutableSecurityKeysStore;
+import org.onap.dcaegen2.services.sdk.security.ssl.Passwords;
+import org.onap.dcaegen2.services.sdk.security.ssl.SecurityKeys;
 
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.Map;
 
@@ -77,6 +86,31 @@ class CbsContentParser {
                 .contentType(jsonObject.get("dmaap.dmaapProducerConfiguration.dmaapContentType").getAsString())
                 .sinkDefinition(parsedSink)
                 .build();
+    }
+
+    MessageRouterPublisherConfig getMessageRouterPublisherConfig() {
+        return ImmutableMessageRouterPublisherConfig.builder()
+                .securityKeys(isDmaapCertAuthEnabled(jsonObject) ? createSecurityKeys(jsonObject) : null)
+                .build();
+    }
+
+    MessageRouterSubscriberConfig getMessageRouterSubscriberConfig() {
+        return ImmutableMessageRouterSubscriberConfig.builder()
+                .securityKeys(isDmaapCertAuthEnabled(jsonObject) ? createSecurityKeys(jsonObject) : null)
+                .build();
+    }
+
+    private SecurityKeys createSecurityKeys(JsonObject config) {
+        return ImmutableSecurityKeys.builder()
+                .keyStore(ImmutableSecurityKeysStore.of(Paths.get(config.get(SECURITY_KEY_STORE_PATH).getAsString())))
+                .keyStorePassword(Passwords.fromPath(Paths.get(config.get(SECURITY_KEY_STORE_PASS_PATH).getAsString())))
+                .trustStore(ImmutableSecurityKeysStore.of(Paths.get(config.get(SECURITY_TRUST_STORE_PATH).getAsString())))
+                .trustStorePassword(Passwords.fromPath(Paths.get(config.get(SECURITY_TRUST_STORE_PASS_PATH).getAsString())))
+                .build();
+    }
+
+    private boolean isDmaapCertAuthEnabled(JsonObject config) {
+        return config.get("security.enableDmaapCertAuth").getAsBoolean();
     }
 
     AaiClientConfiguration getAaiClientConfig() {

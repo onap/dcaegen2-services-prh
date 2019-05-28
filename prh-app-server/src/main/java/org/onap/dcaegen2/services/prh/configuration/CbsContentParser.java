@@ -82,16 +82,11 @@ class CbsContentParser {
     AaiClientConfiguration getAaiClientConfig() {
         return new ImmutableAaiClientConfiguration.Builder()
             .pnfUrl(jsonObject.get("aai.aaiClientConfiguration.pnfUrl").getAsString())
-            .aaiHost(jsonObject.get("aai.aaiClientConfiguration.aaiHost").getAsString())
-            .aaiPort(jsonObject.get("aai.aaiClientConfiguration.aaiHostPortNumber").getAsInt())
             .aaiUserName(jsonObject.get("aai.aaiClientConfiguration.aaiUserName").getAsString())
-            .aaiPnfPath(jsonObject.get("aai.aaiClientConfiguration.aaiPnfPath").getAsString())
             .aaiServiceInstancePath(jsonObject.get("aai.aaiClientConfiguration.aaiServiceInstancePath").getAsString())
             .aaiIgnoreSslCertificateErrors(
                     jsonObject.get("aai.aaiClientConfiguration.aaiIgnoreSslCertificateErrors").getAsBoolean())
             .aaiUserPassword(jsonObject.get("aai.aaiClientConfiguration.aaiUserPassword").getAsString())
-            .aaiProtocol(jsonObject.get("aai.aaiClientConfiguration.aaiProtocol").getAsString())
-            .aaiBasePath(jsonObject.get("aai.aaiClientConfiguration.aaiBasePath").getAsString())
             .trustStorePath(jsonObject.get(SECURITY_TRUST_STORE_PATH).getAsString())
             .trustStorePasswordPath(jsonObject.get(SECURITY_TRUST_STORE_PASS_PATH).getAsString())
             .keyStorePath(jsonObject.get(SECURITY_KEY_STORE_PATH).getAsString())

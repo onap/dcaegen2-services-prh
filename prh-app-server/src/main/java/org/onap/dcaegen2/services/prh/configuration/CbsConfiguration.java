@@ -33,12 +33,7 @@ import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRo
 import org.onap.dcaegen2.services.sdk.rest.services.model.logging.RequestDiagnosticContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
@@ -46,11 +41,7 @@ import reactor.core.scheduler.Schedulers;
 import java.util.Optional;
 
 @Configuration
-@ComponentScan("org.onap.dcaegen2.services.sdk.rest.services.cbs.client.providers")
-@EnableConfigurationProperties
-@EnableScheduling
-@Primary
-public class CbsConfiguration extends PrhAppConfig {
+public class CbsConfiguration implements Config {
     private static final Logger LOGGER = LoggerFactory.getLogger(CbsConfiguration.class);
     private AaiClientConfiguration aaiClientCBSConfiguration;
     private MessageRouterPublisher messageRouterPublisher;
@@ -59,8 +50,11 @@ public class CbsConfiguration extends PrhAppConfig {
     private MessageRouterSubscribeRequest messageRouterCBSSubscribeRequest;
     private MessageRouterPublishRequest messageRouterCBSUpdatePublishRequest;
 
-    @Autowired
-    private ConsulConfigFileReader consulConfigFileReader;
+    private final ConsulConfigFileReader consulConfigFileReader;
+
+    public CbsConfiguration(ConsulConfigFileReader consulConfigFileReader) {
+        this.consulConfigFileReader = consulConfigFileReader;
+    }
 
     public void runTask() {
         Flux.defer(this::resolveEnvProperties)

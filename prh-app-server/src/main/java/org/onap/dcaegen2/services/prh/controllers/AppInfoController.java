@@ -20,13 +20,17 @@
 
 package org.onap.dcaegen2.services.prh.controllers;
 
-import io.swagger.annotations.*;
-import org.onap.dcaegen2.services.prh.configuration.Config;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import org.onap.dcaegen2.services.prh.configuration.PrhAppConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.http.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
@@ -39,11 +43,10 @@ import reactor.core.publisher.Mono;
 public class AppInfoController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AppInfoController.class);
-    private final Resource gitInfo;
+    private final PrhAppConfig config;
 
-    @Autowired
-    public AppInfoController(Config config) {
-        gitInfo = config.getGitInfo();
+    public AppInfoController(PrhAppConfig config) {
+        this.config = config;
     }
 
     @GetMapping(value = "heartbeat", produces = MediaType.TEXT_PLAIN_VALUE)
@@ -58,6 +61,6 @@ public class AppInfoController {
     @GetMapping(value = "version", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("Returns version information")
     public Mono<Resource> version() {
-        return Mono.defer(() -> Mono.just(gitInfo));
+        return Mono.defer(() -> Mono.just(config.getGitInfo()));
     }
 }

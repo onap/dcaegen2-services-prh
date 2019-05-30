@@ -21,7 +21,6 @@
 package org.onap.dcaegen2.services.prh.tasks;
 
 import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.patch.AaiHttpPatchClient;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +29,6 @@ import org.springframework.context.annotation.Primary;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 
 
 
@@ -38,22 +36,18 @@ import static org.mockito.Mockito.spy;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
 @Configuration
-public class AaiPublisherTaskSpy {
+public class AaiPublisherTaskTestConfig {
 
     /**
      * Mocking bean for tests.
-     *
-     * @return A&AI ProducerTask spy
      */
     @Bean
     @Primary
     public AaiProducerTask registerSimpleAaiPublisherTask() {
-        CbsConfiguration cbsConfiguration = spy(CbsConfiguration.class);
-        ConsumerDmaapModel consumerDmaapModel = spy(ConsumerDmaapModel.class);
+        CbsConfiguration cbsConfiguration = mock(CbsConfiguration.class);
         doReturn(mock(AaiClientConfiguration.class)).when(cbsConfiguration).getAaiClientConfiguration();
         AaiHttpPatchClient aaiReactiveHttpPatchClient = mock(AaiHttpPatchClient.class);
-        AaiProducerTaskImpl aaiProducerTask = spy(new AaiProducerTaskImpl(aaiReactiveHttpPatchClient));
 
-        return aaiProducerTask;
+        return new AaiProducerTaskImpl(aaiReactiveHttpPatchClient);
     }
 }

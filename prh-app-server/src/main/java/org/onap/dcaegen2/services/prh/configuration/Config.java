@@ -25,14 +25,11 @@ import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRout
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterSubscriber;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeRequest;
-import org.springframework.core.io.Resource;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/25/18
  */
 public interface Config {
-
-    Resource getGitInfo();
 
     MessageRouterSubscribeRequest getMessageRouterSubscribeRequest();
 

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "300b5132_8891e506",
+        "filename": "prh-app-server/src/test/resources/configurationFromCbs.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2019-05-30T10:00:48Z",
+      "side": 0,
+      "message": "Why dmaapUrl has been removed?",
+      "range": {
+        "startLine": 3,
+        "startChar": 38,
+        "endLine": 3,
+        "endChar": 46
+      },
+      "revId": "37444e2753f351cfe22b4651bcf777b833aeba92",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

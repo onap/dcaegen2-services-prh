@@ -46,7 +46,7 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 class ConsulConfigurationParserTest {
 
     private final String correctJson =
-            new String(Files.readAllBytes(Paths.get(getSystemResource("flattened_configuration.json").toURI())));
+            new String(Files.readAllBytes(Paths.get(getSystemResource("configurationFromCbs.json").toURI())));
     private final ImmutableAaiClientConfiguration correctAaiClientConfig =
             TestAppConfiguration.createDefaultAaiClientConfiguration();
 

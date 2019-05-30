@@ -16,6 +16,24 @@
       "revId": "0c500caf7a7feb0fe702e82383cfcd56bca4fecc",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f51deedf_6f805be8",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AaiQueryTaskImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 2807
+      },
+      "writtenOn": "2019-05-30T12:48:28Z",
+      "side": 1,
+      "message": "Nope, due to compilation failures.",
+      "parentUuid": "10b3daca_74eaf36f",
+      "revId": "0c500caf7a7feb0fe702e82383cfcd56bca4fecc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

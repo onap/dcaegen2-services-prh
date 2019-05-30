@@ -34,6 +34,24 @@
       "revId": "0c500caf7a7feb0fe702e82383cfcd56bca4fecc",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d420b2d0_30fdd363",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/AaiQueryTaskImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2019-05-30T12:51:10Z",
+      "side": 1,
+      "message": "So please extract them to a separate file",
+      "parentUuid": "f51deedf_6f805be8",
+      "revId": "0c500caf7a7feb0fe702e82383cfcd56bca4fecc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

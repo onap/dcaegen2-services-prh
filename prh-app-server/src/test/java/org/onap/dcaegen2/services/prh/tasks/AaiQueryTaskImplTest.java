@@ -26,8 +26,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.onap.dcaegen2.services.prh.integration.junit5.mockito.MockitoExtension;
-import org.onap.dcaegen2.services.prh.model.*;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.onap.dcaegen2.services.prh.model.AaiPnfResultModel;
+import org.onap.dcaegen2.services.prh.model.AaiServiceInstanceResultModel;
+import org.onap.dcaegen2.services.prh.model.ImmutableRelationshipData;
+import org.onap.dcaegen2.services.prh.model.Relationship;
+import org.onap.dcaegen2.services.prh.model.RelationshipData;
+import org.onap.dcaegen2.services.prh.model.RelationshipDict;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.AaiHttpClient;
 import org.onap.dcaegen2.services.sdk.rest.services.model.AaiModel;
 import org.onap.dcaegen2.services.sdk.rest.services.model.AaiServiceInstanceQueryModel;
@@ -38,10 +43,9 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class AaiQueryTaskImplTest {
+class AaiQueryTaskImplTest {
     @Mock
     private AaiHttpClient<AaiModel, AaiPnfResultModel> getPnfModelClient;
 
@@ -60,15 +64,6 @@ public class AaiQueryTaskImplTest {
     @Mock
     private AaiServiceInstanceResultModel serviceModel;
 
-    @Mock
-    private RelationshipData customer;
-
-    @Mock
-    private RelationshipData serviceType;
-
-    @Mock
-    private RelationshipData serviceInstanceId;
-
     private List<RelationshipData> allRelationData;
 
     private AaiQueryTask sut;
@@ -77,16 +72,14 @@ public class AaiQueryTaskImplTest {
 
     @BeforeEach
     void setUp() {
-        when(customer.getRelationshipKey()).thenReturn(AaiQueryTaskImpl.CUSTOMER);
-        when(customer.getRelationshipValue()).thenReturn("Foo");
-
-        when(serviceType.getRelationshipKey()).thenReturn(AaiQueryTaskImpl.SERVICE_TYPE);
-        when(serviceType.getRelationshipValue()).thenReturn("Bar");
-
-        when(serviceInstanceId.getRelationshipKey()).thenReturn(AaiQueryTaskImpl.SERVICE_INSTANCE_ID);
-        when(serviceInstanceId.getRelationshipValue()).thenReturn("Baz");
-
-        allRelationData = Lists.list(customer, serviceType, serviceInstanceId);
+        allRelationData = Lists.list(
+                ImmutableRelationshipData.builder()
+                        .relationshipKey(AaiQueryTaskImpl.CUSTOMER).relationshipValue("Foo").build(),
+                ImmutableRelationshipData.builder()
+                        .relationshipKey(AaiQueryTaskImpl.SERVICE_TYPE).relationshipValue("Bar").build(),
+                ImmutableRelationshipData.builder()
+                        .relationshipKey(AaiQueryTaskImpl.SERVICE_INSTANCE_ID).relationshipValue("Baz").build()
+        );
 
         sut = new AaiQueryTaskImpl(getPnfModelClient, getServiceClient);
     }

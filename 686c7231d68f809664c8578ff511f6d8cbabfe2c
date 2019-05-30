@@ -16,6 +16,24 @@
       "revId": "686c7231d68f809664c8578ff511f6d8cbabfe2c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9475c00_60b15401",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/AaiQueryTaskImplTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 5337
+      },
+      "writtenOn": "2019-05-30T13:25:12Z",
+      "side": 1,
+      "message": "Planned to do that in separate review, but maybe keeping those steps in git log separately is an overkill -\u003e DONE",
+      "parentUuid": "c314365b_f7dc4a0a",
+      "revId": "686c7231d68f809664c8578ff511f6d8cbabfe2c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

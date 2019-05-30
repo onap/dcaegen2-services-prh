@@ -25,11 +25,7 @@ import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.logging.MdcVariables;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
-import org.slf4j.Marker;
-import org.slf4j.MarkerFactory;
+import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -90,12 +86,12 @@ public class ScheduledTasks {
     }
 
     static class State {
-        public final ConsumerDmaapModel DmaapModel;
-        public final Boolean ActivationStatus;
+        public final ConsumerDmaapModel dmaapModel;
+        public final Boolean activationStatus;
 
-        public State(final ConsumerDmaapModel DmaapModel, final Boolean ActivationStatus) {
-            this.DmaapModel = DmaapModel;
-            this.ActivationStatus = ActivationStatus;
+        public State(final ConsumerDmaapModel dmaapModel, final Boolean activationStatus) {
+            this.dmaapModel = dmaapModel;
+            this.activationStatus = activationStatus;
         }
     }
 
@@ -169,10 +165,10 @@ public class ScheduledTasks {
 
     private Mono<State> publishToAaiConfiguration(final State state) {
         try {
-            return state.ActivationStatus
+            return state.activationStatus
                     ? Mono.just(state)
                     : aaiProducerTask
-                        .execute(state.DmaapModel)
+                    .execute(state.dmaapModel)
                         .map(x -> state);
         } catch (PrhTaskException | SSLException e) {
             return Mono.error(e);
@@ -180,24 +176,24 @@ public class ScheduledTasks {
     }
 
     private Mono<State> processAdditionalFields(final State state) {
-        if (state.ActivationStatus) {
+        if (state.activationStatus) {
             LOGGER.debug("Re-registration - Logical links won't be updated.");
 
             return Mono.just(state);
         }
 
-        return bbsActionsTask.execute(state.DmaapModel).map(x -> state);
+        return bbsActionsTask.execute(state.dmaapModel).map(x -> state);
     }
 
     private Flux<MessageRouterPublishResponse>
     publishToDmaapConfiguration(final State state) {
         try {
-            if (state.ActivationStatus) {
+            if (state.activationStatus) {
                 LOGGER.debug("Re-registration - Using PNF_UPDATE DMaaP topic.");
-                return dmaapUpdateProducerTask.execute(state.DmaapModel);
+                return dmaapUpdateProducerTask.execute(state.dmaapModel);
             }
 
-            return dmaapReadyProducerTask.execute(state.DmaapModel);
+            return dmaapReadyProducerTask.execute(state.dmaapModel);
         } catch (PrhTaskException e) {
             return Flux.error(e);
         }

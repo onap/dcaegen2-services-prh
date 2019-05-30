@@ -27,6 +27,7 @@ import reactor.core.publisher.Flux;
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
+@FunctionalInterface
 interface DmaapConsumerTask {
     Flux<ConsumerDmaapModel> execute();
 }

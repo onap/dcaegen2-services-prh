@@ -28,6 +28,7 @@ import reactor.core.publisher.Flux;
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
+@FunctionalInterface
 public interface DmaapPublisherTask {
     Flux<MessageRouterPublishResponse> execute(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException;
 }

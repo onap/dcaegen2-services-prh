@@ -26,7 +26,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.onap.dcaegen2.services.prh.integration.junit5.mockito.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.onap.dcaegen2.services.prh.model.*;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.AaiHttpClient;
 import org.onap.dcaegen2.services.sdk.rest.services.model.AaiModel;
@@ -41,7 +43,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class AaiQueryTaskImplTest {
+@MockitoSettings(strictness = Strictness.LENIENT)   // TODO remove unnecessary stubbing
+class AaiQueryTaskImplTest {
     @Mock
     private AaiHttpClient<AaiModel, AaiPnfResultModel> getPnfModelClient;
 

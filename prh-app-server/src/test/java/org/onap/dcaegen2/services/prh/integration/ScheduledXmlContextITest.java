@@ -28,7 +28,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.onap.dcaegen2.services.prh.integration.junit5.mockito.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

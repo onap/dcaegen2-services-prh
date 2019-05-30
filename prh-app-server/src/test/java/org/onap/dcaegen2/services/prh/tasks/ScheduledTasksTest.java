@@ -23,11 +23,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
-import org.onap.dcaegen2.services.prh.integration.junit5.mockito.MockitoExtension;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -36,14 +37,14 @@ import java.util.Collections;
 import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class ScheduledTasksTest {
+@MockitoSettings(strictness = Strictness.LENIENT)   // TODO remove unnecessary stubbing
+class ScheduledTasksTest {
     private final static ConsumerDmaapModel DMAAP_MODEL =
             ImmutableConsumerDmaapModel
                     .builder()
@@ -157,16 +158,16 @@ public class ScheduledTasksTest {
         verify(readyPublisher, never()).execute(DMAAP_MODEL);
     }
 
-    private Flux<MessageRouterPublishResponse> verifyThatPnfModelWasNotSentDmaapPnfUpdateTopic() throws PrhTaskException {
-        return verify(updatePublisher, never()).execute(DMAAP_MODEL);
+    private void verifyThatPnfModelWasNotSentDmaapPnfUpdateTopic() throws PrhTaskException {
+        verify(updatePublisher, never()).execute(DMAAP_MODEL);
     }
 
     private void verifyThatPnfModelWasSentDmaapPnfReadyTopic() throws PrhTaskException {
         verify(readyPublisher, atLeastOnce()).execute(DMAAP_MODEL);
     }
 
-    private Flux<MessageRouterPublishResponse> verifyThatPnfModelWasSentDmaapPnfUpdateTopic() throws PrhTaskException {
-        return verify(updatePublisher, atLeastOnce()).execute(DMAAP_MODEL);
+    private void verifyThatPnfModelWasSentDmaapPnfUpdateTopic() throws PrhTaskException {
+        verify(updatePublisher, atLeastOnce()).execute(DMAAP_MODEL);
     }
 
     private void verifyThatPnfUpdateWasNotSentToAai() throws PrhTaskException, SSLException {

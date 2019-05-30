@@ -34,7 +34,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/27/18
@@ -42,7 +41,7 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 @Configuration
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
 @ContextConfiguration(locations = "classpath:scheduled-context.xml")
-class ScheduledXmlContextITest extends AbstractTestNGSpringContextTests {
+class ScheduledXmlContextITest {
 
     private static final int WAIT_FOR_SCHEDULING = 1;
 

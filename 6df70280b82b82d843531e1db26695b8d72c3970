@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "66df73d8_7205cf56",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/AaiQueryTaskImplTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 2807
+      },
+      "writtenOn": "2019-05-31T07:52:11Z",
+      "side": 1,
+      "message": "Unfold this.",
+      "range": {
+        "startLine": 30,
+        "startChar": 44,
+        "endLine": 30,
+        "endChar": 46
+      },
+      "revId": "6df70280b82b82d843531e1db26695b8d72c3970",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

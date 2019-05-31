@@ -20,9 +20,6 @@
 
 package org.onap.dcaegen2.services.prh;
 
-import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.INVOCATION_ID;
-import static org.onap.dcaegen2.services.prh.model.logging.MdcVariables.REQUEST_ID;
-
 import java.util.Map;
 import java.util.UUID;
 import org.onap.dcaegen2.services.prh.configuration.ConsulConfigFileReader;
@@ -36,6 +33,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
+
+import static org.onap.dcaegen2.services.sdk.rest.services.model.logging.MdcVariables.INVOCATION_ID;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
@@ -51,7 +50,6 @@ public class MainApp {
 
     @Bean
     Map<String, String> mdcContextMap() {
-        MDC.put(REQUEST_ID, "SampleRequestID");
         MDC.put(INVOCATION_ID, UUID.randomUUID().toString());
         return MDC.getCopyOfContextMap();
     }

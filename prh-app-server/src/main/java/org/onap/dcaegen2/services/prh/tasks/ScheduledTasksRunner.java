@@ -20,7 +20,6 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import io.swagger.annotations.ApiOperation;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -35,11 +34,8 @@ import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import reactor.core.publisher.Mono;
 
 
 /**
@@ -70,16 +66,10 @@ public class ScheduledTasksRunner {
 
     /**
      * Function which have to stop tasks execution.
-     *
-     * @return response entity about status of cancellation operation
      */
-    @ApiOperation(value = "Get response on stopping task execution")
-    public synchronized Mono<ResponseEntity<String>> getResponseFromCancellationOfTasks() {
+    public synchronized void cancelTasks() {
         scheduledPrhTaskFutureList.forEach(x -> x.cancel(false));
         scheduledPrhTaskFutureList.clear();
-        return Mono.defer(() ->
-            Mono.just(new ResponseEntity<>("PRH Service has already been stopped!", HttpStatus.CREATED))
-        );
     }
 
     /**
@@ -87,9 +77,7 @@ public class ScheduledTasksRunner {
      *
      * @return status of operation execution: true - started, false - not started
      */
-
     @PostConstruct
-    @ApiOperation(value = "Start task if possible")
     public synchronized boolean tryToStartTask() {
         LOGGER.info(ENTRY, "Start scheduling PRH workflow");
         if (scheduledPrhTaskFutureList.isEmpty()) {

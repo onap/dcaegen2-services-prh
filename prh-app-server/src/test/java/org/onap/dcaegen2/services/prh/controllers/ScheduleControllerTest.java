@@ -21,49 +21,55 @@
 package org.onap.dcaegen2.services.prh.controllers;
 
 import org.junit.jupiter.api.Test;
-import org.onap.dcaegen2.services.prh.configuration.PrhAppConfig;
+import org.onap.dcaegen2.services.prh.tasks.ScheduledTasksRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext
-class AppInfoControllerTest {
-
-    private static final String SAMPLE_GIT_INFO_CONTENT = "{ \"git.commit.id\" : \"37444e\" }";
+class ScheduleControllerTest {
 
     @MockBean
-    private PrhAppConfig prhAppConfig;
+    private ScheduledTasksRunner scheduledTasksRunner;
 
     @Autowired
     private WebTestClient webTestClient;
 
     @Test
-    void shouldProvideHeartbeatResponse() {
+    void startEndpointShouldAllowStartingPrhTasks() {
+        when(scheduledTasksRunner.tryToStartTask()).thenReturn(true);
         webTestClient
-                .get().uri("/heartbeat")
-                .accept(MediaType.TEXT_PLAIN)
+                .get().uri("/start")
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody(String.class).isEqualTo("alive");
+                .expectStatus().isCreated()
+                .expectBody(String.class).isEqualTo("PRH Service has been started!");
     }
 
+    @Test
+    void whenPrhTasksAreAlreadyStarted_shouldRespondThatRequestWasNotAccepted() {
+        when(scheduledTasksRunner.tryToStartTask()).thenReturn(false);
+        webTestClient
+                .get().uri("/start")
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.NOT_ACCEPTABLE)
+                .expectBody(String.class).isEqualTo("PRH Service is already running!");
+    }
 
     @Test
-    void shouldProvideVersionInfo() {
-        when(prhAppConfig.getGitInfo()).thenReturn(new ByteArrayResource(SAMPLE_GIT_INFO_CONTENT.getBytes()));
-
+    void stopEndpointShouldAllowStoppingPrhTasks() {
         webTestClient
-                .get().uri("/version")
-                .accept(MediaType.APPLICATION_JSON)
+                .get().uri("/stopPrh")
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(String.class).isEqualTo(SAMPLE_GIT_INFO_CONTENT);
+                .expectBody(String.class).isEqualTo("PRH Service has been stopped!");
+
+        verify(scheduledTasksRunner).cancelTasks();
     }
 }

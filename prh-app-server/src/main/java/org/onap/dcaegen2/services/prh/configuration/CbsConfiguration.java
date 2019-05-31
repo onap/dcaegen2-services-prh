@@ -43,6 +43,7 @@ import java.util.Optional;
 @Configuration
 public class CbsConfiguration implements Config {
     private static final Logger LOGGER = LoggerFactory.getLogger(CbsConfiguration.class);
+    private static final String CBS_CONFIG_MISSING = "CBS config missing";
     private AaiClientConfiguration aaiClientCBSConfiguration;
     private MessageRouterPublisher messageRouterPublisher;
     private MessageRouterSubscriber messageRouterSubscriber;
@@ -105,31 +106,31 @@ public class CbsConfiguration implements Config {
 
     @Override
     public MessageRouterPublisher getMessageRouterPublisher() {
-        return Optional.ofNullable(messageRouterPublisher).orElseThrow(() -> new RuntimeException("CBS config missing"));
+        return Optional.ofNullable(messageRouterPublisher).orElseThrow(() -> new RuntimeException(CBS_CONFIG_MISSING));
     }
 
     @Override
     public MessageRouterSubscriber getMessageRouterSubscriber() {
-        return Optional.ofNullable(messageRouterSubscriber).orElseThrow(() -> new RuntimeException("CBS config missing"));
+        return Optional.ofNullable(messageRouterSubscriber).orElseThrow(() -> new RuntimeException(CBS_CONFIG_MISSING));
     }
 
     @Override
     public MessageRouterPublishRequest getMessageRouterPublishRequest() {
-        return Optional.ofNullable(messageRouterCBSPublishRequest).orElseThrow(() -> new RuntimeException("CBS config missing"));
+        return Optional.ofNullable(messageRouterCBSPublishRequest).orElseThrow(() -> new RuntimeException(CBS_CONFIG_MISSING));
     }
 
     @Override
     public MessageRouterPublishRequest getMessageRouterUpdatePublishRequest() {
-        return Optional.ofNullable(messageRouterCBSUpdatePublishRequest).orElseThrow(() -> new RuntimeException("CBS config missing"));
+        return Optional.ofNullable(messageRouterCBSUpdatePublishRequest).orElseThrow(() -> new RuntimeException(CBS_CONFIG_MISSING));
     }
 
     @Override
     public AaiClientConfiguration getAaiClientConfiguration() {
-        return Optional.ofNullable(aaiClientCBSConfiguration).orElseThrow(() -> new RuntimeException("CBS config missing"));
+        return Optional.ofNullable(aaiClientCBSConfiguration).orElseThrow(() -> new RuntimeException(CBS_CONFIG_MISSING));
     }
 
     @Override
     public MessageRouterSubscribeRequest getMessageRouterSubscribeRequest() {
-        return Optional.ofNullable(messageRouterCBSSubscribeRequest).orElseThrow(() -> new RuntimeException("CBS config missing"));
+        return Optional.ofNullable(messageRouterCBSSubscribeRequest).orElseThrow(() -> new RuntimeException(CBS_CONFIG_MISSING));
     }
 }

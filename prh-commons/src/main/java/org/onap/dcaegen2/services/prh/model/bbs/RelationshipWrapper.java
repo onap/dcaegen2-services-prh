@@ -25,6 +25,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @Gson.TypeAdapters(fieldNamingStrategy = true)
+@FunctionalInterface
 public interface RelationshipWrapper {
 
     @SerializedName(value = "relationship")

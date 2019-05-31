@@ -47,4 +47,15 @@
       <appender-ref ref="ROLLING-FILE"/>
     </root>
   </springProfile>
+
+  <springProfile name="dev">
+    <appender class="ch.qos.logback.core.ConsoleAppender" name="CONSOLE" target="SYSTEM_OUT">
+      <encoder>
+        <pattern>${CONSOLE_LOG_PATTERN}</pattern>  <!-- from org/springframework/boot/logging/logback/defaults.xml -->
+      </encoder>
+    </appender>
+    <root level="INFO">
+      <appender-ref ref="CONSOLE"/>
+    </root>
+  </springProfile>
 </configuration>

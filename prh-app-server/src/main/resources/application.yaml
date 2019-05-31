@@ -9,3 +9,11 @@ server:
     key-store: classpath:keystore-local
     key-password: nokiapnf
     keyAlias: tomcat-localhost
+
+---
+spring:
+  profiles: dev
+logging:
+  level:
+    org.onap.dcaegen2.services.prh: info
+    org.onap.dcaegen2.services.sdk: info

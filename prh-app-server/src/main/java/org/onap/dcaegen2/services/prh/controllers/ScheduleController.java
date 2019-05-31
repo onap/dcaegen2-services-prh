@@ -60,15 +60,18 @@ public class ScheduleController {
     @ApiOperation(value = "Receiving stop scheduling worker request")
     public Mono<ResponseEntity<String>> stopTask() {
         LOGGER.trace("Receiving stop scheduling worker request");
-        return scheduledTasksRunner.getResponseFromCancellationOfTasks();
+        return Mono.defer(() -> {
+                    scheduledTasksRunner.cancelTasks();
+                    return Mono.just(new ResponseEntity<>("PRH Service has been stopped!", HttpStatus.OK));
+                }
+        );
     }
 
-    @ApiOperation(value = "Sends success or error response on starting task execution")
     private ResponseEntity<String> createStartTaskResponse(boolean wasScheduled) {
         if (wasScheduled) {
             return new ResponseEntity<>("PRH Service has been started!", HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>("PRH Service is still running!", HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>("PRH Service is already running!", HttpStatus.NOT_ACCEPTABLE);
         }
     }
 }

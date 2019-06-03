@@ -16,6 +16,24 @@
       "revId": "20c84fd46a3cf1ffa2e07e740cdccc3c1b77c13c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ebcaaacd_cdfb8b2b",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/ScheduledTasksRunner.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 5337
+      },
+      "writtenOn": "2019-06-03T07:16:54Z",
+      "side": 0,
+      "message": "#1 this class is not a controller with @Api annotation -\u003e Swagger does not care\n#2 the endpoint that make use of this method is \u0027documented\u0027 on ScheduleController\n\n    @RequestMapping(value \u003d \"stopPrh\", method \u003d RequestMethod.GET)\n    @ApiOperation(value \u003d \"Receiving stop scheduling worker request\")\n    public Mono\u003cResponseEntity\u003cString\u003e\u003e stopTask() {\n\n   (the way it is docummented, endpoint name and method is another story )",
+      "parentUuid": "75b3e655_3971c997",
+      "revId": "20c84fd46a3cf1ffa2e07e740cdccc3c1b77c13c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

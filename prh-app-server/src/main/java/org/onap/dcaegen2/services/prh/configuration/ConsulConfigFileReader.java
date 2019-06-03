@@ -28,8 +28,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
-import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.model.EnvProperties;
-import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.model.ImmutableEnvProperties;
+import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.model.CbsClientConfiguration;
+import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.model.ImmutableCbsClientConfiguration;
+import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.model.ImmutableCbsClientConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,21 +43,21 @@ public class ConsulConfigFileReader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConsulConfigFileReader.class);
     private static final int DEFAULT_CONSUL_PORT = 8500;
-    private ImmutableEnvProperties jsonEnvProperties;
+    private ImmutableCbsClientConfiguration jsonCbsClientConfiguration;
 
     @Value("classpath:consul_config.json")
     private Resource consulConfig;
 
-    public Mono<EnvProperties> evaluate() {
+    public Mono<CbsClientConfiguration> evaluate() {
         initFileStreamReader();
-        EnvProperties envProperties = ImmutableEnvProperties.builder()
-                .consulHost(jsonEnvProperties.consulHost())
-                .consulPort(Optional.ofNullable(jsonEnvProperties.consulPort()).orElse(DEFAULT_CONSUL_PORT))
-                .cbsName(jsonEnvProperties.cbsName())
-                .appName(jsonEnvProperties.appName())
+        CbsClientConfiguration CbsClientConfiguration = ImmutableCbsClientConfiguration.builder()
+                .consulHost(jsonCbsClientConfiguration.consulHost())
+                .consulPort(Optional.ofNullable(jsonCbsClientConfiguration.consulPort()).orElse(DEFAULT_CONSUL_PORT))
+                .cbsName(jsonCbsClientConfiguration.cbsName())
+                .appName(jsonCbsClientConfiguration.appName())
                 .build();
-        LOGGER.info("Evaluated variables: {}", envProperties);
-        return Mono.just(envProperties);
+        LOGGER.info("Evaluated variables: {}", CbsClientConfiguration);
+        return Mono.just(CbsClientConfiguration);
     }
 
     private void initFileStreamReader() {
@@ -65,7 +66,7 @@ public class ConsulConfigFileReader {
         try (InputStream inputStream = consulConfig.getInputStream()) {
             JsonElement rootElement = getJsonElement(inputStream);
             if (rootElement.isJsonObject()) {
-                jsonEnvProperties = gson.fromJson(rootElement, ImmutableEnvProperties.class);
+                jsonCbsClientConfiguration = gson.fromJson(rootElement, ImmutableCbsClientConfiguration.class);
             }
         } catch (IOException e) {
             LOGGER.warn("Failed to load/parse file", e);

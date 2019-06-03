@@ -24,7 +24,7 @@ import com.google.gson.JsonObject;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.CbsClientFactory;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.CbsRequests;
-import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.model.EnvProperties;
+import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.model.CbsClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.DmaapClientFactory;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterPublisher;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterSubscriber;
@@ -58,23 +58,23 @@ public class CbsConfiguration implements Config {
     }
 
     public void runTask() {
-        Flux.defer(this::resolveEnvProperties)
+        Flux.defer(this::resolveCbsClientConfiguration)
             .subscribeOn(Schedulers.parallel())
             .subscribe(this::parsingConfigSuccess, this::parsingConfigError);
     }
 
-    private Mono<EnvProperties> resolveEnvProperties() {
+    private Mono<CbsClientConfiguration> resolveCbsClientConfiguration() {
         try {
-            return Mono.just(EnvProperties.fromEnvironment());
+            return Mono.just(CbsClientConfiguration.fromEnvironment());
         } catch(Exception e){
             parsingConfigError(e);
             return consulConfigFileReader.evaluate();
         }
     }
 
-    private void parsingConfigSuccess(EnvProperties envProperties) {
+    private void parsingConfigSuccess(CbsClientConfiguration cbsClientConfiguration) {
         LOGGER.debug("Fetching PRH configuration from Consul");
-        CbsClientFactory.createCbsClient(envProperties)
+        CbsClientFactory.createCbsClient(cbsClientConfiguration)
             .flatMap(cbsClient -> cbsClient.get(CbsRequests.getAll(RequestDiagnosticContext.create())))
             .subscribe(this::parseCBSConfig, this::cbsConfigError);
     }

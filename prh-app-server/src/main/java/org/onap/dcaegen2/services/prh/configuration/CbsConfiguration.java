@@ -22,24 +22,17 @@ package org.onap.dcaegen2.services.prh.configuration;
 
 import com.google.gson.JsonObject;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.CbsClientFactory;
-import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.CbsRequests;
-import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.model.CbsClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.DmaapClientFactory;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterPublisher;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterSubscriber;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeRequest;
-import org.onap.dcaegen2.services.sdk.rest.services.model.logging.RequestDiagnosticContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Configuration;
-import reactor.core.publisher.Flux;
-import reactor.core.scheduler.Schedulers;
 
 import java.util.Optional;
 
-@Configuration
+
 public class CbsConfiguration implements Config {
     private static final Logger LOGGER = LoggerFactory.getLogger(CbsConfiguration.class);
     private static final String CBS_CONFIG_MISSING = "CBS config missing";
@@ -50,26 +43,8 @@ public class CbsConfiguration implements Config {
     private MessageRouterSubscribeRequest messageRouterCBSSubscribeRequest;
     private MessageRouterPublishRequest messageRouterCBSUpdatePublishRequest;
 
-    private final CbsClientConfigurationResolver cbsClientConfigurationResolver;
 
-    public CbsConfiguration(CbsClientConfigurationResolver cbsClientConfigurationResolver) {
-        this.cbsClientConfigurationResolver = cbsClientConfigurationResolver;
-    }
-
-    public void runTask() {
-        Flux.defer(cbsClientConfigurationResolver::resolveCbsClientConfiguration)
-            .subscribeOn(Schedulers.parallel())
-            .subscribe(this::parsingConfigSuccess, this::parsingConfigError);
-    }
-
-    private void parsingConfigSuccess(CbsClientConfiguration cbsClientConfiguration) {
-        LOGGER.debug("Fetching PRH configuration from Consul");
-        CbsClientFactory.createCbsClient(cbsClientConfiguration)
-            .flatMap(cbsClient -> cbsClient.get(CbsRequests.getAll(RequestDiagnosticContext.create())))
-            .subscribe(this::parseCBSConfig, this::cbsConfigError);
-    }
-
-    private void parseCBSConfig(JsonObject jsonObject) {
+    public void parseCBSConfig(JsonObject jsonObject) {
         LOGGER.info("Received application configuration: {}", jsonObject);
         CbsContentParser consulConfigurationParser = new CbsContentParser(jsonObject);
 
@@ -83,14 +58,6 @@ public class CbsConfiguration implements Config {
         messageRouterSubscriber = DmaapClientFactory.createMessageRouterSubscriber(
                 consulConfigurationParser.getMessageRouterSubscriberConfig());
         messageRouterCBSSubscribeRequest = consulConfigurationParser.getMessageRouterSubscribeRequest();
-    }
-
-    private void parsingConfigError(Throwable throwable) {
-        LOGGER.warn("Failed to process system environments", throwable);
-    }
-
-    private void cbsConfigError(Throwable throwable) {
-        LOGGER.warn("Failed to gather configuration from ConfigBindingService/Consul", throwable);
     }
 
 

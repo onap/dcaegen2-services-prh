@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2019 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,29 +18,17 @@
  * ============LICENSE_END=========================================================
  */
 
+package org.onap.dcaegen2.services.bootstrap;
 
-package org.onap.dcaegen2.services.prh.configuration;
-
-import org.junit.jupiter.api.Test;
+import org.jetbrains.annotations.NotNull;
+import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.CbsClient;
+import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.CbsClientFactory;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.model.CbsClientConfiguration;
-import org.springframework.core.io.ClassRelativeResourceLoader;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
+import reactor.core.publisher.Mono;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class CbsClientConfigFileReaderTest {
-
-    private ResourceLoader resourceLoader = new ClassRelativeResourceLoader(ConsulConfigurationParserTest.class);
-
-    @Test
-    void shouldProvideDefaultCbsClientConfigurationLoadedFromTheFile() {
-        Resource configFile = resourceLoader.getResource("classpath:cbs_client_config.json");
-
-        CbsClientConfiguration configuration = new CbsClientConfigFileReader(configFile).readConfig().block();
-
-        assertEquals("dcae-prh", configuration.appName());
-        assertEquals("cbs", configuration.hostname());
-        assertEquals(Integer.valueOf(10000), configuration.port());
+class CbsClientFactoryFacade {
+    @NotNull
+    Mono<CbsClient> createCbsClient(CbsClientConfiguration cbsClientConfiguration) {
+        return CbsClientFactory.createCbsClient(cbsClientConfiguration);
     }
 }

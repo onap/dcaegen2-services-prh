@@ -49,7 +49,7 @@ import static org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMet
 public class BbsActionsTaskImpl implements BbsActionsTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BbsActionsTaskImpl.class);
-    private static final String ATTACHMENT_POINT = "attachmentPoint";
+    private static final String ATTACHMENT_POINT = "attachment-point";
     private static final String LOGICAL_LINK_URI = "/network/logical-links/logical-link";
     private static final String PNF_URI = "/network/pnfs/pnf";
 

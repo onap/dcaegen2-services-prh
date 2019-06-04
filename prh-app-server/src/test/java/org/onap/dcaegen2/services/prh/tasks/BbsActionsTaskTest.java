@@ -20,10 +20,7 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -37,12 +34,8 @@ import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpRequest;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.ImmutableHttpResponse;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RxHttpClient;
-import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 
-import java.io.InputStreamReader;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -78,7 +71,7 @@ class BbsActionsTaskTest {
         given(cbsConfiguration.getAaiClientConfiguration()).willReturn(aaiClientConfiguration);
 
         JsonObject additionalFields = new JsonObject();
-        additionalFields.addProperty("attachmentPoint", "");
+        additionalFields.addProperty("attachment-point", "");
         ConsumerDmaapModel consumerDmaapModel = buildConsumerDmaapModel(additionalFields);
 
         // when
@@ -95,7 +88,7 @@ class BbsActionsTaskTest {
         given(cbsConfiguration.getAaiClientConfiguration()).willReturn(aaiClientConfiguration);
 
         JsonObject additionalFields = new JsonObject();
-        additionalFields.addProperty("attachmentPoint", "some-link");
+        additionalFields.addProperty("attachment-point", "some-link");
         ConsumerDmaapModel consumerDmaapModel = buildConsumerDmaapModel(additionalFields);
 
         given(httpClient.call(any())).willReturn(Mono.just(buildAaiResponse(HttpResponseStatus.OK)));
@@ -114,7 +107,7 @@ class BbsActionsTaskTest {
         given(cbsConfiguration.getAaiClientConfiguration()).willReturn(aaiClientConfiguration);
 
         JsonObject additionalFields = new JsonObject();
-        additionalFields.addProperty("attachmentPoint", "some-link");
+        additionalFields.addProperty("attachment-point", "some-link");
         ConsumerDmaapModel consumerDmaapModel = buildConsumerDmaapModel(additionalFields);
 
         given(httpClient.call(any())).willReturn(Mono.just(buildAaiResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR)));
@@ -154,14 +147,5 @@ class BbsActionsTaskTest {
             .url("")
             .rawBody("".getBytes())
             .build();
-    }
-
-    private void assertJsonEquals(Publisher<ByteBuf> requestBody, String path) {
-        JsonParser parser = new JsonParser();
-        JsonElement result = parser.parse(Mono.from(requestBody).block().toString(UTF_8));
-        JsonElement expected = parser
-            .parse(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(path)));
-
-        assertThat(result).isEqualTo(expected);
     }
 }

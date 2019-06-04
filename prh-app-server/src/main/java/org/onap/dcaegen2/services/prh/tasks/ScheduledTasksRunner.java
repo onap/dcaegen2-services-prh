@@ -21,18 +21,15 @@
 package org.onap.dcaegen2.services.prh.tasks;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import javax.annotation.PostConstruct;
 
-import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -44,24 +41,17 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Configuration
 @EnableScheduling
 public class ScheduledTasksRunner {
-
     private static final int SCHEDULING_DELAY_FOR_PRH_TASKS = 10;
-    private static final int SCHEDULING_REQUEST_FOR_CONFIGURATION_DELAY = 5;
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledTasksRunner.class);
     private static final Marker ENTRY = MarkerFactory.getMarker("ENTRY");
     private static volatile List<ScheduledFuture> scheduledPrhTaskFutureList = new ArrayList<>();
 
     private final TaskScheduler taskScheduler;
     private final ScheduledTasks scheduledTask;
-    private final CbsConfiguration cbsConfiguration;
 
-    @Autowired
-    public ScheduledTasksRunner(TaskScheduler taskScheduler,
-                                ScheduledTasks scheduledTask,
-                                CbsConfiguration cbsConfiguration) {
+    public ScheduledTasksRunner(TaskScheduler taskScheduler, ScheduledTasks scheduledTask) {
         this.taskScheduler = taskScheduler;
         this.scheduledTask = scheduledTask;
-        this.cbsConfiguration = cbsConfiguration;
     }
 
     /**
@@ -81,9 +71,6 @@ public class ScheduledTasksRunner {
     public synchronized boolean tryToStartTask() {
         LOGGER.info(ENTRY, "Start scheduling PRH workflow");
         if (scheduledPrhTaskFutureList.isEmpty()) {
-            scheduledPrhTaskFutureList.add(taskScheduler
-                .scheduleAtFixedRate(cbsConfiguration::runTask, Instant.now(),
-                    Duration.ofMinutes(SCHEDULING_REQUEST_FOR_CONFIGURATION_DELAY)));
             scheduledPrhTaskFutureList.add(taskScheduler
                 .scheduleWithFixedDelay(scheduledTask::scheduleMainPrhEventTask,
                     Duration.ofSeconds(SCHEDULING_DELAY_FOR_PRH_TASKS)));

@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.configuration;
+package org.onap.dcaegen2.services.bootstrap;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.*;
@@ -26,27 +26,26 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.model.CbsClientConfiguration;
-import reactor.core.publisher.Mono;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CbsClientConfigurationResolverTest {
 
     @Mock
-    private CbsClientConfigFileReader cbsClientConfigFileReader;
+    private CbsProperties cbsProperties;
     @Mock
-    private CbsClientConfiguration configurationFromFile;
+    private CbsClientConfiguration defaultCbsClientConfigFromSpringProps;
 
     @Test
-    @DisabledIfEnvironmentVariable(named = "CONSUL_HOST", matches = ".+")
+    @DisabledIfEnvironmentVariable(named = "CONFIG_BINDING_SERVICE", matches = ".+")
     void whenCbsEnvPropertiesAreNotePresentInEnvironment_ShouldFallbackToLoadingDefaults() {
-        when(cbsClientConfigFileReader.readConfig()).thenReturn(Mono.just(configurationFromFile));
-        CbsClientConfigurationResolver cbsClientConfigurationResolver = new CbsClientConfigurationResolver(cbsClientConfigFileReader);
+        when(cbsProperties.toCbsClientConfiguration()).thenReturn(defaultCbsClientConfigFromSpringProps);
+        CbsClientConfigurationResolver cbsClientConfigurationResolver = new CbsClientConfigurationResolver(cbsProperties);
 
-        CbsClientConfiguration config = cbsClientConfigurationResolver.resolveCbsClientConfiguration().block();
+        CbsClientConfiguration config = cbsClientConfigurationResolver.resolveCbsClientConfiguration();
 
-        assertSame(configurationFromFile, config);
+        assertSame(defaultCbsClientConfigFromSpringProps, config);
     }
 }

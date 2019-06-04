@@ -48,6 +48,7 @@
   <properties>
     <java.version>8</java.version>
     <spring-boot.version>2.1.2.RELEASE</spring-boot.version>
+    <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
     <springfox.version>2.9.2</springfox.version>
     <immutables.version>2.7.5</immutables.version>
     <sdk.version>1.2.0-SNAPSHOT</sdk.version>
@@ -147,6 +148,14 @@
         <groupId>org.onap.dcaegen2.services.sdk.rest.services</groupId>
         <artifactId>common-dependency</artifactId>
         <version>${sdk.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring-cloud.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
 
       <dependency>

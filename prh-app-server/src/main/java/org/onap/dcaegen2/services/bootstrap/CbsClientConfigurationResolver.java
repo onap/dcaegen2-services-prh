@@ -18,28 +18,29 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.configuration;
+package org.onap.dcaegen2.services.bootstrap;
 
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.model.CbsClientConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
 
-@Component
-public class CbsClientConfigurationResolver {
+class CbsClientConfigurationResolver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CbsClientConfigurationResolver.class);
-    private final CbsClientConfigFileReader cbsClientConfigFileReader;
+    private final CbsProperties cbsProperties;
 
-    public CbsClientConfigurationResolver(CbsClientConfigFileReader cbsClientConfigFileReader) {
-        this.cbsClientConfigFileReader = cbsClientConfigFileReader;
+    CbsClientConfigurationResolver(CbsProperties cbsProperties) {
+        this.cbsProperties = cbsProperties;
     }
 
-    Mono<CbsClientConfiguration> resolveCbsClientConfiguration() {
-        return Mono.fromSupplier(CbsClientConfiguration::fromEnvironment)
-                .doOnError(err -> LOGGER.warn("Failed resolving CBS client configuration from system environments", err))
-                .onErrorResume(err -> cbsClientConfigFileReader.readConfig());
+    CbsClientConfiguration resolveCbsClientConfiguration() {
+        try {
+            return CbsClientConfiguration.fromEnvironment();
+        } catch (Exception e) {
+            LOGGER.warn("Failed resolving CBS client configuration from system environments: " + e);
+        }
+        LOGGER.info("Falling back to use of default CBS client configuration properties");
+        return cbsProperties.toCbsClientConfiguration();
     }
 
 }

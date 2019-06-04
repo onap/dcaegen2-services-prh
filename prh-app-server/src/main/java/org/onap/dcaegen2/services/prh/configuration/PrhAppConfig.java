@@ -23,26 +23,28 @@ package org.onap.dcaegen2.services.prh.configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/9/18
  */
-@Configuration
+@Component
 public class PrhAppConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(PrhAppConfig.class);
 
     @Value("classpath:git_info.json")
     private Resource gitInfo;
 
-    @PostConstruct
-    private void printGitInfo() throws IOException {
+
+    @EventListener
+    public void onApplicationStartedEvent(ApplicationStartedEvent applicationStartedEvent) throws IOException {
         if(LOGGER.isDebugEnabled()) {
             LOGGER.debug("Git info={}", StreamUtils.copyToString(gitInfo.getInputStream(), Charset.defaultCharset()));
         }
@@ -51,4 +53,5 @@ public class PrhAppConfig {
     public Resource getGitInfo() {
         return gitInfo;
     }
+
 }

@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: dcae-prh
+
+  cloud:
+    config:
+      enabled: false
+
+
+logging:
+  level:
+    org.springframework.boot.SpringApplication: warn
+    org.springframework.context.support.PostProcessorRegistrationDelegate: warn
+
+cbs:
+  hostname: cbs
+  port: 10000
+  app-name: dcae-prh
+  updates-interval: 5m
+  fetch-retries:
+    max-attempts: 10
+    first-backoff: 3s
+    max-backoff: 15s

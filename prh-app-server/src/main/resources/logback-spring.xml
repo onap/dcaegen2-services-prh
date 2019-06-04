@@ -16,8 +16,6 @@
     |%replace(%replace(%marker){'\t','\\\\t'}){'\n','\\\\n'}
     |%thread
     |%n"/>
-  <variable name="logLevel" value="${LOG_LEVEL:-ERROR}"/>
-  <variable name="logLevelPrh" value="${PRH_LOG_LEVEL:-WARN}"/>
 
   <springProfile name="prod">
     <appender class="ch.qos.logback.core.ConsoleAppender" name="CONSOLE" target="SYSTEM_OUT">
@@ -39,10 +37,7 @@
       </rollingPolicy>
     </appender>
 
-    <logger name="org.onap.dcaegen2.services.prh" level="${logLevelPrh}"/>
-    <logger name="org.onap.dcaegen2.services.sdk" level="${logLevelPrh}"/>
-
-    <root level="${logLevel}">
+    <root level="INFO">
       <appender-ref ref="CONSOLE"/>
       <appender-ref ref="ROLLING-FILE"/>
     </root>

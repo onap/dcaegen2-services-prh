@@ -28,6 +28,7 @@ import org.slf4j.MDC;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
@@ -42,6 +43,7 @@ import static org.onap.dcaegen2.services.sdk.rest.services.model.logging.MdcVari
 @SpringBootApplication(exclude = {JacksonAutoConfiguration.class})
 @Configuration
 @EnableScheduling
+@EnableConfigurationProperties
 public class MainApp {
 
     public static void main(String[] args) {

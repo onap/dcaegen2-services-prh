@@ -10,13 +10,16 @@ server:
     key-password: nokiapnf
     keyAlias: tomcat-localhost
 
-management.endpoints.web.exposure.include: "loggers"
-
+management.endpoints.web.exposure.include: "loggers,refresh,env,health"
 
 ---
 spring:
   profiles: dev
 logging:
   level:
-    org.onap.dcaegen2.services.prh: info
-    org.onap.dcaegen2.services.sdk: info
+    org.onap.dcaegen2.services.prh: debug
+    org.onap.dcaegen2.services.sdk: debug
+
+management.endpoints.web.exposure.include: "*"
+
+

@@ -26,7 +26,7 @@
   <parent>
     <groupId>org.onap.dcaegen2.services</groupId>
     <artifactId>prh</artifactId>
-    <version>1.2.3-SNAPSHOT</version>
+    <version>1.2.4-SNAPSHOT</version>
   </parent>
 
   <groupId>org.onap.dcaegen2.services.prh</groupId>
@@ -173,7 +173,7 @@
     <dependency>
       <groupId>org.onap.dcaegen2.services.prh</groupId>
       <artifactId>prh-commons</artifactId>
-      <version>1.2.3-SNAPSHOT</version>
+      <version>1.2.4-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.onap.dcaegen2.services.sdk.rest.services</groupId>

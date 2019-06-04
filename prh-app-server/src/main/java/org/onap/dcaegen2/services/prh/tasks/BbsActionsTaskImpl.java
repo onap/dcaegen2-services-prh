@@ -38,14 +38,11 @@ import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RequestBody;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RxHttpClient;
 import org.onap.dcaegen2.services.sdk.rest.services.uri.URI.URIBuilder;
 import org.onap.dcaegen2.services.sdk.security.ssl.SslFactory;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-
-
 
 import java.util.Arrays;
 import java.util.List;
@@ -57,7 +54,7 @@ import static org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMet
 public class BbsActionsTaskImpl implements BbsActionsTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BbsActionsTaskImpl.class);
-    private static final String ATTACHMENT_POINT = "attachmentPoint";
+    private static final String ATTACHMENT_POINT = "attachment-point";
     private static final String LOGICAL_LINK_URI = "/network/logical-links/logical-link/";
     private static final String PNF_URI = "/network/pnfs/pnf/";
 

@@ -1,0 +1,9 @@
+Code-Review+1: David Perez Caparros <david.perezcaparros@swisscom.com>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Marcin Migdal <marcin.migdal@nokia.com>
+Code-Review+2: Vijay Venkatesh Kumar <vv770d@att.com>
+Submitted-by: Vijay Venkatesh Kumar <vv770d@att.com>
+Submitted-at: Wed, 05 Jun 2019 13:38:16 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/dcaegen2/services/prh/+/89258
+Project: dcaegen2/services/prh
+Branch: refs/heads/dublin

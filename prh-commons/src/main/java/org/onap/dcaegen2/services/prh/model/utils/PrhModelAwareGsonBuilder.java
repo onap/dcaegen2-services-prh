@@ -23,8 +23,9 @@ package org.onap.dcaegen2.services.prh.model.utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapterFactory;
-
 import java.util.ServiceLoader;
+import org.onap.dcaegen2.services.prh.model.queries.NamedNode;
+import org.onap.dcaegen2.services.prh.model.queries.NamedNodeAdapter;
 
 public final class PrhModelAwareGsonBuilder {
 
@@ -34,6 +35,7 @@ public final class PrhModelAwareGsonBuilder {
     public static Gson createGson() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         TYPE_ADAPTER_FACTORIES.forEach(gsonBuilder::registerTypeAdapterFactory);
+        gsonBuilder.registerTypeAdapter(NamedNode.class, new NamedNodeAdapter());
         return gsonBuilder.create();
     }
 }

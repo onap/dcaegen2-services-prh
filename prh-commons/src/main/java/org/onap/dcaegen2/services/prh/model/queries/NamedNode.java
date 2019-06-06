@@ -18,24 +18,17 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.model.utils;
+package org.onap.dcaegen2.services.prh.model.queries;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapterFactory;
-import java.util.ServiceLoader;
-import org.onap.dcaegen2.services.prh.model.queries.NamedNode;
-import org.onap.dcaegen2.services.prh.model.queries.NamedNodeAdapter;
+import java.util.Map;
+import org.immutables.value.Value;
 
-public final class PrhModelAwareGsonBuilder {
-
-    private static final Iterable<TypeAdapterFactory> TYPE_ADAPTER_FACTORIES =
-            ServiceLoader.load(TypeAdapterFactory.class);
-
-    public static Gson createGson() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        TYPE_ADAPTER_FACTORIES.forEach(gsonBuilder::registerTypeAdapterFactory);
-        gsonBuilder.registerTypeAdapter(NamedNode.class, new NamedNodeAdapter());
-        return gsonBuilder.create();
-    }
+/**
+ * @see NamedNodeAdapter
+ * @see NamedNodes
+ */
+@Value.Immutable
+public interface NamedNode {
+    String name();
+    Map<String, Object> properties();
 }

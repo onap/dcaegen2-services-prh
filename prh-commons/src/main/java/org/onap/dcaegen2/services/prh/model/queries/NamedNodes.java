@@ -18,24 +18,22 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.model.utils;
+package org.onap.dcaegen2.services.prh.model.queries;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapterFactory;
-import java.util.ServiceLoader;
-import org.onap.dcaegen2.services.prh.model.queries.NamedNode;
-import org.onap.dcaegen2.services.prh.model.queries.NamedNodeAdapter;
+import com.google.gson.annotations.SerializedName;
+import java.util.List;
+import org.immutables.gson.Gson;
+import org.immutables.value.Value;
 
-public final class PrhModelAwareGsonBuilder {
+/**
+ * @see NamedNode
+ * @see <a href="https://docs.onap.org/en/dublin/submodules/aai/aai-common.git/docs/AAI%20REST%20API%20Documentation/customQueries.html">AAI
+ * Custom queries</a></a>
+ */
+@Value.Immutable
+@Gson.TypeAdapters(fieldNamingStrategy = true)
+public interface NamedNodes {
 
-    private static final Iterable<TypeAdapterFactory> TYPE_ADAPTER_FACTORIES =
-            ServiceLoader.load(TypeAdapterFactory.class);
-
-    public static Gson createGson() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        TYPE_ADAPTER_FACTORIES.forEach(gsonBuilder::registerTypeAdapterFactory);
-        gsonBuilder.registerTypeAdapter(NamedNode.class, new NamedNodeAdapter());
-        return gsonBuilder.create();
-    }
+    @SerializedName(value = "results")
+    List<NamedNode> results();
 }

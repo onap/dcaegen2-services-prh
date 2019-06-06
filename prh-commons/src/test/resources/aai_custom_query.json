@@ -1,0 +1,27 @@
+{
+  "results": [
+    {
+      "pnf": {
+        "pnf-name": "foo",
+        "in-maint": false,
+        "resource-version": "1559732370039"
+      }
+    },
+    {
+      "logical-link": {
+        "link-name": "bar",
+        "in-maint": false,
+        "link-type": "attachment-point",
+        "resource-version": "1559805666899"
+      }
+    },
+    {
+      "service-instance": {
+        "service-instance-id": "pnf-service-id",
+        "service-instance-name": "baz",
+        "resource-version": "1559732385933",
+        "orchestration-status": "ACTIVE"
+      }
+    }
+  ]
+}

@@ -55,16 +55,22 @@ public class AaiHttpClientConfig {
     public AaiHttpClient<AaiServiceInstanceQueryModel, AaiServiceInstanceResultModel> getServiceInstanceClient() {
         return createLazyConfigClient(
                 (config, client) -> new AaiGetServiceInstanceClient(config, client)
-                        .map(httpResponse -> httpResponse.bodyAsJson(StandardCharsets.UTF_8,
-                                PrhModelAwareGsonBuilder.createGson(), AaiServiceInstanceResultModel.class)));
+                        .map(httpResponse -> {
+                            httpResponse.throwIfUnsuccessful();
+                            return httpResponse.bodyAsJson(StandardCharsets.UTF_8,
+                                    PrhModelAwareGsonBuilder.createGson(), AaiServiceInstanceResultModel.class);
+                        }));
     }
 
     @Bean
     public AaiHttpClient<AaiModel, AaiPnfResultModel> getGetClient() {
         return createLazyConfigClient(
                 (config, client) -> new AaiHttpGetClient(config, client)
-                        .map(httpResponse -> httpResponse.bodyAsJson(StandardCharsets.UTF_8,
-                                PrhModelAwareGsonBuilder.createGson(), AaiPnfResultModel.class)));
+                        .map(httpResponse -> {
+                            httpResponse.throwIfUnsuccessful();
+                            return httpResponse.bodyAsJson(StandardCharsets.UTF_8,
+                                    PrhModelAwareGsonBuilder.createGson(), AaiPnfResultModel.class);
+                        }));
     }
 
     private <T, U> AaiHttpClient<T, U> createLazyConfigClient(

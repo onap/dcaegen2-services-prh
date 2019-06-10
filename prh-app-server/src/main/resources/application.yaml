@@ -10,6 +10,9 @@ server:
     key-password: nokiapnf
     keyAlias: tomcat-localhost
 
+management.endpoints.web.exposure.include: "loggers"
+
+
 ---
 spring:
   profiles: dev

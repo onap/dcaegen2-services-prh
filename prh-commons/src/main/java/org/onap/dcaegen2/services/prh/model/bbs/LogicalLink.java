@@ -20,10 +20,12 @@
 package org.onap.dcaegen2.services.prh.model.bbs;
 
 import com.google.gson.annotations.SerializedName;
-import java.util.List;
 import org.immutables.gson.Gson;
 import org.immutables.value.Value;
+import org.onap.dcaegen2.services.prh.model.ImmutableRelationship;
+import org.onap.dcaegen2.services.prh.model.Relationship;
 import org.onap.dcaegen2.services.sdk.rest.services.model.ClientModel;
+import org.springframework.lang.Nullable;
 
 @Value.Immutable
 @Gson.TypeAdapters(fieldNamingStrategy = true)
@@ -35,6 +37,13 @@ public interface LogicalLink extends ClientModel {
     @SerializedName(value = "link-type")
     String getLinkType();
 
-    @SerializedName(value = "relationship-list")
-    List<RelationshipWrapper> getRelationshipList();
+    @Nullable
+    @SerializedName(value = "resource-version")
+    String getResourceVersion();
+
+    @SerializedName("relationship-list")
+    @Value.Default
+    default Relationship getRelationshipList() {
+        return ImmutableRelationship.builder().build();
+    }
 }

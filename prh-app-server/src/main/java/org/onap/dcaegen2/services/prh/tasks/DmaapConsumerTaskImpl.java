@@ -50,8 +50,7 @@ public class DmaapConsumerTaskImpl implements DmaapConsumerTask {
     public Flux<ConsumerDmaapModel> execute() {
         MessageRouterSubscriber messageRouterSubscriber = config.getMessageRouterSubscriber();
         MessageRouterSubscribeRequest messageRouterSubscribeRequest = config.getMessageRouterSubscribeRequest();
-        Mono<MessageRouterSubscribeResponse> response = messageRouterSubscriber
-                .get(messageRouterSubscribeRequest);
+        Mono<MessageRouterSubscribeResponse> response = messageRouterSubscriber.get(messageRouterSubscribeRequest);
         return dmaapConsumerJsonParser.getJsonObject(response);
     }
 

@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8f9499e6_4f459fae",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 3699
+      },
+      "writtenOn": "2019-06-12T13:08:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5af42818_f2c70102",
+      "revId": "c7ff3ea42ca7b99bfa0982d29ae3af07d338f64d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "01828711_8f36e856",
         "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskImpl.java",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "1987cca0_a933ffa2",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 3699
+      },
+      "writtenOn": "2019-06-12T13:08:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "01828711_8f36e856",
+      "revId": "c7ff3ea42ca7b99bfa0982d29ae3af07d338f64d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b585c0b5_d870008c",
         "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskImpl.java",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2019-06-12T11:35:09Z",
       "side": 1,
       "message": "extarct as variables. Check it they are already defines in SDK as constatcn e.g. in MDC variables",
+      "revId": "c7ff3ea42ca7b99bfa0982d29ae3af07d338f64d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02fb1065_1acb4d1b",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 3699
+      },
+      "writtenOn": "2019-06-12T13:08:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b585c0b5_d870008c",
       "revId": "c7ff3ea42ca7b99bfa0982d29ae3af07d338f64d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false

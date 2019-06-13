@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "9aa1e0b2_6d4b60bb",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 2731
+      },
+      "writtenOn": "2019-06-13T09:54:26Z",
+      "side": 1,
+      "message": "Ok",
+      "parentUuid": "4b2def95_ab696df1",
+      "range": {
+        "startLine": 105,
+        "startChar": 47,
+        "endLine": 105,
+        "endChar": 60
+      },
+      "revId": "dcb864e67b3d6e48bf4b0efd960316e54b28274c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a3b6f05b_1595f7ee",
         "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskImpl.java",
         "patchSetId": 2
@@ -225,6 +249,30 @@
       "side": 1,
       "message": "I modified the message so now it doesn\u0027t start with a comma. I hope it\u0027s clearer. If you have any further suggestions on how could I improve it, let me know.",
       "parentUuid": "d912cd9a_db064e39",
+      "range": {
+        "startLine": 118,
+        "startChar": 21,
+        "endLine": 118,
+        "endChar": 95
+      },
+      "revId": "dcb864e67b3d6e48bf4b0efd960316e54b28274c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fe8950d_69273e30",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 2731
+      },
+      "writtenOn": "2019-06-13T09:54:26Z",
+      "side": 1,
+      "message": "Well, this is better",
+      "parentUuid": "c2fc5493_6d72b13d",
       "range": {
         "startLine": 118,
         "startChar": 21,
@@ -460,6 +508,30 @@
       "side": 1,
       "message": "Do you know about any Gson annotation that would make a field optional? There are other classes that use this Spring annotation and are inteded to Gson serialization, for example AaiPnfResultModel.",
       "parentUuid": "751f6215_112f6c2e",
+      "range": {
+        "startLine": 28,
+        "startChar": 7,
+        "endLine": 28,
+        "endChar": 31
+      },
+      "revId": "dcb864e67b3d6e48bf4b0efd960316e54b28274c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83d8b3a1_e5180365",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/bbs/LogicalLink.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 2731
+      },
+      "writtenOn": "2019-06-13T09:54:26Z",
+      "side": 1,
+      "message": "Okay, I was wrong. Just checked how this works and this is not problem of Gson.\n\nSadly this is Immutables way of doing things, Immutables doesn\u0027t provide their Nullable annotation and any annotation with given name is accepted, in this case Spring one.\n\nLeave it as is.",
+      "parentUuid": "5d7bda7a_f1bae9d0",
       "range": {
         "startLine": 28,
         "startChar": 7,

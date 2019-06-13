@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2a1e562b_8c61abc8",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 3699
+      },
+      "writtenOn": "2019-06-13T08:28:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3afd677d_700ff338",
+      "range": {
+        "startLine": 95,
+        "startChar": 25,
+        "endLine": 95,
+        "endChar": 34
+      },
+      "revId": "dcb864e67b3d6e48bf4b0efd960316e54b28274c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19870fa3_c9078639",
         "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskImpl.java",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2019-06-13T05:34:19Z",
       "side": 1,
       "message": "Concat this",
+      "range": {
+        "startLine": 105,
+        "startChar": 47,
+        "endLine": 105,
+        "endChar": 60
+      },
+      "revId": "dcb864e67b3d6e48bf4b0efd960316e54b28274c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b2def95_ab696df1",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 3699
+      },
+      "writtenOn": "2019-06-13T08:28:39Z",
+      "side": 1,
+      "message": "I cannot do this, as I use this constant in buildUri() to replace pnf uri with another string. The full uri taken from AaiClientConfiguration looks like this:\nhttps://aai.onap.svc.cluster.local:8443/aai/v12/network/pnfs/pnf",
+      "parentUuid": "19870fa3_c9078639",
       "range": {
         "startLine": 105,
         "startChar": 47,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "0f552979_ee9c6bd7",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 3699
+      },
+      "writtenOn": "2019-06-13T08:28:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a3b6f05b_1595f7ee",
+      "range": {
+        "startLine": 108,
+        "startChar": 20,
+        "endLine": 108,
+        "endChar": 33
+      },
+      "revId": "dcb864e67b3d6e48bf4b0efd960316e54b28274c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "702f0dbf_580912de",
         "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskImpl.java",
         "patchSetId": 2
@@ -82,6 +154,30 @@
       "writtenOn": "2019-06-13T05:34:19Z",
       "side": 1,
       "message": "Use static import",
+      "range": {
+        "startLine": 109,
+        "startChar": 57,
+        "endLine": 109,
+        "endChar": 73
+      },
+      "revId": "dcb864e67b3d6e48bf4b0efd960316e54b28274c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1661f9a4_472c8889",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 3699
+      },
+      "writtenOn": "2019-06-13T08:28:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "702f0dbf_580912de",
       "range": {
         "startLine": 109,
         "startChar": 57,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "c2fc5493_6d72b13d",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 3699
+      },
+      "writtenOn": "2019-06-13T08:28:39Z",
+      "side": 1,
+      "message": "I modified the message so now it doesn\u0027t start with a comma. I hope it\u0027s clearer. If you have any further suggestions on how could I improve it, let me know.",
+      "parentUuid": "d912cd9a_db064e39",
+      "range": {
+        "startLine": 118,
+        "startChar": 21,
+        "endLine": 118,
+        "endChar": 95
+      },
+      "revId": "dcb864e67b3d6e48bf4b0efd960316e54b28274c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c2cd2f1e_5eae54e9",
         "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskImpl.java",
         "patchSetId": 2
@@ -128,6 +248,30 @@
       "writtenOn": "2019-06-13T05:34:19Z",
       "side": 1,
       "message": "Did you check if any http lib used in project has those constants already? If so maybe use them instead?",
+      "range": {
+        "startLine": 156,
+        "startChar": 17,
+        "endLine": 156,
+        "endChar": 47
+      },
+      "revId": "dcb864e67b3d6e48bf4b0efd960316e54b28274c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa1f0ad7_4ef3fe2f",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 3699
+      },
+      "writtenOn": "2019-06-13T08:28:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c2cd2f1e_5eae54e9",
       "range": {
         "startLine": 156,
         "startChar": 17,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "1a670843_1d9a707e",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 3699
+      },
+      "writtenOn": "2019-06-13T08:28:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3a9f8d83_d3c7eca5",
+      "range": {
+        "startLine": 194,
+        "startChar": 12,
+        "endLine": 194,
+        "endChar": 60
+      },
+      "revId": "dcb864e67b3d6e48bf4b0efd960316e54b28274c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "af1fb713_86a9e337",
         "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskTest.java",
         "patchSetId": 2
@@ -174,6 +342,30 @@
       "writtenOn": "2019-06-13T05:34:19Z",
       "side": 1,
       "message": "Shouldn\u0027t this block came before captor?",
+      "range": {
+        "startLine": 136,
+        "startChar": 41,
+        "endLine": 136,
+        "endChar": 57
+      },
+      "revId": "dcb864e67b3d6e48bf4b0efd960316e54b28274c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79658a32_43ebd79c",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 3699
+      },
+      "writtenOn": "2019-06-13T08:28:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "af1fb713_86a9e337",
       "range": {
         "startLine": 136,
         "startChar": 41,
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "515901d4_8c73d1cc",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 3699
+      },
+      "writtenOn": "2019-06-13T08:28:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0202572b_8f8473fa",
+      "range": {
+        "startLine": 151,
+        "startChar": 43,
+        "endLine": 151,
+        "endChar": 61
+      },
+      "revId": "dcb864e67b3d6e48bf4b0efd960316e54b28274c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "751f6215_112f6c2e",
         "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/bbs/LogicalLink.java",
         "patchSetId": 2
@@ -220,6 +436,30 @@
       "writtenOn": "2019-06-13T05:34:19Z",
       "side": 1,
       "message": "Are you sure this should use Spring annotation? I thought it is related to Gson serialization",
+      "range": {
+        "startLine": 28,
+        "startChar": 7,
+        "endLine": 28,
+        "endChar": 31
+      },
+      "revId": "dcb864e67b3d6e48bf4b0efd960316e54b28274c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5d7bda7a_f1bae9d0",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/bbs/LogicalLink.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 3699
+      },
+      "writtenOn": "2019-06-13T08:28:39Z",
+      "side": 1,
+      "message": "Do you know about any Gson annotation that would make a field optional? There are other classes that use this Spring annotation and are inteded to Gson serialization, for example AaiPnfResultModel.",
+      "parentUuid": "751f6215_112f6c2e",
       "range": {
         "startLine": 28,
         "startChar": 7,

@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "647ec72e_00bd93a3",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/bootstrap/CbsClientConfigurationResolver.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2019-06-14T09:08:45Z",
+      "side": 1,
+      "message": "of remobe",
+      "revId": "9d977137784efa518d7111c4efdd06077f64b3b1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "69c613bd_4433e954",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/bootstrap/CbsProperties.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2019-06-14T09:08:45Z",
+      "side": 1,
+      "message": "extract to separate file",
+      "revId": "9d977137784efa518d7111c4efdd06077f64b3b1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6fca8502_08a7f9f3",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/CbsConfigRefreshScheduler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2019-06-14T09:08:45Z",
+      "side": 1,
+      "message": "move it under constructor",
+      "revId": "9d977137784efa518d7111c4efdd06077f64b3b1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6f71a7eb_742bb95c",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/CbsConfigRefreshScheduler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2019-06-14T09:08:45Z",
+      "side": 1,
+      "message": "Put it under Post Construct",
+      "revId": "9d977137784efa518d7111c4efdd06077f64b3b1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

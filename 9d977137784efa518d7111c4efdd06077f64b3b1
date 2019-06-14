@@ -139,6 +139,24 @@
       "revId": "9d977137784efa518d7111c4efdd06077f64b3b1",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c35546c_fc790cdb",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/CbsConfigRefreshScheduler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 5337
+      },
+      "writtenOn": "2019-06-14T10:36:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48d670cc_0156148f",
+      "revId": "9d977137784efa518d7111c4efdd06077f64b3b1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

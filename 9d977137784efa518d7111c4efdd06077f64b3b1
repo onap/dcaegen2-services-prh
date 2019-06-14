@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "40e470e4_57bc3226",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/bootstrap/CbsClientConfigurationResolver.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 5337
+      },
+      "writtenOn": "2019-06-14T10:22:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "647ec72e_00bd93a3",
+      "revId": "9d977137784efa518d7111c4efdd06077f64b3b1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "69c613bd_4433e954",
         "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/bootstrap/CbsProperties.java",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2019-06-14T09:08:45Z",
       "side": 1,
       "message": "extract to separate file",
+      "revId": "9d977137784efa518d7111c4efdd06077f64b3b1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b8f52da2_39d2bf10",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/bootstrap/CbsProperties.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 5337
+      },
+      "writtenOn": "2019-06-14T10:22:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "69c613bd_4433e954",
       "revId": "9d977137784efa518d7111c4efdd06077f64b3b1",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "289cd7c5_d7265deb",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/CbsConfigRefreshScheduler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 5337
+      },
+      "writtenOn": "2019-06-14T10:22:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6fca8502_08a7f9f3",
+      "revId": "9d977137784efa518d7111c4efdd06077f64b3b1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6f71a7eb_742bb95c",
         "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/CbsConfigRefreshScheduler.java",
         "patchSetId": 2
@@ -67,6 +121,24 @@
       "revId": "9d977137784efa518d7111c4efdd06077f64b3b1",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d670cc_0156148f",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/configuration/CbsConfigRefreshScheduler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 5337
+      },
+      "writtenOn": "2019-06-14T10:22:44Z",
+      "side": 1,
+      "message": "I\u0027d preffer keeping it below \u0027onEnvironmentChaned\u0027 where \u0027stopPollingForCbsUpdates\u0027 is used explicitly in schedule restart scenario.\n\nExecuting that via @PreDestroy is an irrelevant use case of application shutdwown, since the bean is not supposed to be recreated during application life",
+      "parentUuid": "6f71a7eb_742bb95c",
+      "revId": "9d977137784efa518d7111c4efdd06077f64b3b1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }

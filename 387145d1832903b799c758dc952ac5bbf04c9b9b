@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1829ed79_6918699a",
+        "filename": "prh-app-server/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2019-06-14T09:08:45Z",
+      "side": 1,
+      "message": "why optional?",
+      "revId": "387145d1832903b799c758dc952ac5bbf04c9b9b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03e96824_f4ac16aa",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/bootstrap/CbsClientConfigurationResolver.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2019-06-14T09:08:45Z",
+      "side": 1,
+      "message": "remove of",
+      "revId": "387145d1832903b799c758dc952ac5bbf04c9b9b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0024fb46_3c213a54",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/bootstrap/CbsJsonToPropertyMapConverter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2019-06-14T09:08:45Z",
+      "side": 1,
+      "message": "class may be final?",
+      "revId": "387145d1832903b799c758dc952ac5bbf04c9b9b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "281f11f1_224d26a4",
+        "filename": "prh-app-server/src/main/resources/bootstrap.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2019-06-14T09:08:45Z",
+      "side": 1,
+      "message": "this must be ranamed to the one as configbinding service",
+      "revId": "387145d1832903b799c758dc952ac5bbf04c9b9b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

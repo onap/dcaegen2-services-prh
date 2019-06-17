@@ -36,7 +36,9 @@ import static org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMet
 import static org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMethod.PUT;
 
 import com.google.gson.JsonObject;
+import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Scanner;
 import org.junit.jupiter.api.Test;
@@ -64,6 +66,7 @@ class BbsActionsTaskTest {
     private static final String PNF_WITHOUT_LINK_JSON = "BbsActionsTaskTestFiles/pnfWithoutLinks.json";
     private static final String PNF_WITH_LINK_JSON = "BbsActionsTaskTestFiles/pnfWithLogicalLink.json";
     private static final String LOGICAL_LINK_JSON = "BbsActionsTaskTestFiles/oldLogicalLink.json";
+    private static final String LOGICAL_LINK_BODY = "BbsActionsTaskTestFiles/logicalLinkBody.json";
 
 
     private CbsConfiguration cbsConfiguration = mock(CbsConfiguration.class);
@@ -136,6 +139,7 @@ class BbsActionsTaskTest {
         assertEquals(GET, pnfGet.method());
         assertEquals(AAI_URL + LOGICAL_LINK_URL + "/" + linkName, linkPut.url());
         assertEquals(PUT, linkPut.method());
+        assertEquals(getBodyJson(LOGICAL_LINK_BODY), extractBodyFromRequest(linkPut));
     }
 
     @Test
@@ -179,6 +183,7 @@ class BbsActionsTaskTest {
         assertEquals(GET, linkGet.method());
         assertEquals(AAI_URL + LOGICAL_LINK_URL + "/" + linkName + "?resource-version=1560171816043", linkDelete.url());
         assertEquals(DELETE, linkDelete.method());
+        assertEquals(getBodyJson(LOGICAL_LINK_BODY), extractBodyFromRequest(linkPut));
     }
 
     @Test
@@ -228,6 +233,10 @@ class BbsActionsTaskTest {
             .url("")
             .rawBody(body.getBytes())
             .build();
+    }
+
+    private String extractBodyFromRequest(HttpRequest request) {
+        return Mono.from(request.body().contents()).block().toString(StandardCharsets.UTF_8);
     }
 
     private String getBodyJson(String filename) {

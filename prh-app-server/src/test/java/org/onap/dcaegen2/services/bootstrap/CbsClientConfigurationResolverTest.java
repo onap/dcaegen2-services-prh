@@ -20,32 +20,32 @@
 
 package org.onap.dcaegen2.services.bootstrap;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.model.CbsClientConfiguration;
 
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(MockitoExtension.class)
 class CbsClientConfigurationResolverTest {
 
-    @Mock
     private CbsProperties cbsProperties;
-    @Mock
-    private CbsClientConfiguration defaultCbsClientConfigFromSpringProps;
+
+    @BeforeEach
+    void setUp() {
+        cbsProperties = new CbsProperties();
+        cbsProperties.setHostname("some-cbs-host");
+        cbsProperties.setPort(123);
+        cbsProperties.setAppName("client-app-name");
+    }
 
     @Test
     @DisabledIfEnvironmentVariable(named = "CONFIG_BINDING_SERVICE", matches = ".+")
-    void whenCbsEnvPropertiesAreNotePresentInEnvironment_ShouldFallbackToLoadingDefaults() {
-        when(cbsProperties.toCbsClientConfiguration()).thenReturn(defaultCbsClientConfigFromSpringProps);
-        CbsClientConfigurationResolver cbsClientConfigurationResolver = new CbsClientConfigurationResolver(cbsProperties);
+    void whenCbsEnvPropertiesAreNotePresentInEnvironment_ShouldFallbackToLoadingDefaultsFromCbsProperties() {
+        CbsClientConfiguration config = new CbsClientConfigurationResolver(cbsProperties).resolveCbsClientConfiguration();
 
-        CbsClientConfiguration config = cbsClientConfigurationResolver.resolveCbsClientConfiguration();
-
-        assertSame(defaultCbsClientConfigFromSpringProps, config);
+        assertThat(config.hostname()).isEqualTo(cbsProperties.getHostname());
+        assertThat(config.port()).isEqualTo(cbsProperties.getPort());
+        assertThat(config.appName()).isEqualTo(cbsProperties.getAppName());
     }
 }

@@ -181,7 +181,7 @@ public class BbsActionsTaskImpl implements BbsActionsTask {
     private ImmutableLogicalLink.Builder prepareModelBuilder(String linkName, String pnfName) {
         Relationship relationship = org.onap.dcaegen2.services.prh.model.ImmutableRelationship.builder()
             .addRelationship(
-                ImmutableRelationshipDict.builder().relatedLink(PNF_URI + pnfName).build()).build();
+                ImmutableRelationshipDict.builder().relatedLink(PNF_URI + "/" + pnfName).build()).build();
 
         return ImmutableLogicalLink
             .builder()

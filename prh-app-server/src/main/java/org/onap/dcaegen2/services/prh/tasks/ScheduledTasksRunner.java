@@ -24,13 +24,14 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
-import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
@@ -54,6 +55,11 @@ public class ScheduledTasksRunner {
         this.scheduledTask = scheduledTask;
     }
 
+    @EventListener
+    public void onApplicationStartedEvent(ApplicationStartedEvent applicationStartedEvent) {
+        tryToStartTask();
+    }
+
     /**
      * Function which have to stop tasks execution.
      */
@@ -67,7 +73,6 @@ public class ScheduledTasksRunner {
      *
      * @return status of operation execution: true - started, false - not started
      */
-    @PostConstruct
     public synchronized boolean tryToStartTask() {
         LOGGER.info(ENTRY, "Start scheduling PRH workflow");
         if (scheduledPrhTaskFutureList.isEmpty()) {

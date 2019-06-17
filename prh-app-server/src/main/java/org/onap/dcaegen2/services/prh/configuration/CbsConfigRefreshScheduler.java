@@ -46,7 +46,7 @@ public class CbsConfigRefreshScheduler {
     private final ContextRefresher contextRefresher;
     private final Environment environment;
     private final Scheduler scheduler;
-    private transient Disposable refreshEventsStreamHandle;
+    private volatile Disposable refreshEventsStreamHandle;
 
 
     public CbsConfigRefreshScheduler(ContextRefresher contextRefresher, Environment environment) {

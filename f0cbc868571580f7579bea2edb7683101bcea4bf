@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "13105af2_1f7313e3",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 2731
+      },
+      "writtenOn": "2019-06-17T10:08:00Z",
+      "side": 1,
+      "message": "Maybe extract to helper method?",
+      "range": {
+        "startLine": 143,
+        "startChar": 22,
+        "endLine": 143,
+        "endChar": 99
+      },
+      "revId": "f0cbc868571580f7579bea2edb7683101bcea4bf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

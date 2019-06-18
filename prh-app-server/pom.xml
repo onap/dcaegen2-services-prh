@@ -39,7 +39,9 @@
     <prh.main.class>org.onap.dcaegen2.services.prh.MainApp</prh.main.class>
     <dependency.dir.name>libs</dependency.dir.name>
     <dependency.dir.location>${project.build.directory}/${dependency.dir.name}</dependency.dir.location>
-    <docker.artifact.dir>/opt</docker.artifact.dir>
+
+    <docker.user.name>prh</docker.user.name>
+    <docker.user.dir>/home/${docker.user.name}</docker.user.dir>
     <docker.image.name>onap/${project.groupId}.${project.artifactId}</docker.image.name>
   </properties>
 
@@ -115,7 +117,7 @@
             <tag>latest</tag>
           </imageTags>
           <baseImage>openjdk:${java.version}-jre-alpine</baseImage>
-          <workdir>${docker.artifact.dir}</workdir>
+          <workdir>${docker.user.dir}</workdir>
           <resources>
             <resource>
               <directory>${dependency.dir.location}</directory>
@@ -126,10 +128,14 @@
               <include>${project.build.finalName}.jar</include>
             </resource>
           </resources>
+          <runs>
+            <run>adduser -h ${docker.user.dir} -D ${docker.user.name}; chmod -R a+w /var/log</run>
+          </runs>
           <exposes>
             <expose>8100</expose>
             <expose>8433</expose>
           </exposes>
+          <user>${docker.user.name}</user>
           <entryPoint>["java", "-jar", "${project.build.finalName}.jar"]</entryPoint>
         </configuration>
         <executions>

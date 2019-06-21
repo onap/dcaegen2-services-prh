@@ -20,12 +20,12 @@
 
 package org.onap.dcaegen2.services.bootstrap;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import java.util.Map;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toMap;
 
 class CbsJsonToPropertyMapConverter {
 
@@ -34,8 +34,9 @@ class CbsJsonToPropertyMapConverter {
     Map<String, Object> convertToMap(JsonObject jsonObject) {
         verifyExpectedCbsJsonFormat(jsonObject);
         JsonObject config = jsonObject.getAsJsonObject(CBS_CONFIG_ROOT_PROPERTY);
-        return config.entrySet().stream().collect(
-                Collectors.toMap(Map.Entry::getKey, entry -> unpack(entry.getValue())));
+        return config.entrySet().stream()
+                .filter(entry -> entry.getValue().isJsonPrimitive())
+                .collect(toMap(Map.Entry::getKey, entry -> unpack(entry.getValue().getAsJsonPrimitive())));
     }
 
     private static void verifyExpectedCbsJsonFormat(JsonObject jsonObject) {
@@ -45,20 +46,17 @@ class CbsJsonToPropertyMapConverter {
         }
     }
 
-    private Object unpack(JsonElement value) {
-        if (value.isJsonPrimitive()) {
-            JsonPrimitive primitiveValue = value.getAsJsonPrimitive();
-            if (primitiveValue.isString()) {
-                return primitiveValue.getAsString();
-            }
-            if (primitiveValue.isBoolean()) {
-                return primitiveValue.getAsBoolean();
-            }
-            if (primitiveValue.isNumber()) {
-                return primitiveValue.getAsLong();
-            }
+    private Object unpack(JsonPrimitive value) {
+        if (value.isString()) {
+            return value.getAsString();
         }
-        return value;
+        if (value.isBoolean()) {
+            return value.getAsBoolean();
+        }
+        if (value.isNumber()) {
+            return value.getAsLong();
+        }
+        throw new IllegalArgumentException("Unexpected JsonPrimitive type found in configuration form CBS: " + value);
     }
 
 }

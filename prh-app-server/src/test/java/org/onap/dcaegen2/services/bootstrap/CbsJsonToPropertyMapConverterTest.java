@@ -22,7 +22,6 @@ package org.onap.dcaegen2.services.bootstrap;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -38,6 +37,7 @@ class CbsJsonToPropertyMapConverterTest {
             "    \"someStringProp\": \"foo\",\n" +
             "    \"someNumericalProp\": 123,\n" +
             "    \"someBooleanProp\": true,\n" +
+            "    \"someArrayProp\": [],\n" +
             "    \"someObjectProp\": {\n" +
             "      \"bar\": \"baz\"\n" +
             "    }\n" +
@@ -58,10 +58,11 @@ class CbsJsonToPropertyMapConverterTest {
     }
 
     @Test
-    void shouldLeaveComplexPropertiesAsJsonTypes() {
+    void shouldSkipComplexProperties() {
         Map<String, Object> map = cbsJsonToPropertyMapConverter.convertToMap(SOME_JSON_FROM_CBS);
 
-        assertThat(map).hasEntrySatisfying("someObjectProp", hasClass(JsonObject.class));
+        assertThat(map).doesNotContainKeys("someObjectProp");
+        assertThat(map).doesNotContainKeys("someArrayProp");
     }
 
     @Test
@@ -76,11 +77,4 @@ class CbsJsonToPropertyMapConverterTest {
         return new JsonParser().parse(jsonString).getAsJsonObject();
     }
 
-    private static Condition<Object> hasClass(Class clazz) {
-        return new Condition<Object>(clazz.getCanonicalName()){
-            public boolean matches(Object value) {
-                return value.getClass().equals(clazz);
-            }
-        };
-    }
 }

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "735d691a_adb5a6b9",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/bootstrap/CbsClientConfigurationResolverTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 2807
+      },
+      "writtenOn": "2019-06-24T12:24:21Z",
+      "side": 1,
+      "message": "typo?",
+      "range": {
+        "startLine": 44,
+        "startChar": 35,
+        "endLine": 44,
+        "endChar": 36
+      },
+      "revId": "c3b98731e966a4ace2198ce5e4aa4fc324036e81",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

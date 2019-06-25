@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e2a7f5cd_ffcfe2fa",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 5337
+      },
+      "writtenOn": "2019-06-25T09:58:04Z",
+      "side": 1,
+      "message": "placeholder missing -\u003e \n\n    LOGGER.debug(\"Creating logical link in AAI {}\", request);",
+      "range": {
+        "startLine": 122,
+        "startChar": 8,
+        "endLine": 122,
+        "endChar": 63
+      },
+      "revId": "a0eb85a6b289899b1dae7bebbcc897343b498f6e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

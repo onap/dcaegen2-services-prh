@@ -30,8 +30,6 @@ import static org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMet
 import com.google.gson.JsonObject;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
-import java.util.function.Function;
-import org.jetbrains.annotations.NotNull;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.AaiFailureException;
 import org.onap.dcaegen2.services.prh.model.AaiPnfResultModel;
@@ -121,12 +119,14 @@ public class BbsActionsTaskImpl implements BbsActionsTask {
 
     private Mono<HttpResponse> createLogicalLinkInAai(String linkName, String pnfName) {
         ImmutableHttpRequest request = buildLogicalLinkPutRequest(linkName, pnfName);
+        LOGGER.debug("Creating logical link in AAI {} ", request);
         return httpClient.call(request)
             .flatMap(response -> handleResponse(response, "PUT LogicalLink request. Link name: " + linkName));
     }
 
     private Mono<HttpResponse> deleteLogicalLinkInAai(String linkName, String resourceVersion) {
         ImmutableHttpRequest request = buildLogicalLinkDeleteRequest(linkName, resourceVersion);
+        LOGGER.debug("Deleting logical link in AAI {} ", request);
         return httpClient.call(request)
             .flatMap(response -> handleResponse(response, "DELETE LogicalLink request. Link name:  " + linkName));
     }

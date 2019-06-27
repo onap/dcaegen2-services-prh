@@ -23,7 +23,6 @@ package org.onap.dcaegen2.services.prh;
 import java.util.Map;
 import java.util.UUID;
 
-import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.providers.CloudConfigurationClient;
 import org.slf4j.MDC;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -59,12 +58,6 @@ public class MainApp {
     @Bean
     TaskScheduler concurrentTaskScheduler() {
         return new ConcurrentTaskScheduler();
-    }
-
-
-    @Bean
-    CloudConfigurationClient getCloudConfigurationClient(){
-        return new CloudConfigurationClient();
     }
 
 }

@@ -43,8 +43,8 @@ public class PrhAppConfig {
     private Resource gitInfo;
 
 
-    @EventListener
-    public void onApplicationStartedEvent(ApplicationStartedEvent applicationStartedEvent) throws IOException {
+    @EventListener(ApplicationStartedEvent.class)
+    public void onApplicationStarted() throws IOException {
         if(LOGGER.isDebugEnabled()) {
             LOGGER.debug("Git info={}", StreamUtils.copyToString(gitInfo.getInputStream(), Charset.defaultCharset()));
         }

@@ -39,7 +39,7 @@ import reactor.core.publisher.Mono;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
 @Component
-public class AaiProducerTaskImpl extends AaiProducerTask {
+public class AaiProducerTaskImpl implements AaiProducerTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AaiProducerTaskImpl.class);
 
@@ -50,8 +50,7 @@ public class AaiProducerTaskImpl extends AaiProducerTask {
         this.aaiHttpPatchClient = aaiHttpPatchClient;
     }
 
-    @Override
-    Mono<ConsumerDmaapModel> publish(ConsumerDmaapModel consumerDmaapModel) {
+    private Mono<ConsumerDmaapModel> publish(ConsumerDmaapModel consumerDmaapModel) {
         Mono<HttpResponse> response = aaiHttpPatchClient.getAaiResponse(consumerDmaapModel);
         return response.flatMap(r -> {
             if (HttpUtils.isSuccessfulResponseCode(r.statusCode())) {
@@ -63,7 +62,7 @@ public class AaiProducerTaskImpl extends AaiProducerTask {
     }
 
     @Override
-    protected Mono<ConsumerDmaapModel> execute(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException {
+    public Mono<ConsumerDmaapModel> execute(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException {
         if (consumerDmaapModel == null) {
             throw new DmaapNotFoundException("Invoked null object to DMaaP task");
         }

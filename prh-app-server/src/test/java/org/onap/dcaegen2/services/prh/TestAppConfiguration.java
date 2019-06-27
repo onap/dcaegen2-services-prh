@@ -23,6 +23,7 @@ package org.onap.dcaegen2.services.prh;
 import org.onap.dcaegen2.services.sdk.model.streams.dmaap.ImmutableMessageRouterSink;
 import org.onap.dcaegen2.services.sdk.model.streams.dmaap.ImmutableMessageRouterSource;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.ImmutableAaiClientConfiguration;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.ContentType;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterPublishRequest;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterSubscribeRequest;
 
@@ -44,7 +45,7 @@ public class TestAppConfiguration {
 
     public static ImmutableMessageRouterPublishRequest createDefaultMessageRouterPublishRequest() {
         return ImmutableMessageRouterPublishRequest.builder()
-                .contentType("application/json")
+                .contentType(ContentType.APPLICATION_JSON)
                 .sinkDefinition(ImmutableMessageRouterSink.builder()
                         .name("the topic")
                         .topicUrl(String.format("http://%s:%d/events/TOPIC", "www", 1234))

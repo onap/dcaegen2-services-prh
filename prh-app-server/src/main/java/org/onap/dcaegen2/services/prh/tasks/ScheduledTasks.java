@@ -37,7 +37,6 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.net.ssl.SSLException;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
@@ -167,7 +166,7 @@ public class ScheduledTasks {
                     : aaiProducerTask
                     .execute(state.dmaapModel)
                         .map(x -> state);
-        } catch (PrhTaskException | SSLException e) {
+        } catch (PrhTaskException e) {
             LOGGER.warn("AAIProducerTask exception has been registered: ", e);
             return Mono.error(e);
         }

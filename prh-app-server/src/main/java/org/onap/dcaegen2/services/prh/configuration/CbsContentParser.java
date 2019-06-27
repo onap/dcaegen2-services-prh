@@ -69,21 +69,18 @@ class CbsContentParser {
     }
 
     MessageRouterPublishRequest getMessageRouterPublishRequest() {
-        RawDataStream<JsonObject> sink = DataStreams.namedSinks(jsonObject).find(streamWithName(PNF_READY)).get();
-        MessageRouterSink parsedSink = StreamFromGsonParsers.messageRouterSinkParser().unsafeParse(sink);
-
-        return ImmutableMessageRouterPublishRequest.builder()
-                .contentType(jsonObject.get("dmaap.dmaapProducerConfiguration.dmaapContentType").getAsString())
-                .sinkDefinition(parsedSink)
-                .build();
+        return getMessageRouterPublishRequest(PNF_READY);
     }
 
     MessageRouterPublishRequest getMessageRouterUpdatePublishRequest() {
-        RawDataStream<JsonObject> sink = DataStreams.namedSinks(jsonObject).find(streamWithName(PNF_UPDATE)).get();
+        return getMessageRouterPublishRequest(PNF_UPDATE);
+    }
+
+    private MessageRouterPublishRequest getMessageRouterPublishRequest(String streamName) {
+        RawDataStream<JsonObject> sink = DataStreams.namedSinks(jsonObject).find(streamWithName(streamName)).get();
         MessageRouterSink parsedSink = StreamFromGsonParsers.messageRouterSinkParser().unsafeParse(sink);
 
         return ImmutableMessageRouterPublishRequest.builder()
-                .contentType(jsonObject.get("dmaap.dmaapProducerConfiguration.dmaapContentType").getAsString())
                 .sinkDefinition(parsedSink)
                 .build();
     }

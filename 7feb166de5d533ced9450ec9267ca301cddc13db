@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "88163e88_f8199e3f",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 3395
+      },
+      "writtenOn": "2019-06-27T09:29:38Z",
+      "side": 1,
+      "message": "change name to request or httpRequest",
+      "revId": "7feb166de5d533ced9450ec9267ca301cddc13db",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

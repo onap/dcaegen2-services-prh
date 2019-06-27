@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.prh.TestAppConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.aai.client.config.ImmutableAaiClientConfiguration;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.ContentType;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeRequest;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.config.MessageRouterPublisherConfig;
@@ -84,8 +85,18 @@ class ConsulConfigurationParserTest {
         MessageRouterPublishRequest messageRouterPublishRequest = consulConfigurationParser.getMessageRouterPublishRequest();
 
         // then
-        assertThat(messageRouterPublishRequest.contentType()).isEqualTo("application/json");
+        assertThat(messageRouterPublishRequest.contentType()).isEqualTo(ContentType.APPLICATION_JSON);
         assertThat(messageRouterPublishRequest.sinkDefinition().topicUrl()).isEqualTo("http://dmaap-mr:2222/events/unauthenticated.PNF_READY");
+    }
+
+    @Test
+    void shouldCreateMessageRouterUpdatePublishConfigurationCorrectly() {
+        // when
+        MessageRouterPublishRequest messageRouterPublishRequest = consulConfigurationParser.getMessageRouterUpdatePublishRequest();
+
+        // then
+        assertThat(messageRouterPublishRequest.contentType()).isEqualTo(ContentType.APPLICATION_JSON);
+        assertThat(messageRouterPublishRequest.sinkDefinition().topicUrl()).isEqualTo("http://dmaap-mr:2222/events/unauthenticated.PNF_UPDATE");
     }
 
     @Test

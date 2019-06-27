@@ -108,7 +108,6 @@ class DmaapPublisherTaskImplTest {
 
         return ImmutableMessageRouterPublishRequest.builder()
                 .sinkDefinition(sinkDefinition)
-                .contentType("application/json")
                 .build();
     }
 }

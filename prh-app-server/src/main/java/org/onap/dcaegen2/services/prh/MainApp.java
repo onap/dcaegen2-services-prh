@@ -23,14 +23,12 @@ package org.onap.dcaegen2.services.prh;
 import java.util.Map;
 import java.util.UUID;
 
-import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.providers.CloudConfigurationClient;
 import org.slf4j.MDC;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
@@ -41,7 +39,6 @@ import static org.onap.dcaegen2.services.sdk.rest.services.model.logging.MdcVari
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
 @SpringBootApplication(exclude = {JacksonAutoConfiguration.class})
-@Configuration
 @EnableScheduling
 @EnableConfigurationProperties
 public class MainApp {
@@ -59,12 +56,6 @@ public class MainApp {
     @Bean
     TaskScheduler concurrentTaskScheduler() {
         return new ConcurrentTaskScheduler();
-    }
-
-
-    @Bean
-    CloudConfigurationClient getCloudConfigurationClient(){
-        return new CloudConfigurationClient();
     }
 
 }

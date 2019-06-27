@@ -2,17 +2,14 @@
   "config":{
     "dmaap.dmaapConsumerConfiguration.dmaapUserName":"admin",
     "dmaap.dmaapConsumerConfiguration.dmaapUserPassword":"admin",
-    "dmaap.dmaapConsumerConfiguration.dmaapContentType":"application/json",
     "dmaap.dmaapConsumerConfiguration.consumerId":"c12",
     "dmaap.dmaapConsumerConfiguration.consumerGroup":"OpenDCAE-c12",
     "dmaap.dmaapConsumerConfiguration.timeoutMs":-1,
 
     "dmaap.dmaapProducerConfiguration.dmaapUserName":"admin",
     "dmaap.dmaapProducerConfiguration.dmaapUserPassword":"admin",
-    "dmaap.dmaapProducerConfiguration.dmaapContentType":"application/json",
     "dmaap.dmaapUpdateProducerConfiguration.dmaapUserName":"admin",
     "dmaap.dmaapUpdateProducerConfiguration.dmaapUserPassword":"admin",
-    "dmaap.dmaapUpdateProducerConfiguration.dmaapContentType":"application/json",
     "aai.aaiClientConfiguration.pnfUrl": "https://aai.onap.svc.cluster.local:8443/aai/v12/network/pnfs/pnf",
     "aai.aaiClientConfiguration.aaiUserName":"AAI",
     "aai.aaiClientConfiguration.aaiUserPassword":"AAI",

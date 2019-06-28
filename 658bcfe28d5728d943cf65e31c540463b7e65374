@@ -22,6 +22,30 @@
       "revId": "658bcfe28d5728d943cf65e31c540463b7e65374",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8a774544_f607ba91",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/prh/MainApp.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 5337
+      },
+      "writtenOn": "2019-06-28T13:17:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b99bed6_4aeb3c86",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 14
+      },
+      "revId": "658bcfe28d5728d943cf65e31c540463b7e65374",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

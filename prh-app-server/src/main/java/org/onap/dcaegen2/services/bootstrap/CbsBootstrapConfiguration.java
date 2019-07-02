@@ -30,6 +30,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableConfigurationProperties(CbsProperties.class)
 public class CbsBootstrapConfiguration {
+    private static final CbsConfiguration CBS_CONFIGURATION = new CbsConfiguration();
 
     @Bean
     public CbsProperties cbsProperties() {
@@ -52,6 +53,6 @@ public class CbsBootstrapConfiguration {
 
     @Bean
     public CbsConfiguration cbsConfiguration() {
-        return new CbsConfiguration();
+        return CBS_CONFIGURATION;
     }
 }

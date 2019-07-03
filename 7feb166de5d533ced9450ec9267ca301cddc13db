@@ -16,6 +16,24 @@
       "revId": "7feb166de5d533ced9450ec9267ca301cddc13db",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a84a38e3_336fa05f",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/prh/tasks/BbsActionsTaskTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 3699
+      },
+      "writtenOn": "2019-07-03T12:32:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "88163e88_f8199e3f",
+      "revId": "7feb166de5d533ced9450ec9267ca301cddc13db",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

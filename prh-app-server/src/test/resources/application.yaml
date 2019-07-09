@@ -1,3 +1,8 @@
 spring:
   profiles:
     active: prod
+
+logging:
+  level:
+    org.onap.dcaegen2.services.prh: debug
+    org.onap.dcaegen2.services.sdk: debug

@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f35e9423_24a64a7f",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2019-07-11T20:26:08Z",
+      "side": 1,
+      "message": "1.3.1",
+      "range": {
+        "startLine": 35,
+        "startChar": 11,
+        "endLine": 35,
+        "endChar": 16
+      },
+      "revId": "268e6db209ef581e0724c420a34eb5e91ba15eca",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e99ba27_bb6ddb32",
+        "filename": "prh-app-server/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2019-07-11T20:26:08Z",
+      "side": 1,
+      "message": "1.3.1",
+      "range": {
+        "startLine": 29,
+        "startChar": 13,
+        "endLine": 29,
+        "endChar": 18
+      },
+      "revId": "268e6db209ef581e0724c420a34eb5e91ba15eca",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b70d38e8_222283ce",
+        "filename": "prh-commons/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2019-07-11T20:26:08Z",
+      "side": 1,
+      "message": "1.3.1",
+      "range": {
+        "startLine": 29,
+        "startChar": 13,
+        "endLine": 29,
+        "endChar": 18
+      },
+      "revId": "268e6db209ef581e0724c420a34eb5e91ba15eca",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "719800f7_fcccfed3",
+        "filename": "version.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2019-07-11T20:26:08Z",
+      "side": 1,
+      "message": "1.3.1",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 3,
+        "endChar": 7
+      },
+      "revId": "268e6db209ef581e0724c420a34eb5e91ba15eca",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

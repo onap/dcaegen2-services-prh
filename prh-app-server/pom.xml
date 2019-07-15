@@ -37,12 +37,14 @@
     <maven.build.timestamp.format>yyyyMMdd'T'HHmmss</maven.build.timestamp.format>
 
     <prh.main.class>org.onap.dcaegen2.services.prh.MainApp</prh.main.class>
-    <dependency.dir.name>libs</dependency.dir.name>
-    <dependency.dir.location>${project.build.directory}/${dependency.dir.name}</dependency.dir.location>
+    <classpath.separator>@@</classpath.separator>
+    <dep.dir.name>libs</dep.dir.name>
+    <ext.dep.dir.path>${dep.dir.name}/external</ext.dep.dir.path>
+    <int.dep.dir.path>${dep.dir.name}/internal</int.dep.dir.path>
 
+    <skipDocker>false</skipDocker>
     <docker.user.name>prh</docker.user.name>
     <docker.user.dir>/home/${docker.user.name}</docker.user.dir>
-    <docker.image.name>onap/${project.groupId}.${project.artifactId}</docker.image.name>
   </properties>
 
   <build>
@@ -71,116 +73,142 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <configuration>
+          <silent>true</silent>
+          <includeScope>runtime</includeScope>
+          <pathSeparator>${classpath.separator}</pathSeparator>
+        </configuration>
+        <executions>
+          <execution>
+            <id>copy-external-dependencies</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+              <goal>build-classpath</goal>
+            </goals>
+            <configuration>
+              <excludeGroupIds>${project.parent.groupId}</excludeGroupIds>
+              <outputDirectory>${project.build.directory}/${ext.dep.dir.path}</outputDirectory>
+              <prefix>./${ext.dep.dir.path}</prefix>
+              <outputProperty>classpath.external</outputProperty>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-internal-dependencies</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+              <goal>build-classpath</goal>
+            </goals>
+            <configuration>
+              <includeGroupIds>${project.parent.groupId}</includeGroupIds>
+              <outputDirectory>${project.build.directory}/${int.dep.dir.path}</outputDirectory>
+              <prefix>./${int.dep.dir.path}</prefix>
+              <outputProperty>classpath.internal</outputProperty>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin> <!-- workaround for MDEP-541 -->
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>fix-classpath-separator</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>regex-properties</goal>
+            </goals>
+            <configuration>
+              <regexPropertySettings>
+                <regexPropertySetting>
+                  <name>classpath.external</name>
+                  <value>${classpath.external}</value>
+                  <regex>${classpath.separator}</regex>
+                  <replacement xml:space="preserve"> </replacement>
+                </regexPropertySetting>
+                <regexPropertySetting>
+                  <name>classpath.internal</name>
+                  <value>${classpath.internal}</value>
+                  <regex>${classpath.separator}</regex>
+                  <replacement xml:space="preserve"> </replacement>
+                </regexPropertySetting>
+              </regexPropertySettings>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
           <archive>
             <manifest>
-              <addClasspath>true</addClasspath>
-              <classpathPrefix>./${dependency.dir.name}/</classpathPrefix>
-              <useUniqueVersions>false</useUniqueVersions>
               <mainClass>${prh.main.class}</mainClass>
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              <addBuildEnvironmentEntries>true</addBuildEnvironmentEntries>
+              <useUniqueVersions>false</useUniqueVersions> <!-- workaround for MJAR-156 -->
             </manifest>
             <manifestEntries>
-              <Build-Time>${maven.build.timestamp}</Build-Time>
+              <Class-Path>${classpath.external} ${classpath.internal}</Class-Path>
+              <Git-Branch>${git.branch}</Git-Branch>
+              <Git-Build-Host>${git.build.host}</Git-Build-Host>
+              <Git-Build-Time>${git.build.time}</Git-Build-Time>
+              <Git-Build-User-Email>${git.build.user.email}</Git-Build-User-Email>
+              <Git-Build-User-Name>${git.build.user.name}</Git-Build-User-Name>
+              <Git-Build-Version>${git.build.version}</Git-Build-Version>
+              <Git-Closest-Tag-Name>${git.closest.tag.name}</Git-Closest-Tag-Name>
+              <Git-Commit-Id>${git.commit.id}</Git-Commit-Id>
+              <Git-Commit-Message-Short>${git.commit.message.short}</Git-Commit-Message-Short>
+              <Git-Commit-Time>${git.commit.time}</Git-Commit-Time>
+              <Git-Commit-User-Email>${git.commit.user.email}</Git-Commit-User-Email>
+              <Git-Commit-User-Name>${git.commit.user.name}</Git-Commit-User-Name>
             </manifestEntries>
           </archive>
         </configuration>
       </plugin>
+
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <configuration>
-          <outputDirectory>${dependency.dir.location}</outputDirectory>
-          <includeScope>runtime</includeScope>
-          <silent>true</silent>
-        </configuration>
-        <executions>
-          <execution>
-            <id>copy-external-dependencies</id>
-            <phase>package</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>com.spotify</groupId>
+        <groupId>io.fabric8</groupId>
         <artifactId>docker-maven-plugin</artifactId>
         <configuration>
-          <serverId>${onap.nexus.dockerregistry.daily}</serverId>
-          <imageName>${docker.image.name}</imageName>
-          <imageTags>
-            <tag>latest</tag>
-          </imageTags>
-          <baseImage>openjdk:${java.version}-jre-alpine</baseImage>
-          <workdir>${docker.user.dir}</workdir>
-          <resources>
-            <resource>
-              <directory>${dependency.dir.location}</directory>
-              <targetPath>${dependency.dir.name}</targetPath>
-            </resource>
-            <resource>
-              <directory>${project.build.directory}</directory>
-              <include>${project.build.finalName}.jar</include>
-            </resource>
-          </resources>
-          <runs>
-            <run>adduser -h ${docker.user.dir} -D ${docker.user.name}; chmod -R a+w /var/log</run>
-          </runs>
-          <exposes>
-            <expose>8100</expose>
-            <expose>8433</expose>
-          </exposes>
-          <user>${docker.user.name}</user>
-          <entryPoint>["java", "-jar", "${project.build.finalName}.jar"]</entryPoint>
+          <skip>${skipDocker}</skip>
+          <images>
+            <image>
+              <name>${project.groupId}.${project.artifactId}</name>
+              <registry>${onap.nexus.dockerregistry.daily}</registry>
+              <build>
+                <contextDir>${project.basedir}</contextDir>
+                <cleanup>none</cleanup>
+                <tags>
+                  <tag>latest</tag>
+                  <tag>${project.version}</tag>
+                  <tag>${project.version}-${maven.build.timestamp}Z</tag>
+                </tags>
+              </build>
+            </image>
+          </images>
         </configuration>
         <executions>
           <execution>
-            <id>build-image</id>
+            <id>docker-build-image</id>
             <phase>package</phase>
             <goals>
               <goal>build</goal>
             </goals>
           </execution>
           <execution>
-            <id>tag-and-push-image-latest</id>
+            <id>docker-push-image</id>
             <phase>deploy</phase>
             <goals>
-              <goal>tag</goal>
+              <goal>push</goal>
             </goals>
-            <configuration>
-              <image>${docker.image.name}:latest</image>
-              <newName>${onap.nexus.dockerregistry.daily}/${docker.image.name}:latest</newName>
-              <pushImage>true</pushImage>
-            </configuration>
-          </execution>
-          <execution>
-            <id>tag-and-push-image-with-version</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>tag</goal>
-            </goals>
-            <configuration>
-              <image>${docker.image.name}:latest</image>
-              <newName>${onap.nexus.dockerregistry.daily}/${docker.image.name}:${project.version}</newName>
-              <pushImage>true</pushImage>
-            </configuration>
-          </execution>
-          <execution>
-            <id>tag-and-push-image-with-version-and-date</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>tag</goal>
-            </goals>
-            <configuration>
-              <image>${docker.image.name}:latest</image>
-              <newName>${onap.nexus.dockerregistry.daily}/${docker.image.name}:${project.version}-${maven.build.timestamp}Z</newName>
-              <pushImage>true</pushImage>
-            </configuration>
           </execution>
         </executions>
       </plugin>

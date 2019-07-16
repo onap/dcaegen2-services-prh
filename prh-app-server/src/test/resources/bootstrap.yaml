@@ -1,2 +1,6 @@
 cbs:
   enabled: false
+spring:
+  cloud:
+    config:
+      enabled: false

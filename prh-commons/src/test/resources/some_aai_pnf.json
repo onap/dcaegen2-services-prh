@@ -25,6 +25,7 @@
   "relationship-list": {
     "relationship": [
       {
+        "related-link": "some relatedLink",
         "related-to": "some relatedTo",
         "relationship-data": [
           {

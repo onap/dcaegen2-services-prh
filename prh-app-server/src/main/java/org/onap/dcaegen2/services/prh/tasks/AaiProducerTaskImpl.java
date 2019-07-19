@@ -20,19 +20,20 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.prh.exceptions.AaiNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.model.utils.HttpUtils;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.AaiHttpClient;
-import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
-import org.onap.dcaegen2.services.sdk.rest.services.model.AaiModel;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.common.Unit;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.pnf.ImmutablePnf;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.pnf.Pnf;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.actions.AaiUpdateAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
+
+import static org.onap.dcaegen2.services.prh.model.AaiModelConverter.dmaapConsumerModelToPnf;
 
 
 /**
@@ -43,22 +44,17 @@ public class AaiProducerTaskImpl implements AaiProducerTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AaiProducerTaskImpl.class);
 
-    private final AaiHttpClient<AaiModel, HttpResponse> aaiHttpPatchClient;
+    private final AaiUpdateAction<Pnf, Unit> aaiUpdateAction;
 
     @Autowired
-    public AaiProducerTaskImpl(final AaiHttpClient<AaiModel, HttpResponse> aaiHttpPatchClient) {
-        this.aaiHttpPatchClient = aaiHttpPatchClient;
+    public AaiProducerTaskImpl(final AaiUpdateAction<Pnf, Unit> aaiUpdateAction) {
+        this.aaiUpdateAction = aaiUpdateAction;
     }
 
     private Mono<ConsumerDmaapModel> publish(ConsumerDmaapModel consumerDmaapModel) {
-        Mono<HttpResponse> response = aaiHttpPatchClient.getAaiResponse(consumerDmaapModel);
-        return response.flatMap(r -> {
-            if (HttpUtils.isSuccessfulResponseCode(r.statusCode())) {
-                return Mono.just(consumerDmaapModel);
-            }
-            return Mono
-                    .error(new AaiNotFoundException("Incorrect response code for continuation of tasks workflow" + r.statusCode()));
-        });
+        return aaiUpdateAction
+                .call(dmaapConsumerModelToPnf(consumerDmaapModel))
+                .map(x -> consumerDmaapModel);
     }
 
     @Override

@@ -42,6 +42,7 @@ import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.Predicate;
 
+import static org.onap.dcaegen2.services.prh.model.AaiModelConverter.dmaapConsumerModelToPnf;
 import static org.onap.dcaegen2.services.sdk.rest.services.model.logging.MdcVariables.INSTANCE_UUID;
 import static org.onap.dcaegen2.services.sdk.rest.services.model.logging.MdcVariables.RESPONSE_CODE;
 
@@ -155,7 +156,7 @@ public class ScheduledTasks {
 
     private Mono<State> queryAaiForConfiguration(final ConsumerDmaapModel monoDMaaPModel) {
         return aaiQueryTask
-                .execute(monoDMaaPModel)
+                .execute(dmaapConsumerModelToPnf(monoDMaaPModel))
                 .map(x -> new State(monoDMaaPModel, x));
     }
 

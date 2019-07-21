@@ -181,7 +181,7 @@
           <skip>${skipDocker}</skip>
           <images>
             <image>
-              <name>${project.groupId}.${project.artifactId}</name>
+              <name>onap/${project.groupId}.${project.artifactId}</name>
               <registry>${onap.nexus.dockerregistry.daily}</registry>
               <build>
                 <contextDir>${project.basedir}</contextDir>
@@ -195,7 +195,7 @@
             </image>
           </images>
         </configuration>
-        <executions>
+       <!-- <executions>
           <execution>
             <id>docker-build-image</id>
             <phase>package</phase>
@@ -211,6 +211,7 @@
             </goals>
           </execution>
         </executions>
+	-->
       </plugin>
     </plugins>
   </build>

@@ -1,6 +1,7 @@
 {
   "service-instance-id": "some serviceInstanceId",
   "service-instance-name": "some serviceInstanceName",
+  "global-customer-id": "some customer id",
   "service-type": "some serviceType",
   "service-role": "some serviceRole",
   "environment-context": "some environmentContext",
@@ -26,6 +27,7 @@
   "relationship-list": {
     "relationship": [
       {
+        "related-link": "some relatedLink",
         "related-to": "some relatedTo",
         "relationship-data": [
           {

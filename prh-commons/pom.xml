@@ -40,7 +40,8 @@
     </dependency>
     <dependency>
       <groupId>org.onap.dcaegen2.services.sdk.rest.services</groupId>
-      <artifactId>aai-client</artifactId>
+      <artifactId>client</artifactId>
+      <version>${sdk.version}</version>
     </dependency>
 
     <dependency>

@@ -26,6 +26,18 @@ import com.google.gson.TypeAdapterFactory;
 import java.util.ServiceLoader;
 import org.onap.dcaegen2.services.prh.model.queries.NamedNode;
 import org.onap.dcaegen2.services.prh.model.queries.NamedNodeAdapter;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.GsonAdaptersLogicalLinkComplete;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.GsonAdaptersLogicalLinkRequired;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.GsonAdaptersPnfComplete;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.GsonAdaptersPnfRequired;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.GsonAdaptersServiceInstanceComplete;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.GsonAdaptersServiceInstanceRequired;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.LogicalLinkComplete;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.LogicalLinkRequired;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.PnfComplete;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.PnfRequired;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.ServiceInstanceComplete;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.ServiceInstanceRequired;
 
 public final class PrhModelAwareGsonBuilder {
 
@@ -35,6 +47,14 @@ public final class PrhModelAwareGsonBuilder {
     public static Gson createGson() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         TYPE_ADAPTER_FACTORIES.forEach(gsonBuilder::registerTypeAdapterFactory);
+
+        gsonBuilder.registerTypeAdapterFactory(new GsonAdaptersPnfRequired());
+        gsonBuilder.registerTypeAdapterFactory(new GsonAdaptersPnfComplete());
+        gsonBuilder.registerTypeAdapterFactory(new GsonAdaptersLogicalLinkRequired());
+        gsonBuilder.registerTypeAdapterFactory(new GsonAdaptersLogicalLinkComplete());
+        gsonBuilder.registerTypeAdapterFactory(new GsonAdaptersServiceInstanceRequired());
+        gsonBuilder.registerTypeAdapterFactory(new GsonAdaptersServiceInstanceComplete());
+
         gsonBuilder.registerTypeAdapter(NamedNode.class, new NamedNodeAdapter());
         return gsonBuilder.create();
     }

@@ -20,22 +20,24 @@
 
 package org.onap.dcaegen2.services.prh.model;
 
-import com.google.gson.Gson;
-import org.junit.jupiter.api.Test;
-import org.onap.dcaegen2.services.prh.model.utils.PrhModelAwareGsonBuilder;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import com.google.gson.Gson;
 import java.io.InputStreamReader;
 import java.util.Objects;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import org.onap.dcaegen2.services.prh.model.utils.PrhModelAwareGsonBuilder;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.PnfComplete;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.common.models.Relationship;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.common.models.RelationshipData;
 
 class AaiPnfResultModelTest {
 
     @Test
     void shouldParseAaiPnf() {
-        Gson gson = PrhModelAwareGsonBuilder.createGson();
-        AaiPnfResultModel pnf = gson.fromJson(new InputStreamReader(Objects.requireNonNull(
-                ClassLoader.getSystemResourceAsStream("some_aai_pnf.json"))), AaiPnfResultModel.class);
+        final Gson gson = PrhModelAwareGsonBuilder.createGson();
+        final PnfComplete pnf = gson.fromJson(new InputStreamReader(Objects.requireNonNull(
+                ClassLoader.getSystemResourceAsStream("some_aai_pnf.json"))), PnfComplete.class);
 
         assertThat(pnf.getPnfName()).isEqualTo("some pnfName");
         assertThat(pnf.getPnfName2()).isEqualTo("some pnfName2");
@@ -48,7 +50,7 @@ class AaiPnfResultModelTest {
         assertThat(pnf.getManagementOption()).isEqualTo("some managementOption");
         assertThat(pnf.getIpaddressV4Oam()).isEqualTo("some ipaddressV4Oam");
         assertThat(pnf.getSwVersion()).isEqualTo("some swVersion");
-        assertThat(pnf.isInMaint()).isFalse();
+        assertThat(pnf.getInMaint()).isFalse();
         assertThat(pnf.getFrameId()).isEqualTo("some frameId");
         assertThat(pnf.getSerialNumber()).isEqualTo("some serialNumber");
         assertThat(pnf.getIpaddressV4Loopback0()).isEqualTo("some ipaddressV4Loopback0");
@@ -62,7 +64,7 @@ class AaiPnfResultModelTest {
         assertThat(pnf.getNfRole()).isEqualTo("some nfRole");
 
         assertThat(pnf.getRelationshipList().getRelationship()).hasSize(1);
-        RelationshipDict relationshipDict = pnf.getRelationshipList().getRelationship().get(0);
+        Relationship relationshipDict = pnf.getRelationshipList().getRelationship().get(0);
         assertThat(relationshipDict.getRelatedTo()).isEqualTo("some relatedTo");
         assertThat(relationshipDict.getRelationshipData()).hasSize(1);
         RelationshipData relationshipData = relationshipDict.getRelationshipData().get(0);
@@ -72,16 +74,16 @@ class AaiPnfResultModelTest {
 
     @Test
     void shouldProvideEmptyRelationshipListForEmptyJson() {
-        Gson gson = PrhModelAwareGsonBuilder.createGson();
-        AaiPnfResultModel pnf = gson.fromJson("{}", AaiPnfResultModel.class);
+        final Gson gson = PrhModelAwareGsonBuilder.createGson();
+        final PnfComplete pnf = gson.fromJson("{\"pnf-name\": \"FOO\"}", PnfComplete.class);
         assertThat(pnf.getRelationshipList()).isNotNull();
         assertThat(pnf.getRelationshipList().getRelationship()).isEmpty();
     }
 
     @Test
     void shouldIgnoreUnexpectedFieldsInJson() {
-        Gson gson = PrhModelAwareGsonBuilder.createGson();
-        gson.fromJson("{\"foo\":\"bar\"}", AaiPnfResultModel.class);
+        final Gson gson = PrhModelAwareGsonBuilder.createGson();
+        gson.fromJson("{\"pnf-name\": \"FOO\", \"foo\":\"bar\"}", PnfComplete.class);
     }
 
 }

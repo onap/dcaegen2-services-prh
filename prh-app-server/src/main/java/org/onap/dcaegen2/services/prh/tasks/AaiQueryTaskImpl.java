@@ -20,88 +20,43 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.prh.model.*;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.AaiHttpClient;
-import org.onap.dcaegen2.services.sdk.rest.services.model.AaiModel;
-import org.onap.dcaegen2.services.sdk.rest.services.model.AaiServiceInstanceQueryModel;
-import org.onap.dcaegen2.services.sdk.rest.services.model.ImmutableAaiServiceInstanceQueryModel;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.PnfComplete;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.PnfRequired;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.ServiceInstanceComplete;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.common.actions.AaiGetAction;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.common.actions.AaiGetRelationAction;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.common.actions.AaiRelation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
-
 @Component
 public class AaiQueryTaskImpl implements AaiQueryTask {
-    static final String ACTIVE_STATUS = "Active";
-    static final String RELATED_TO = "service-instance";
-    static final String CUSTOMER = "customer.global-customer-id";
-    static final String SERVICE_TYPE = "service-subscription.service-type";
-    static final String SERVICE_INSTANCE_ID = "service-instance.service-instance-id";
+    private final static String ACTIVE_STATUS = "Active";
 
-    private final AaiHttpClient<AaiModel, AaiPnfResultModel> getPnfModelClient;
-    private final AaiHttpClient<AaiServiceInstanceQueryModel, AaiServiceInstanceResultModel> getServiceClient;
+    private final AaiGetAction<PnfRequired, PnfComplete> getPnfAction;
+    private final AaiGetRelationAction<PnfComplete, ServiceInstanceComplete> getRelationToServiceInstance;
 
     @Autowired
     public AaiQueryTaskImpl(
-            final AaiHttpClient<AaiModel, AaiPnfResultModel> getPnfModelClient,
-            final AaiHttpClient<AaiServiceInstanceQueryModel, AaiServiceInstanceResultModel> getServiceClient) {
-        this.getPnfModelClient = getPnfModelClient;
-        this.getServiceClient = getServiceClient;
+            final AaiGetAction<PnfRequired, PnfComplete> getPnfAction,
+            final AaiGetRelationAction<PnfComplete, ServiceInstanceComplete> getRelationToServiceInstance) {
+        this.getPnfAction = getPnfAction;
+        this.getRelationToServiceInstance = getRelationToServiceInstance;
     }
 
     @Override
-    public Mono<Boolean> execute(AaiModel aaiModel) {
-        return getPnfModelClient
-                .getAaiResponse(aaiModel)
-                .flatMap(this::checkIfPnfHasRelationToService)
-                .flatMap(getServiceClient::getAaiResponse)
-                .map(this::checkIfRelatedServiceInstanceIsActive)
+    public Mono<Boolean> execute(PnfRequired pnf) {
+        return getPnfAction
+                .call(pnf)
+                .flux()
+                .flatMap(getRelationToServiceInstance::call)
+                .map(AaiRelation::to)
+                .any(this::checkIfRelatedServiceInstanceIsActive)
                 .defaultIfEmpty(false);
     }
 
-    private Mono<AaiServiceInstanceQueryModel> checkIfPnfHasRelationToService(final AaiPnfResultModel model) {
-        return Mono
-                .justOrEmpty(model.getRelationshipList())
-                .map(this::findRelatedTo)
-                .flatMap(Mono::justOrEmpty)
-                .map(RelationshipDict::getRelationshipData)
-                .flatMap(x -> {
-                    final Optional<String> customer = findValue(x, CUSTOMER);
-                    final Optional<String> serviceType = findValue(x, SERVICE_TYPE);
-                    final Optional<String> serviceInstanceId= findValue(x, SERVICE_INSTANCE_ID);
-
-                    return customer.isPresent() && serviceType.isPresent() && serviceInstanceId.isPresent()
-                            ? Mono.just(ImmutableAaiServiceInstanceQueryModel
-                            .builder()
-                            .customerId(customer.get())
-                            .serviceType(serviceType.get())
-                            .serviceInstanceId(serviceInstanceId.get())
-                            .build())
-                            : Mono.empty();
-                });
-    }
-
-    private Boolean checkIfRelatedServiceInstanceIsActive(final AaiServiceInstanceResultModel model) {
+    private Boolean checkIfRelatedServiceInstanceIsActive(final ServiceInstanceComplete model) {
         return ACTIVE_STATUS.equalsIgnoreCase(model.getOrchestrationStatus());
-    }
-
-    private Optional<RelationshipDict> findRelatedTo(final Relationship data) {
-        return Optional.ofNullable(data.getRelationship())
-                .map(Stream::of)
-                .orElseGet(Stream::empty)
-                .flatMap(List::stream)
-                .filter(x -> RELATED_TO.equals(x.getRelatedTo()))
-                .findFirst();
-    }
-
-    private Optional<String> findValue(final List<RelationshipData> data, final String key) {
-        return data
-                .stream()
-                .filter(y -> key.equals(y.getRelationshipKey()))
-                .findFirst()
-                .map(RelationshipData::getRelationshipValue);
     }
 }

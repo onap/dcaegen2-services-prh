@@ -20,74 +20,61 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.assertj.core.util.Lists;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.onap.dcaegen2.services.prh.model.AaiPnfResultModel;
-import org.onap.dcaegen2.services.prh.model.AaiServiceInstanceResultModel;
-import org.onap.dcaegen2.services.prh.model.ImmutableRelationshipData;
-import org.onap.dcaegen2.services.prh.model.Relationship;
-import org.onap.dcaegen2.services.prh.model.RelationshipData;
-import org.onap.dcaegen2.services.prh.model.RelationshipDict;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.AaiHttpClient;
-import org.onap.dcaegen2.services.sdk.rest.services.model.AaiModel;
-import org.onap.dcaegen2.services.sdk.rest.services.model.AaiServiceInstanceQueryModel;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.ImmutableServiceInstanceRequired;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.PnfComplete;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.PnfRequired;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.ServiceInstanceComplete;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.ServiceInstanceRequired;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.common.actions.AaiGetAction;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.common.actions.AaiGetRelationAction;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.common.actions.AaiRelation;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.Collections;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class AaiQueryTaskImplTest {
-    @Mock
-    private AaiHttpClient<AaiModel, AaiPnfResultModel> getPnfModelClient;
+    private static final ServiceInstanceRequired SERVICE_REFERENCE =
+            ImmutableServiceInstanceRequired
+                    .builder()
+                    .globalCustomerId("Baz")
+                    .serviceInstanceId("Foo")
+                    .serviceType("Bar")
+                    .build();
 
     @Mock
-    private AaiHttpClient<AaiServiceInstanceQueryModel, AaiServiceInstanceResultModel> getServiceClient;
+    private AaiGetAction<PnfRequired, PnfComplete> getPnfModelClient;
 
     @Mock
-    private AaiPnfResultModel pnfResultModel;
+    private AaiGetRelationAction<PnfComplete, ServiceInstanceComplete> getRelationToServiceInstance;
 
     @Mock
-    private Relationship pnfRelationships;
+    private PnfComplete pnfResultModel;
 
     @Mock
-    private RelationshipDict pnfRelation;
-
-    @Mock
-    private AaiServiceInstanceResultModel serviceModel;
-
-    private List<RelationshipData> allRelationData;
+    private ServiceInstanceComplete serviceModel;
 
     private AaiQueryTask sut;
 
-    private final AaiModel aaiModel = () -> "SomePNF";
+    private final PnfRequired aaiModel = () -> "SomePNF";
 
     @BeforeEach
     void setUp() {
-        allRelationData = Lists.list(
-                ImmutableRelationshipData.builder()
-                        .relationshipKey(AaiQueryTaskImpl.CUSTOMER).relationshipValue("Foo").build(),
-                ImmutableRelationshipData.builder()
-                        .relationshipKey(AaiQueryTaskImpl.SERVICE_TYPE).relationshipValue("Bar").build(),
-                ImmutableRelationshipData.builder()
-                        .relationshipKey(AaiQueryTaskImpl.SERVICE_INSTANCE_ID).relationshipValue("Baz").build()
-        );
-
-        sut = new AaiQueryTaskImpl(getPnfModelClient, getServiceClient);
+        sut = new AaiQueryTaskImpl(getPnfModelClient, getRelationToServiceInstance);
     }
 
     @Test
     void whenPnfIsUnavailable_ShouldThrowException() {
         //given
-        given(getPnfModelClient.getAaiResponse(aaiModel)).willReturn(Mono.error(new Exception("404")));
+        given(getPnfModelClient.call(aaiModel)).willReturn(Mono.error(new Exception("404")));
 
         //when
         final Mono<Boolean> task = sut.execute(aaiModel);
@@ -97,59 +84,9 @@ class AaiQueryTaskImplTest {
     }
 
     @Test
-    void whenPnfIsAvailableButRelationshipIsNull_ShouldReturnFalse() {
+    void whenPnfIsAvailableButServiceReferenceIsEmpty_ShouldReturnFalse() {
         //given
-        given(pnfResultModel.getRelationshipList()).willReturn(null);
-
-        configurePnfClient(aaiModel, pnfResultModel);
-
-        //when
-        final Mono<Boolean> task = sut.execute(aaiModel);
-
-        //then
-        Assertions.assertFalse(task::block);
-    }
-
-    @Test
-    void whenPnfIsAvailableButRelationshipIsEmpty_ShouldReturnFalse() {
-        //given
-        given(pnfRelationships.getRelationship()).willReturn(Collections.emptyList());
-        given(pnfResultModel.getRelationshipList()).willReturn(pnfRelationships);
-        configurePnfClient(aaiModel, pnfResultModel);
-
-        //when
-        final Mono<Boolean> task = sut.execute(aaiModel);
-
-        //then
-        Assertions.assertFalse(task::block);
-    }
-
-    @Test
-    void whenPnfIsAvailableButServiceRelationIsMissing_ShouldReturnFalse() {
-        //given
-        given(pnfRelation.getRelatedTo()).willReturn("some-other-relation");
-        given(pnfRelationships.getRelationship()).willReturn(Collections.singletonList(pnfRelation));
-        given(pnfResultModel.getRelationshipList()).willReturn(pnfRelationships);
-
-        configurePnfClient(aaiModel, pnfResultModel);
-
-        //when
-        final Mono<Boolean> task = sut.execute(aaiModel);
-
-        //then
-        Assertions.assertFalse(task::block);
-    }
-
-    @Test
-    void whenPnfIsAvailableButServiceRelationIsMissingRequiredKey_ShouldReturnFalse() {
-        //given
-        Collections.shuffle(allRelationData);
-        allRelationData.remove(0);
-
-        given(pnfRelation.getRelatedTo()).willReturn(AaiQueryTaskImpl.RELATED_TO);
-        given(pnfRelation.getRelationshipData()).willReturn(allRelationData);
-        given(pnfRelationships.getRelationship()).willReturn(Collections.singletonList(pnfRelation));
-        given(pnfResultModel.getRelationshipList()).willReturn(pnfRelationships);
+        given(getRelationToServiceInstance.call(any())).willReturn(Flux.empty());
 
         configurePnfClient(aaiModel, pnfResultModel);
 
@@ -163,13 +100,9 @@ class AaiQueryTaskImplTest {
     @Test
     void whenPnfIsAvailableAndServiceRelationIsCompleteButServiceIsInactive_ShouldReturnFalse() {
         //given
+        given(getRelationToServiceInstance.call(any()))
+                .willReturn(Flux.just(AaiRelation.create(pnfResultModel, serviceModel)));
         given(serviceModel.getOrchestrationStatus()).willReturn("Inactive");
-        given(getServiceClient.getAaiResponse(any())).willReturn(Mono.just(serviceModel));
-
-        given(pnfRelation.getRelatedTo()).willReturn(AaiQueryTaskImpl.RELATED_TO);
-        given(pnfRelation.getRelationshipData()).willReturn(allRelationData);
-        given(pnfRelationships.getRelationship()).willReturn(Collections.singletonList(pnfRelation));
-        given(pnfResultModel.getRelationshipList()).willReturn(pnfRelationships);
 
         configurePnfClient(aaiModel, pnfResultModel);
 
@@ -183,13 +116,9 @@ class AaiQueryTaskImplTest {
     @Test
     void whenPnfIsAvailableAndServiceRelationIsCompleteButServiceIsActive_ShouldReturnFalse() {
         //given
+        given(getRelationToServiceInstance.call(any()))
+                .willReturn(Flux.just(AaiRelation.create(pnfResultModel, serviceModel)));
         given(serviceModel.getOrchestrationStatus()).willReturn("Active");
-        given(getServiceClient.getAaiResponse(any())).willReturn(Mono.just(serviceModel));
-
-        given(pnfRelation.getRelatedTo()).willReturn(AaiQueryTaskImpl.RELATED_TO);
-        given(pnfRelation.getRelationshipData()).willReturn(allRelationData);
-        given(pnfRelationships.getRelationship()).willReturn(Collections.singletonList(pnfRelation));
-        given(pnfResultModel.getRelationshipList()).willReturn(pnfRelationships);
 
         configurePnfClient(aaiModel, pnfResultModel);
 
@@ -200,7 +129,7 @@ class AaiQueryTaskImplTest {
         Assertions.assertTrue(task::block);
     }
 
-    private void configurePnfClient(final AaiModel aaiModel, final AaiPnfResultModel pnfResultModel) {
-        given(getPnfModelClient.getAaiResponse(aaiModel)).willReturn(Mono.just(pnfResultModel));
+    private void configurePnfClient(final PnfRequired aaiModel, final PnfComplete pnfResultModel) {
+        given(getPnfModelClient.call(aaiModel)).willReturn(Mono.just(pnfResultModel));
     }
 }

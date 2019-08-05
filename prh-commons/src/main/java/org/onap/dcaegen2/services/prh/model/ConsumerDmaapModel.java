@@ -25,7 +25,6 @@ import com.google.gson.annotations.SerializedName;
 import org.springframework.lang.Nullable;
 import org.immutables.gson.Gson;
 import org.immutables.value.Value;
-import org.onap.dcaegen2.services.sdk.rest.services.model.AaiModel;
 import org.onap.dcaegen2.services.sdk.rest.services.model.DmaapModel;
 
 /**
@@ -34,7 +33,7 @@ import org.onap.dcaegen2.services.sdk.rest.services.model.DmaapModel;
 
 @Value.Immutable
 @Gson.TypeAdapters(fieldNamingStrategy = true)
-public interface ConsumerDmaapModel extends AaiModel, DmaapModel {
+public interface ConsumerDmaapModel extends DmaapModel {
 
     @SerializedName(value = "correlationId", alternate = "correlationId")
     String getCorrelationId();

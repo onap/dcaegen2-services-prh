@@ -56,11 +56,10 @@ public class TestAppConfiguration {
 
     public static ImmutableAaiClientConfiguration createDefaultAaiClientConfiguration() {
         return new ImmutableAaiClientConfiguration.Builder()
-                .pnfUrl("https://aai.onap.svc.cluster.local:8443/aai/v12/network/pnfs/pnf")
                 .aaiUserName("AAI")
                 .aaiUserPassword("AAI")
                 .aaiIgnoreSslCertificateErrors(true)
-                .aaiServiceInstancePath("/business/customers/customer/${customer}/service-subscriptions/service-subscription/${serviceType}/service-instances/service-instance/${serviceInstanceId}")
+                .baseUrl("https://aai.onap.svc.cluster.local:8443/aai/v12/")
                 .trustStorePath("/opt/app/prh/local/org.onap.prh.trust.jks")
                 .trustStorePasswordPath("change_it")
                 .keyStorePath("/opt/app/prh/local/org.onap.prh.p12")

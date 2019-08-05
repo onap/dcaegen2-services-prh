@@ -20,23 +20,25 @@
 
 package org.onap.dcaegen2.services.prh.model;
 
-import com.google.gson.Gson;
-import org.junit.jupiter.api.Test;
-import org.onap.dcaegen2.services.prh.model.utils.PrhModelAwareGsonBuilder;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import com.google.gson.Gson;
 import java.io.InputStreamReader;
 import java.util.Objects;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import org.onap.dcaegen2.services.prh.model.utils.PrhModelAwareGsonBuilder;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.ServiceInstanceComplete;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.common.models.Relationship;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.common.models.RelationshipData;
 
 class AaiServiceInstanceResultModelTest {
 
     @Test
     void shouldParseAaiServiceInstance() {
-        AaiServiceInstanceResultModel serviceInstance = PrhModelAwareGsonBuilder.createGson().fromJson(
+        ServiceInstanceComplete serviceInstance = PrhModelAwareGsonBuilder.createGson().fromJson(
                 new InputStreamReader(Objects.requireNonNull(
                         ClassLoader.getSystemResourceAsStream("some_aai_service_instance.json"))),
-                AaiServiceInstanceResultModel.class);
+                ServiceInstanceComplete.class);
 
         assertThat(serviceInstance.getServiceInstanceId()).isEqualTo("some serviceInstanceId");
         assertThat(serviceInstance.getServiceInstanceName()).isEqualTo("some serviceInstanceName");
@@ -53,17 +55,13 @@ class AaiServiceInstanceResultModelTest {
         assertThat(serviceInstance.getWidgetModelId()).isEqualTo("some widgetModelId");
         assertThat(serviceInstance.getWidgetModelVersion()).isEqualTo("some widgetModelVersion");
         assertThat(serviceInstance.getBandwidthTotal()).isEqualTo("some bandwidthTotal");
-        assertThat(serviceInstance.getBandwidthUpWan1()).isEqualTo("some bandwidthUpWan1");
-        assertThat(serviceInstance.getBandwidthDownWan1()).isEqualTo("some bandwidthDownWan1");
-        assertThat(serviceInstance.getBandwidthUpWan2()).isEqualTo("some bandwidthUpWan2");
-        assertThat(serviceInstance.getBandwidthDownWan2()).isEqualTo("some bandwidthDownWan2");
         assertThat(serviceInstance.getVhnPortalUrl()).isEqualTo("some vhnPortalUrl");
         assertThat(serviceInstance.getServiceInstanceLocationId()).isEqualTo("some serviceInstanceLocationId");
         assertThat(serviceInstance.getResourceVersion()).isEqualTo("some resourceVersion");
         assertThat(serviceInstance.getSelflink()).isEqualTo("some selflink");
         assertThat(serviceInstance.getOrchestrationStatus()).isEqualTo("some orchestrationStatus");
 
-        RelationshipDict relationshipDict = serviceInstance.getRelationshipList().getRelationship().get(0);
+        Relationship relationshipDict = serviceInstance.getRelationshipList().getRelationship().get(0);
         assertThat(relationshipDict.getRelatedTo()).isEqualTo("some relatedTo");
         assertThat(relationshipDict.getRelationshipData()).hasSize(1);
         RelationshipData relationshipData = relationshipDict.getRelationshipData().get(0);
@@ -74,16 +72,21 @@ class AaiServiceInstanceResultModelTest {
 
     @Test
     void shouldProvideEmptyRelationshipListForEmptyJson() {
-        Gson gson = PrhModelAwareGsonBuilder.createGson();
-        AaiServiceInstanceResultModel serviceInstance = gson.fromJson("{}", AaiServiceInstanceResultModel.class);
+        final Gson gson = PrhModelAwareGsonBuilder.createGson();
+        final ServiceInstanceComplete serviceInstance = gson.fromJson(
+                "{\"service-instance-id\": \"FOO\", \"service-type\": \" BAR\", \"global-customer-id\" : \"BOO\"}",
+                ServiceInstanceComplete.class);
         assertThat(serviceInstance.getRelationshipList()).isNotNull();
         assertThat(serviceInstance.getRelationshipList().getRelationship()).isEmpty();
     }
 
     @Test
     void shouldIgnoreUnexpectedFieldsInJson() {
-        Gson gson = PrhModelAwareGsonBuilder.createGson();
-        gson.fromJson("{\"foo\":\"bar\"}", AaiServiceInstanceResultModel.class);
+        final Gson gson = PrhModelAwareGsonBuilder.createGson();
+        gson.fromJson(
+                "{\"service-instance-id\": \"FOO\", \"service-type\": \" BAR\", " +
+                        "\"global-customer-id\" : \"BOO\", \"foo\":\"bar\"}",
+                ServiceInstanceComplete.class);
     }
 
 }

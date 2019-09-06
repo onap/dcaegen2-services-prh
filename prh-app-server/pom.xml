@@ -195,7 +195,7 @@
             </image>
           </images>
         </configuration>
-       <!-- <executions>
+       <executions>
           <execution>
             <id>docker-build-image</id>
             <phase>package</phase>
@@ -211,7 +211,6 @@
             </goals>
           </execution>
         </executions>
-	-->
       </plugin>
     </plugins>
   </build>

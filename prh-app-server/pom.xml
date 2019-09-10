@@ -43,6 +43,7 @@
     <int.dep.dir.path>${dep.dir.name}/internal</int.dep.dir.path>
 
     <skipDocker>false</skipDocker>
+    <skipDockerPush>true</skipDockerPush>
     <docker.user.name>prh</docker.user.name>
     <docker.user.dir>/home/${docker.user.name}</docker.user.dir>
   </properties>
@@ -178,7 +179,9 @@
         <groupId>io.fabric8</groupId>
         <artifactId>docker-maven-plugin</artifactId>
         <configuration>
-          <skip>${skipDocker}</skip>
+          <skipPush>${skipDockerPush}</skipPush>
+          <verbose>true</verbose>
+          <imagePullPolicy>IfNotPresent</imagePullPolicy>
           <images>
             <image>
               <name>onap/${project.groupId}.${project.artifactId}</name>

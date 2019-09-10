@@ -43,7 +43,6 @@
     <int.dep.dir.path>${dep.dir.name}/internal</int.dep.dir.path>
 
     <skipDocker>false</skipDocker>
-    <skipDockerPush>true</skipDockerPush>
     <docker.user.name>prh</docker.user.name>
     <docker.user.dir>/home/${docker.user.name}</docker.user.dir>
   </properties>
@@ -179,7 +178,6 @@
         <groupId>io.fabric8</groupId>
         <artifactId>docker-maven-plugin</artifactId>
         <configuration>
-          <skipPush>${skipDockerPush}</skipPush>
           <verbose>true</verbose>
           <imagePullPolicy>IfNotPresent</imagePullPolicy>
           <images>
@@ -198,7 +196,7 @@
             </image>
           </images>
         </configuration>
-       <executions>
+<!--       <executions>
           <execution>
             <id>docker-build-image</id>
             <phase>package</phase>
@@ -212,8 +210,8 @@
             <goals>
               <goal>push</goal>
             </goals>
-          </execution>
-        </executions>
+          </execution> 
+        </executions> -->
       </plugin>
     </plugins>
   </build>

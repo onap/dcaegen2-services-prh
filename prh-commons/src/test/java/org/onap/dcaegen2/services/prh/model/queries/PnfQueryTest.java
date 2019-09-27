@@ -52,4 +52,5 @@ class PnfQueryTest {
             return br.lines().collect(joining(System.lineSeparator()));
         }
     }
+    
 }

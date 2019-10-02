@@ -25,8 +25,8 @@ import com.google.gson.annotations.SerializedName;
 import org.springframework.lang.Nullable;
 import org.immutables.gson.Gson;
 import org.immutables.value.Value;
-import org.onap.dcaegen2.services.sdk.rest.services.model.AaiModel;
-import org.onap.dcaegen2.services.sdk.rest.services.model.DmaapModel;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.AaiModel;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.DmaapModel;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/8/18

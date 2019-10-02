@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
+import javax.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -63,6 +64,7 @@ public class ScheduledTasksRunner {
     /**
      * Function which have to stop tasks execution.
      */
+    @PreDestroy
     public synchronized void cancelTasks() {
         scheduledPrhTaskFutureList.forEach(x -> x.cancel(false));
         scheduledPrhTaskFutureList.clear();

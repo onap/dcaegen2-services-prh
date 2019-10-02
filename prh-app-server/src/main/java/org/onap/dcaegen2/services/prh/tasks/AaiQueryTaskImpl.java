@@ -21,10 +21,10 @@
 package org.onap.dcaegen2.services.prh.tasks;
 
 import org.onap.dcaegen2.services.prh.model.*;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.AaiHttpClient;
-import org.onap.dcaegen2.services.sdk.rest.services.model.AaiModel;
-import org.onap.dcaegen2.services.sdk.rest.services.model.AaiServiceInstanceQueryModel;
-import org.onap.dcaegen2.services.sdk.rest.services.model.ImmutableAaiServiceInstanceQueryModel;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.api.AaiHttpClient;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.AaiModel;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.AaiServiceInstanceQueryModel;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.ImmutableAaiServiceInstanceQueryModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;

@@ -20,7 +20,7 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.sdk.rest.services.model.AaiModel;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.AaiModel;
 import reactor.core.publisher.Mono;
 
 @FunctionalInterface

@@ -25,7 +25,7 @@ import static org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMet
 
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.Request;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.api.Request;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMethod;
 
 /**

@@ -234,10 +234,6 @@
       <groupId>org.onap.dcaegen2.services.sdk.rest.services</groupId>
       <artifactId>dmaap-client</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.onap.dcaegen2.services.sdk.rest.services</groupId>
-      <artifactId>common-dependency</artifactId>
-    </dependency>
 
     <dependency>
       <groupId>org.springframework.cloud</groupId>

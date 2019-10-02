@@ -33,9 +33,9 @@ import org.onap.dcaegen2.services.prh.model.ImmutableRelationshipData;
 import org.onap.dcaegen2.services.prh.model.Relationship;
 import org.onap.dcaegen2.services.prh.model.RelationshipData;
 import org.onap.dcaegen2.services.prh.model.RelationshipDict;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.service.http.AaiHttpClient;
-import org.onap.dcaegen2.services.sdk.rest.services.model.AaiModel;
-import org.onap.dcaegen2.services.sdk.rest.services.model.AaiServiceInstanceQueryModel;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.api.AaiHttpClient;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.AaiModel;
+import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.AaiServiceInstanceQueryModel;
 import reactor.core.publisher.Mono;
 
 import java.util.Collections;

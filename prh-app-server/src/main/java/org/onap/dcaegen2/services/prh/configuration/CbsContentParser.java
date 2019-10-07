@@ -113,6 +113,7 @@ class CbsContentParser {
     AaiClientConfiguration getAaiClientConfig() {
         return new ImmutableAaiClientConfiguration.Builder()
             .pnfUrl(jsonObject.get("aai.aaiClientConfiguration.pnfUrl").getAsString())
+            .baseUrl(jsonObject.get("aai.aaiClientConfiguration.baseUrl").getAsString())
             .aaiUserName(jsonObject.get("aai.aaiClientConfiguration.aaiUserName").getAsString())
             .aaiServiceInstancePath(jsonObject.get("aai.aaiClientConfiguration.aaiServiceInstancePath").getAsString())
             .aaiIgnoreSslCertificateErrors(

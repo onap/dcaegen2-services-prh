@@ -20,22 +20,45 @@
 
 package org.onap.dcaegen2.services.prh.integration;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doAnswer;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
+import org.mockito.stubbing.Answer;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-
-import static org.mockito.Mockito.verify;
+import org.springframework.test.context.TestPropertySource;
 
 
 @SpringBootTest
+@TestPropertySource(properties = {"prh.workflow-scheduling-interval=20ms"})
 class PrhWorkflowSchedulingIntegrationTest {
 
+    private static final int EXPECTED_INVOCATIONS_NUMBER = 1;
+    private static final int REMAINING_INVOCATIONS_NUMBER = 0;
     @MockBean
     private ScheduledTasks scheduledTasks;
+    private CountDownLatch invocationLatch;
 
     @Test
-    void prhWorkflowShouldBeExecutedRightAfterApplicationStart() {
-        verify(scheduledTasks).scheduleMainPrhEventTask();
+    void prhWorkflowShouldBeExecutedRightAfterApplicationStart() throws InterruptedException {
+        invocationLatch = new CountDownLatch(EXPECTED_INVOCATIONS_NUMBER);
+        doAnswer(registerInvocation(invocationLatch)).when(scheduledTasks).scheduleMainPrhEventTask();
+        assertThatMethodWasInvokedOnce();
+    }
+
+    private void assertThatMethodWasInvokedOnce() throws InterruptedException {
+        invocationLatch.await(1, TimeUnit.SECONDS);
+        assertEquals(REMAINING_INVOCATIONS_NUMBER, invocationLatch.getCount());
+    }
+
+    private static Answer registerInvocation(CountDownLatch invocationLatch) {
+        return invocation -> {
+            invocationLatch.countDown();
+            return null;
+        };
     }
 }

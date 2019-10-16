@@ -22,4 +22,5 @@ logging:
 
 management.endpoints.web.exposure.include: "*"
 
-
+prh:
+  workflow-scheduling-interval: 10s

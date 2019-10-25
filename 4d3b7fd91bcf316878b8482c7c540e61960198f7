@@ -1,0 +1,10 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Maciej Grabinski <maciej.grabinski@nokia.com>
+Code-Review+1: Kornel Janiak <kornel.janiak@nokia.com>
+Code-Review+1: Michal Kabaj <michal.kabaj@nokia.com>
+Code-Review+2: Vijay Venkatesh Kumar <vv770d@att.com>
+Submitted-by: Vijay Venkatesh Kumar <vv770d@att.com>
+Submitted-at: Fri, 25 Oct 2019 20:54:46 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/dcaegen2/services/prh/+/97189
+Project: dcaegen2/services/prh
+Branch: refs/heads/elalto

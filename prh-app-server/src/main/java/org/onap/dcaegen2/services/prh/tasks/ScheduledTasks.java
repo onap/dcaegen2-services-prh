@@ -161,9 +161,7 @@ public class ScheduledTasks {
 
     private Mono<State> publishToAaiConfiguration(final State state) {
         try {
-            return state.activationStatus
-                    ? Mono.just(state)
-                    : aaiProducerTask
+            return aaiProducerTask
                     .execute(state.dmaapModel)
                         .map(x -> state);
         } catch (PrhTaskException e) {

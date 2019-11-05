@@ -1,0 +1,4 @@
+distribution_type: 'maven'
+version: '1.3.2'
+project: 'dcaegen2-services-prh'
+log_dir: 'dcaegen2-services-prh-maven-stage-elalto/50/'

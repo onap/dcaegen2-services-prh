@@ -139,14 +139,17 @@ class ScheduledTasksTest {
     @Test
     void whenPnfHasActiveService_OnlyPostToPnfUpdateShouldBePerformed() throws SSLException, PrhTaskException {
         //given
+        Mono<ConsumerDmaapModel> consumerModel = Mono.just(DMAAP_MODEL);
+
         given(consumer.execute()).willReturn(Flux.just(DMAAP_MODEL));
         given(aaiQuery.execute(any())).willReturn(Mono.just(true));
+        given(aaiProducer.execute(DMAAP_MODEL)).willReturn(consumerModel);
 
         //when
         sut.scheduleMainPrhEventTask();
 
         //then
-        verifyThatPnfUpdateWasNotSentToAai();
+        verifyThatPnfUpdateWasSentToAai();
         verifyIfLogicalLinkWasNotCreated();
         verifyThatPnfModelWasNotSentDmaapPnfReadyTopic();
         verifyThatPnfModelWasSentDmaapPnfUpdateTopic();

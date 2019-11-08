@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "72a0c943_4302a5bb",
+        "filename": "releases/1.3.2-container.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2019-11-08T16:20:01Z",
+      "side": 1,
+      "message": "This should be removed.. causes image pull to fail\n\nnexus3.onap.org:10003/onap/onap/org.onap.dcaegen2.services.prh.prh-app-server:1.3.2-20191107T174913Z not found: manifest unknown: manifest unknown",
+      "range": {
+        "startLine": 7,
+        "startChar": 11,
+        "endLine": 7,
+        "endChar": 16
+      },
+      "revId": "6700109407994bfa49b8e58bd676f3fabbb27739",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

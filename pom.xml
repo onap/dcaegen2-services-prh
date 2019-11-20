@@ -47,7 +47,7 @@
 
   <properties>
     <java.version>8</java.version>
-    <spring-boot.version>2.1.2.RELEASE</spring-boot.version>
+    <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
     <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
     <springfox.version>2.9.2</springfox.version>
     <immutables.version>2.7.5</immutables.version>

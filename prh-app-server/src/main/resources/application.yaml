@@ -12,6 +12,9 @@ server:
 
 management.endpoints.web.exposure.include: "loggers,refresh,env,health"
 
+prh:
+  workflow-scheduling-interval: 10s
+
 ---
 spring:
   profiles: dev

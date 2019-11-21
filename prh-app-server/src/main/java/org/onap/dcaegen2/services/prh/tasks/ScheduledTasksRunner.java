@@ -20,11 +20,12 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
+import javax.annotation.PreDestroy;
+import org.onap.dcaegen2.services.prh.configuration.PrhProperties;
 import javax.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,17 +44,19 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Configuration
 @EnableScheduling
 public class ScheduledTasksRunner {
-    private static final int SCHEDULING_DELAY_FOR_PRH_TASKS = 10;
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledTasksRunner.class);
     private static final Marker ENTRY = MarkerFactory.getMarker("ENTRY");
     private static volatile List<ScheduledFuture> scheduledPrhTaskFutureList = new ArrayList<>();
 
     private final TaskScheduler taskScheduler;
     private final ScheduledTasks scheduledTask;
+    private final PrhProperties prhProperties;
 
-    public ScheduledTasksRunner(TaskScheduler taskScheduler, ScheduledTasks scheduledTask) {
+    public ScheduledTasksRunner(TaskScheduler taskScheduler, ScheduledTasks scheduledTask,
+        PrhProperties prhProperties) {
         this.taskScheduler = taskScheduler;
         this.scheduledTask = scheduledTask;
+        this.prhProperties = prhProperties;
     }
 
     @EventListener
@@ -80,7 +83,7 @@ public class ScheduledTasksRunner {
         if (scheduledPrhTaskFutureList.isEmpty()) {
             scheduledPrhTaskFutureList.add(taskScheduler
                 .scheduleWithFixedDelay(scheduledTask::scheduleMainPrhEventTask,
-                    Duration.ofSeconds(SCHEDULING_DELAY_FOR_PRH_TASKS)));
+                    prhProperties.getWorkflowSchedulingInterval()));
             return true;
         } else {
             return false;

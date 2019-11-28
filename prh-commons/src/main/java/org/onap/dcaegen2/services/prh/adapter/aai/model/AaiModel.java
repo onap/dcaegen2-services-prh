@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START=======================================================
- * PNF-REGISTRATION-HANDLER
+ * DCAEGEN2-SERVICES-SDK
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
@@ -18,12 +18,10 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.tasks;
-
-import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiModel;
-import reactor.core.publisher.Mono;
+package org.onap.dcaegen2.services.prh.adapter.aai.model;
 
 @FunctionalInterface
-public interface AaiQueryTask {
-    Mono<Boolean> execute(final AaiModel aaiModel);
+public interface AaiModel extends ClientModel {
+
+    String getCorrelationId();
 }

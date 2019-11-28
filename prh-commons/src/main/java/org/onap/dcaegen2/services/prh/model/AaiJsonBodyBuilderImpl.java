@@ -22,10 +22,9 @@ package org.onap.dcaegen2.services.prh.model;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapterFactory;
-import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel.Builder;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.JsonBodyBuilder;
-
 import java.util.ServiceLoader;
+import org.onap.dcaegen2.services.prh.adapter.aai.model.JsonBodyBuilder;
+import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel.Builder;
 import org.springframework.util.StringUtils;
 
 

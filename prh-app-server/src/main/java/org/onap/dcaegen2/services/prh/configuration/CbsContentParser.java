@@ -20,14 +20,19 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
+import static org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.streams.StreamPredicates.streamWithName;
+
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import java.nio.file.Paths;
+import java.time.Duration;
+import java.util.Map;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableAaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.model.streams.RawDataStream;
 import org.onap.dcaegen2.services.sdk.model.streams.dmaap.MessageRouterSink;
 import org.onap.dcaegen2.services.sdk.model.streams.dmaap.MessageRouterSource;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.api.AaiClientConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.api.ImmutableAaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.streams.DataStreams;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.streams.StreamFromGsonParsers;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterPublishRequest;
@@ -42,12 +47,6 @@ import org.onap.dcaegen2.services.sdk.security.ssl.ImmutableSecurityKeys;
 import org.onap.dcaegen2.services.sdk.security.ssl.ImmutableSecurityKeysStore;
 import org.onap.dcaegen2.services.sdk.security.ssl.Passwords;
 import org.onap.dcaegen2.services.sdk.security.ssl.SecurityKeys;
-
-import java.nio.file.Paths;
-import java.time.Duration;
-import java.util.Map;
-
-import static org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.streams.StreamPredicates.streamWithName;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 8/21/18

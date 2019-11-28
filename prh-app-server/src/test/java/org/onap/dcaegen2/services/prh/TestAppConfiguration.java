@@ -20,14 +20,13 @@
 
 package org.onap.dcaegen2.services.prh;
 
+import java.time.Duration;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableAaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.model.streams.dmaap.ImmutableMessageRouterSink;
 import org.onap.dcaegen2.services.sdk.model.streams.dmaap.ImmutableMessageRouterSource;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.api.ImmutableAaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.ContentType;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterPublishRequest;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterSubscribeRequest;
-
-import java.time.Duration;
 
 
 public class TestAppConfiguration {

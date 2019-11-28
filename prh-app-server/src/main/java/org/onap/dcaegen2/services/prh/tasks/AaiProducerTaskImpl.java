@@ -20,14 +20,14 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
+import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpClient;
+import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiModel;
 import org.onap.dcaegen2.services.prh.exceptions.AaiNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.utils.HttpUtils;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.api.AaiHttpClient;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.AaiModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

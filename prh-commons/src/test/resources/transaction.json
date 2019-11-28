@@ -1,0 +1,11 @@
+{
+  "operations": [
+    {
+      "action": "put",
+      "uri": "/network/logical-links/logical-link/foo",
+      "body": {
+        "link-name": "foo"
+      }
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 /*
  * ============LICENSE_START=======================================================
- * PNF-REGISTRATION-HANDLER
+ * DCAEGEN2-SERVICES-SDK
  * ================================================================================
- * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,15 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.tasks;
+package org.onap.dcaegen2.services.prh.adapter.aai.api;
 
-import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiModel;
+import java.util.function.Function;
 import reactor.core.publisher.Mono;
 
-@FunctionalInterface
-public interface AaiQueryTask {
-    Mono<Boolean> execute(final AaiModel aaiModel);
+public interface AaiHttpClient<T, U> {
+    Mono<U> getAaiResponse(T aaiModel);
+
+    default <S> AaiHttpClient<T, S> map(final Function<U,S> fn) {
+        return aaiModel -> AaiHttpClient.this.getAaiResponse(aaiModel).map(fn);
+    }
 }

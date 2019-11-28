@@ -36,7 +36,6 @@ import static org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMet
 import static org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMethod.PUT;
 
 import com.google.gson.JsonObject;
-import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -45,11 +44,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.onap.dcaegen2.services.prh.TestAppConfiguration;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
 import org.onap.dcaegen2.services.prh.exceptions.AaiFailureException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.api.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpRequest;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.ImmutableHttpResponse;

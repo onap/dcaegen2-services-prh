@@ -20,27 +20,32 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
 import com.google.gson.JsonObject;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import javax.net.ssl.SSLException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.onap.dcaegen2.services.prh.TestAppConfiguration;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.patch.AaiHttpPatchClient;
 import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.api.AaiClientConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.api.patch.AaiHttpPatchClient;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
-import javax.net.ssl.SSLException;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/14/18

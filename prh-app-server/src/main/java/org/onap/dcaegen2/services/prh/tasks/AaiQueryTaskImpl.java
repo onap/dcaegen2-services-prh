@@ -20,18 +20,21 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.prh.model.*;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.api.AaiHttpClient;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.AaiModel;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.AaiServiceInstanceQueryModel;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.ImmutableAaiServiceInstanceQueryModel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpClient;
+import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiServiceInstanceQueryModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.model.ImmutableAaiServiceInstanceQueryModel;
+import org.onap.dcaegen2.services.prh.model.AaiPnfResultModel;
+import org.onap.dcaegen2.services.prh.model.AaiServiceInstanceResultModel;
+import org.onap.dcaegen2.services.prh.model.Relationship;
+import org.onap.dcaegen2.services.prh.model.RelationshipData;
+import org.onap.dcaegen2.services.prh.model.RelationshipDict;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 @Component
 public class AaiQueryTaskImpl implements AaiQueryTask {

@@ -20,6 +20,11 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+
+import java.util.Collections;
+import java.util.List;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,22 +32,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpClient;
+import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiServiceInstanceQueryModel;
 import org.onap.dcaegen2.services.prh.model.AaiPnfResultModel;
 import org.onap.dcaegen2.services.prh.model.AaiServiceInstanceResultModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableRelationshipData;
 import org.onap.dcaegen2.services.prh.model.Relationship;
 import org.onap.dcaegen2.services.prh.model.RelationshipData;
 import org.onap.dcaegen2.services.prh.model.RelationshipDict;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.api.AaiHttpClient;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.AaiModel;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.model.AaiServiceInstanceQueryModel;
 import reactor.core.publisher.Mono;
-
-import java.util.Collections;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class AaiQueryTaskImplTest {

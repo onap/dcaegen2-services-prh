@@ -228,10 +228,6 @@
     </dependency>
     <dependency>
       <groupId>org.onap.dcaegen2.services.sdk.rest.services</groupId>
-      <artifactId>aai-client</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.onap.dcaegen2.services.sdk.rest.services</groupId>
       <artifactId>dmaap-client</artifactId>
     </dependency>
 

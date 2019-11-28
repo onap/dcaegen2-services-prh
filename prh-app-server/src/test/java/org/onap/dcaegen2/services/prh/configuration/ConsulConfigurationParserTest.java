@@ -20,13 +20,21 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
+import static java.lang.ClassLoader.getSystemResource;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.Duration;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.prh.TestAppConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.api.AaiClientConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.aai.client.api.ImmutableAaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableAaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.ContentType;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeRequest;
@@ -34,22 +42,13 @@ import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.config.Me
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.config.MessageRouterSubscriberConfig;
 import org.onap.dcaegen2.services.sdk.security.ssl.SecurityKeys;
 
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.time.Duration;
-
-import static java.lang.ClassLoader.getSystemResource;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
-
 
 class ConsulConfigurationParserTest {
 
     private final String correctJson =
-            new String(Files.readAllBytes(Paths.get(getSystemResource("configurationFromCbs.json").toURI())));
+        new String(Files.readAllBytes(Paths.get(getSystemResource("configurationFromCbs.json").toURI())));
     private final ImmutableAaiClientConfiguration correctAaiClientConfig =
-            TestAppConfiguration.createDefaultAaiClientConfiguration();
+        TestAppConfiguration.createDefaultAaiClientConfiguration();
 
     private final JsonObject correctConfig = new Gson().fromJson(correctJson, JsonObject.class);
     private final CbsContentParser consulConfigurationParser = new CbsContentParser(correctConfig);
@@ -70,10 +69,12 @@ class ConsulConfigurationParserTest {
     @Test
     void shouldCreateMessageRouterSubscribeRequestCorrectly() {
         // given
-        MessageRouterSubscribeRequest messageRouterSubscribeRequest = consulConfigurationParser.getMessageRouterSubscribeRequest();
+        MessageRouterSubscribeRequest messageRouterSubscribeRequest = consulConfigurationParser
+            .getMessageRouterSubscribeRequest();
 
         // then
-        assertThat(messageRouterSubscribeRequest.sourceDefinition().topicUrl()).isEqualTo("http://dmaap-mr:2222/events/unauthenticated.VES_PNFREG_OUTPUT");
+        assertThat(messageRouterSubscribeRequest.sourceDefinition().topicUrl())
+            .isEqualTo("http://dmaap-mr:2222/events/unauthenticated.VES_PNFREG_OUTPUT");
         assertThat(messageRouterSubscribeRequest.consumerGroup()).isEqualTo("OpenDCAE-c12");
         assertThat(messageRouterSubscribeRequest.consumerId()).isEqualTo("c12");
         assertThat(messageRouterSubscribeRequest.timeout()).isEqualTo(Duration.ofMillis(-1));
@@ -82,28 +83,33 @@ class ConsulConfigurationParserTest {
     @Test
     void shouldCreateMessageRouterPublishConfigurationCorrectly() {
         // when
-        MessageRouterPublishRequest messageRouterPublishRequest = consulConfigurationParser.getMessageRouterPublishRequest();
+        MessageRouterPublishRequest messageRouterPublishRequest = consulConfigurationParser
+            .getMessageRouterPublishRequest();
 
         // then
         assertThat(messageRouterPublishRequest.contentType()).isEqualTo(ContentType.APPLICATION_JSON);
-        assertThat(messageRouterPublishRequest.sinkDefinition().topicUrl()).isEqualTo("http://dmaap-mr:2222/events/unauthenticated.PNF_READY");
+        assertThat(messageRouterPublishRequest.sinkDefinition().topicUrl())
+            .isEqualTo("http://dmaap-mr:2222/events/unauthenticated.PNF_READY");
     }
 
     @Test
     void shouldCreateMessageRouterUpdatePublishConfigurationCorrectly() {
         // when
-        MessageRouterPublishRequest messageRouterPublishRequest = consulConfigurationParser.getMessageRouterUpdatePublishRequest();
+        MessageRouterPublishRequest messageRouterPublishRequest = consulConfigurationParser
+            .getMessageRouterUpdatePublishRequest();
 
         // then
         assertThat(messageRouterPublishRequest.contentType()).isEqualTo(ContentType.APPLICATION_JSON);
-        assertThat(messageRouterPublishRequest.sinkDefinition().topicUrl()).isEqualTo("http://dmaap-mr:2222/events/unauthenticated.PNF_UPDATE");
+        assertThat(messageRouterPublishRequest.sinkDefinition().topicUrl())
+            .isEqualTo("http://dmaap-mr:2222/events/unauthenticated.PNF_UPDATE");
     }
 
     @Test
     void whenDmaapCertAuthIsDisabled_MessageRouterPublisherConfigSecurityKeysShouldBeIgnored() {
         assumeFalse(correctConfig.getAsJsonObject("config").get("security.enableDmaapCertAuth").getAsBoolean());
 
-        MessageRouterPublisherConfig messageRouterPublisherConfig = consulConfigurationParser.getMessageRouterPublisherConfig();
+        MessageRouterPublisherConfig messageRouterPublisherConfig = consulConfigurationParser
+            .getMessageRouterPublisherConfig();
 
         assertThat(messageRouterPublisherConfig.securityKeys()).isNull();
     }
@@ -112,7 +118,8 @@ class ConsulConfigurationParserTest {
     void whenDmaapCertAuthIsDisabled_MessageRouterSubscriberConfigSecurityKeysShouldBeIgnored() {
         assumeFalse(correctConfig.getAsJsonObject("config").get("security.enableDmaapCertAuth").getAsBoolean());
 
-        MessageRouterSubscriberConfig messageRouterSubscriberConfig = consulConfigurationParser.getMessageRouterSubscriberConfig();
+        MessageRouterSubscriberConfig messageRouterSubscriberConfig = consulConfigurationParser
+            .getMessageRouterSubscriberConfig();
 
         assertThat(messageRouterSubscriberConfig.securityKeys()).isNull();
     }
@@ -122,7 +129,8 @@ class ConsulConfigurationParserTest {
     void whenDmaapCertAuthIsEnabled_MessageRouterPublisherConfigSecurityKeysShouldBeLoaded() {
         CbsContentParser consulConfigurationParser = new CbsContentParser(getConfigWithSslEnabled(correctJson));
 
-        MessageRouterPublisherConfig messageRouterPublisherConfig = consulConfigurationParser.getMessageRouterPublisherConfig();
+        MessageRouterPublisherConfig messageRouterPublisherConfig = consulConfigurationParser
+            .getMessageRouterPublisherConfig();
 
         verifySecurityKeys(messageRouterPublisherConfig.securityKeys());
     }
@@ -132,7 +140,8 @@ class ConsulConfigurationParserTest {
     void whenDmaapCertAuthIsEnabled_MessageRouterSubscriberConfigSecurityKeysShouldBeLoaded() {
         CbsContentParser consulConfigurationParser = new CbsContentParser(getConfigWithSslEnabled(correctJson));
 
-        MessageRouterSubscriberConfig messageRouterSubscriberConfig = consulConfigurationParser.getMessageRouterSubscriberConfig();
+        MessageRouterSubscriberConfig messageRouterSubscriberConfig = consulConfigurationParser
+            .getMessageRouterSubscriberConfig();
 
         verifySecurityKeys(messageRouterSubscriberConfig.securityKeys());
     }
@@ -141,8 +150,10 @@ class ConsulConfigurationParserTest {
         assertThat(securityKeys).isNotNull();
         assertThat(securityKeys.trustStore().path().endsWith("org.onap.dcae.trust.jks")).isTrue();
         assertThat(securityKeys.keyStore().path().endsWith("org.onap.dcae.jks")).isTrue();
-        securityKeys.trustStorePassword().use(chars -> assertThat(new String(chars)).isEqualTo("*TQH?Lnszprs4LmlAj38yds("));
-        securityKeys.keyStorePassword().use(chars -> assertThat(new String(chars)).isEqualTo("mYHC98!qX}7h?W}jRv}MIXTJ"));
+        securityKeys.trustStorePassword()
+            .use(chars -> assertThat(new String(chars)).isEqualTo("*TQH?Lnszprs4LmlAj38yds("));
+        securityKeys.keyStorePassword()
+            .use(chars -> assertThat(new String(chars)).isEqualTo("mYHC98!qX}7h?W}jRv}MIXTJ"));
     }
 
     private static JsonObject getConfigWithSslEnabled(String configJsonString) {

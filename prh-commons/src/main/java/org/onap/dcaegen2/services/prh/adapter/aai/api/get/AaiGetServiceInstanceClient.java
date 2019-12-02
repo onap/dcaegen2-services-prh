@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * DCAEGEN2-SERVICES-SDK
  * ================================================================================
- * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2019 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@
 
 package org.onap.dcaegen2.services.prh.adapter.aai.api.get;
 
-import static org.onap.dcaegen2.services.prh.adapter.aai.impl.AaiRequests.createAaiGetRequest;
 import static org.onap.dcaegen2.services.prh.adapter.aai.main.AaiHttpClientFactory.createRequestDiagnosticContext;
 
 import io.vavr.collection.HashMap;
@@ -29,10 +28,10 @@ import org.apache.commons.text.StringSubstitutor;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpClient;
 import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiServiceInstanceQueryModel;
-import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpRequest;
+import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMethod;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
+import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.ImmutableHttpRequest;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RxHttpClient;
-import org.onap.dcaegen2.services.sdk.rest.services.uri.URI;
 import reactor.core.publisher.Mono;
 
 public class AaiGetServiceInstanceClient implements
@@ -59,15 +58,13 @@ public class AaiGetServiceInstanceClient implements
             SERVICE_INSTANCE_ID, aaiModel.serviceInstanceId());
 
         final StringSubstitutor substitutor = new StringSubstitutor(mapping.toJavaMap());
-        final String replaced = substitutor.replace(configuration.aaiServiceInstancePath());
+        final String endpoint = substitutor.replace(configuration.aaiServiceInstancePath());
 
-        final HttpRequest getRequest = createAaiGetRequest(getUri(replaced),
-            createRequestDiagnosticContext(), configuration.aaiHeaders());
-
-        return httpClient.call(getRequest);
-    }
-
-    private String getUri(final String endpoint) {
-        return new URI.URIBuilder().path(configuration.baseUrl() + endpoint).build().toString();
+        return httpClient.call(ImmutableHttpRequest.builder()
+            .method(HttpMethod.GET)
+            .url(configuration.baseUrl() + endpoint)
+            .customHeaders(HashMap.ofAll(configuration.aaiHeaders()))
+            .diagnosticContext(createRequestDiagnosticContext())
+            .build());
     }
 }

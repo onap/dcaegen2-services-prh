@@ -20,16 +20,16 @@
 
 package org.onap.dcaegen2.services.prh.adapter.aai.api.get;
 
-import static org.onap.dcaegen2.services.prh.adapter.aai.impl.AaiRequests.createAaiGetRequest;
 import static org.onap.dcaegen2.services.prh.adapter.aai.main.AaiHttpClientFactory.createRequestDiagnosticContext;
 
+import io.vavr.collection.HashMap;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpClient;
 import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiModel;
-import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpRequest;
+import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMethod;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
+import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.ImmutableHttpRequest;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RxHttpClient;
-import org.onap.dcaegen2.services.sdk.rest.services.uri.URI;
 import reactor.core.publisher.Mono;
 
 public final class AaiHttpGetClient implements AaiHttpClient<AaiModel, HttpResponse> {
@@ -45,14 +45,11 @@ public final class AaiHttpGetClient implements AaiHttpClient<AaiModel, HttpRespo
 
     @Override
     public Mono<HttpResponse> getAaiResponse(AaiModel aaiModel) {
-        final HttpRequest getRequest = createAaiGetRequest(getUri(aaiModel.getCorrelationId()),
-            createRequestDiagnosticContext(), configuration.aaiHeaders());
-
-        return httpClient.call(getRequest);
-    }
-
-
-    private String getUri(String pnfName) {
-        return new URI.URIBuilder().path(configuration.pnfUrl() + "/" + pnfName).build().toString();
+        return httpClient.call(ImmutableHttpRequest.builder()
+            .method(HttpMethod.GET)
+            .url(configuration.pnfUrl() + "/" + aaiModel.getCorrelationId())
+            .customHeaders(HashMap.ofAll(configuration.aaiHeaders()))
+            .diagnosticContext(createRequestDiagnosticContext())
+            .build());
     }
 }

@@ -26,7 +26,6 @@ import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiModel;
 import org.onap.dcaegen2.services.prh.adapter.aai.model.JsonBodyBuilder;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RxHttpClient;
-import org.onap.dcaegen2.services.sdk.rest.services.uri.URI;
 
 public class AbstractHttpClientTest {
 
@@ -37,6 +36,6 @@ public class AbstractHttpClientTest {
 
 
     protected String constructAaiUri(AaiClientConfiguration configuration, String pnfName) {
-        return new URI.URIBuilder().path(configuration.pnfUrl() + "/" + pnfName).build().toString();
+        return configuration.pnfUrl() + "/" + pnfName;
     }
 }

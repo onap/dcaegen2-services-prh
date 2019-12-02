@@ -21,15 +21,17 @@
 
 package org.onap.dcaegen2.services.prh.adapter.aai.api.put;
 
-import static org.onap.dcaegen2.services.prh.adapter.aai.impl.AaiRequests.createAaiPutRequest;
 import static org.onap.dcaegen2.services.prh.adapter.aai.main.AaiHttpClientFactory.createRequestDiagnosticContext;
 
+import io.vavr.collection.HashMap;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpClient;
 import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiModel;
 import org.onap.dcaegen2.services.prh.adapter.aai.model.JsonBodyBuilder;
-import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpRequest;
+import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMethod;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
+import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.ImmutableHttpRequest;
+import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RequestBody;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RxHttpClient;
 import reactor.core.publisher.Mono;
 
@@ -50,8 +52,14 @@ public class AaiHttpPutClient implements AaiHttpClient<AaiModel, HttpResponse> {
 
     @Override
     public Mono<HttpResponse> getAaiResponse(AaiModel aaiModel) {
-        final HttpRequest aaiPutRequest = createAaiPutRequest(uri, createRequestDiagnosticContext(),
-            configuration.aaiHeaders(), jsonBodyBuilder, aaiModel);
-        return httpClient.call(aaiPutRequest);
+        String jsonBody = jsonBodyBuilder.createJsonBody(aaiModel);
+
+        return httpClient.call(ImmutableHttpRequest.builder()
+            .url(uri)
+            .customHeaders(HashMap.ofAll(configuration.aaiHeaders()))
+            .diagnosticContext(createRequestDiagnosticContext())
+            .body(RequestBody.fromString(jsonBody))
+            .method(HttpMethod.PUT)
+            .build());
     }
 }

@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8ac7d8f4_5faa64bb",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/adapter/aai/api/get/AaiGetServiceInstanceClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2019-12-03T08:44:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2f45371d_694c9cb9",
+      "revId": "197b3bb8bbf7dcdecd473d061f398e5b6991f528",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85720521_e18e6496",
         "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/adapter/aai/api/patch/AaiHttpPatchClient.java",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2019-12-03T05:42:52Z",
       "side": 1,
       "message": "add 2019 copyright\nplus company info if needed",
+      "revId": "197b3bb8bbf7dcdecd473d061f398e5b6991f528",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0c92fa5b_6823199c",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/adapter/aai/api/patch/AaiHttpPatchClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2019-12-03T08:44:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85720521_e18e6496",
       "revId": "197b3bb8bbf7dcdecd473d061f398e5b6991f528",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false

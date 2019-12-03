@@ -21,7 +21,7 @@
 package org.onap.dcaegen2.services.prh.adapter.aai.model;
 
 @FunctionalInterface
-public interface AaiModel extends ClientModel {
+public interface AaiModel {
 
     String getCorrelationId();
 }

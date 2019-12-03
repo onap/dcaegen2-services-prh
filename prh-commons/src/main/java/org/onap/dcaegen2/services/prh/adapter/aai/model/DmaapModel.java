@@ -20,5 +20,5 @@
 
 package org.onap.dcaegen2.services.prh.adapter.aai.model;
 
-public interface DmaapModel extends ClientModel {
+public interface DmaapModel {
 }

@@ -24,7 +24,7 @@ import org.immutables.value.Value;
 
 @Value.Style(stagedBuilder = true)
 @Value.Immutable
-public interface AaiServiceInstanceQueryModel extends ClientModel {
+public interface AaiServiceInstanceQueryModel {
     String customerId();
     String serviceType();
     String serviceInstanceId();

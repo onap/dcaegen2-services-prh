@@ -21,7 +21,7 @@
 package org.onap.dcaegen2.services.prh.adapter.aai.model;
 
 @FunctionalInterface
-public interface JsonBodyBuilder<T extends ClientModel> {
+public interface JsonBodyBuilder<T> {
 
     /**
      * Method for serialization object by GSON.

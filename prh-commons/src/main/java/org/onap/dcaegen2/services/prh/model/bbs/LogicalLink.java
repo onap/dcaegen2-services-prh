@@ -22,14 +22,13 @@ package org.onap.dcaegen2.services.prh.model.bbs;
 import com.google.gson.annotations.SerializedName;
 import org.immutables.gson.Gson;
 import org.immutables.value.Value;
-import org.onap.dcaegen2.services.prh.adapter.aai.model.ClientModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableRelationship;
 import org.onap.dcaegen2.services.prh.model.Relationship;
 import org.springframework.lang.Nullable;
 
 @Value.Immutable
 @Gson.TypeAdapters(fieldNamingStrategy = true)
-public interface LogicalLink extends ClientModel {
+public interface LogicalLink {
 
     @SerializedName(value = "link-name")
     String getLinkName();

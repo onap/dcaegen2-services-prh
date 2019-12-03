@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * DCAEGEN2-SERVICES-SDK
  * ================================================================================
- * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2019 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 package org.onap.dcaegen2.services.prh.adapter.aai.model;
 
 @FunctionalInterface
-public interface JsonBodyBuilder<T extends ClientModel> {
+public interface JsonBodyBuilder<T> {
 
     /**
      * Method for serialization object by GSON.

@@ -28,11 +28,11 @@ import org.onap.dcaegen2.services.prh.adapter.aai.api.get.AaiGetServiceInstanceC
 import org.onap.dcaegen2.services.prh.adapter.aai.api.get.AaiHttpGetClient;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.patch.AaiHttpPatchClient;
 import org.onap.dcaegen2.services.prh.adapter.aai.main.AaiHttpClientFactory;
-import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiModel;
 import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiServiceInstanceQueryModel;
 import org.onap.dcaegen2.services.prh.model.AaiJsonBodyBuilderImpl;
 import org.onap.dcaegen2.services.prh.model.AaiPnfResultModel;
 import org.onap.dcaegen2.services.prh.model.AaiServiceInstanceResultModel;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.utils.PrhModelAwareGsonBuilder;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RxHttpClient;
@@ -47,7 +47,7 @@ public class AaiHttpClientConfig {
     private CbsConfiguration cbsConfiguration;
 
     @Bean
-    public AaiHttpClient<AaiModel, HttpResponse> getPatchClientFactory() {
+    public AaiHttpClient<ConsumerDmaapModel, HttpResponse> getPatchClientFactory() {
         return createLazyConfigClient(
             (config, client) -> new AaiHttpPatchClient(config, new AaiJsonBodyBuilderImpl(), client));
     }
@@ -64,7 +64,7 @@ public class AaiHttpClientConfig {
     }
 
     @Bean
-    public AaiHttpClient<AaiModel, AaiPnfResultModel> getGetClient() {
+    public AaiHttpClient<ConsumerDmaapModel, AaiPnfResultModel> getGetClient() {
         return createLazyConfigClient(
             (config, client) -> new AaiHttpGetClient(config, client)
                 .map(httpResponse -> {

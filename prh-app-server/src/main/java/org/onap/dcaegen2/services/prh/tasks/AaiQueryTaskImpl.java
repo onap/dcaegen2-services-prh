@@ -24,11 +24,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpClient;
-import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiModel;
 import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiServiceInstanceQueryModel;
 import org.onap.dcaegen2.services.prh.adapter.aai.model.ImmutableAaiServiceInstanceQueryModel;
 import org.onap.dcaegen2.services.prh.model.AaiPnfResultModel;
 import org.onap.dcaegen2.services.prh.model.AaiServiceInstanceResultModel;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.Relationship;
 import org.onap.dcaegen2.services.prh.model.RelationshipData;
 import org.onap.dcaegen2.services.prh.model.RelationshipDict;
@@ -44,19 +44,19 @@ public class AaiQueryTaskImpl implements AaiQueryTask {
     static final String SERVICE_TYPE = "service-subscription.service-type";
     static final String SERVICE_INSTANCE_ID = "service-instance.service-instance-id";
 
-    private final AaiHttpClient<AaiModel, AaiPnfResultModel> getPnfModelClient;
+    private final AaiHttpClient<ConsumerDmaapModel, AaiPnfResultModel> getPnfModelClient;
     private final AaiHttpClient<AaiServiceInstanceQueryModel, AaiServiceInstanceResultModel> getServiceClient;
 
     @Autowired
     public AaiQueryTaskImpl(
-            final AaiHttpClient<AaiModel, AaiPnfResultModel> getPnfModelClient,
+            final AaiHttpClient<ConsumerDmaapModel, AaiPnfResultModel> getPnfModelClient,
             final AaiHttpClient<AaiServiceInstanceQueryModel, AaiServiceInstanceResultModel> getServiceClient) {
         this.getPnfModelClient = getPnfModelClient;
         this.getServiceClient = getServiceClient;
     }
 
     @Override
-    public Mono<Boolean> execute(AaiModel aaiModel) {
+    public Mono<Boolean> execute(ConsumerDmaapModel aaiModel) {
         return getPnfModelClient
                 .getAaiResponse(aaiModel)
                 .flatMap(this::checkIfPnfHasRelationToService)

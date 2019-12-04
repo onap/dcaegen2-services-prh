@@ -21,7 +21,6 @@
 package org.onap.dcaegen2.services.prh.tasks;
 
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpClient;
-import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiModel;
 import org.onap.dcaegen2.services.prh.exceptions.AaiNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
@@ -43,10 +42,10 @@ public class AaiProducerTaskImpl implements AaiProducerTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AaiProducerTaskImpl.class);
 
-    private final AaiHttpClient<AaiModel, HttpResponse> aaiHttpPatchClient;
+    private final AaiHttpClient<ConsumerDmaapModel, HttpResponse> aaiHttpPatchClient;
 
     @Autowired
-    public AaiProducerTaskImpl(final AaiHttpClient<AaiModel, HttpResponse> aaiHttpPatchClient) {
+    public AaiProducerTaskImpl(final AaiHttpClient<ConsumerDmaapModel, HttpResponse> aaiHttpPatchClient) {
         this.aaiHttpPatchClient = aaiHttpPatchClient;
     }
 

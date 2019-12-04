@@ -25,14 +25,14 @@ import static org.onap.dcaegen2.services.prh.adapter.aai.main.AaiHttpClientFacto
 import io.vavr.collection.HashMap;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpClient;
-import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiModel;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMethod;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.ImmutableHttpRequest;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RxHttpClient;
 import reactor.core.publisher.Mono;
 
-public final class AaiHttpGetClient implements AaiHttpClient<AaiModel, HttpResponse> {
+public final class AaiHttpGetClient implements AaiHttpClient<ConsumerDmaapModel, HttpResponse> {
 
     private final RxHttpClient httpClient;
     private final AaiClientConfiguration configuration;
@@ -44,7 +44,7 @@ public final class AaiHttpGetClient implements AaiHttpClient<AaiModel, HttpRespo
     }
 
     @Override
-    public Mono<HttpResponse> getAaiResponse(AaiModel aaiModel) {
+    public Mono<HttpResponse> getAaiResponse(ConsumerDmaapModel aaiModel) {
         return httpClient.call(ImmutableHttpRequest.builder()
             .method(HttpMethod.GET)
             .url(configuration.pnfUrl() + "/" + aaiModel.getCorrelationId())

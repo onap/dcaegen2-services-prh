@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2019 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,19 +23,12 @@ package org.onap.dcaegen2.services.prh.model;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapterFactory;
 import java.util.ServiceLoader;
-import org.onap.dcaegen2.services.prh.adapter.aai.model.JsonBodyBuilder;
 import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel.Builder;
 import org.springframework.util.StringUtils;
 
 
-public class AaiJsonBodyBuilderImpl implements JsonBodyBuilder<ConsumerDmaapModel> {
+public class AaiJsonBodyBuilderImpl {
 
-    /**
-     * Method for serialization object by GSON.
-     *
-     * @param consumerDmaapModel - object which will be serialized
-     * @return string from serialization
-     */
     public String createJsonBody(ConsumerDmaapModel consumerDmaapModel) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         ServiceLoader.load(TypeAdapterFactory.class).forEach(gsonBuilder::registerTypeAdapterFactory);

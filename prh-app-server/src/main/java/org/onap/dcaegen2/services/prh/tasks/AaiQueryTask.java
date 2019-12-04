@@ -20,10 +20,10 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiModel;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import reactor.core.publisher.Mono;
 
 @FunctionalInterface
 public interface AaiQueryTask {
-    Mono<Boolean> execute(final AaiModel aaiModel);
+    Mono<Boolean> execute(final ConsumerDmaapModel aaiModel);
 }

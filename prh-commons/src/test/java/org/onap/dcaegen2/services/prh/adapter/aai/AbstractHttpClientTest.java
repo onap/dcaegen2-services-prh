@@ -22,16 +22,16 @@ package org.onap.dcaegen2.services.prh.adapter.aai;
 import static org.mockito.Mockito.mock;
 
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiClientConfiguration;
-import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiModel;
-import org.onap.dcaegen2.services.prh.adapter.aai.model.JsonBodyBuilder;
+import org.onap.dcaegen2.services.prh.model.AaiJsonBodyBuilderImpl;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RxHttpClient;
 
 public class AbstractHttpClientTest {
 
-    protected final AaiModel aaiModel = () -> "test-id";
+    protected final ConsumerDmaapModel aaiModel = mock(ConsumerDmaapModel.class);
     protected final RxHttpClient httpClient = mock(RxHttpClient.class);
-    protected final JsonBodyBuilder bodyBuilder = mock(JsonBodyBuilder.class);
+    protected final AaiJsonBodyBuilderImpl bodyBuilder = mock(AaiJsonBodyBuilderImpl.class);
     protected final HttpResponse response = mock(HttpResponse.class);
 
 

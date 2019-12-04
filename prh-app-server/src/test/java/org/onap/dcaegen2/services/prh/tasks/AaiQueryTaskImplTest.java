@@ -22,6 +22,7 @@ package org.onap.dcaegen2.services.prh.tasks;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,10 +34,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpClient;
-import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiModel;
 import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiServiceInstanceQueryModel;
 import org.onap.dcaegen2.services.prh.model.AaiPnfResultModel;
 import org.onap.dcaegen2.services.prh.model.AaiServiceInstanceResultModel;
+import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableRelationshipData;
 import org.onap.dcaegen2.services.prh.model.Relationship;
 import org.onap.dcaegen2.services.prh.model.RelationshipData;
@@ -46,7 +47,7 @@ import reactor.core.publisher.Mono;
 @ExtendWith(MockitoExtension.class)
 class AaiQueryTaskImplTest {
     @Mock
-    private AaiHttpClient<AaiModel, AaiPnfResultModel> getPnfModelClient;
+    private AaiHttpClient<ConsumerDmaapModel, AaiPnfResultModel> getPnfModelClient;
 
     @Mock
     private AaiHttpClient<AaiServiceInstanceQueryModel, AaiServiceInstanceResultModel> getServiceClient;
@@ -67,7 +68,7 @@ class AaiQueryTaskImplTest {
 
     private AaiQueryTask sut;
 
-    private final AaiModel aaiModel = () -> "SomePNF";
+    private final ConsumerDmaapModel aaiModel = mock(ConsumerDmaapModel.class);
 
     @BeforeEach
     void setUp() {
@@ -199,7 +200,7 @@ class AaiQueryTaskImplTest {
         Assertions.assertTrue(task::block);
     }
 
-    private void configurePnfClient(final AaiModel aaiModel, final AaiPnfResultModel pnfResultModel) {
+    private void configurePnfClient(final ConsumerDmaapModel aaiModel, final AaiPnfResultModel pnfResultModel) {
         given(getPnfModelClient.getAaiResponse(aaiModel)).willReturn(Mono.just(pnfResultModel));
     }
 }

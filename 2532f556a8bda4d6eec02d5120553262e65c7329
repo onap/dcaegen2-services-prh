@@ -16,6 +16,24 @@
       "revId": "2532f556a8bda4d6eec02d5120553262e65c7329",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a14d3d16_e2c1fea7",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/AaiJsonBodyBuilderImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 2815
+      },
+      "writtenOn": "2019-12-04T14:02:27Z",
+      "side": 1,
+      "message": "Javadocs should only be used when having API exposed publicly and not within the internal implementation. In this case the code should be self-documenting The removed javadoc does not provide any benefits - the implementation is simple enough that the method and class name should clearly indicate what the responsibilities are.\nAlthough I do think that the names can be improved and I will suggest new names in another ticket.",
+      "parentUuid": "692bd79b_c841b067",
+      "revId": "2532f556a8bda4d6eec02d5120553262e65c7329",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "692bd79b_c841b067",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/AaiJsonBodyBuilderImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 2837
+      },
+      "writtenOn": "2019-12-04T13:54:11Z",
+      "side": 1,
+      "message": "Javadoc not needed here?",
+      "revId": "2532f556a8bda4d6eec02d5120553262e65c7329",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2019 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import com.google.gson.annotations.SerializedName;
 import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiModel;
-import org.onap.dcaegen2.services.prh.adapter.aai.model.DmaapModel;
 import org.springframework.lang.Nullable;
 
 /**
@@ -34,7 +33,7 @@ import org.springframework.lang.Nullable;
 
 @Value.Immutable
 @Gson.TypeAdapters(fieldNamingStrategy = true)
-public interface ConsumerDmaapModel extends AaiModel, DmaapModel {
+public interface ConsumerDmaapModel extends AaiModel {
 
     @SerializedName(value = "correlationId", alternate = "correlationId")
     String getCorrelationId();

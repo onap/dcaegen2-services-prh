@@ -34,6 +34,24 @@
       "revId": "2532f556a8bda4d6eec02d5120553262e65c7329",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8290193_e8189d9b",
+        "filename": "prh-commons/src/main/java/org/onap/dcaegen2/services/prh/model/AaiJsonBodyBuilderImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 2837
+      },
+      "writtenOn": "2019-12-05T08:23:06Z",
+      "side": 1,
+      "message": "ok, since this aaiclient code was moved to prh there is no reason for Javadoc at all.",
+      "parentUuid": "a14d3d16_e2c1fea7",
+      "revId": "2532f556a8bda4d6eec02d5120553262e65c7329",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

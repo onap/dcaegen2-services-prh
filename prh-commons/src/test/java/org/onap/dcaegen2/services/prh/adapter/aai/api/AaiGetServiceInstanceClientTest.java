@@ -17,66 +17,53 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.adapter.aai.get;
+package org.onap.dcaegen2.services.prh.adapter.aai.api;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.onap.dcaegen2.services.prh.adapter.aai.AaiClientConfigurations.secureConfiguration;
+import static org.onap.dcaegen2.services.prh.adapter.aai.api.AaiClientConfigurations.secureConfiguration;
 
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
 import org.junit.jupiter.api.Test;
-import org.onap.dcaegen2.services.prh.adapter.aai.AbstractHttpClientTest;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiClientConfiguration;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.get.AaiHttpGetClient;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpRequest;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-class AaiHttpGetClientTest extends AbstractHttpClientTest {
+class AaiGetServiceInstanceClientTest extends AbstractHttpClientTest {
+
+    public static final String SERVICE_INSTANCE_PATH =
+        "https://aai.onap.svc.cluster.local:8443/aai/v12/business/customers/customer/Demonstration/"
+            + "service-subscriptions/service-subscription/VCPE/service-instances/service-instance/df018f76-7fc8-46ab-8444-7d67e1efc284";
 
     @Test
     void getAaiResponse_shouldCallGetMethod_withGivenAaiHeaders() {
 
         // given
+        AaiServiceInstanceQueryModel model = mock(AaiServiceInstanceQueryModel.class);
         Map<String, String> headers = HashMap.of("sample-key", "sample-value");
-        AaiHttpGetClient cut = new AaiHttpGetClient(secureConfiguration(headers.toJavaMap()), httpClient);
+        AaiGetServiceInstanceClient cut = new AaiGetServiceInstanceClient(secureConfiguration(headers.toJavaMap()),
+            httpClient);
+
+        given(model.customerId()).willReturn("Demonstration");
+        given(model.serviceInstanceId()).willReturn("df018f76-7fc8-46ab-8444-7d67e1efc284");
+        given(model.serviceType()).willReturn("VCPE");
 
         given(httpClient.call(any(HttpRequest.class)))
             .willReturn(Mono.just(response));
 
         // when
         StepVerifier
-            .create(cut.getAaiResponse(aaiModel))
+            .create(cut.getAaiResponse(model))
             .expectNext(response)
             .verifyComplete();
 
         //then
         verify(httpClient)
-            .call(argThat(httpRequest -> httpRequest.customHeaders().equals(headers)));
-    }
-
-    @Test
-    void getAaiResponse_shouldCallGetMethod_withProperUri() {
-
-        // given
-        AaiClientConfiguration configuration = secureConfiguration();
-        String uri = constructAaiUri(configuration, aaiModel.getCorrelationId());
-        AaiHttpGetClient cut = new AaiHttpGetClient(configuration, httpClient);
-
-        given(httpClient.call(any(HttpRequest.class)))
-            .willReturn(Mono.just(response));
-
-        // when
-        StepVerifier
-            .create(cut.getAaiResponse(aaiModel))
-            .expectNext(response)
-            .verifyComplete();
-
-        // then
-        verify(httpClient)
-            .call(argThat(httpRequest -> httpRequest.url().equals(uri)));
+            .call(argThat(httpRequest -> httpRequest.customHeaders().equals(headers) &&
+                httpRequest.url().equals(SERVICE_INSTANCE_PATH)));
     }
 }

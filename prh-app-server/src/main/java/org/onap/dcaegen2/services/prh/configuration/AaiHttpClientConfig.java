@@ -22,13 +22,13 @@ package org.onap.dcaegen2.services.prh.configuration;
 
 import java.nio.charset.StandardCharsets;
 import java.util.function.BiFunction;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiGetServiceInstanceClient;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpClient;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.get.AaiGetServiceInstanceClient;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.get.AaiHttpGetClient;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.patch.AaiHttpPatchClient;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpGetClient;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpPatchClient;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiServiceInstanceQueryModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.main.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.adapter.aai.main.AaiHttpClientFactory;
-import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiServiceInstanceQueryModel;
 import org.onap.dcaegen2.services.prh.model.AaiJsonBodyBuilderImpl;
 import org.onap.dcaegen2.services.prh.model.AaiPnfResultModel;
 import org.onap.dcaegen2.services.prh.model.AaiServiceInstanceResultModel;

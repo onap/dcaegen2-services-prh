@@ -34,7 +34,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpClient;
-import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiServiceInstanceQueryModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiServiceInstanceQueryModel;
 import org.onap.dcaegen2.services.prh.model.AaiPnfResultModel;
 import org.onap.dcaegen2.services.prh.model.AaiServiceInstanceResultModel;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;

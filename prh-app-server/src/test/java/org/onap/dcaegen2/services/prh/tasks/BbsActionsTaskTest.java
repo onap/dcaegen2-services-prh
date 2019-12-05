@@ -44,7 +44,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.onap.dcaegen2.services.prh.TestAppConfiguration;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.adapter.aai.main.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
 import org.onap.dcaegen2.services.prh.exceptions.AaiFailureException;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;

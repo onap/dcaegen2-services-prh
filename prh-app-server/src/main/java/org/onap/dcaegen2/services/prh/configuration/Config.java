@@ -20,7 +20,7 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
-import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.adapter.aai.main.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterPublisher;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterSubscriber;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;

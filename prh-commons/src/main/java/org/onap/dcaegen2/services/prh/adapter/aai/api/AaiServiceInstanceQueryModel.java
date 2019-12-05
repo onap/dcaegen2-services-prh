@@ -17,25 +17,15 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.adapter.aai;
 
-import static org.mockito.Mockito.mock;
+package org.onap.dcaegen2.services.prh.adapter.aai.api;
 
-import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiClientConfiguration;
-import org.onap.dcaegen2.services.prh.model.AaiJsonBodyBuilderImpl;
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
-import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RxHttpClient;
+import org.immutables.value.Value;
 
-public class AbstractHttpClientTest {
-
-    protected final ConsumerDmaapModel aaiModel = mock(ConsumerDmaapModel.class);
-    protected final RxHttpClient httpClient = mock(RxHttpClient.class);
-    protected final AaiJsonBodyBuilderImpl bodyBuilder = mock(AaiJsonBodyBuilderImpl.class);
-    protected final HttpResponse response = mock(HttpResponse.class);
-
-
-    protected String constructAaiUri(AaiClientConfiguration configuration, String pnfName) {
-        return configuration.pnfUrl() + "/" + pnfName;
-    }
+@Value.Style(stagedBuilder = true)
+@Value.Immutable
+public interface AaiServiceInstanceQueryModel {
+    String customerId();
+    String serviceType();
+    String serviceInstanceId();
 }

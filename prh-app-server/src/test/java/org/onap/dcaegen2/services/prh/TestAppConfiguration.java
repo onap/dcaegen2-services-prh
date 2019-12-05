@@ -21,7 +21,7 @@
 package org.onap.dcaegen2.services.prh;
 
 import java.time.Duration;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableAaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.adapter.aai.main.ImmutableAaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.model.streams.dmaap.ImmutableMessageRouterSink;
 import org.onap.dcaegen2.services.sdk.model.streams.dmaap.ImmutableMessageRouterSource;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.ContentType;

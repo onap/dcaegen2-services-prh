@@ -22,7 +22,7 @@ package org.onap.dcaegen2.services.prh.configuration;
 
 import com.google.gson.JsonObject;
 import java.util.Optional;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.adapter.aai.main.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.DmaapClientFactory;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterPublisher;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterSubscriber;

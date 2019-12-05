@@ -1,8 +1,8 @@
-/*
+/*-
  * ============LICENSE_START=======================================================
  * DCAEGEN2-SERVICES-SDK
  * ================================================================================
- * Copyright (C) 2018-2019 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2019 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,38 +18,48 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.adapter.aai.api.get;
+package org.onap.dcaegen2.services.prh.adapter.aai.api;
 
 import static org.onap.dcaegen2.services.prh.adapter.aai.main.AaiHttpClientFactory.createRequestDiagnosticContext;
 
 import io.vavr.collection.HashMap;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiClientConfiguration;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpClient;
+import io.vavr.collection.Map;
+import org.onap.dcaegen2.services.prh.adapter.aai.main.AaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.model.AaiJsonBodyBuilderImpl;
 import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMethod;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.ImmutableHttpRequest;
+import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RequestBody;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RxHttpClient;
 import reactor.core.publisher.Mono;
 
-public final class AaiHttpGetClient implements AaiHttpClient<ConsumerDmaapModel, HttpResponse> {
+public final class AaiHttpPatchClient implements AaiHttpClient<ConsumerDmaapModel, HttpResponse> {
 
-    private final RxHttpClient httpClient;
+    private final static Map<String, String> CONTENT_TYPE = HashMap.of("Content-Type", "application/merge-patch+json");
+
+    private RxHttpClient httpClient;
     private final AaiClientConfiguration configuration;
+    private final AaiJsonBodyBuilderImpl jsonBodyBuilder;
 
 
-    public AaiHttpGetClient(AaiClientConfiguration configuration, RxHttpClient httpClient) {
+    public AaiHttpPatchClient(final AaiClientConfiguration configuration, AaiJsonBodyBuilderImpl jsonBodyBuilder,
+        RxHttpClient httpClient) {
         this.configuration = configuration;
+        this.jsonBodyBuilder = jsonBodyBuilder;
         this.httpClient = httpClient;
     }
 
-    @Override
     public Mono<HttpResponse> getAaiResponse(ConsumerDmaapModel aaiModel) {
+        final Map<String, String> headers = CONTENT_TYPE.merge(HashMap.ofAll(configuration.aaiHeaders()));
+        String jsonBody = jsonBodyBuilder.createJsonBody(aaiModel);
+
         return httpClient.call(ImmutableHttpRequest.builder()
-            .method(HttpMethod.GET)
             .url(configuration.pnfUrl() + "/" + aaiModel.getCorrelationId())
-            .customHeaders(HashMap.ofAll(configuration.aaiHeaders()))
+            .customHeaders(headers)
             .diagnosticContext(createRequestDiagnosticContext())
+            .body(RequestBody.fromString(jsonBody))
+            .method(HttpMethod.PATCH)
             .build());
     }
 }

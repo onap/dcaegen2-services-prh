@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.adapter.aai.api;
+package org.onap.dcaegen2.services.prh.adapter.aai.main;
 
 import java.io.Serializable;
 import java.util.Map;

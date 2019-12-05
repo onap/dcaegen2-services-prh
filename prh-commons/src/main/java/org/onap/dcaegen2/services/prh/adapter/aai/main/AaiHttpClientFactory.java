@@ -22,7 +22,6 @@ package org.onap.dcaegen2.services.prh.adapter.aai.main;
 
 import java.nio.file.Paths;
 import java.util.UUID;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RxHttpClient;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RxHttpClientFactory;
 import org.onap.dcaegen2.services.sdk.rest.services.model.logging.ImmutableRequestDiagnosticContext;

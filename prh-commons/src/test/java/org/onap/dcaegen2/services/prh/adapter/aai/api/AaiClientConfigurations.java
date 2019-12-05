@@ -17,12 +17,12 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.adapter.aai;
+package org.onap.dcaegen2.services.prh.adapter.aai.api;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiClientConfiguration;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableAaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.adapter.aai.main.AaiClientConfiguration;
+import org.onap.dcaegen2.services.prh.adapter.aai.main.ImmutableAaiClientConfiguration;
 
 public final class AaiClientConfigurations {
 

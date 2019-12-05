@@ -18,16 +18,14 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.adapter.aai.api.get;
+package org.onap.dcaegen2.services.prh.adapter.aai.api;
 
 import static org.onap.dcaegen2.services.prh.adapter.aai.main.AaiHttpClientFactory.createRequestDiagnosticContext;
 
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
 import org.apache.commons.text.StringSubstitutor;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiClientConfiguration;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpClient;
-import org.onap.dcaegen2.services.prh.adapter.aai.model.AaiServiceInstanceQueryModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.main.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMethod;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.ImmutableHttpRequest;

@@ -18,11 +18,13 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.model;
+package org.onap.dcaegen2.services.prh.adapter.aai.impl;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel.Builder;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerDmaapModel.Builder;
 import org.onap.dcaegen2.services.prh.model.utils.PrhModelAwareGsonBuilder;
 
 

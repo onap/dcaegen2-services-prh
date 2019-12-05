@@ -17,7 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.adapter.aai.api;
+package org.onap.dcaegen2.services.prh.adapter.aai.impl;
 
 import java.util.HashMap;
 import java.util.Map;

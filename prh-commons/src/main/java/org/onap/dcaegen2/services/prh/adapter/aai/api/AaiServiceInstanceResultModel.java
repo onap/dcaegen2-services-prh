@@ -18,11 +18,13 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.model;
+package org.onap.dcaegen2.services.prh.adapter.aai.api;
 
 import com.google.gson.annotations.SerializedName;
 import org.immutables.gson.Gson;
 import org.immutables.value.Value;
+import org.onap.dcaegen2.services.prh.model.ImmutableRelationship;
+import org.onap.dcaegen2.services.prh.model.Relationship;
 import org.springframework.lang.Nullable;
 
 @Value.Immutable

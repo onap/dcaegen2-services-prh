@@ -18,16 +18,17 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.model;
-
-import com.google.gson.Gson;
-import org.junit.jupiter.api.Test;
-import org.onap.dcaegen2.services.prh.model.utils.PrhModelAwareGsonBuilder;
-
-import java.io.InputStreamReader;
-import java.util.Objects;
+package org.onap.dcaegen2.services.prh.adapter.aai.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import com.google.gson.Gson;
+import java.io.InputStreamReader;
+import java.util.Objects;
+import org.junit.jupiter.api.Test;
+import org.onap.dcaegen2.services.prh.model.RelationshipData;
+import org.onap.dcaegen2.services.prh.model.RelationshipDict;
+import org.onap.dcaegen2.services.prh.model.utils.PrhModelAwareGsonBuilder;
 
 class AaiPnfResultModelTest {
 

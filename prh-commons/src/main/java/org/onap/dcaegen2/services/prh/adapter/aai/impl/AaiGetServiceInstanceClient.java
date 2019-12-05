@@ -1,4 +1,4 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * DCAEGEN2-SERVICES-SDK
  * ================================================================================
@@ -18,48 +18,53 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.adapter.aai.api;
+package org.onap.dcaegen2.services.prh.adapter.aai.impl;
 
 import static org.onap.dcaegen2.services.prh.adapter.aai.main.AaiHttpClientFactory.createRequestDiagnosticContext;
 
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
+import org.apache.commons.text.StringSubstitutor;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpClient;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiServiceInstanceQueryModel;
 import org.onap.dcaegen2.services.prh.adapter.aai.main.AaiClientConfiguration;
-import org.onap.dcaegen2.services.prh.model.AaiJsonBodyBuilderImpl;
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMethod;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.ImmutableHttpRequest;
-import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RequestBody;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RxHttpClient;
 import reactor.core.publisher.Mono;
 
-public final class AaiHttpPatchClient implements AaiHttpClient<ConsumerDmaapModel, HttpResponse> {
+public class AaiGetServiceInstanceClient implements
+    AaiHttpClient<AaiServiceInstanceQueryModel, HttpResponse> {
 
-    private final static Map<String, String> CONTENT_TYPE = HashMap.of("Content-Type", "application/merge-patch+json");
+    private static final String CUSTOMER = "customer";
+    private static final String SERVICE_TYPE = "serviceType";
+    private static final String SERVICE_INSTANCE_ID = "serviceInstanceId";
 
-    private RxHttpClient httpClient;
+    private final RxHttpClient httpClient;
     private final AaiClientConfiguration configuration;
-    private final AaiJsonBodyBuilderImpl jsonBodyBuilder;
 
-
-    public AaiHttpPatchClient(final AaiClientConfiguration configuration, AaiJsonBodyBuilderImpl jsonBodyBuilder,
-        RxHttpClient httpClient) {
+    public AaiGetServiceInstanceClient(final AaiClientConfiguration configuration,
+        final RxHttpClient httpClient) {
         this.configuration = configuration;
-        this.jsonBodyBuilder = jsonBodyBuilder;
         this.httpClient = httpClient;
     }
 
-    public Mono<HttpResponse> getAaiResponse(ConsumerDmaapModel aaiModel) {
-        final Map<String, String> headers = CONTENT_TYPE.merge(HashMap.ofAll(configuration.aaiHeaders()));
-        String jsonBody = jsonBodyBuilder.createJsonBody(aaiModel);
+    @Override
+    public Mono<HttpResponse> getAaiResponse(AaiServiceInstanceQueryModel aaiModel) {
+        final Map<String, String> mapping = HashMap.of(
+            CUSTOMER, aaiModel.customerId(),
+            SERVICE_TYPE, aaiModel.serviceType(),
+            SERVICE_INSTANCE_ID, aaiModel.serviceInstanceId());
+
+        final StringSubstitutor substitutor = new StringSubstitutor(mapping.toJavaMap());
+        final String endpoint = substitutor.replace(configuration.aaiServiceInstancePath());
 
         return httpClient.call(ImmutableHttpRequest.builder()
-            .url(configuration.pnfUrl() + "/" + aaiModel.getCorrelationId())
-            .customHeaders(headers)
+            .method(HttpMethod.GET)
+            .url(configuration.baseUrl() + endpoint)
+            .customHeaders(HashMap.ofAll(configuration.aaiHeaders()))
             .diagnosticContext(createRequestDiagnosticContext())
-            .body(RequestBody.fromString(jsonBody))
-            .method(HttpMethod.PATCH)
             .build());
     }
 }

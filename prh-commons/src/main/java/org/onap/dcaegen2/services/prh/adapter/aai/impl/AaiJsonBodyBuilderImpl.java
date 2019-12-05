@@ -18,12 +18,14 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.model;
+package org.onap.dcaegen2.services.prh.adapter.aai.impl;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapterFactory;
 import java.util.ServiceLoader;
-import org.onap.dcaegen2.services.prh.model.ImmutableConsumerDmaapModel.Builder;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerDmaapModel.Builder;
 import org.springframework.util.StringUtils;
 
 

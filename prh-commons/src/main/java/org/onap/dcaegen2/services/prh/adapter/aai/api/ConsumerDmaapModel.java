@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.model;
+package org.onap.dcaegen2.services.prh.adapter.aai.api;
 
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * DCAEGEN2-SERVICES-SDK
  * ================================================================================
- * Copyright (C) 2019 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2018-2019 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,13 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.adapter.aai.api;
+package org.onap.dcaegen2.services.prh.adapter.aai.impl;
 
 import static org.onap.dcaegen2.services.prh.adapter.aai.main.AaiHttpClientFactory.createRequestDiagnosticContext;
 
 import io.vavr.collection.HashMap;
-import io.vavr.collection.Map;
-import org.apache.commons.text.StringSubstitutor;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpClient;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.adapter.aai.main.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMethod;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
@@ -32,35 +32,22 @@ import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.ImmutableHttpR
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RxHttpClient;
 import reactor.core.publisher.Mono;
 
-public class AaiGetServiceInstanceClient implements
-    AaiHttpClient<AaiServiceInstanceQueryModel, HttpResponse> {
-
-    private static final String CUSTOMER = "customer";
-    private static final String SERVICE_TYPE = "serviceType";
-    private static final String SERVICE_INSTANCE_ID = "serviceInstanceId";
+public final class AaiHttpGetClient implements AaiHttpClient<ConsumerDmaapModel, HttpResponse> {
 
     private final RxHttpClient httpClient;
     private final AaiClientConfiguration configuration;
 
-    public AaiGetServiceInstanceClient(final AaiClientConfiguration configuration,
-        final RxHttpClient httpClient) {
+
+    public AaiHttpGetClient(AaiClientConfiguration configuration, RxHttpClient httpClient) {
         this.configuration = configuration;
         this.httpClient = httpClient;
     }
 
     @Override
-    public Mono<HttpResponse> getAaiResponse(AaiServiceInstanceQueryModel aaiModel) {
-        final Map<String, String> mapping = HashMap.of(
-            CUSTOMER, aaiModel.customerId(),
-            SERVICE_TYPE, aaiModel.serviceType(),
-            SERVICE_INSTANCE_ID, aaiModel.serviceInstanceId());
-
-        final StringSubstitutor substitutor = new StringSubstitutor(mapping.toJavaMap());
-        final String endpoint = substitutor.replace(configuration.aaiServiceInstancePath());
-
+    public Mono<HttpResponse> getAaiResponse(ConsumerDmaapModel aaiModel) {
         return httpClient.call(ImmutableHttpRequest.builder()
             .method(HttpMethod.GET)
-            .url(configuration.baseUrl() + endpoint)
+            .url(configuration.pnfUrl() + "/" + aaiModel.getCorrelationId())
             .customHeaders(HashMap.ofAll(configuration.aaiHeaders()))
             .diagnosticContext(createRequestDiagnosticContext())
             .build());

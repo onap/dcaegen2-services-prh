@@ -30,10 +30,10 @@ import static org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMet
 import com.google.gson.JsonObject;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiPnfResultModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.AaiFailureException;
-import org.onap.dcaegen2.services.prh.model.AaiPnfResultModel;
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableRelationshipDict;
 import org.onap.dcaegen2.services.prh.model.Relationship;
 import org.onap.dcaegen2.services.prh.model.RelationshipDict;

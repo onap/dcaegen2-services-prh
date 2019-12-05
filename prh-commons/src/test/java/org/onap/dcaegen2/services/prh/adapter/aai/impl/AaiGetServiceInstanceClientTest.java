@@ -17,18 +17,19 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.dcaegen2.services.prh.adapter.aai.api;
+package org.onap.dcaegen2.services.prh.adapter.aai.impl;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.onap.dcaegen2.services.prh.adapter.aai.api.AaiClientConfigurations.secureConfiguration;
+import static org.onap.dcaegen2.services.prh.adapter.aai.impl.AaiClientConfigurations.secureConfiguration;
 
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
 import org.junit.jupiter.api.Test;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiServiceInstanceQueryModel;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpRequest;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;

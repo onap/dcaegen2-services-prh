@@ -20,7 +20,7 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.prh.model.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
 import reactor.core.publisher.Flux;
 
 

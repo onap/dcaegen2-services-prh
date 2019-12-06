@@ -1,0 +1,10 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Kornel Janiak <kornel.janiak@nokia.com>
+Code-Review+1: Joanna Jeremicz <joanna.jeremicz@nokia.com>
+Code-Review+1: Remigiusz Janeczek <remigiusz.janeczek@nokia.com>
+Code-Review+2: Piotr Wielebski <piotr.wielebski@nokia.com>
+Submitted-by: Piotr Wielebski <piotr.wielebski@nokia.com>
+Submitted-at: Fri, 06 Dec 2019 09:49:21 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/dcaegen2/services/prh/+/99192
+Project: dcaegen2/services/prh
+Branch: refs/heads/master

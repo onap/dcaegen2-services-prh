@@ -1,0 +1,8 @@
+distribution_type: 'container'
+container_release_tag: '1.4.0'
+project: 'dcaegen2-services-prh'
+log_dir: 'dcaegen2-services-prh-maven-docker-stage-master/141/'
+ref: 533f5c3e31d63a451a7ddf4f5b554b6c9becf7eb
+containers:
+  - name: 'org.onap.dcaegen2.services.prh.prh-app-server'
+    version: '1.4.0-20191212T133639Z'

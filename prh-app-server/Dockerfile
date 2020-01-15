@@ -1,11 +1,11 @@
-FROM openjdk:8-jre-alpine
+FROM openjdk:11-jre-slim
 
 LABEL copyright="Copyright (C) 2018-2019 NOKIA" \
       license.name="The Apache Software License, Version 2.0" \
       license.url="http://www.apache.org/licenses/LICENSE-2.0" \
       maintainer="Nokia Wroclaw ONAP Team"
 
-RUN adduser -h ${docker.user.dir} -D ${docker.user.name}; \
+RUN adduser --home ${docker.user.dir} --disabled-password ${docker.user.name}; \
     chmod -R a+w /var/log
 
 USER ${docker.user.name}

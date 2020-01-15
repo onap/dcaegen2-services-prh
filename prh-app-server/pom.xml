@@ -45,6 +45,7 @@
     <skipDocker>false</skipDocker>
     <docker.user.name>prh</docker.user.name>
     <docker.user.dir>/home/${docker.user.name}</docker.user.dir>
+    <docker.user.id>1414</docker.user.id>
   </properties>
 
   <build>

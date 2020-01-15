@@ -1,12 +1,12 @@
-FROM openjdk:8-jre-alpine
+FROM docker.io/openjdk:11-jre-slim
 
 LABEL copyright="Copyright (C) 2018-2019 NOKIA" \
       license.name="The Apache Software License, Version 2.0" \
       license.url="http://www.apache.org/licenses/LICENSE-2.0" \
       maintainer="Nokia Wroclaw ONAP Team"
 
-RUN adduser -h ${docker.user.dir} -D ${docker.user.name}; \
-    chmod -R a+w /var/log
+RUN useradd --user-group --uid ${docker.user.id} -d ${docker.user.dir} ${docker.user.name}; \
+chmod -R a+w /var/log
 
 USER ${docker.user.name}
 WORKDIR ${docker.user.dir}

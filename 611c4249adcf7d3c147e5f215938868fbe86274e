@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0298facc_9cd2d8e2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 2837
+      },
+      "writtenOn": "2020-01-16T08:01:19Z",
+      "side": 1,
+      "message": "I would add \"Additionally to.. DCAE SDK ..\" for being clear.",
+      "range": {
+        "startLine": 9,
+        "startChar": 5,
+        "endLine": 9,
+        "endChar": 7
+      },
+      "revId": "611c4249adcf7d3c147e5f215938868fbe86274e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "68ac8450_1550d206",
+        "filename": "prh-app-server/Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 2837
+      },
+      "writtenOn": "2020-01-16T08:01:19Z",
+      "side": 1,
+      "message": "I would mark that this comes from docker.io\ndocker.io/openjdk:11-jre-slim",
+      "revId": "611c4249adcf7d3c147e5f215938868fbe86274e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6491070e_d3c04817",
+        "filename": "prh-app-server/Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 2837
+      },
+      "writtenOn": "2020-01-16T08:01:19Z",
+      "side": 1,
+      "message": "Create not just user but group also. You can base on hv-ves Dockerfile with that.\nOnap Dockerfile guidelines could be found here:\nhttps://wiki.onap.org/display/DW/Best+Practices",
+      "revId": "611c4249adcf7d3c147e5f215938868fbe86274e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

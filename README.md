@@ -41,6 +41,6 @@ dcae-services
 
 ## License
 
-Copyright (C) 2018-2019 NOKIA Intellectual Property. All rights reserved.
+Copyright (C) 2018-2020 NOKIA Intellectual Property. All rights reserved.
 [License](http://www.apache.org/licenses/LICENSE-2.0)
 

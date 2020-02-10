@@ -71,6 +71,11 @@ committers:
       company: 'EST'
       id: 'JoeOLeary'
       timezone: 'Ireland/UTC'
+    - name: 'Kornel Janiak'
+      email: 'kornel.janiak@nokia.com'
+      company: 'Nokia'
+      id: 'kjaniak'
+      timezone: 'Europe/Warsaw'
 tsc:
     approval: 'https://lists.onap.org/pipermail/onap-tsc'
     changes:
@@ -89,3 +94,6 @@ tsc:
         - type: 'Addition'
           name: 'Joseph O Leary'
           link: 'https://lists.onap.org/g/onap-tsc/message/5715'
+        - type: 'Addition'
+          name: 'Kornel Janiak'
+          link: 'https://lists.onap.org/g/onap-tsc/message/5889'

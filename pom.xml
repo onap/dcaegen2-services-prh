@@ -52,6 +52,9 @@
     <springfox.version>2.9.2</springfox.version>
     <immutables.version>2.7.5</immutables.version>
     <sdk.version>1.3.4</sdk.version>
+    <sonar.coverage.jacoco.xmlReportPaths>
+      ${project.reporting.outputDirectory}/jacoco-ut/jacoco.xml
+    </sonar.coverage.jacoco.xmlReportPaths>
   </properties>
 
   <modules>

@@ -66,6 +66,7 @@ class BbsActionsTaskTest {
     private static final String PNF_WITH_LINK_JSON = "BbsActionsTaskTestFiles/pnfWithLogicalLink.json";
     private static final String LOGICAL_LINK_JSON = "BbsActionsTaskTestFiles/oldLogicalLink.json";
     private static final String LOGICAL_LINK_BODY = "BbsActionsTaskTestFiles/logicalLinkBody.json";
+    private static final String LOGICAL_LINK_BODY_WITH_SPACE = "BbsActionsTaskTestFiles/logicalLinkBodyWithSpace.json";
 
 
     private CbsConfiguration cbsConfiguration = mock(CbsConfiguration.class);
@@ -111,7 +112,8 @@ class BbsActionsTaskTest {
         given(cbsConfiguration.getAaiClientConfiguration()).willReturn(aaiClientConfiguration);
 
         JsonObject additionalFields = new JsonObject();
-        String linkName = "some-link";
+        String linkName = "some link";
+        String encodedLinkName = "some%20link";
         additionalFields.addProperty(ATTACHMENT_POINT, linkName);
         ConsumerDmaapModel consumerDmaapModel = buildConsumerDmaapModel(additionalFields);
 
@@ -136,9 +138,9 @@ class BbsActionsTaskTest {
 
         assertEquals(AAI_URL + PNF_URL + "/Nokia123", pnfGet.url());
         assertEquals(GET, pnfGet.method());
-        assertEquals(AAI_URL + LOGICAL_LINK_URL + "/" + linkName, linkPut.url());
+        assertEquals(AAI_URL + LOGICAL_LINK_URL + "/" + encodedLinkName, linkPut.url());
         assertEquals(PUT, linkPut.method());
-        assertEquals(getBodyJson(LOGICAL_LINK_BODY), extractBodyFromRequest(linkPut));
+        assertEquals(getBodyJson(LOGICAL_LINK_BODY_WITH_SPACE), extractBodyFromRequest(linkPut));
     }
 
     @Test

@@ -26,6 +26,7 @@ import static org.apache.http.HttpHeaders.CONTENT_TYPE;
 import static org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMethod.DELETE;
 import static org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMethod.GET;
 import static org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMethod.PUT;
+import static org.springframework.web.util.UriUtils.encodeFragment;
 
 import com.google.gson.JsonObject;
 import io.vavr.collection.HashMap;
@@ -202,7 +203,7 @@ public class BbsActionsTaskImpl implements BbsActionsTask {
     }
 
     private String buildUri(String path) {
-        return config.getAaiClientConfiguration().pnfUrl().replace(PNF_URI, path);
+        return config.getAaiClientConfiguration().pnfUrl().replace(PNF_URI, encodeFragment(path, UTF_8));
     }
 }
 

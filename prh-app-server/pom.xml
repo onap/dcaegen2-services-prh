@@ -3,7 +3,7 @@
   ~ ============LICENSE_START=======================================================
   ~ PNF-REGISTRATION-HANDLER
   ~ ================================================================================
-  ~ Copyright (C) 2018-2019 NOKIA Intellectual Property. All rights reserved.
+  ~ Copyright (C) 2018-2020 NOKIA Intellectual Property. All rights reserved.
   ~ ================================================================================
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -197,22 +197,6 @@
             </image>
           </images>
         </configuration>
-<!--       <executions>
-          <execution>
-            <id>docker-build-image</id>
-            <phase>package</phase>
-            <goals>
-              <goal>build</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>docker-push-image</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>push</goal>
-            </goals>
-          </execution> 
-        </executions> -->
       </plugin>
     </plugins>
   </build>
@@ -246,11 +230,7 @@
     </dependency>
     <dependency>
       <groupId>io.springfox</groupId>
-      <artifactId>springfox-swagger2</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-swagger-ui</artifactId>
+      <artifactId>springfox-boot-starter</artifactId>
     </dependency>
     <dependency>
       <groupId>io.projectreactor</groupId>
@@ -277,6 +257,11 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
     </dependency>
 
     <dependency>

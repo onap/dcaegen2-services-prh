@@ -51,7 +51,7 @@
     <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
     <springfox.version>3.0.0</springfox.version>
     <immutables.version>2.7.5</immutables.version>
-    <sdk.version>1.4.1</sdk.version>
+    <sdk.version>1.4.2</sdk.version>
     <guava.version>29.0-jre</guava.version>
     <sonar.coverage.jacoco.xmlReportPaths>
       ${project.reporting.outputDirectory}/jacoco-ut/jacoco.xml

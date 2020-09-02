@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "833955a7_f307053f",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 2837
+      },
+      "writtenOn": "2020-09-02T08:13:20Z",
+      "side": 1,
+      "message": "Today we will release verison 1.4.3, hold on.",
+      "range": {
+        "startLine": 54,
+        "startChar": 17,
+        "endLine": 54,
+        "endChar": 22
+      },
+      "revId": "dff3933ed1a88b3fdf02e4008cdd98bcf26235fc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

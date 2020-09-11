@@ -2,7 +2,7 @@
 project: 'dcaegen2-services-prh'
 project_creation_date: '2018-01-31'
 project_category: ''
-lifecycle_state: 'Incubation'
+lifecycle_state: 'Mature'
 project_lead: &onap_dcaegen2_ptl
     name: 'Vijay Venkatesh Kumar'
     email: 'vv770d@att.com'
@@ -31,11 +31,6 @@ repositories:
     - 'dcaegen2/services/prh'
 committers:
     - <<: *onap_dcaegen2_ptl
-    - name: 'Lusheng Ji'
-      email: 'lji@research.att.com'
-      company: 'ATT'
-      id: 'wrider'
-      timezone: 'America/New_York'
     - name: 'Tony Hansen'
       email: 'tony@att.com'
       company: 'ATT'
@@ -57,10 +52,15 @@ committers:
       id: 'kjaniak'
       timezone: 'Europe/Warsaw'
     - name: 'Jack Lucas'
-      email: 'jflucas@research.att.com'
-      company: 'ATT'
+      email: 'jflos@sonoris.net'
+      company: 'IC'
       id: 'jackl'
       timezone: 'America/New_York'
+    - name: 'Remigiusz Janeczek'
+      email: 'remigiusz.janeczek@nokia.com'
+      company: 'Nokia'
+      id: 'rjanecze'
+      timezone: 'Europe/Warsaw'
 tsc:
     approval: 'https://lists.onap.org/pipermail/onap-tsc'
     changes:
@@ -91,3 +91,9 @@ tsc:
         - type: 'Removal'
           name: 'Xinhui Li'
           link: 'https://lists.onap.org/g/onap-tsc/message/6814'
+        - type: 'Removal'
+          name: 'Lusheng Ji'
+          link: 'https://lists.onap.org/g/onap-tsc/message/7026'
+        - type: 'Addition'
+          name: 'Remigiusz Janeczek'
+          link: 'https://lists.onap.org/g/onap-tsc/message/7026'

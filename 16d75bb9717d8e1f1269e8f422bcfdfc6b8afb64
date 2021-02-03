@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "52fe4cc0_1e1c12d9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 3435
+      },
+      "writtenOn": "2021-02-03T10:03:30Z",
+      "side": 1,
+      "message": "Please use a similar convention to this one:\nhttps://gerrit.onap.org/r/c/dcaegen2/collectors/hv-ves/+/116446",
+      "revId": "16d75bb9717d8e1f1269e8f422bcfdfc6b8afb64",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f1b448d_ce214317",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 3435
+      },
+      "writtenOn": "2021-02-03T10:03:30Z",
+      "side": 1,
+      "message": "Update Copyright",
+      "revId": "16d75bb9717d8e1f1269e8f422bcfdfc6b8afb64",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d021f839_4e4f678a",
+        "filename": "prh-app-server/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 3435
+      },
+      "writtenOn": "2021-02-03T10:03:30Z",
+      "side": 1,
+      "message": "Update Copyright",
+      "revId": "16d75bb9717d8e1f1269e8f422bcfdfc6b8afb64",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "951f7457_e4789225",
+        "filename": "prh-app-server/src/main/java/org/onap/dcaegen2/services/bootstrap/CbsPropertySourceLocator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 3435
+      },
+      "writtenOn": "2021-02-03T10:03:30Z",
+      "side": 1,
+      "message": "Update Copyright",
+      "revId": "16d75bb9717d8e1f1269e8f422bcfdfc6b8afb64",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0cc88550_107e4b86",
+        "filename": "prh-app-server/src/test/java/org/onap/dcaegen2/services/bootstrap/CbsPropertySourceLocatorTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 3435
+      },
+      "writtenOn": "2021-02-03T10:03:30Z",
+      "side": 1,
+      "message": "Update Copyright",
+      "revId": "16d75bb9717d8e1f1269e8f422bcfdfc6b8afb64",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38611876_cf5dc4ad",
+        "filename": "prh-commons/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 3435
+      },
+      "writtenOn": "2021-02-03T10:03:30Z",
+      "side": 1,
+      "message": "Update Copyright",
+      "revId": "16d75bb9717d8e1f1269e8f422bcfdfc6b8afb64",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

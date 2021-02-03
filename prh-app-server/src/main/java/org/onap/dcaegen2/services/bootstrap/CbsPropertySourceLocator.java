@@ -31,6 +31,7 @@ import org.springframework.cloud.bootstrap.config.PropertySourceLocator;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.PropertySource;
+import reactor.util.retry.Retry;
 
 import java.util.Map;
 
@@ -63,9 +64,9 @@ public class CbsPropertySourceLocator implements PropertySourceLocator {
         Map<String, Object> properties = cbsClientFactoryFacade.createCbsClient(cbsClientConfiguration)
                 .flatMap(cbsClient -> cbsClient.get(CbsRequests.getAll(RequestDiagnosticContext.create())))
                 .doOnError(e -> LOGGER.warn("Failed fetching config properties from CBS - retrying...", e))
-                .retryBackoff(cbsProperties.getFetchRetries().getMaxAttempts(),
-                        cbsProperties.getFetchRetries().getFirstBackoff(),
-                        cbsProperties.getFetchRetries().getMaxBackoff())
+                .retryWhen(Retry.
+                        backoff(cbsProperties.getFetchRetries().getMaxAttempts(), cbsProperties.getFetchRetries().getFirstBackoff()).
+                        maxBackoff(cbsProperties.getFetchRetries().getMaxBackoff()))
                 .doOnNext(this::updateCbsConfig)
                 .map(cbsJsonToPropertyMapConverter::convertToMap)
                 .block();

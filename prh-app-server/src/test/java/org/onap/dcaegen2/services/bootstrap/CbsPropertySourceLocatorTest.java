@@ -80,7 +80,7 @@ class CbsPropertySourceLocatorTest {
 
     @BeforeEach
     void setup() {
-        virtualTimeScheduler = VirtualTimeScheduler.getOrSet();
+        virtualTimeScheduler = VirtualTimeScheduler.getOrSet(true);
 
         when(cbsClientConfigurationResolver.resolveCbsClientConfiguration()).thenReturn(cbsClientConfiguration);
         when(cbsClientFactoryFacade.createCbsClient(cbsClientConfiguration)).thenReturn(Mono.just(cbsClient));

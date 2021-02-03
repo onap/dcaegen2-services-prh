@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2019 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import org.springframework.cloud.bootstrap.config.PropertySourceLocator;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.PropertySource;
+import reactor.util.retry.Retry;
 
 import java.util.Map;
 
@@ -63,9 +64,9 @@ public class CbsPropertySourceLocator implements PropertySourceLocator {
         Map<String, Object> properties = cbsClientFactoryFacade.createCbsClient(cbsClientConfiguration)
                 .flatMap(cbsClient -> cbsClient.get(CbsRequests.getAll(RequestDiagnosticContext.create())))
                 .doOnError(e -> LOGGER.warn("Failed fetching config properties from CBS - retrying...", e))
-                .retryBackoff(cbsProperties.getFetchRetries().getMaxAttempts(),
-                        cbsProperties.getFetchRetries().getFirstBackoff(),
-                        cbsProperties.getFetchRetries().getMaxBackoff())
+                .retryWhen(Retry.
+                        backoff(cbsProperties.getFetchRetries().getMaxAttempts(), cbsProperties.getFetchRetries().getFirstBackoff()).
+                        maxBackoff(cbsProperties.getFetchRetries().getMaxBackoff()))
                 .doOnNext(this::updateCbsConfig)
                 .map(cbsJsonToPropertyMapConverter::convertToMap)
                 .block();

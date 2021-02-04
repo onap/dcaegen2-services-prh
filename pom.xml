@@ -3,7 +3,7 @@
   ~ ============LICENSE_START=======================================================
   ~ PNF-REGISTRATION-HANDLER
   ~ ================================================================================
-  ~ Copyright (C) 2018-2020 NOKIA Intellectual Property. All rights reserved.
+  ~ Copyright (C) 2018-2021 NOKIA Intellectual Property. All rights reserved.
   ~ ================================================================================
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -47,8 +47,8 @@
 
   <properties>
     <java.version>11</java.version>
-    <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
-    <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
+    <spring-boot.version>2.4.2</spring-boot.version>
+    <spring-cloud.version>2020.0.1</spring-cloud.version>
     <springfox.version>3.0.0</springfox.version>
     <immutables.version>2.7.5</immutables.version>
     <sdk.version>1.4.3</sdk.version>

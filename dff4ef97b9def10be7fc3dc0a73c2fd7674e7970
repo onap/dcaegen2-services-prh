@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ec644e8_77b28ffc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 6044
+      },
+      "writtenOn": "2021-02-05T09:11:46Z",
+      "side": 1,
+      "message": "Please rebase the commit on guilin branch, so guilin doesn\u0027t fast forward to master when merging this commit.",
+      "range": {
+        "startLine": 1,
+        "startChar": 12,
+        "endLine": 1,
+        "endChar": 20
+      },
+      "revId": "dff4ef97b9def10be7fc3dc0a73c2fd7674e7970",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

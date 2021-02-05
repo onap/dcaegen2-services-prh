@@ -189,7 +189,6 @@
                 <contextDir>${project.basedir}</contextDir>
                 <cleanup>none</cleanup>
                 <tags>
-                  <tag>latest</tag>
                   <tag>${project.version}</tag>
                   <tag>${project.version}-${maven.build.timestamp}Z</tag>
                 </tags>

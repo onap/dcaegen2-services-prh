@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d4c6c583_8c5de349",
+        "filename": "Changelog.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 3435
+      },
+      "writtenOn": "2021-02-10T12:30:04Z",
+      "side": 1,
+      "message": "Consider to add section ###Changed",
+      "revId": "6b736fbf7845d9cef4d1e8d8abfa51c9f17298c9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

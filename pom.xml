@@ -32,7 +32,7 @@
 
   <groupId>org.onap.dcaegen2.services</groupId>
   <artifactId>prh</artifactId>
-  <version>1.5.5-SNAPSHOT</version>
+  <version>1.5.6-SNAPSHOT</version>
 
   <name>dcaegen2-services-prh</name>
   <description>PNF Registration Handler</description>
@@ -51,7 +51,7 @@
     <spring-cloud.version>2020.0.1</spring-cloud.version>
     <springfox.version>3.0.0</springfox.version>
     <immutables.version>2.7.5</immutables.version>
-    <sdk.version>1.4.3</sdk.version>
+    <sdk.version>1.6.0</sdk.version>
     <guava.version>29.0-jre</guava.version>
     <sonar.coverage.jacoco.xmlReportPaths>
       ${project.reporting.outputDirectory}/jacoco-ut/jacoco.xml

@@ -16,6 +16,24 @@
       "revId": "6b736fbf7845d9cef4d1e8d8abfa51c9f17298c9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "834ce4eb_dda69732",
+        "filename": "Changelog.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 6751
+      },
+      "writtenOn": "2021-02-10T12:49:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d4c6c583_8c5de349",
+      "revId": "6b736fbf7845d9cef4d1e8d8abfa51c9f17298c9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

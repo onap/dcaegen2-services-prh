@@ -1,6 +1,6 @@
-FROM docker.io/openjdk:11-jre-slim
+FROM docker.io/openjdk:11.0.10-jre-slim
 
-LABEL copyright="Copyright (C) 2018-2020 NOKIA" \
+LABEL copyright="Copyright (C) 2018-2021 NOKIA" \
       license.name="The Apache Software License, Version 2.0" \
       license.url="http://www.apache.org/licenses/LICENSE-2.0" \
       maintainer="Nokia Wroclaw ONAP Team"

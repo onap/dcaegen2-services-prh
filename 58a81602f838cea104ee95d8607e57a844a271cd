@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ccc8ff1_d09f2438",
+        "filename": "prh-app-server/Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2021-02-17T16:12:56Z",
+      "side": 1,
+      "message": "recommend switching to integration base images (https://nexus3.onap.org/#browse/browse:docker.release:v2%2Fonap%2Fintegration-java11%2Ftags%2F8.0.0)",
+      "range": {
+        "startLine": 1,
+        "startChar": 5,
+        "endLine": 1,
+        "endChar": 39
+      },
+      "revId": "58a81602f838cea104ee95d8607e57a844a271cd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

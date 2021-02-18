@@ -1,12 +1,13 @@
-FROM docker.io/openjdk:11-jre-slim
+FROM nexus3.onap.org:10001/onap/integration-java11:8.0.0
 
 LABEL copyright="Copyright (C) 2018-2020 NOKIA" \
       license.name="The Apache Software License, Version 2.0" \
       license.url="http://www.apache.org/licenses/LICENSE-2.0" \
       maintainer="Nokia Wroclaw ONAP Team"
 
-RUN useradd --user-group --uid ${docker.user.id} -d ${docker.user.dir} ${docker.user.name}; \
-chmod -R a+w /var/log
+USER root
+RUN adduser --disabled-password --uid ${docker.user.id} --home ${docker.user.dir} ${docker.user.name} && \
+    chmod -R a+w /var/log
 
 USER ${docker.user.name}
 WORKDIR ${docker.user.dir}

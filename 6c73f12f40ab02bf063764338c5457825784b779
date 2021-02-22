@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "280b1226_d3df90f6",
+        "filename": "prh-app-server/Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2021-02-22T17:42:33Z",
+      "side": 1,
+      "message": "include specific released version tag",
+      "revId": "6c73f12f40ab02bf063764338c5457825784b779",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

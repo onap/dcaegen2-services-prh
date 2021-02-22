@@ -46,6 +46,30 @@
       "revId": "58a81602f838cea104ee95d8607e57a844a271cd",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b6ff8c7_b7383d91",
+        "filename": "prh-app-server/Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2021-02-22T18:04:08Z",
+      "side": 1,
+      "message": "Unfortunately this doesn\u0027t address DCAEGEN2-2420 needs. \nThere is another change submitted to align to ONAP base image - 118066, thinking that could be followed upon.",
+      "parentUuid": "5ce60155_d320ad4e",
+      "range": {
+        "startLine": 1,
+        "startChar": 5,
+        "endLine": 1,
+        "endChar": 39
+      },
+      "revId": "58a81602f838cea104ee95d8607e57a844a271cd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

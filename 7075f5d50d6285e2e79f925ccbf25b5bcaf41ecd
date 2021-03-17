@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9686d611_8f352520",
+        "filename": "pom.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 6044
+      },
+      "writtenOn": "2021-03-17T09:30:21Z",
+      "side": 1,
+      "message": "2021",
+      "range": {
+        "startLine": 7,
+        "startChar": 18,
+        "endLine": 7,
+        "endChar": 22
+      },
+      "revId": "7075f5d50d6285e2e79f925ccbf25b5bcaf41ecd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ea00930_5aca34ed",
+        "filename": "pom.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 6044
+      },
+      "writtenOn": "2021-03-17T09:30:21Z",
+      "side": 1,
+      "message": "Please update minor version instead of patch version.",
+      "range": {
+        "startLine": 36,
+        "startChar": 13,
+        "endLine": 36,
+        "endChar": 14
+      },
+      "revId": "7075f5d50d6285e2e79f925ccbf25b5bcaf41ecd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7979e256_4be96f3a",
+        "filename": "prh-app-server/Dockerfile",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 6044
+      },
+      "writtenOn": "2021-03-17T09:30:21Z",
+      "side": 1,
+      "message": "--ingroup has no argument (also not sure if it\u0027s --user-group equivalent)\npassword would need to be entered\nalso ; \\ should be changed to \u0026\u0026 \\\n\nI believe correct solution would be:\n RUN adduser --uid ${docker.user.id} --home ${docker.user.dir} -D ${docker.user.name} \u0026\u0026\\",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 94
+      },
+      "revId": "7075f5d50d6285e2e79f925ccbf25b5bcaf41ecd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

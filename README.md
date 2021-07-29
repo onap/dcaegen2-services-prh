@@ -16,6 +16,12 @@ PRH is delivered as one **Docker container** which hosts application server and 
 Whole project (top level of PRH directory) and each module (sub module directory) can be compiled using 
 `mvn clean install` command.   
 
+### Build docker image
+In main project directory run: 
+```
+mvn clean package docker:build
+```
+
 ## Main API Endpoints
 
 Running with dev-mode of PRH

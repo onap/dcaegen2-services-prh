@@ -55,8 +55,8 @@ public class TestAppConfiguration {
 
     public static ImmutableAaiClientConfiguration createDefaultAaiClientConfiguration() {
         return new ImmutableAaiClientConfiguration.Builder()
-                .pnfUrl("https://aai.onap.svc.cluster.local:8443/aai/v12/network/pnfs/pnf")
-                .baseUrl("https://aai.onap.svc.cluster.local:8443/aai/v12")
+                .pnfUrl("https://aai.onap.svc.cluster.local:8443/aai/v23/network/pnfs/pnf")
+                .baseUrl("https://aai.onap.svc.cluster.local:8443/aai/v23")
                 .aaiUserName("AAI")
                 .aaiUserPassword("AAI")
                 .aaiIgnoreSslCertificateErrors(true)

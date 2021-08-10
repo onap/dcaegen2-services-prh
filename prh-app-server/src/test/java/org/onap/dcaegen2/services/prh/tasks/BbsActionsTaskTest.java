@@ -57,7 +57,7 @@ import reactor.core.publisher.Mono;
 
 class BbsActionsTaskTest {
 
-    private static final String AAI_URL = "https://aai.onap.svc.cluster.local:8443/aai/v12/network";
+    private static final String AAI_URL = "https://aai.onap.svc.cluster.local:8443/aai/v23/network";
     private static final String PNF_URL = "/pnfs/pnf";
     private static final String LOGICAL_LINK_URL = "/logical-links/logical-link";
     private static final String ATTACHMENT_POINT = "attachment-point";

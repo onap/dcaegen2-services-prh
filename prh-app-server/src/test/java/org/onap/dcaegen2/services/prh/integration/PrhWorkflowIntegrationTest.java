@@ -103,8 +103,8 @@ class PrhWorkflowIntegrationTest {
 
         stubFor(get(urlEqualTo("/events/unauthenticated.VES_PNFREG_OUTPUT/OpenDCAE-c12/c12"))
                 .willReturn(ok().withBody(new Gson().toJson(singletonList(event)))));
-        stubFor(get(urlEqualTo("/aai/v12/network/pnfs/pnf/" + pnfName)).willReturn(ok().withBody("{}")));
-        stubFor(patch(urlEqualTo("/aai/v12/network/pnfs/pnf/" + pnfName)));
+        stubFor(get(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)).willReturn(ok().withBody("{}")));
+        stubFor(patch(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)));
         stubFor(post(urlEqualTo("/events/unauthenticated.PNF_READY")));
 
         scheduledTasks.scheduleMainPrhEventTask();

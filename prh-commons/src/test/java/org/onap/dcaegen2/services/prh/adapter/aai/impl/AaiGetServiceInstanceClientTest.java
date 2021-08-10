@@ -37,7 +37,7 @@ import reactor.test.StepVerifier;
 class AaiGetServiceInstanceClientTest extends AbstractHttpClientTest {
 
     public static final String SERVICE_INSTANCE_PATH =
-        "https://aai.onap.svc.cluster.local:8443/aai/v12/business/customers/customer/Demonstration/"
+        "https://aai.onap.svc.cluster.local:8443/aai/v23/business/customers/customer/Demonstration/"
             + "service-subscriptions/service-subscription/VCPE/service-instances/service-instance/df018f76-7fc8-46ab-8444-7d67e1efc284";
 
     @Test

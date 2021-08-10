@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * DCAEGEN2-SERVICES-SDK
  * ================================================================================
- * Copyright (C) 2019 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,6 +41,9 @@ public class AaiGetServiceInstanceClient implements
     private static final String SERVICE_TYPE = "serviceType";
     private static final String SERVICE_INSTANCE_ID = "serviceInstanceId";
 
+    private static final String VARIABLE_PREFIX = "{{";
+    private static final String VARIABLE_SUFFIX = "}}";
+
     private final RxHttpClient httpClient;
     private final AaiClientConfiguration configuration;
 
@@ -57,7 +60,10 @@ public class AaiGetServiceInstanceClient implements
             SERVICE_TYPE, aaiModel.serviceType(),
             SERVICE_INSTANCE_ID, aaiModel.serviceInstanceId());
 
-        final StringSubstitutor substitutor = new StringSubstitutor(mapping.toJavaMap());
+        final StringSubstitutor substitutor =
+            new StringSubstitutor(mapping.toJavaMap())
+                .setVariablePrefix(VARIABLE_PREFIX)
+                .setVariableSuffix(VARIABLE_SUFFIX);
         final String endpoint = substitutor.replace(configuration.aaiServiceInstancePath());
 
         return httpClient.call(ImmutableHttpRequest.builder()

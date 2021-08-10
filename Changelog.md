@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.7.0] - 10/08/2021 - not released
+### Changed
+- Change AAI variable syntax to "{{variable}}" 
+
 ## [1.6.1] - 29/07/2021
 ### Changed
 - Fix vulnerabilities (top up spring-boot version to 2.4.8) 

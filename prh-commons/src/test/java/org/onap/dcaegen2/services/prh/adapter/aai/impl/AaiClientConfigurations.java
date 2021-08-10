@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * DCAEGEN2-SERVICES-SDK
  * ================================================================================
- * Copyright (C) 2019 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public final class AaiClientConfigurations {
 
     private static AaiClientConfiguration validConfiguration(Map<String, String> headers, boolean secure) {
         return new ImmutableAaiClientConfiguration.Builder()
-            .baseUrl("https://aai.onap.svc.cluster.local:8443/aai/v12")
+            .baseUrl("https://aai.onap.svc.cluster.local:8443/aai/v23")
             .aaiUserName("sample-username")
             .aaiUserPassword("sample-password")
             .aaiIgnoreSslCertificateErrors(false)

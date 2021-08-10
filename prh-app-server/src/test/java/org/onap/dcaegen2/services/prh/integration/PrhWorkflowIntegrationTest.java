@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2019 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,8 +103,8 @@ class PrhWorkflowIntegrationTest {
 
         stubFor(get(urlEqualTo("/events/unauthenticated.VES_PNFREG_OUTPUT/OpenDCAE-c12/c12"))
                 .willReturn(ok().withBody(new Gson().toJson(singletonList(event)))));
-        stubFor(get(urlEqualTo("/aai/v12/network/pnfs/pnf/" + pnfName)).willReturn(ok().withBody("{}")));
-        stubFor(patch(urlEqualTo("/aai/v12/network/pnfs/pnf/" + pnfName)));
+        stubFor(get(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)).willReturn(ok().withBody("{}")));
+        stubFor(patch(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)));
         stubFor(post(urlEqualTo("/events/unauthenticated.PNF_READY")));
 
         scheduledTasks.scheduleMainPrhEventTask();

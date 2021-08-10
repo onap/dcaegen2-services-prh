@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2019 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ import reactor.core.publisher.Mono;
 
 class BbsActionsTaskTest {
 
-    private static final String AAI_URL = "https://aai.onap.svc.cluster.local:8443/aai/v12/network";
+    private static final String AAI_URL = "https://aai.onap.svc.cluster.local:8443/aai/v23/network";
     private static final String PNF_URL = "/pnfs/pnf";
     private static final String LOGICAL_LINK_URL = "/logical-links/logical-link";
     private static final String ATTACHMENT_POINT = "attachment-point";

@@ -12,7 +12,7 @@
       {
         "related-to": "logical-link",
         "relationship-label": "org.onap.relationships.inventory.BridgedTo",
-        "related-link": "/aai/v14/network/logical-links/logical-link/some-link",
+        "related-link": "/aai/v23/network/logical-links/logical-link/some-link",
         "relationship-data": [
           {
             "relationship-key": "logical-link.link-name",

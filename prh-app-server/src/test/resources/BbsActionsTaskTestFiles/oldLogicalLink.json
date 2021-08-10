@@ -8,7 +8,7 @@
       {
         "related-to": "pnf",
         "relationship-label": "org.onap.relationships.inventory.BridgedTo",
-        "related-link": "/aai/v14/network/pnfs/pnf/Nokia123",
+        "related-link": "/aai/v23/network/pnfs/pnf/Nokia123",
         "relationship-data": [
           {
             "relationship-key": "pnf.pnf-name",

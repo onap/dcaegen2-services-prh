@@ -30,13 +30,13 @@
       {
         "format": "AAI_Interaction",
         "version": "1.0.0",
-        "config_key": "/aai/v12/network/pnfs/pnf/pnf_name",
+        "config_key": "/aai/v23/network/pnfs/pnf/pnf_name",
         "type": "message_router"
       },
       {
         "format": "AAI_Interaction",
         "version": "1.0.0",
-        "config_key": "/aai/v12/network/pnfs/pnf/pnf_name",
+        "config_key": "/aai/v23/network/pnfs/pnf/pnf_name",
         "type": "message_router"
       }
     ]

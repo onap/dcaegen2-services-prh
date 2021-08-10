@@ -43,7 +43,7 @@ public final class AaiClientConfigurations {
 
     private static AaiClientConfiguration validConfiguration(Map<String, String> headers, boolean secure) {
         return new ImmutableAaiClientConfiguration.Builder()
-            .baseUrl("https://aai.onap.svc.cluster.local:8443/aai/v12")
+            .baseUrl("https://aai.onap.svc.cluster.local:8443/aai/v23")
             .aaiUserName("sample-username")
             .aaiUserPassword("sample-password")
             .aaiIgnoreSslCertificateErrors(false)

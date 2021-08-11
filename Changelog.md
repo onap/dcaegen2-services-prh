@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [1.7.0] - 10/08/2021 - not released
+## [1.7.0] - 11/08/2021
 ### Changed
 - Change AAI variable syntax to "{{variable}}" 
 

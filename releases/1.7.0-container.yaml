@@ -1,0 +1,8 @@
+distribution_type: 'container'
+container_release_tag: '1.7.0'
+project: 'dcaegen2-services-prh'
+log_dir: 'dcaegen2-services-prh-maven-docker-stage-master/752/'
+ref: 1b0a5fdc4df59d2b85db840f28fdd79215bff68f
+containers:
+  - name: 'org.onap.dcaegen2.services.prh.prh-app-server'
+    version: '1.7.0-20210811T094803Z'

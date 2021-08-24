@@ -37,6 +37,7 @@ import static org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMet
 
 import com.google.gson.JsonObject;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import io.vavr.collection.HashMultimap;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Scanner;
@@ -99,7 +100,8 @@ class BbsActionsTaskTest {
         ConsumerDmaapModel consumerDmaapModel = buildConsumerDmaapModel(additionalFields);
 
         // when
-        ConsumerDmaapModel result = new BbsActionsTaskImpl(cbsConfiguration, httpClient).execute(consumerDmaapModel).block();
+        ConsumerDmaapModel result = new BbsActionsTaskImpl(cbsConfiguration, httpClient).execute(consumerDmaapModel)
+            .block();
 
         // then
         verifyZeroInteractions(httpClient);
@@ -233,6 +235,7 @@ class BbsActionsTaskTest {
             .statusCode(status.code())
             .url("")
             .rawBody(body.getBytes())
+            .headers(HashMultimap.withSeq().empty())
             .build();
     }
 

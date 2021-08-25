@@ -59,11 +59,9 @@ public class CbsPropertySourceLocator implements PropertySourceLocator {
     @Override
     public PropertySource<?> locate(Environment environment) {
         CbsClientConfiguration cbsClientConfiguration = cbsClientConfigurationResolver.resolveCbsClientConfiguration();
-        LOGGER.info("Fetching configuration from Config Binding Service @ {}:{} for {}",
-                cbsClientConfiguration.hostname(), cbsClientConfiguration.port(), cbsClientConfiguration.appName());
         Map<String, Object> properties = cbsClientFactoryFacade.createCbsClient(cbsClientConfiguration)
                 .flatMap(cbsClient -> cbsClient.get(CbsRequests.getAll(RequestDiagnosticContext.create())))
-                .doOnError(e -> LOGGER.warn("Failed fetching config properties from CBS - retrying...", e))
+                .doOnError(e -> LOGGER.warn("Failed loading configuration - retrying...", e))
                 .retryWhen(Retry.
                         backoff(cbsProperties.getFetchRetries().getMaxAttempts(), cbsProperties.getFetchRetries().getFirstBackoff()).
                         maxBackoff(cbsProperties.getFetchRetries().getMaxBackoff()))
@@ -77,7 +75,7 @@ public class CbsPropertySourceLocator implements PropertySourceLocator {
         try {
             cbsConfiguration.parseCBSConfig(jsonObject);
         } catch (Exception e) {
-            LOGGER.error("Failed parsing configuration from CBS", e);
+            LOGGER.error("Failed parsing configuration", e);
             throw e;
         }
     }

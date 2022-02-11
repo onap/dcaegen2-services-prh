@@ -3,7 +3,7 @@
   ~ ============LICENSE_START=======================================================
   ~ PNF-REGISTRATION-HANDLER
   ~ ================================================================================
-  ~ Copyright (C) 2018-2021 NOKIA Intellectual Property. All rights reserved.
+  ~ Copyright (C) 2018-2022 NOKIA Intellectual Property. All rights reserved.
   ~ Copyright (C) 2021 Samsung electronics. All rights reserved.
   ~ ================================================================================
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,7 +27,7 @@
   <parent>
     <groupId>org.onap.dcaegen2.services</groupId>
     <artifactId>prh</artifactId>
-    <version>1.7.1-SNAPSHOT</version>
+    <version>1.7.2-SNAPSHOT</version>
   </parent>
 
   <groupId>org.onap.dcaegen2.services.prh</groupId>

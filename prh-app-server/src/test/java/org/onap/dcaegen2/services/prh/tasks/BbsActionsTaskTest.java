@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2019-2021 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2022 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMethod.DELETE;
 import static org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMethod.GET;
 import static org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMethod.PUT;
@@ -86,7 +86,7 @@ class BbsActionsTaskTest {
         ConsumerDmaapModel result = new BbsActionsTaskImpl(cbsConfiguration, httpClient).execute(consumerDmaapModel).block();
 
         // then
-        verifyZeroInteractions(httpClient);
+        verifyNoInteractions(httpClient);
         assertThat(result).isEqualTo(consumerDmaapModel);
     }
 
@@ -104,7 +104,7 @@ class BbsActionsTaskTest {
             .block();
 
         // then
-        verifyZeroInteractions(httpClient);
+        verifyNoInteractions(httpClient);
         assertThat(result).isEqualTo(consumerDmaapModel);
     }
 

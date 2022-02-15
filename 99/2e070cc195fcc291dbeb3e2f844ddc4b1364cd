@@ -1,0 +1,9 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Piotr Marcinkiewicz <piotr.marcinkiewicz@nokia.com>
+Code-Review+1: Niranjana Y <niranjana.y60@wipro.com>
+Code-Review+2: Tomasz Wr�bel <tomasz.wrobel@nokia.com>
+Submitted-by: Tomasz Wr�bel <tomasz.wrobel@nokia.com>
+Submitted-at: Tue, 15 Feb 2022 07:41:24 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/dcaegen2/services/prh/+/127081
+Project: dcaegen2/services/prh
+Branch: refs/heads/master

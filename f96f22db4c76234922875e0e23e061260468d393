@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b1f9ea00_d09e8a35",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2022-02-15T23:46:51Z",
+      "side": 1,
+      "message": "Moving fwd pls include more detailed commit msg identifying changes introduced in this version (similar to changelog entry)",
+      "revId": "f96f22db4c76234922875e0e23e061260468d393",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

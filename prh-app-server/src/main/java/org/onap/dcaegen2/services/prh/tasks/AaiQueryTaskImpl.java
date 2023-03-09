@@ -3,10 +3,10 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -35,6 +35,8 @@ import org.onap.dcaegen2.services.prh.model.RelationshipDict;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Component
 public class AaiQueryTaskImpl implements AaiQueryTask {
@@ -44,6 +46,7 @@ public class AaiQueryTaskImpl implements AaiQueryTask {
     static final String SERVICE_TYPE = "service-subscription.service-type";
     static final String SERVICE_INSTANCE_ID = "service-instance.service-instance-id";
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AaiQueryTaskImpl.class);
     private final AaiHttpClient<ConsumerDmaapModel, AaiPnfResultModel> getPnfModelClient;
     private final AaiHttpClient<AaiServiceInstanceQueryModel, AaiServiceInstanceResultModel> getServiceClient;
 
@@ -55,8 +58,11 @@ public class AaiQueryTaskImpl implements AaiQueryTask {
         this.getServiceClient = getServiceClient;
     }
 
+    
+
     @Override
     public Mono<Boolean> execute(ConsumerDmaapModel aaiModel) {
+
         return getPnfModelClient
                 .getAaiResponse(aaiModel)
                 .flatMap(this::checkIfPnfHasRelationToService)
@@ -65,7 +71,22 @@ public class AaiQueryTaskImpl implements AaiQueryTask {
                 .defaultIfEmpty(false);
     }
 
+
+   // Added by DTAG, March 2023
+    @Override
+    public Mono<ConsumerDmaapModel> findPnfinAAI(final ConsumerDmaapModel model) {
+
+        return getPnfModelClient
+                .getAaiResponse(model)
+                .flatMap(aaiModel -> Mono.just(model));
+
+                    
+    }
+     
+
+
     private Mono<AaiServiceInstanceQueryModel> checkIfPnfHasRelationToService(final AaiPnfResultModel model) {
+
         return Mono
                 .justOrEmpty(model.getRelationshipList())
                 .map(this::findRelatedTo)
@@ -88,10 +109,12 @@ public class AaiQueryTaskImpl implements AaiQueryTask {
     }
 
     private Boolean checkIfRelatedServiceInstanceIsActive(final AaiServiceInstanceResultModel model) {
+
         return ACTIVE_STATUS.equalsIgnoreCase(model.getOrchestrationStatus());
     }
 
     private Optional<RelationshipDict> findRelatedTo(final Relationship data) {
+
         return Optional.ofNullable(data.getRelationship())
                 .map(Stream::of)
                 .orElseGet(Stream::empty)
@@ -101,10 +124,12 @@ public class AaiQueryTaskImpl implements AaiQueryTask {
     }
 
     private Optional<String> findValue(final List<RelationshipData> data, final String key) {
+
         return data
                 .stream()
                 .filter(y -> key.equals(y.getRelationshipKey()))
                 .findFirst()
                 .map(RelationshipData::getRelationshipValue);
     }
+  
 }

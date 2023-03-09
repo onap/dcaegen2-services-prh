@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.9.0] - 2023/01/13
+### Changed
+- [DCAEGEN2-3312] Code additions to handle (optionally) early PNF registrations. This is enabled if the deployment Helm contains an environment variable: name: SPRING_PROFILES_ACTIVE
+          value: autoCommitDisabled. 
+  If this is set, then other required environment variables are:
+       - name: kafkaBoostrapServerConfig
+          value: onap-strimzi-kafka-bootstrap:9092
+        - name: groupIdConfig
+          value: OpenDCAE-c12
+        - name: kafkaUsername
+          value: strimzi-kafka-admin
+        - name: kafkaPassword
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: strimzi-kafka-admin
+        - name: kafkaTopic
+          value: unauthenticated.VES_PNFREG_OUTPUT
+        - name: SPRING_PROFILES_ACTIVE
+          value: autoCommitDisabled
+        - name: JAAS_CONFIG
+          valueFrom:
+            secretKeyRef:
+              key: sasl.jaas.config
+              name: strimzi-kafka-admin
+  [DCAEGEN2-3357] Updated dependencies for vulnerability check
+
 ## [1.8.1] - 2022/08/11
 ### Changed
 - [DCAEGEN2-3219] dcaegen2-services-prh vulnerability update

@@ -2,7 +2,6 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,14 +17,36 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+package org.onap.dcaegen2.services.prh.tasks.commit;
 
-package org.onap.dcaegen2.services.prh.tasks;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
-import reactor.core.publisher.Mono;
+@ExtendWith(MockitoExtension.class)
+public class EpochDateTimeConversionTest {
 
+    private EpochDateTimeConversion epochDateTimeConversion;
 
-public interface AaiQueryTask {
-    Mono<Boolean> execute(final ConsumerDmaapModel aaiModel);
-    Mono<ConsumerDmaapModel> findPnfinAAI(final ConsumerDmaapModel model);
+    @BeforeEach
+    void setUp() {
+        epochDateTimeConversion = new EpochDateTimeConversion();
+        epochDateTimeConversion.setDaysForRecords("3");
+    }
+
+    @Test
+    public void getStartDateOfTheDayTest(){
+        epochDateTimeConversion.getDaysForRecords();
+        Long day = epochDateTimeConversion.getStartDateOfTheDay();
+        Assertions.assertNotNull(day);
+    }
+
+    @Test
+    public void getEndDateOfTheDayTest(){
+        Long day = epochDateTimeConversion.getEndDateOfTheDay();
+        Assertions.assertNotNull(day);
+    }
 }

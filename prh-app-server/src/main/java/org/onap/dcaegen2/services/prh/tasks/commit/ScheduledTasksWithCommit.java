@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2023 DTAG Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,25 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.tasks;
+package org.onap.dcaegen2.services.prh.tasks.commit;
 
+import static org.onap.dcaegen2.services.sdk.rest.services.model.logging.MdcVariables.RESPONSE_CODE;
+
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
-import org.onap.dcaegen2.services.prh.tasks.commit.*;
+import org.onap.dcaegen2.services.prh.tasks.AaiProducerTask;
+import org.onap.dcaegen2.services.prh.tasks.AaiQueryTask;
+import org.onap.dcaegen2.services.prh.tasks.BbsActionsTask;
+import org.onap.dcaegen2.services.prh.tasks.DmaapConsumerTask;
+import org.onap.dcaegen2.services.prh.tasks.DmaapPublisherTask;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishResponse;
 import org.onap.dcaegen2.services.sdk.rest.services.model.logging.MdcVariables;
-import org.slf4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.configurationprocessor.json.JSONException;
@@ -35,31 +45,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
-import java.util.function.Predicate;
-
-import static org.onap.dcaegen2.services.sdk.rest.services.model.logging.MdcVariables.INSTANCE_UUID;
-import static org.onap.dcaegen2.services.sdk.rest.services.model.logging.MdcVariables.RESPONSE_CODE;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
-@Profile("!autoCommitDisabled")
+@Profile("autoCommitDisabled")
 @Component
-public class ScheduledTasks {
+public class ScheduledTasksWithCommit {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledTasks.class);
-    private static final Marker INVOKE = MarkerFactory.getMarker("INVOKE");
+    private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledTasksWithCommit.class);
     private static Boolean pnfFound = true;
     private DmaapConsumerTask dmaapConsumerTask;
-
+    private KafkaConsumerTask kafkaConsumerTask;
     private DmaapPublisherTask dmaapReadyProducerTask;
     private DmaapPublisherTask dmaapUpdateProducerTask;
-    private  AaiQueryTask aaiQueryTask;
-    private  AaiProducerTask aaiProducerTask;
-    private  BbsActionsTask bbsActionsTask;
+    private AaiQueryTask aaiQueryTask;
+    private AaiProducerTask aaiProducerTask;
+    private BbsActionsTask bbsActionsTask;
     private Map<String, String> mdcContextMap;
 
     /**
@@ -70,19 +72,20 @@ public class ScheduledTasks {
      * @param dmaapUpdatePublisherTask - fourth task
      * @param aaiPublisherTask         - second task
      */
-
     @Autowired
-    public ScheduledTasks(
-            final DmaapConsumerTask dmaapConsumerTask,
-            @Qualifier("ReadyPublisherTask") final DmaapPublisherTask dmaapReadyPublisherTask,
-            @Qualifier("UpdatePublisherTask") final DmaapPublisherTask dmaapUpdatePublisherTask,
-            final AaiQueryTask aaiQueryTask,
-            final AaiProducerTask aaiPublisherTask,
-            final BbsActionsTask bbsActionsTask,
-            final Map<String, String> mdcContextMap) {
+    public ScheduledTasksWithCommit(
+        final DmaapConsumerTask dmaapConsumerTask,
+        final KafkaConsumerTask kafkaConsumerTask,
+        @Qualifier("ReadyPublisherTask") final DmaapPublisherTask dmaapReadyPublisherTask,
+        @Qualifier("UpdatePublisherTask") final DmaapPublisherTask dmaapUpdatePublisherTask,
+        final AaiQueryTask aaiQueryTask,
+        final AaiProducerTask aaiPublisherTask,
+        final BbsActionsTask bbsActionsTask,
+        final Map<String, String> mdcContextMap) {
         this.dmaapConsumerTask = dmaapConsumerTask;
         this.dmaapReadyProducerTask = dmaapReadyPublisherTask;
         this.dmaapUpdateProducerTask = dmaapUpdatePublisherTask;
+        this.kafkaConsumerTask=kafkaConsumerTask;
         this.aaiQueryTask = aaiQueryTask;
         this.aaiProducerTask = aaiPublisherTask;
         this.bbsActionsTask = bbsActionsTask;
@@ -90,45 +93,61 @@ public class ScheduledTasks {
     }
 
     static class State {
-        public final ConsumerDmaapModel dmaapModel;
-        public final Boolean activationStatus;
-      
+        public ConsumerDmaapModel dmaapModel;
+        public  Boolean activationStatus;
+
         public State(ConsumerDmaapModel dmaapModel, final Boolean activationStatus) {
             this.dmaapModel = dmaapModel;
             this.activationStatus = activationStatus;
         }
     }
 
-    /**
-     * Main function for scheduling prhWorkflow.
-     */
-    public void scheduleMainPrhEventTask() {
+    public void scheduleKafkaPrhEventTask() {
         MdcVariables.setMdcContextMap(mdcContextMap);
         try {
-            LOGGER.trace("Execution of tasks was registered");
+            LOGGER.info("Execution of tasks was registered with commit");
             CountDownLatch mainCountDownLatch = new CountDownLatch(1);
-            consumeFromDMaaPMessage()
-                    .doOnError(DmaapEmptyResponseException.class, error ->
-                            LOGGER.warn("Nothing to consume from DMaaP")
-                    )
+            consumeFromKafkaMessage()
+                    .flatMap(model->queryAaiForPnf(model)
+                .doOnError(e -> { LOGGER.info("PNF Not Found in AAI --> {}" + e);
+                   disableCommit();
+                })
+                .onErrorResume(e -> Mono.empty())
+                
+                )
                     .flatMap(this::queryAaiForConfiguration)
-                    .flatMap(this::publishToAaiConfiguration)
-                    .flatMap(this::processAdditionalFields)
-                    .flatMap(this::publishToDmaapConfiguration)
-                    .onErrorResume(resumePrhPredicate(), exception -> Mono.empty())
-                    .doOnTerminate(mainCountDownLatch::countDown)
-                    .subscribe(this::onSuccess, this::onError, this::onComplete);
-
+                .flatMap(this::publishToAaiConfiguration)
+                .flatMap(this::processAdditionalFields)
+                .flatMap(this::publishToDmaapConfiguration)
+                    .onErrorResume(e -> Mono.empty())
+                
+                .doOnTerminate(mainCountDownLatch::countDown)
+                .subscribe(this::onSuccess, this::onError, this::onCompleteKafka);
             mainCountDownLatch.await();
-        } catch (InterruptedException e) {
-            LOGGER.warn("Interruption problem on countDownLatch ", e);
+        } catch (InterruptedException | JSONException e ) {
+            LOGGER.warn("Interruption problem on countDownLatch {}", e);
             Thread.currentThread().interrupt();
         }
     }
 
-    private void onComplete() {
-        LOGGER.info("PRH tasks have been completed");
+    private static void disableCommit()
+    {
+        pnfFound=false;
     }
+
+    private void onCompleteKafka() {
+        LOGGER.info("PRH tasks have been completed");
+        if(pnfFound){
+            kafkaConsumerTask.commitOffset();
+            LOGGER.info("Committed the Offset");
+        }
+        else
+        {
+            LOGGER.info("Offset not Committed");
+            pnfFound=true;
+        }
+    }
+
 
     private void onSuccess(MessageRouterPublishResponse response) {
         if (response.successful()) {
@@ -145,29 +164,30 @@ public class ScheduledTasks {
         }
     }
 
-    private Flux<ConsumerDmaapModel> consumeFromDMaaPMessage() {
-        return Flux.defer(() -> {
-            MdcVariables.setMdcContextMap(mdcContextMap);
-            MDC.put(INSTANCE_UUID, UUID.randomUUID().toString());
-            LOGGER.info(INVOKE, "Init configs");
-            return dmaapConsumerTask.execute();
-        });
+    private Flux<ConsumerDmaapModel> consumeFromKafkaMessage() throws JSONException {
+        return kafkaConsumerTask.execute();
     }
 
     private Mono<State> queryAaiForConfiguration(final ConsumerDmaapModel monoDMaaPModel) {
-        LOGGER.info("Find AAI Info  --> "+monoDMaaPModel.getCorrelationId());
         return   aaiQueryTask
-                .execute(monoDMaaPModel)
-                .map(x -> new State(monoDMaaPModel, x));
+            .execute(monoDMaaPModel)
+            .map(x -> new State(monoDMaaPModel, x));
     }
+
+    private Mono<ConsumerDmaapModel> queryAaiForPnf(final ConsumerDmaapModel monoDMaaPModel) {
+
+        LOGGER.info("Find PNF --> "+monoDMaaPModel.getCorrelationId());
+        return aaiQueryTask.findPnfinAAI(monoDMaaPModel);
+    }
+
 
     private Mono<State> publishToAaiConfiguration(final State state) {
         try {
             return aaiProducerTask
-                    .execute(state.dmaapModel)
-                        .map(x -> state);
+                .execute(state.dmaapModel)
+                .map(x -> state);
         } catch (PrhTaskException e) {
-            LOGGER.warn("AAIProducerTask exception has been registered: ", e);
+            LOGGER.warn("AAIProducerTask exception has been registered: {}", e);
             return Mono.error(e);
         }
     }
@@ -191,9 +211,5 @@ public class ScheduledTasks {
             LOGGER.warn("DMaaPProducerTask exception has been registered: ", e);
             return Flux.error(e);
         }
-    }
-
-    private Predicate<Throwable> resumePrhPredicate() {
-        return exception -> exception instanceof PrhTaskException;
     }
 }

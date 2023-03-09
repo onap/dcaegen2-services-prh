@@ -5,6 +5,7 @@
   ~ ================================================================================
   ~ Copyright (C) 2018-2022 NOKIA Intellectual Property. All rights reserved.
   ~ Copyright (C) 2021 Samsung Electronics. All rights reserved.
+  ~ Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
   ~ ================================================================================
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -33,7 +34,7 @@
 
   <groupId>org.onap.dcaegen2.services</groupId>
   <artifactId>prh</artifactId>
-  <version>1.8.1-SNAPSHOT</version>
+  <version>1.9.0-SNAPSHOT</version>
 
   <name>dcaegen2-services-prh</name>
   <description>PNF Registration Handler</description>
@@ -45,6 +46,12 @@
       <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
     </license>
   </licenses>
+
+  <profiles>
+    <profile>
+      <id>docker</id>
+    </profile>
+  </profiles>
 
   <properties>
     <java.version>11</java.version>
@@ -134,7 +141,6 @@
       </plugins>
     </pluginManagement>
   </build>
-
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -192,6 +198,31 @@
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
         <version>${guava.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.kafka</groupId>
+        <artifactId>spring-kafka</artifactId>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.kafka</groupId>
+        <artifactId>spring-kafka-test</artifactId>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-web</artifactId>
+        <version>5.3.25</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-text</artifactId>
+        <version>1.10.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat.embed</groupId>
+        <artifactId>tomcat-embed-core</artifactId>
+        <version>9.0.72</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

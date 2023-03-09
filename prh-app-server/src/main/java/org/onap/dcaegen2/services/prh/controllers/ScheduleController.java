@@ -3,6 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +24,7 @@ package org.onap.dcaegen2.services.prh.controllers;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasksRunner;
+import org.onap.dcaegen2.services.prh.tasks.commit.ScheduledTasksRunnerWithCommit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,30 +42,34 @@ import reactor.core.publisher.Mono;
 @Api(value = "ScheduleController", description = "Schedule Controller")
 public class ScheduleController {
 
+    
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleController.class);
 
-    private final ScheduledTasksRunner scheduledTasksRunner;
+    private ScheduledTasksRunner scheduledTasksRunner;
 
-    @Autowired
+
+    @Autowired(required = false)
     public ScheduleController(ScheduledTasksRunner scheduledTasksRunner) {
         this.scheduledTasksRunner = scheduledTasksRunner;
     }
 
+
+
     @RequestMapping(value = "start", method = RequestMethod.GET)
     @ApiOperation(value = "Start scheduling worker request")
     public Mono<ResponseEntity<String>> startTasks() {
-        LOGGER.trace("Receiving start scheduling worker request");
-        return Mono.fromSupplier(scheduledTasksRunner::tryToStartTask).map(this::createStartTaskResponse);
+            return Mono.fromSupplier(scheduledTasksRunner::tryToStartTask).map(this::createStartTaskResponse);
     }
+
 
     @RequestMapping(value = "stopPrh", method = RequestMethod.GET)
     @ApiOperation(value = "Receiving stop scheduling worker request")
     public Mono<ResponseEntity<String>> stopTask() {
         LOGGER.trace("Receiving stop scheduling worker request");
         return Mono.defer(() -> {
-                    scheduledTasksRunner.cancelTasks();
-                    return Mono.just(new ResponseEntity<>("PRH Service has been stopped!", HttpStatus.OK));
-                }
+                scheduledTasksRunner.cancelTasks();
+                return Mono.just(new ResponseEntity<>("PRH Service has been stopped!", HttpStatus.OK));
+            }
         );
     }
 

@@ -2,7 +2,6 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,13 +18,18 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.tasks;
+package org.onap.dcaegen2.services.prh.tasks.commit;
 
 import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
-import reactor.core.publisher.Mono;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import reactor.core.publisher.Flux;
 
+/**
+ * @author <a href="mailto:ajinkya-patil@t-systems.com">Ajinkya Patil</a> on 3/13/23
+ */
 
-public interface AaiQueryTask {
-    Mono<Boolean> execute(final ConsumerDmaapModel aaiModel);
-    Mono<ConsumerDmaapModel> findPnfinAAI(final ConsumerDmaapModel model);
+public interface KafkaConsumerTask {
+    Flux<ConsumerDmaapModel> execute() throws JSONException;
+
+    void commitOffset();
 }

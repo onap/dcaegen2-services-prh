@@ -3,6 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -188,6 +189,13 @@ public interface AaiPnfResultModel {
     @Nullable
     @SerializedName("prov-status")
     String getProvStatus();
+
+    /**
+     * OrchestrationStatus Status of pnf for commit task
+     **/
+    @Nullable
+    @SerializedName("orchestration-status")
+    String getOrchestrationStatus();
 
     /**
      * Nf Role is the role performed by this instance in the network.

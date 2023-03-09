@@ -3,6 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +26,6 @@ import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import reactor.core.publisher.Mono;
 
 @FunctionalInterface
-interface AaiProducerTask {
+public interface AaiProducerTask {
     Mono<ConsumerDmaapModel> execute(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException;
 }

@@ -1,6 +1,6 @@
 spring:
-  profiles:
-    active: prod
+  profiles: prod
+
 server:
   port: 8433
   ssl:
@@ -24,5 +24,14 @@ logging:
     org.onap.dcaegen2.services.sdk: debug
 
 management.endpoints.web.exposure.include: "*"
+
+---
+spring:
+  profiles:
+    default: prod
+
+
+
+
 
 

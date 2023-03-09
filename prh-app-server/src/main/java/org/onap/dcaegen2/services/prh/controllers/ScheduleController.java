@@ -23,6 +23,7 @@ package org.onap.dcaegen2.services.prh.controllers;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasksRunner;
+import org.onap.dcaegen2.services.prh.tasks.commit.ScheduledTasksRunnerWithCommit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,30 +41,49 @@ import reactor.core.publisher.Mono;
 @Api(value = "ScheduleController", description = "Schedule Controller")
 public class ScheduleController {
 
+    String profile = System.getenv("SPRING_PROFILES_ACTIVE");
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleController.class);
 
-    private final ScheduledTasksRunner scheduledTasksRunner;
+    private ScheduledTasksRunner scheduledTasksRunner;
+    private ScheduledTasksRunnerWithCommit scheduledTasksRunnerWithCommit;
 
-    @Autowired
+    @Autowired(required = false)
     public ScheduleController(ScheduledTasksRunner scheduledTasksRunner) {
         this.scheduledTasksRunner = scheduledTasksRunner;
+    }
+
+    @Autowired(required = false)
+    public ScheduleController(ScheduledTasksRunnerWithCommit scheduledTasksRunnerWithCommit) {
+        this.scheduledTasksRunnerWithCommit = scheduledTasksRunnerWithCommit;
     }
 
     @RequestMapping(value = "start", method = RequestMethod.GET)
     @ApiOperation(value = "Start scheduling worker request")
     public Mono<ResponseEntity<String>> startTasks() {
-        LOGGER.trace("Receiving start scheduling worker request");
-        return Mono.fromSupplier(scheduledTasksRunner::tryToStartTask).map(this::createStartTaskResponse);
+        LOGGER.trace("Receiving start scheduling worker request with Comit SchedulerController");
+        if(!(profile.equals("autoCommitDisabled")))
+        {
+            LOGGER.info("The active profile with auto-commit enabled condition: "+profile);
+            return Mono.fromSupplier(scheduledTasksRunner::tryToStartTask).map(this::createStartTaskResponse);
+        }
+        else
+        {
+            LOGGER.info("The active profile with auto-commit disabled condition: "+profile);
+            return Mono.fromSupplier(scheduledTasksRunnerWithCommit::tryToStartTaskWithCommit).map(this::createStartTaskResponse);
+        }
+
     }
+
 
     @RequestMapping(value = "stopPrh", method = RequestMethod.GET)
     @ApiOperation(value = "Receiving stop scheduling worker request")
     public Mono<ResponseEntity<String>> stopTask() {
         LOGGER.trace("Receiving stop scheduling worker request");
         return Mono.defer(() -> {
-                    scheduledTasksRunner.cancelTasks();
-                    return Mono.just(new ResponseEntity<>("PRH Service has been stopped!", HttpStatus.OK));
-                }
+                scheduledTasksRunner.cancelTasks();
+                return Mono.just(new ResponseEntity<>("PRH Service has been stopped!", HttpStatus.OK));
+            }
         );
     }
 

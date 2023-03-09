@@ -190,6 +190,13 @@ public interface AaiPnfResultModel {
     String getProvStatus();
 
     /**
+     * OrchestrationStatus Status of pnf for commit task
+     **/
+    @Nullable
+    @SerializedName("orchestration-status")
+    String getOrchestrationStatus();
+
+    /**
      * Nf Role is the role performed by this instance in the network.
      **/
     @Nullable

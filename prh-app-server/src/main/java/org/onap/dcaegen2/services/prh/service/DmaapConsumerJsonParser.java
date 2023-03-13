@@ -3,6 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +41,23 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
-import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.*;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.SOURCE_NAME;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.OAM_IPV_4_ADDRESS;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.OAM_IPV_6_ADDRESS;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.SERIAL_NUMBER;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.EQUIP_VENDOR;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.EQUIP_MODEL;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.EQUIP_TYPE;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.NF_ROLE;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.SW_VERSION;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.ADDITIONAL_FIELDS;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.COMMON_FORMAT_FOR_STRING;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.EVENT;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.COMMON_EVENT_HEADER;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.PNF_REGISTRATION_FIELDS;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.CORRELATION_ID;
+import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.COMMON_FORMAT_FOR_JSON_OBJECT;
+
 
 
 
@@ -92,6 +109,13 @@ public class DmaapConsumerJsonParser {
                         .map(jsonElementFromArray -> getJsonObjectFromAnArray(jsonElementFromArray)
                                 .orElseGet(JsonObject::new)))));
     }
+
+    /**
+     * Extract info from string and create @see {@link ConsumerDmaapModel}.
+     *
+     * @param monoMessage - results from Kafka
+     * @return reactive DMaaPModel
+     */
 
     public Flux<ConsumerDmaapModel> getConsumerDmaapModelFromKafkaConsumerRecord(java.util.List<String> items)
     {

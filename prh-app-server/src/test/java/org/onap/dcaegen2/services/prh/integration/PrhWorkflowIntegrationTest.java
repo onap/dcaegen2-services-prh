@@ -3,6 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2019-2021 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,11 +39,27 @@ import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.ok;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.matching.UrlPattern.get;
+import static com.github.tomakehurst.wiremock.matching.UrlPattern.path;
+import static com.github.tomakehurst.wiremock.matching.UrlPattern.post;
+import static com.github.tomakehurst.wiremock.matching.UrlPathPattern.anyRequestedFor;
+import static com.github.tomakehurst.wiremock.matching.UrlPathPattern.postRequestedFor;
+java.lang.String,com.github.tomakehurst.wiremock.matching.StringValuePattern.matchingJsonPath;
+
+
+
+
+
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+
 import static java.lang.ClassLoader.getSystemResource;
 import static java.util.Collections.singletonList;
 

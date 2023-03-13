@@ -42,7 +42,7 @@ import org.springframework.context.annotation.Import;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+
 import static java.lang.ClassLoader.getSystemResource;
 import static java.util.Collections.singletonList;
 

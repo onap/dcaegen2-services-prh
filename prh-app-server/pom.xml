@@ -5,6 +5,7 @@
   ~ ================================================================================
   ~ Copyright (C) 2018-2022 NOKIA Intellectual Property. All rights reserved.
   ~ Copyright (C) 2021 Samsung Electronics. All rights reserved.
+  ~ Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
   ~ ================================================================================
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -27,7 +28,7 @@
   <parent>
     <groupId>org.onap.dcaegen2.services</groupId>
     <artifactId>prh</artifactId>
-    <version>1.8.1-SNAPSHOT</version>
+    <version>1.9.0-SNAPSHOT</version>
   </parent>
 
   <groupId>org.onap.dcaegen2.services.prh</groupId>
@@ -279,6 +280,11 @@
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>1.9.5</version>
     </dependency>
     <dependency>
       <groupId>org.assertj</groupId>

@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.9.0] - 2023/01/13
+### Changed
+- [DCAEGEN2-3312] Code additions to handle (optionally) early PNF registrations
+
 ## [1.8.1] - 2022/08/11
 ### Changed
 - [DCAEGEN2-3219] dcaegen2-services-prh vulnerability update

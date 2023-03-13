@@ -3,6 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,38 +42,23 @@ import reactor.core.publisher.Mono;
 @Api(value = "ScheduleController", description = "Schedule Controller")
 public class ScheduleController {
 
-    String profile = System.getenv("SPRING_PROFILES_ACTIVE");
-
+    
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleController.class);
 
     private ScheduledTasksRunner scheduledTasksRunner;
-    private ScheduledTasksRunnerWithCommit scheduledTasksRunnerWithCommit;
+
 
     @Autowired(required = false)
     public ScheduleController(ScheduledTasksRunner scheduledTasksRunner) {
         this.scheduledTasksRunner = scheduledTasksRunner;
     }
 
-    @Autowired(required = false)
-    public ScheduleController(ScheduledTasksRunnerWithCommit scheduledTasksRunnerWithCommit) {
-        this.scheduledTasksRunnerWithCommit = scheduledTasksRunnerWithCommit;
-    }
+
 
     @RequestMapping(value = "start", method = RequestMethod.GET)
     @ApiOperation(value = "Start scheduling worker request")
     public Mono<ResponseEntity<String>> startTasks() {
-        LOGGER.trace("Receiving start scheduling worker request with Comit SchedulerController");
-        if(!(profile.equals("autoCommitDisabled")))
-        {
-            LOGGER.info("The active profile with auto-commit enabled condition: "+profile);
             return Mono.fromSupplier(scheduledTasksRunner::tryToStartTask).map(this::createStartTaskResponse);
-        }
-        else
-        {
-            LOGGER.info("The active profile with auto-commit disabled condition: "+profile);
-            return Mono.fromSupplier(scheduledTasksRunnerWithCommit::tryToStartTaskWithCommit).map(this::createStartTaskResponse);
-        }
-
     }
 
 

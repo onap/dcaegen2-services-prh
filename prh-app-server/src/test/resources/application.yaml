@@ -2,6 +2,10 @@ spring:
   profiles:
     active: prod
 
+spring:
+  profiles:
+    default: prod
+
 logging:
   level:
     org.onap.dcaegen2.services.prh: debug

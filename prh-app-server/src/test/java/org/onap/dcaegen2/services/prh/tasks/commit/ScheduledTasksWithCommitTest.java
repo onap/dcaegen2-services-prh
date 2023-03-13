@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2023 DTAG Intellectual Property. All rights reserved.
+ * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,14 @@
  */
 package org.onap.dcaegen2.services.prh.tasks.commit;
 
-import static org.mockito.Mockito.*;
-
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.Map;
-
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,12 +40,12 @@ import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.tasks.AaiProducerTask;
 import org.onap.dcaegen2.services.prh.tasks.AaiQueryTask;
 import org.onap.dcaegen2.services.prh.tasks.BbsActionsTask;
-import org.onap.dcaegen2.services.prh.tasks.DmaapConsumerTask;
 import org.onap.dcaegen2.services.prh.tasks.DmaapPublisherTask;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishResponse;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 
 @ExtendWith(MockitoExtension.class)
 class ScheduledTasksWithCommitTest {
@@ -60,8 +63,6 @@ class ScheduledTasksWithCommitTest {
     @Mock
     private DmaapPublisherTask updatePublisher;
 
-    @Mock
-    private DmaapConsumerTask consumer;
 
     @Mock
     private BbsActionsTask bbsActionsTask;
@@ -82,7 +83,6 @@ class ScheduledTasksWithCommitTest {
     @BeforeEach
     void setUp() {
         sut = new ScheduledTasksWithCommit(
-            consumer,
             kafkaConsumerTask,
             readyPublisher,
             updatePublisher,

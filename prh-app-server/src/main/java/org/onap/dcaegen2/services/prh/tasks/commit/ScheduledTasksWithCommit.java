@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2023 DTAG Intellectual Property. All rights reserved.
+ * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,16 +24,17 @@ import static org.onap.dcaegen2.services.sdk.rest.services.model.logging.MdcVari
 
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.tasks.AaiProducerTask;
 import org.onap.dcaegen2.services.prh.tasks.AaiQueryTask;
 import org.onap.dcaegen2.services.prh.tasks.BbsActionsTask;
-import org.onap.dcaegen2.services.prh.tasks.DmaapConsumerTask;
 import org.onap.dcaegen2.services.prh.tasks.DmaapPublisherTask;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishResponse;
 import org.onap.dcaegen2.services.sdk.rest.services.model.logging.MdcVariables;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -47,7 +48,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
+ * @author <a href="mailto:sangeeta.bellara@t-systems.com">Sangeeta Bellara</a> on 3/13/23
  */
 @Profile("autoCommitDisabled")
 @Component
@@ -55,7 +56,6 @@ public class ScheduledTasksWithCommit {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledTasksWithCommit.class);
     private static Boolean pnfFound = true;
-    private DmaapConsumerTask dmaapConsumerTask;
     private KafkaConsumerTask kafkaConsumerTask;
     private DmaapPublisherTask dmaapReadyProducerTask;
     private DmaapPublisherTask dmaapUpdateProducerTask;
@@ -67,14 +67,13 @@ public class ScheduledTasksWithCommit {
     /**
      * Constructor for tasks registration in PRHWorkflow.
      *
-     * @param dmaapConsumerTask        - fist task
+     * @param kafkaConsumerTask        - fist task
      * @param dmaapReadyPublisherTask  - third task
      * @param dmaapUpdatePublisherTask - fourth task
      * @param aaiPublisherTask         - second task
      */
     @Autowired
     public ScheduledTasksWithCommit(
-        final DmaapConsumerTask dmaapConsumerTask,
         final KafkaConsumerTask kafkaConsumerTask,
         @Qualifier("ReadyPublisherTask") final DmaapPublisherTask dmaapReadyPublisherTask,
         @Qualifier("UpdatePublisherTask") final DmaapPublisherTask dmaapUpdatePublisherTask,
@@ -82,7 +81,6 @@ public class ScheduledTasksWithCommit {
         final AaiProducerTask aaiPublisherTask,
         final BbsActionsTask bbsActionsTask,
         final Map<String, String> mdcContextMap) {
-        this.dmaapConsumerTask = dmaapConsumerTask;
         this.dmaapReadyProducerTask = dmaapReadyPublisherTask;
         this.dmaapUpdateProducerTask = dmaapUpdatePublisherTask;
         this.kafkaConsumerTask=kafkaConsumerTask;

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2023 DTAG Intellectual Property. All rights reserved.
+ * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,9 @@ import java.util.Date;
 
 /**
  * This class will return start date time of the day and end date time of the day in epoch format.
+ * @author <a href="mailto:mohd.khan@t-systems.com">Mohd Usman Khan</a> on 3/13/23
  */
+
 @Component
 public class EpochDateTimeConversion {
 

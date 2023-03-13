@@ -3,6 +3,7 @@
  * PROJECT
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +27,8 @@ import static org.mockito.Mockito.mock;
 
 import java.util.Collections;
 import java.util.List;
+
+
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +36,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.*;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpClient;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiPnfResultModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiServiceInstanceQueryModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiServiceInstanceResultModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableRelationshipData;
 import org.onap.dcaegen2.services.prh.model.Relationship;
 import org.onap.dcaegen2.services.prh.model.RelationshipData;
@@ -79,18 +87,6 @@ class AaiQueryTaskImplTest {
 
         sut = new AaiQueryTaskImpl(getPnfModelClient, getServiceClient);
     }
-
-    /*@Test
-    void whenPnfIsUnavailable_ShouldThrowException() {
-        //given
-        given(getPnfModelClient.getAaiResponse(aaiModel)).willReturn(Mono.error(new Exception("404")));
-
-        //when
-        final Mono<Boolean> task = sut.execute(aaiModel);
-
-        //then
-        Assertions.assertThrows(Exception.class, task::block);
-    }*/
 
     @Test
     void whenPnfIsAvailableButRelationshipIsNull_ShouldReturnFalse() {

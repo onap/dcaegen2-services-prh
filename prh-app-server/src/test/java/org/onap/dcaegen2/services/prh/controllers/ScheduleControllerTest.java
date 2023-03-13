@@ -42,7 +42,7 @@ class ScheduleControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
-    @Test
+   @Test
     void startEndpointShouldAllowStartingPrhTasks() {
         when(scheduledTasksRunner.tryToStartTask()).thenReturn(true);
         webTestClient

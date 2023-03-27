@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0c25aead_9b447540",
+        "filename": "Changelog.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 105
+      },
+      "writtenOn": "2023-03-27T14:44:55Z",
+      "side": 1,
+      "message": "The phrase \"if this is set\" is ambiguous. I think you mean:\n\nIf this is set with the value of \"autoCommitDisabled\", then . . .",
+      "revId": "84b1279861788a67c648de1d47099eea9d4e3600",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

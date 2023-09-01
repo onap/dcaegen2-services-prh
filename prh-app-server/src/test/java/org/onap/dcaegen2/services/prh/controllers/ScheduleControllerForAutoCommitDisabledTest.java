@@ -2,7 +2,6 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2019 NOKIA Intellectual Property. All rights reserved.
  * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,57 +20,77 @@
 
 package org.onap.dcaegen2.services.prh.controllers;
 
+import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.onap.dcaegen2.services.prh.configuration.CbsConfigurationForAutoCommitDisabledMode;
 import org.onap.dcaegen2.services.prh.configuration.KafkaConfig;
-import org.onap.dcaegen2.services.prh.configuration.PrhAppConfig;
-import org.onap.dcaegen2.services.prh.tasks.DmaapConsumerTaskImpl;
-import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
+import org.onap.dcaegen2.services.prh.tasks.commit.KafkaConsumerTaskImpl;
+import org.onap.dcaegen2.services.prh.tasks.commit.ScheduledTasksRunnerWithCommit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Profile;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.IfProfileValue;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext
-@ActiveProfiles(value = "prod")
-class AppInfoControllerTest {
-
-    private static final String SAMPLE_GIT_INFO_CONTENT = "{ \"git.commit.id\" : \"37444e\" }";
+@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
+@ActiveProfiles(value = "autoCommitDisabled")
+class ScheduleControllerForAutoCommitDisabledTest {
 
     @MockBean
-    private PrhAppConfig prhAppConfig;
-
+    private ScheduledTasksRunnerWithCommit scheduledTasksRunnerWithCommit;
+    
+    @MockBean
+    private KafkaConfig kafkaConfig;
+    
+    @MockBean
+    private ConsumerFactory<String, String> consumerFactory;
+    
+    @MockBean
+    private ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory;
+    
+    @MockBean
+    private KafkaConsumerTaskImpl kafkaConsumerTaskImpl;
+    
     @Autowired
     private WebTestClient webTestClient;
 
-    @MockBean
-    private ScheduledTasks scheduledTasks;
-
-    @Test
-    void shouldProvideHeartbeatResponse() {
-        webTestClient.get().uri("/heartbeat").accept(MediaType.TEXT_PLAIN).exchange().expectStatus().isOk()
-                .expectBody(String.class).isEqualTo("alive");
+    
+   @Test
+   void startEndpointShouldAllowStartingPrhTasks() {
+        when(scheduledTasksRunnerWithCommit.tryToStartTaskWithCommit()).thenReturn(true);
+        webTestClient
+                .get().uri("/start")
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody(String.class).isEqualTo("PRH Service has been started!");
     }
 
     @Test
-    void shouldProvideVersionInfo() {
-        when(prhAppConfig.getGitInfo()).thenReturn(new ByteArrayResource(SAMPLE_GIT_INFO_CONTENT.getBytes()));
-
+    void whenPrhTasksAreAlreadyStarted_shouldRespondThatRequestWasNotAccepted() {
+        when(scheduledTasksRunnerWithCommit.tryToStartTaskWithCommit()).thenReturn(false);
         webTestClient
-                .get().uri("/version")
-                .accept(MediaType.APPLICATION_JSON)
+                .get().uri("/start")
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.NOT_ACCEPTABLE)
+                .expectBody(String.class).isEqualTo("PRH Service is already running!");
+    }
+
+    @Test
+    void stopEndpointShouldAllowStoppingPrhTasks() {
+        webTestClient
+                .get().uri("/stopPrh")
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(String.class).isEqualTo(SAMPLE_GIT_INFO_CONTENT);
+                .expectBody(String.class).isEqualTo("PRH Service has been stopped!");
+
+        verify(scheduledTasksRunnerWithCommit).cancelTasks();
     }
 }

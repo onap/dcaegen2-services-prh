@@ -3,6 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,35 +31,35 @@ import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRo
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 
 
+@Profile("!autoCommitDisabled")
 public class CbsConfiguration implements Config {
     private static final Logger LOGGER = LoggerFactory.getLogger(CbsConfiguration.class);
-    private static final String CBS_CONFIG_MISSING = "CBS config missing";
-    private AaiClientConfiguration aaiClientCBSConfiguration;
-    private MessageRouterPublisher messageRouterPublisher;
-    private MessageRouterSubscriber messageRouterSubscriber;
-    private MessageRouterPublishRequest messageRouterCBSPublishRequest;
-    private MessageRouterSubscribeRequest messageRouterCBSSubscribeRequest;
-    private MessageRouterPublishRequest messageRouterCBSUpdatePublishRequest;
-
-
+    protected static final String CBS_CONFIG_MISSING = "CBS config missing";
+    protected AaiClientConfiguration aaiClientCBSConfiguration;
+    protected MessageRouterPublisher messageRouterPublisher;
+    protected MessageRouterSubscriber messageRouterSubscriber;
+    protected MessageRouterPublishRequest messageRouterCBSPublishRequest;
+    protected MessageRouterSubscribeRequest messageRouterCBSSubscribeRequest;
+    protected MessageRouterPublishRequest messageRouterCBSUpdatePublishRequest;
+    
     public void parseCBSConfig(JsonObject jsonObject) {
+        
         LOGGER.info("Received application configuration: {}", jsonObject);
-        CbsContentParser consulConfigurationParser = new CbsContentParser(jsonObject);
-
+        CbsContentParser  consulConfigurationParser = new CbsContentParser(jsonObject);
         aaiClientCBSConfiguration = consulConfigurationParser.getAaiClientConfig();
 
-        messageRouterPublisher = DmaapClientFactory.createMessageRouterPublisher(
-                consulConfigurationParser.getMessageRouterPublisherConfig());
+        messageRouterPublisher = DmaapClientFactory
+                .createMessageRouterPublisher(consulConfigurationParser.getMessageRouterPublisherConfig());
         messageRouterCBSPublishRequest = consulConfigurationParser.getMessageRouterPublishRequest();
         messageRouterCBSUpdatePublishRequest = consulConfigurationParser.getMessageRouterUpdatePublishRequest();
 
-        messageRouterSubscriber = DmaapClientFactory.createMessageRouterSubscriber(
-                consulConfigurationParser.getMessageRouterSubscriberConfig());
+        messageRouterSubscriber = DmaapClientFactory
+                .createMessageRouterSubscriber(consulConfigurationParser.getMessageRouterSubscriberConfig());
         messageRouterCBSSubscribeRequest = consulConfigurationParser.getMessageRouterSubscribeRequest();
-    }
-
+     }
 
     @Override
     public MessageRouterPublisher getMessageRouterPublisher() {
@@ -72,21 +73,27 @@ public class CbsConfiguration implements Config {
 
     @Override
     public MessageRouterPublishRequest getMessageRouterPublishRequest() {
-        return Optional.ofNullable(messageRouterCBSPublishRequest).orElseThrow(() -> new RuntimeException(CBS_CONFIG_MISSING));
+        return Optional.ofNullable(messageRouterCBSPublishRequest)
+                .orElseThrow(() -> new RuntimeException(CBS_CONFIG_MISSING));
     }
 
     @Override
     public MessageRouterPublishRequest getMessageRouterUpdatePublishRequest() {
-        return Optional.ofNullable(messageRouterCBSUpdatePublishRequest).orElseThrow(() -> new RuntimeException(CBS_CONFIG_MISSING));
+        return Optional.ofNullable(messageRouterCBSUpdatePublishRequest)
+                .orElseThrow(() -> new RuntimeException(CBS_CONFIG_MISSING));
     }
 
     @Override
     public AaiClientConfiguration getAaiClientConfiguration() {
-        return Optional.ofNullable(aaiClientCBSConfiguration).orElseThrow(() -> new RuntimeException(CBS_CONFIG_MISSING));
+        return Optional.ofNullable(aaiClientCBSConfiguration)
+                .orElseThrow(() -> new RuntimeException(CBS_CONFIG_MISSING));
     }
 
     @Override
     public MessageRouterSubscribeRequest getMessageRouterSubscribeRequest() {
-        return Optional.ofNullable(messageRouterCBSSubscribeRequest).orElseThrow(() -> new RuntimeException(CBS_CONFIG_MISSING));
+        return Optional.ofNullable(messageRouterCBSSubscribeRequest)
+                .orElseThrow(() -> new RuntimeException(CBS_CONFIG_MISSING));
     }
+    
+
 }

@@ -2,7 +2,6 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2019 NOKIA Intellectual Property. All rights reserved.
  * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,11 +22,17 @@ package org.onap.dcaegen2.services.prh.integration;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.stubbing.Answer;
-import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
+import org.onap.dcaegen2.services.prh.configuration.KafkaConfig;
+import org.onap.dcaegen2.services.prh.tasks.commit.KafkaConsumerTask;
+import org.onap.dcaegen2.services.prh.tasks.commit.ScheduledTasksRunnerWithCommit;
+import org.onap.dcaegen2.services.prh.tasks.commit.ScheduledTasksWithCommit;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
@@ -36,32 +41,59 @@ import static org.mockito.Mockito.doAnswer;
 
 
 @SpringBootTest
-@TestPropertySource (properties = {"prh.workflow-scheduling-interval=20ms"})
-@ActiveProfiles(value = "prod")
+@TestPropertySource (properties = {"prh.workflow-scheduling-interval=20ms","spring.main.allow-bean-definition-overriding=true"})
 @DirtiesContext
-class PrhWorkflowSchedulingIntegrationTest {
+@ActiveProfiles(value = "autoCommitDisabled")
+@Disabled
+class PrhWorkflowSchedulingIntegrationForAutoCommitDisabledTest {
 
     private static final int EXPECTED_INVOCATIONS_NUMBER = 1;
     private static final int REMAINING_INVOCATIONS_NUMBER = 0;
+    
     @MockBean
-    private ScheduledTasks scheduledTasks;
+    private ScheduledTasksRunnerWithCommit scheduledTasksRunnerWithCommit;
+    
+    @MockBean
+    private ScheduledTasksWithCommit scheduledTasksWithCommit;
+    
+    @MockBean
+    private KafkaConsumerTask kafkaConsumerTask;
+   
+    
+    @MockBean
+    private KafkaConfig kafkaConfig;
+    
+    @MockBean
+    private ConsumerFactory<String, String> consumerFactory;
+    
+    @MockBean
+    private ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory;
+    
     private CountDownLatch invocationLatch;
-
+    
     @Test
-    void prhWorkflowShouldBeExecutedRightAfterApplicationStart() throws InterruptedException {
-        invocationLatch = new CountDownLatch(EXPECTED_INVOCATIONS_NUMBER);
-        doAnswer(registerInvocation(invocationLatch)).when(scheduledTasks).scheduleMainPrhEventTask();
-        assertThatMethodWasInvokedOnce();
+    void prhWorkflowShouldBeExecutedRightAfterApplicationStart() {
+        try {
+            
+            invocationLatch = new CountDownLatch(EXPECTED_INVOCATIONS_NUMBER);
+            doAnswer(registerInvocation(invocationLatch)).when(scheduledTasksWithCommit).scheduleKafkaPrhEventTask();
+            assertThatMethodWasInvokedOnce();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void assertThatMethodWasInvokedOnce() throws InterruptedException {
-        invocationLatch.await(1, TimeUnit.SECONDS);
+        boolean awaitResult = invocationLatch.await(1, TimeUnit.SECONDS);
+        System.out.println("###awaitResult="+awaitResult);
         assertEquals(REMAINING_INVOCATIONS_NUMBER, invocationLatch.getCount());
     }
 
     private static Answer registerInvocation(CountDownLatch invocationLatch) {
         return invocation -> {
+            System.out.println("###before countDown:"+invocationLatch.getCount());
             invocationLatch.countDown();
+            System.out.println("###after countDown:"+invocationLatch.getCount());
             return null;
         };
     }

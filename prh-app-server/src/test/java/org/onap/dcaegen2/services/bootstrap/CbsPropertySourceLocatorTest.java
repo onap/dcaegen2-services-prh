@@ -3,6 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2019-2021 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +30,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
+import org.onap.dcaegen2.services.prh.configuration.CbsConfigurationForAutoCommitDisabledMode;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.CbsClient;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.CbsRequests;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.model.CbsClientConfiguration;
@@ -39,20 +41,21 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertySource;
 import reactor.core.publisher.Mono;
 import reactor.test.scheduler.VirtualTimeScheduler;
-
 import java.util.Map;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assumptions.assumeThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.*;
-
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.doThrow;
 
 @ExtendWith(MockitoExtension.class)
 class CbsPropertySourceLocatorTest {
 
-    private static final RequestPath GET_ALL_REQUEST_PATH = CbsRequests.getAll(RequestDiagnosticContext.create()).requestPath();
+    private static final RequestPath GET_ALL_REQUEST_PATH = CbsRequests.getAll(RequestDiagnosticContext.create())
+            .requestPath();
 
     private CbsProperties cbsProperties = new CbsProperties();
     @Mock
@@ -66,28 +69,24 @@ class CbsPropertySourceLocatorTest {
     @Mock
     private CbsConfiguration cbsConfiguration;
     @Mock
+    private CbsConfigurationForAutoCommitDisabledMode cbsConfigurationForAutoCommitDisabledMode;
+    @Mock
     private Environment environment;
     @Mock
     private CbsClient cbsClient;
     @Mock
     private JsonObject cbsConfigJsonObject;
     private Map<String, Object> cbsConfigMap = ImmutableMap.of("foo", "bar");
-
     private VirtualTimeScheduler virtualTimeScheduler;
-
     private CbsPropertySourceLocator cbsPropertySourceLocator;
-
 
     @BeforeEach
     void setup() {
         virtualTimeScheduler = VirtualTimeScheduler.getOrSet(true);
 
-        when(cbsClientConfigurationResolver.resolveCbsClientConfiguration()).thenReturn(cbsClientConfiguration);
-        when(cbsClientFactoryFacade.createCbsClient(cbsClientConfiguration)).thenReturn(Mono.just(cbsClient));
+        cbsPropertySourceLocator = new CbsPropertySourceLocator(cbsProperties, cbsJsonToPropertyMapConverter,
+                cbsClientConfigurationResolver, cbsClientFactoryFacade, cbsConfiguration);
 
-        cbsPropertySourceLocator = new CbsPropertySourceLocator(
-                cbsProperties, cbsJsonToPropertyMapConverter, cbsClientConfigurationResolver,
-                cbsClientFactoryFacade, cbsConfiguration);
     }
 
     @AfterEach
@@ -95,9 +94,10 @@ class CbsPropertySourceLocatorTest {
         virtualTimeScheduler.dispose();
     }
 
-
     @Test
     void shouldBuildCbsPropertySourceBasedOnDataFetchedUsingCbsClient() {
+        Mono<CbsClient> just = Mono.just(cbsClient);
+        when(cbsClientFactoryFacade.createCbsClient(any())).thenReturn(just);
         when(cbsClient.get(argThat(request -> request.requestPath().equals(GET_ALL_REQUEST_PATH))))
                 .thenReturn(Mono.just(cbsConfigJsonObject));
         when(cbsJsonToPropertyMapConverter.convertToMap(cbsConfigJsonObject)).thenReturn(cbsConfigMap);
@@ -108,9 +108,10 @@ class CbsPropertySourceLocatorTest {
         assertThat(propertySource).extracting(s -> s.getProperty("foo")).isEqualTo("bar");
     }
 
-
     @Test
     void shouldUpdateCbsConfigurationStateBasedOnDataFetchedUsingCbsClient() {
+        Mono<CbsClient> just = Mono.just(cbsClient);
+        when(cbsClientFactoryFacade.createCbsClient(any())).thenReturn(just);
         when(cbsClient.get(argThat(request -> request.requestPath().equals(GET_ALL_REQUEST_PATH))))
                 .thenReturn(Mono.just(cbsConfigJsonObject));
         when(cbsJsonToPropertyMapConverter.convertToMap(cbsConfigJsonObject)).thenReturn(cbsConfigMap);
@@ -120,9 +121,10 @@ class CbsPropertySourceLocatorTest {
         verify(cbsConfiguration).parseCBSConfig(cbsConfigJsonObject);
     }
 
-
     @Test
     void shouldPropagateExceptionWhenCbsConfigurationParsingFails() {
+        Mono<CbsClient> just = Mono.just(cbsClient);
+        when(cbsClientFactoryFacade.createCbsClient(any())).thenReturn(just);
         when(cbsClient.get(any(CbsRequest.class))).thenReturn(Mono.just(cbsConfigJsonObject));
 
         RuntimeException someCbsConfigParsingException = new RuntimeException("boom!");
@@ -134,13 +136,13 @@ class CbsPropertySourceLocatorTest {
 
     @Test
     void shouldRetryFetchingConfigFromCbsInCaseOfFailure() {
+        Mono<CbsClient> just = Mono.just(cbsClient);
+        when(cbsClientFactoryFacade.createCbsClient(any())).thenReturn(just);
         assumeThat(cbsProperties.getFetchRetries().getMaxAttempts()).isGreaterThan(1);
-        when(cbsClient.get(any(CbsRequest.class)))
-                .thenReturn(Mono.defer(() -> {
-                        virtualTimeScheduler.advanceTimeBy(cbsProperties.getFetchRetries().getMaxBackoff());
-                        return Mono.error(new RuntimeException("some connection failure"));
-                }))
-                .thenReturn(Mono.just(cbsConfigJsonObject));
+        when(cbsClient.get(any(CbsRequest.class))).thenReturn(Mono.defer(() -> {
+            virtualTimeScheduler.advanceTimeBy(cbsProperties.getFetchRetries().getMaxBackoff());
+            return Mono.error(new RuntimeException("some connection failure"));
+        })).thenReturn(Mono.just(cbsConfigJsonObject));
         when(cbsJsonToPropertyMapConverter.convertToMap(cbsConfigJsonObject)).thenReturn(cbsConfigMap);
 
         PropertySource<?> propertySource = cbsPropertySourceLocator.locate(environment);
@@ -150,15 +152,16 @@ class CbsPropertySourceLocatorTest {
 
     @Test
     void shouldFailAfterExhaustingAllOfConfiguredRetryAttempts() {
+        Mono<CbsClient> just = Mono.just(cbsClient);
+        when(cbsClientFactoryFacade.createCbsClient(any())).thenReturn(just);
         assumeThat(cbsProperties.getFetchRetries().getMaxAttempts()).isGreaterThan(1);
-        when(cbsClient.get(any(CbsRequest.class)))
-                .thenReturn(Mono.defer(() -> {
-                    virtualTimeScheduler.advanceTimeBy(cbsProperties.getFetchRetries().getMaxBackoff());
-                    return Mono.error(new RuntimeException("some connection failure"));
-                }));
+        when(cbsClient.get(any(CbsRequest.class))).thenReturn(Mono.defer(() -> {
+            virtualTimeScheduler.advanceTimeBy(cbsProperties.getFetchRetries().getMaxBackoff());
+            return Mono.error(new RuntimeException("some connection failure"));
+        }));
 
-        assertThatThrownBy(() -> cbsPropertySourceLocator.locate(environment))
-                .hasMessageContaining("Retries exhausted")
+        assertThatThrownBy(() -> cbsPropertySourceLocator.locate(environment)).hasMessageContaining("Retries exhausted")
                 .hasMessageContaining(cbsProperties.getFetchRetries().getMaxAttempts().toString());
     }
+
 }

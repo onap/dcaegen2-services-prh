@@ -1,0 +1,66 @@
+{
+    "config": {
+        "aai.aaiClientConfiguration.aaiBasePath": "/aai/v23",
+        "aai.aaiClientConfiguration.aaiHeaders": {
+            "Accept": "application/json",
+            "Authorization": "Basic QUFJOkFBSQ==",
+            "Real-Time": "true",
+            "X-FromAppId": "prh",
+            "X-TransactionId": "9999"
+        },
+        "aai.aaiClientConfiguration.aaiHost": "aai-internal.onap.svc.cluster.local",
+        "aai.aaiClientConfiguration.aaiHostPortNumber": 80,
+        "aai.aaiClientConfiguration.aaiIgnoreSslCertificateErrors": true,
+        "aai.aaiClientConfiguration.aaiPnfPath": "/network/pnfs/pnf",
+        "aai.aaiClientConfiguration.aaiProtocol": "http",
+        "aai.aaiClientConfiguration.aaiServiceInstancePath": "/business/customers/customer/{{customer}}/service-subscriptions/service-subscription/{{serviceType}}/service-instances/service-instance/{{serviceInstanceId}}",
+        "aai.aaiClientConfiguration.aaiUserName": "AAI",
+        "aai.aaiClientConfiguration.aaiUserPassword": "AAI",
+        "aai.aaiClientConfiguration.baseUrl": "https://aai.onap.svc.cluster.local:8443/aai/v23",
+        "aai.aaiClientConfiguration.pnfUrl": "http://aai.onap.svc.cluster.local:8443/aai/v23/network/pnfs/pnf",
+        "dmaap.dmaapConsumerConfiguration.consumerGroup": "OpenDCAE-c12",
+        "dmaap.dmaapConsumerConfiguration.consumerId": "c12",
+        "dmaap.dmaapConsumerConfiguration.dmaapContentType": "application/json",
+        "dmaap.dmaapConsumerConfiguration.timeoutMs": -1,
+        "dmaap.dmaapProducerConfiguration.dmaapContentType": "application/json",
+        "dmaap.dmaapUpdateProducerConfiguration.dmaapContentType": "application/json",
+        "security.enableAaiCertAuth": false,
+        "security.enableDmaapCertAuth": false,
+        "security.keyStorePasswordPath": "/opt/app/prh/etc/cert/jks.pass",
+        "security.keyStorePath": "/opt/app/prh/etc/cert/cert.jks",
+        "security.trustStorePasswordPath": "/opt/app/prh/etc/cert/trust.pass",
+        "security.trustStorePath": "/opt/app/prh/etc/cert/trust.jks",
+        "streams_publishes": {
+            "pnf-ready": {
+                "dmaap_info": {
+                    "topic_url": "http://dmaap-mr:2222/events/unauthenticated.PNF_READY"
+                },
+                "type": "message_router"
+            },
+            "pnf-update": {
+                "dmaap_info": {
+                    "topic_url": "http://dmaap-mr:2222/events/unauthenticated.PNF_UPDATE"
+                },
+                "type": "message_router"
+            }
+        },
+        "streams_subscribes": {
+            "ves-reg-output": {
+                "dmaap_info": {
+                    "topic_url": "http://dmaap-mr:2222/events/unauthenticated.VES_PNFREG_OUTPUT"
+                },
+                "type": "message_router"
+            }
+        },
+        "kafka-configurations": {
+            "kafkaBoostrapServerConfig": "onap-strimzi-kafka-bootstrap:9092",
+            "groupIdConfig": "OpenDCAE-c12",
+            "kafkaSecurityProtocol": "SASL_PLAINTEXT",
+            "kafkaSaslMechanism": "SCRAM-SHA-512",
+            "kafkaUsername": "strimzi-kafka-admin-username",
+            "kafkaPassword": "strimzi-kafka-admin-password",
+            "kafkaJaasConfig": "jaas_config",
+            "Login_Module_Class": "MODULE-CLASS"
+        }
+    }
+}

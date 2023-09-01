@@ -21,34 +21,52 @@
 
 package org.onap.dcaegen2.services.prh.controllers;
 
+import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.onap.dcaegen2.services.prh.tasks.ScheduledTasksRunner;
+import org.onap.dcaegen2.services.prh.configuration.KafkaConfig;
+import org.onap.dcaegen2.services.prh.tasks.commit.KafkaConsumerTaskImpl;
 import org.onap.dcaegen2.services.prh.tasks.commit.ScheduledTasksRunnerWithCommit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.IfProfileValue;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext
-@ActiveProfiles("prod")
-class ScheduleControllerTest {
+@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
+@ActiveProfiles(value = "autoCommitDisabled")
+class ScheduleControllerForAutoCommitDisabledTest {
 
     @MockBean
-    private ScheduledTasksRunner scheduledTasksRunner;
-
+    private ScheduledTasksRunnerWithCommit scheduledTasksRunnerWithCommit;
+    
+    @MockBean
+    private KafkaConfig kafkaConfig;
+    
+    @MockBean
+    private ConsumerFactory<String, String> consumerFactory;
+    
+    @MockBean
+    private ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory;
+    
+    @MockBean
+    private KafkaConsumerTaskImpl kafkaConsumerTaskImpl;
+    
     @Autowired
     private WebTestClient webTestClient;
 
+    
    @Test
-    void startEndpointShouldAllowStartingPrhTasks() {
-        when(scheduledTasksRunner.tryToStartTask()).thenReturn(true);
+   void startEndpointShouldAllowStartingPrhTasks() {
+        when(scheduledTasksRunnerWithCommit.tryToStartTaskWithCommit()).thenReturn(true);
         webTestClient
                 .get().uri("/start")
                 .exchange()
@@ -58,7 +76,7 @@ class ScheduleControllerTest {
 
     @Test
     void whenPrhTasksAreAlreadyStarted_shouldRespondThatRequestWasNotAccepted() {
-        when(scheduledTasksRunner.tryToStartTask()).thenReturn(false);
+        when(scheduledTasksRunnerWithCommit.tryToStartTaskWithCommit()).thenReturn(false);
         webTestClient
                 .get().uri("/start")
                 .exchange()
@@ -74,6 +92,6 @@ class ScheduleControllerTest {
                 .expectStatus().isOk()
                 .expectBody(String.class).isEqualTo("PRH Service has been stopped!");
 
-        verify(scheduledTasksRunner).cancelTasks();
+        verify(scheduledTasksRunnerWithCommit).cancelTasks();
     }
 }

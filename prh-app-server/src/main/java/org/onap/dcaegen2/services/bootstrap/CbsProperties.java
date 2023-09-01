@@ -35,32 +35,12 @@ public class CbsProperties {
     private Duration updatesInterval;
     @NestedConfigurationProperty
     private RetryProperties fetchRetries = new RetryProperties();
-    private String  hostname;
-    private Integer port;
     private String appName;
 
     CbsClientConfiguration toCbsClientConfiguration() {
         return ImmutableCbsClientConfiguration.builder()
-                .hostname(hostname)
-                .port(port)
                 .appName(appName)
                 .build();
-    }
-
-    public String getHostname() {
-        return hostname;
-    }
-
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
-    }
-
-    public Integer getPort() {
-        return port;
-    }
-
-    public void setPort(Integer port) {
-        this.port = port;
     }
 
     public String getAppName() {

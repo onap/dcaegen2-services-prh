@@ -24,7 +24,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.model.CbsClientConfiguration;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CbsClientConfigurationResolverTest {
@@ -34,18 +33,15 @@ class CbsClientConfigurationResolverTest {
     @BeforeEach
     void setUp() {
         cbsProperties = new CbsProperties();
-        cbsProperties.setHostname("some-cbs-host");
-        cbsProperties.setPort(123);
         cbsProperties.setAppName("client-app-name");
     }
 
     @Test
     @DisabledIfEnvironmentVariable(named = "CONFIG_BINDING_SERVICE", matches = ".+")
     void whenCbsEnvPropertiesAreNotePresentInEnvironment_ShouldFallbackToLoadingDefaultsFromCbsProperties() {
-        CbsClientConfiguration config = new CbsClientConfigurationResolver(cbsProperties).resolveCbsClientConfiguration();
+        CbsClientConfiguration config = new CbsClientConfigurationResolver(cbsProperties)
+                .resolveCbsClientConfiguration();
 
-        assertThat(config.hostname()).isEqualTo(cbsProperties.getHostname());
-        assertThat(config.port()).isEqualTo(cbsProperties.getPort());
         assertThat(config.appName()).isEqualTo(cbsProperties.getAppName());
     }
 }

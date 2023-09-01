@@ -2,7 +2,8 @@
 <configuration debug="false" scan="false">
   <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
   <property name="outputFilename" value="prh-app-server_output"/>
-  <property name="logPath" value="/var/log/ONAP/prh/prh-app-server"/>
+  <!-- <property name="logPath" value="/var/log/ONAP/prh/prh-app-server"/> -->
+  <property name="logPath" value="C:\Users\A200195828\Desktop\PRH-LOGS"/>
   <property name="archivePath" value="${logPath}/archive"/>
   <property name="maxFileSize" value="50MB"/>
   <property name="maxHistory" value="30"/>
@@ -17,7 +18,7 @@
     |%thread
     |%n"/>
 
-  <springProfile name="prod">
+  <springProfile name="prod,autoCommitDisabled">
     <appender class="ch.qos.logback.core.ConsoleAppender" name="CONSOLE" target="SYSTEM_OUT">
       <encoder>
         <pattern>${defaultPattern}</pattern>

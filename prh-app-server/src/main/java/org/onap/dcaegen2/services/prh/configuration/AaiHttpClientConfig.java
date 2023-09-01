@@ -21,6 +21,7 @@
 package org.onap.dcaegen2.services.prh.configuration;
 
 import java.nio.charset.StandardCharsets;
+
 import java.util.function.BiFunction;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpClient;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiPnfResultModel;
@@ -39,47 +40,48 @@ import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RxHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
 public class AaiHttpClientConfig {
 
     @Autowired
-    private CbsConfiguration cbsConfiguration;
+    private Config config;
 
     @Bean
     public AaiHttpClient<ConsumerDmaapModel, HttpResponse> getPatchClientFactory() {
         return createLazyConfigClient(
-            (config, client) -> new AaiHttpPatchClient(config, new AaiJsonBodyBuilderImpl(), client));
+                (config, client) -> new AaiHttpPatchClient(config, new AaiJsonBodyBuilderImpl(), client));
     }
 
     @Bean
     public AaiHttpClient<AaiServiceInstanceQueryModel, AaiServiceInstanceResultModel> getServiceInstanceClient() {
         return createLazyConfigClient(
-            (config, client) -> new AaiGetServiceInstanceClient(config, client)
-                .map(httpResponse -> {
+                (config, client) -> new AaiGetServiceInstanceClient(config, client).map(httpResponse -> {
                     httpResponse.throwIfUnsuccessful();
-                    return httpResponse.bodyAsJson(StandardCharsets.UTF_8,
-                        PrhModelAwareGsonBuilder.createGson(), AaiServiceInstanceResultModel.class);
+                    return httpResponse.bodyAsJson(StandardCharsets.UTF_8, PrhModelAwareGsonBuilder.createGson(),
+                            AaiServiceInstanceResultModel.class);
                 }));
     }
 
     @Bean
     public AaiHttpClient<ConsumerDmaapModel, AaiPnfResultModel> getGetClient() {
-        return createLazyConfigClient(
-            (config, client) -> new AaiHttpGetClient(config, client)
-                .map(httpResponse -> {
-                    httpResponse.throwIfUnsuccessful();
-                    return httpResponse.bodyAsJson(StandardCharsets.UTF_8,
-                        PrhModelAwareGsonBuilder.createGson(), AaiPnfResultModel.class);
-                }));
+
+
+
+        return createLazyConfigClient((config, client) -> new AaiHttpGetClient(config, client).map(httpResponse -> {
+            httpResponse.throwIfUnsuccessful();
+            return httpResponse.bodyAsJson(StandardCharsets.UTF_8, PrhModelAwareGsonBuilder.createGson(),
+                    AaiPnfResultModel.class);
+        }));
     }
 
     private <T, U> AaiHttpClient<T, U> createLazyConfigClient(
-        final BiFunction<AaiClientConfiguration, RxHttpClient, AaiHttpClient<T, U>> factoryMethod) {
+            final BiFunction<AaiClientConfiguration, RxHttpClient, AaiHttpClient<T, U>> factoryMethod) {
+//        System.out.println("pnf url in AAIClientConfiguration is: " + config.getAaiClientConfiguration().pnfUrl());
+//        System.out.println("base url in AAIClientConfiguration is: " + config.getAaiClientConfiguration().baseUrl());
+        return x -> factoryMethod.apply(config.getAaiClientConfiguration(),
+                new AaiHttpClientFactory(config.getAaiClientConfiguration()).build()).getAaiResponse(x);
 
-        return x -> factoryMethod.apply(
-            cbsConfiguration.getAaiClientConfiguration(),
-            new AaiHttpClientFactory(cbsConfiguration.getAaiClientConfiguration()).build()
-        ).getAaiResponse(x);
     }
 }

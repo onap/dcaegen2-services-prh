@@ -23,12 +23,22 @@ package org.onap.dcaegen2.services.prh;
 import java.util.Map;
 import java.util.UUID;
 
+import org.onap.dcaegen2.services.bootstrap.CbsBootstrapConfiguration;
+//import org.onap.dcaegen2.services.bootstrap.CbsBootstrapConfigurationForAutoCommitDisabled;
+import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
+import org.onap.dcaegen2.services.prh.configuration.CbsConfigurationForAutoCommitDisabledMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
@@ -36,15 +46,29 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import static org.onap.dcaegen2.services.sdk.rest.services.model.logging.MdcVariables.INVOCATION_ID;
 
 /**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on
+ *         3/23/18
  */
-@SpringBootApplication(exclude = {JacksonAutoConfiguration.class})
+@SpringBootApplication(exclude = { JacksonAutoConfiguration.class })
 @EnableScheduling
 @EnableConfigurationProperties
 public class MainApp {
 
+//    @Autowired
+//    private static ApplicationContext applicationContext;
+    
+    
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainApp.class);
+    
     public static void main(String[] args) {
+       
         SpringApplication.run(MainApp.class, args);
+        
+//        LOGGER.info("CbsConfiguration="+applicationContext.getBean(CbsConfiguration.class));
+//        LOGGER.info("CbsConfigurationForAutoCommitDisabledMode="+applicationContext.getBean(CbsConfigurationForAutoCommitDisabledMode.class));
+//        LOGGER.info("CbsBootstrapConfiguration="+applicationContext.getBean(CbsBootstrapConfiguration.class));
+//        LOGGER.info("CbsBootstrapConfigurationForAutoCommitDisabled="+applicationContext.getBean(CbsBootstrapConfigurationForAutoCommitDisabled.class));
     }
 
     @Bean

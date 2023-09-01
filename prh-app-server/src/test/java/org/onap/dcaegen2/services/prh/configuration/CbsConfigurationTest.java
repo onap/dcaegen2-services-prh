@@ -23,10 +23,8 @@ package org.onap.dcaegen2.services.prh.configuration;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.Test;
-
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
 import static java.lang.ClassLoader.getSystemResource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -51,11 +49,11 @@ class CbsConfigurationTest {
                 .hasMessage(EXPECTED_ERROR_MESSAGE_WHEN_CBS_CONFIG_IS_NOT_INITIALIZED);
     }
 
-
     @Test
     void cbsConfigurationShouldExposeDataReceivedAsJsonFromCbs() throws Exception {
-        JsonObject cbsConfigJson = new Gson().fromJson(new String(Files.readAllBytes(Paths.get(
-                getSystemResource("configurationFromCbs.json").toURI()))), JsonObject.class);
+        JsonObject cbsConfigJson = new Gson().fromJson(
+                new String(Files.readAllBytes(Paths.get(getSystemResource("configurationFromCbs.json").toURI()))),
+                JsonObject.class);
         CbsConfiguration cbsConfiguration = new CbsConfiguration();
 
         cbsConfiguration.parseCBSConfig(cbsConfigJson);
@@ -66,5 +64,8 @@ class CbsConfigurationTest {
         assertThat(cbsConfiguration.getMessageRouterPublishRequest()).isNotNull();
         assertThat(cbsConfiguration.getMessageRouterSubscribeRequest()).isNotNull();
         assertThat(cbsConfiguration.getMessageRouterUpdatePublishRequest()).isNotNull();
+
     }
+
+   
 }

@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.10.0] - 2023/09/01
+### Changed
+- [DCAEGEN2-3365] Code changed so that the autoCommitDisabled mode of PRH use CBSContentParser for environment variables.
+
 ## [1.9.0] - 2023/01/13
 ### Changed
 - [DCAEGEN2-3312] Code additions to handle (optionally) early PNF registrations. This is enabled if the deployment Helm contains an environment variable: name: SPRING_PROFILES_ACTIVE

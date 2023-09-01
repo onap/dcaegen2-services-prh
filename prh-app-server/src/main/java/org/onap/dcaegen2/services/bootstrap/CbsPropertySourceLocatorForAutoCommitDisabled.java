@@ -21,7 +21,7 @@
 package org.onap.dcaegen2.services.bootstrap;
 
 import com.google.gson.JsonObject;
-import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
+import org.onap.dcaegen2.services.prh.configuration.CbsConfigurationForAutoCommitDisabledMode;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.CbsRequests;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.model.CbsClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.model.logging.RequestDiagnosticContext;
@@ -33,29 +33,34 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.PropertySource;
 import reactor.util.retry.Retry;
-
 import java.util.Map;
 
-@Profile("!autoCommitDisabled")
-public class CbsPropertySourceLocator implements PropertySourceLocator {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CbsPropertySourceLocator.class);
+/**
+ *  * @author <a href="mailto:PRANIT.KAPDULE@t-systems.com">Pranit Kapdule</a> on
+ *   *        24/08/23
+ *    */
+
+@Profile("autoCommitDisabled")
+public class CbsPropertySourceLocatorForAutoCommitDisabled implements PropertySourceLocator {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CbsPropertySourceLocatorForAutoCommitDisabled.class);
 
     private final CbsProperties cbsProperties;
     private final CbsJsonToPropertyMapConverter cbsJsonToPropertyMapConverter;
     private final CbsClientConfigurationResolver cbsClientConfigurationResolver;
     private final CbsClientFactoryFacade cbsClientFactoryFacade;
-    private final CbsConfiguration cbsConfiguration;
-    
-    public CbsPropertySourceLocator(CbsProperties cbsProperties,
+    private final CbsConfigurationForAutoCommitDisabledMode cbsConfigurationForAutoCommitDisabledMode;
+
+    public CbsPropertySourceLocatorForAutoCommitDisabled(CbsProperties cbsProperties,
             CbsJsonToPropertyMapConverter cbsJsonToPropertyMapConverter,
             CbsClientConfigurationResolver cbsClientConfigurationResolver,
-            CbsClientFactoryFacade cbsClientFactoryFacade, CbsConfiguration cbsConfiguration) {
+            CbsClientFactoryFacade cbsClientFactoryFacade, CbsConfigurationForAutoCommitDisabledMode cbsConfigurationForAutoCommitDisabledMode) {
         
                 this.cbsProperties = cbsProperties;
                 this.cbsJsonToPropertyMapConverter = cbsJsonToPropertyMapConverter;
                 this.cbsClientConfigurationResolver = cbsClientConfigurationResolver;
                 this.cbsClientFactoryFacade = cbsClientFactoryFacade;
-                this.cbsConfiguration = cbsConfiguration;
+                this.cbsConfigurationForAutoCommitDisabledMode = cbsConfigurationForAutoCommitDisabledMode;
+
     }
 
     @Override
@@ -69,7 +74,8 @@ public class CbsPropertySourceLocator implements PropertySourceLocator {
                         .backoff(cbsProperties.getFetchRetries().getMaxAttempts(),
                                 cbsProperties.getFetchRetries().getFirstBackoff())
                         .maxBackoff(cbsProperties.getFetchRetries().getMaxBackoff()))
-                .doOnNext(this::updateCbsConfig).map(cbsJsonToPropertyMapConverter::convertToMap).block();
+                .doOnNext(this::updateCbsConfig)
+                .map(cbsJsonToPropertyMapConverter::convertToMap).block();
 
         return new MapPropertySource("cbs", properties);
     }
@@ -77,7 +83,7 @@ public class CbsPropertySourceLocator implements PropertySourceLocator {
     private void updateCbsConfig(JsonObject jsonObject) {
         try {
             LOGGER.info("Updating CBS configuration");
-            cbsConfiguration.parseCBSConfig(jsonObject);
+            cbsConfigurationForAutoCommitDisabledMode.parseCBSConfig(jsonObject);
 
         } catch (Exception e) {
             LOGGER.error("Failed parsing configuration", e);

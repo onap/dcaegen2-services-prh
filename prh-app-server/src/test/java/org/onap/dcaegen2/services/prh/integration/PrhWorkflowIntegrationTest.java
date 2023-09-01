@@ -39,6 +39,7 @@ import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
@@ -52,22 +53,15 @@ import static com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.github.tomakehurst.wiremock.client.WireMock.patch;
-
-
-
-
-
-
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
-
 import static java.lang.ClassLoader.getSystemResource;
 import static java.util.Collections.singletonList;
 
 
 @SpringBootTest
 @AutoConfigureWireMock(port = 0)
+@ActiveProfiles(value = "prod")
 class PrhWorkflowIntegrationTest {
 
     @Autowired
@@ -95,6 +89,8 @@ class PrhWorkflowIntegrationTest {
             cbsConfiguration.parseCBSConfig(cbsConfigJson);
             return cbsConfiguration;
         }
+        
+
     }
 
     @BeforeEach

@@ -3,6 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2019 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,32 +36,12 @@ public class CbsProperties {
     private Duration updatesInterval;
     @NestedConfigurationProperty
     private RetryProperties fetchRetries = new RetryProperties();
-    private String  hostname;
-    private Integer port;
     private String appName;
 
     CbsClientConfiguration toCbsClientConfiguration() {
         return ImmutableCbsClientConfiguration.builder()
-                .hostname(hostname)
-                .port(port)
                 .appName(appName)
                 .build();
-    }
-
-    public String getHostname() {
-        return hostname;
-    }
-
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
-    }
-
-    public Integer getPort() {
-        return port;
-    }
-
-    public void setPort(Integer port) {
-        this.port = port;
     }
 
     public String getAppName() {

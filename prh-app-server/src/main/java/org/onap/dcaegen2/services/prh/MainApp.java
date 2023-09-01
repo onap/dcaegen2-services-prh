@@ -22,7 +22,6 @@ package org.onap.dcaegen2.services.prh;
 
 import java.util.Map;
 import java.util.UUID;
-
 import org.slf4j.MDC;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -32,19 +31,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
-
 import static org.onap.dcaegen2.services.sdk.rest.services.model.logging.MdcVariables.INVOCATION_ID;
 
 /**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on
+ *         3/23/18
  */
-@SpringBootApplication(exclude = {JacksonAutoConfiguration.class})
+@SpringBootApplication(exclude = { JacksonAutoConfiguration.class })
 @EnableScheduling
 @EnableConfigurationProperties
 public class MainApp {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainApp.class);
+    
     public static void main(String[] args) {
+       
         SpringApplication.run(MainApp.class, args);
+
     }
 
     @Bean

@@ -2,7 +2,6 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * Copyright (C) 2023 Deutsche Telekom Intellectual Property.All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +22,7 @@ package org.onap.dcaegen2.services.prh.controllers;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.onap.dcaegen2.services.prh.tasks.ScheduledTasksRunner;
+import org.onap.dcaegen2.services.prh.tasks.commit.ScheduledTasksRunnerWithCommit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,36 +35,37 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 /**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on
- *         4/5/18
- */
+ *  * @author <a href="mailto:PRANIT.KAPDULE@t-systems.com">Pranit Kapdule</a> on
+ *   *        24/08/23
+ *    */
 @RestController
 @Api(value = "ScheduleController")
-@Profile("!autoCommitDisabled")
-public class ScheduleController {
+@Profile("autoCommitDisabled")
+public class ScheduleControllerForAutoCommitDisabled {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleController.class);
-    private ScheduledTasksRunner scheduledTasksRunner;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleControllerForAutoCommitDisabled.class);
 
-
+    private ScheduledTasksRunnerWithCommit scheduledTasksRunnerWithCommit;
+    
     @Autowired(required = false)
-    public ScheduleController(ScheduledTasksRunner scheduledTasksRunner) {
-        this.scheduledTasksRunner = scheduledTasksRunner;
+    public ScheduleControllerForAutoCommitDisabled(ScheduledTasksRunnerWithCommit scheduledTasksRunnerWithCommit) {
+        this.scheduledTasksRunnerWithCommit = scheduledTasksRunnerWithCommit;
     }
 
     @RequestMapping(value = "start", method = RequestMethod.GET)
     @ApiOperation(value = "Start scheduling worker request")
     public Mono<ResponseEntity<String>> startTasks() {
         LOGGER.trace("Receiving start scheduling worker request with Comit SchedulerController");
-        return Mono.fromSupplier(scheduledTasksRunner::tryToStartTask).map(this::createStartTaskResponse);
+        return Mono.fromSupplier(scheduledTasksRunnerWithCommit::tryToStartTaskWithCommit)
+                .map(this::createStartTaskResponse);
     }
-
+    
     @RequestMapping(value = "stopPrh", method = RequestMethod.GET)
     @ApiOperation(value = "Receiving stop scheduling worker request")
     public Mono<ResponseEntity<String>> stopTask() {
         LOGGER.trace("Receiving stop scheduling worker request");
         return Mono.defer(() -> {
-            scheduledTasksRunner.cancelTasks();
+            scheduledTasksRunnerWithCommit.cancelTasks();
             return Mono.just(new ResponseEntity<>("PRH Service has been stopped!", HttpStatus.OK));
         });
     }

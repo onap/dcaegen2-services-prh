@@ -24,13 +24,8 @@ package org.onap.dcaegen2.services.prh.tasks;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
-
 import javax.annotation.PreDestroy;
 import org.onap.dcaegen2.services.prh.configuration.PrhProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Marker;
-import org.slf4j.MarkerFactory;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -38,31 +33,26 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 6/13/18
  */
+
 @Profile("!autoCommitDisabled")
 @Configuration
 @EnableScheduling
 public class ScheduledTasksRunner {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledTasksRunner.class);
-    private static final Marker ENTRY = MarkerFactory.getMarker("ENTRY");
-    private static volatile List<ScheduledFuture> scheduledPrhTaskFutureList = new ArrayList<>();
 
+    private static volatile List<ScheduledFuture> scheduledPrhTaskFutureList = new ArrayList<>();
     private final TaskScheduler taskScheduler;
     private final ScheduledTasks scheduledTask;
     private final PrhProperties prhProperties;
-
     public ScheduledTasksRunner(TaskScheduler taskScheduler, ScheduledTasks scheduledTask,
         PrhProperties prhProperties) {
         this.taskScheduler = taskScheduler;
         this.scheduledTask = scheduledTask;
         this.prhProperties = prhProperties;
     }
-
-     String profile = System.getenv("SPRING_PROFILES_ACTIVE");
-
+    
     @EventListener
     public void onApplicationStartedEvent(ApplicationStartedEvent applicationStartedEvent) {
             tryToStartTask();
@@ -83,7 +73,6 @@ public class ScheduledTasksRunner {
      * @return status of operation execution: true - started, false - not started
      */
     public synchronized boolean tryToStartTask() {
-        LOGGER.info(ENTRY, "Start scheduling PRH workflow");
         if (scheduledPrhTaskFutureList.isEmpty()) {
             scheduledPrhTaskFutureList.add(taskScheduler
                 .scheduleWithFixedDelay(scheduledTask::scheduleMainPrhEventTask,
@@ -94,4 +83,3 @@ public class ScheduledTasksRunner {
         }
     }
 }
-

@@ -29,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -52,7 +51,6 @@ public class ScheduledTasksRunnerWithCommit {
     private final TaskScheduler taskScheduler;
     private final PrhProperties prhProperties;
 
-    @Autowired
     private ScheduledTasksWithCommit scheduledTasksWithCommit;
 
     public ScheduledTasksRunnerWithCommit(TaskScheduler taskScheduler, ScheduledTasksWithCommit scheduledTasksWithCommit,
@@ -64,7 +62,8 @@ public class ScheduledTasksRunnerWithCommit {
 
     @EventListener
     public void onApplicationStartedEvent(ApplicationStartedEvent applicationStartedEvent) {
-        tryToStartTaskWithCommit();
+        LOGGER.info(ENTRY,"### in onApplicationStartedEvent");
+        LOGGER.info(ENTRY,"###tryToStartTaskWithCommit="+tryToStartTaskWithCommit());
     }
 
     /**
@@ -72,6 +71,7 @@ public class ScheduledTasksRunnerWithCommit {
      */
     @PreDestroy
     public synchronized void cancelTasks() {
+        LOGGER.info(ENTRY,"###In cancelTasks");
         scheduledPrhTaskFutureList.forEach(x -> x.cancel(false));
         scheduledPrhTaskFutureList.clear();
     }
@@ -96,4 +96,3 @@ public class ScheduledTasksRunnerWithCommit {
     }
 
 }
-

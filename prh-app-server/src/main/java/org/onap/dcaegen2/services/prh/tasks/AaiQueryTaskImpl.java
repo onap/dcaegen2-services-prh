@@ -79,8 +79,6 @@ public class AaiQueryTaskImpl implements AaiQueryTask {
         return getPnfModelClient
                 .getAaiResponse(model)
                 .flatMap(aaiModel -> Mono.just(model));
-
-                    
     }
      
 

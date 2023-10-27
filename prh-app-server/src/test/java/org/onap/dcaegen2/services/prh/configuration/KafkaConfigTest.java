@@ -57,7 +57,9 @@ public class KafkaConfigTest {
 
     @Test
     void beforecbsConfigurationForAutoCommitDisabledMode() throws Exception {
-        withEnvironmentVariable("JAAS_CONFIG", "jaas_config").execute(() -> {
+        withEnvironmentVariable("JAAS_CONFIG", "jaas_config")
+        .and("BOOTSTRAP_SERVERS", "localhost:9092")
+        .execute(() -> {
             this.consumerFactoryTest();
         });
     }
@@ -120,7 +122,9 @@ public class KafkaConfigTest {
 
     @Test
     void beforeKafkaListenerContainerFactoryTest() throws Exception {
-        withEnvironmentVariable("JAAS_CONFIG", "jaas_config").execute(() -> {
+        withEnvironmentVariable("JAAS_CONFIG", "jaas_config")
+        .and("BOOTSTRAP_SERVERS", "localhost:9092")
+        .execute(() -> {
             this.kafkaListenerContainerFactoryTest();
         });
     }

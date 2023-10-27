@@ -78,7 +78,9 @@ public class KafkaConsumerTaskImplTest {
 
     @Test
     void beforeOnMessageTest() throws Exception {
-        withEnvironmentVariable("JAAS_CONFIG", "jaas_config").execute(() -> {
+        withEnvironmentVariable("JAAS_CONFIG", "jaas_config")
+        .and("BOOTSTRAP_SERVERS", "localhost:9092")
+        .execute(() -> {
             cbsConfigurationForAutoCommitDisabled.parseCBSConfig(cbsConfigJsonForAutoCommitDisabled);
             kafkaConsumerTask = new KafkaConsumerTaskImpl(cbsConfigurationForAutoCommitDisabled,
                     dmaapConsumerJsonParser, epochDateTimeConversion);
@@ -100,7 +102,9 @@ public class KafkaConsumerTaskImplTest {
 
     @Test
     void beforeCommitOffsetTest() throws Exception {
-        withEnvironmentVariable("JAAS_CONFIG", "jaas_config").execute(() -> {
+        withEnvironmentVariable("JAAS_CONFIG", "jaas_config")
+        .and("BOOTSTRAP_SERVERS", "localhost:9092")
+        .execute(() -> {
             cbsConfigurationForAutoCommitDisabled.parseCBSConfig(cbsConfigJsonForAutoCommitDisabled);
             kafkaConsumerTask = new KafkaConsumerTaskImpl(cbsConfigurationForAutoCommitDisabled,
                     dmaapConsumerJsonParser, epochDateTimeConversion);
@@ -110,7 +114,9 @@ public class KafkaConsumerTaskImplTest {
 
     @Test
     void beforeExecuteTest() throws Exception {
-        withEnvironmentVariable("JAAS_CONFIG", "jaas_config").execute(() -> {
+        withEnvironmentVariable("JAAS_CONFIG", "jaas_config")
+        .and("BOOTSTRAP_SERVERS", "localhost:9092")
+        .execute(() -> {
             cbsConfigurationForAutoCommitDisabled.parseCBSConfig(cbsConfigJsonForAutoCommitDisabled);
             kafkaConsumerTask = new KafkaConsumerTaskImpl(cbsConfigurationForAutoCommitDisabled,
                     dmaapConsumerJsonParser, epochDateTimeConversion);

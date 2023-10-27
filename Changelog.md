@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.10.1] - 2023/10/27
+### Changed
+- [DCAEGEN2-3402] Remove DMaaP dependency in PRH
+
 ## [1.10.0] - 2023/09/01
 ### Changed
 - [DCAEGEN2-3365] Code changed so that the autoCommitDisabled mode of PRH use CBSContentParser for environment variables.

@@ -26,6 +26,8 @@ import com.google.gson.JsonObject;
 import org.junit.jupiter.api.Test;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
+import static com.github.stefanbirkner.systemlambda.SystemLambda.withEnvironmentVariable;
 import static java.lang.ClassLoader.getSystemResource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -52,19 +54,25 @@ class CbsConfigurationTest {
 
     @Test
     void cbsConfigurationShouldExposeDataReceivedAsJsonFromCbs() throws Exception {
-        JsonObject cbsConfigJson = new Gson().fromJson(
-                new String(Files.readAllBytes(Paths.get(getSystemResource("configurationFromCbs.json").toURI()))),
-                JsonObject.class);
-        CbsConfiguration cbsConfiguration = new CbsConfiguration();
+        
+        withEnvironmentVariable("JAAS_CONFIG", "jaas_config")
+        .and("BOOTSTRAP_SERVERS", "localhost:9092")
+        .execute(() -> {
+            JsonObject cbsConfigJson = new Gson().fromJson(
+                    new String(Files.readAllBytes(Paths.get(getSystemResource("configurationFromCbs.json").toURI()))),
+                    JsonObject.class);
+            CbsConfiguration cbsConfiguration = new CbsConfiguration();
 
-        cbsConfiguration.parseCBSConfig(cbsConfigJson);
+            cbsConfiguration.parseCBSConfig(cbsConfigJson);
 
-        assertThat(cbsConfiguration.getAaiClientConfiguration()).isNotNull();
-        assertThat(cbsConfiguration.getMessageRouterPublisher()).isNotNull();
-        assertThat(cbsConfiguration.getMessageRouterSubscriber()).isNotNull();
-        assertThat(cbsConfiguration.getMessageRouterPublishRequest()).isNotNull();
-        assertThat(cbsConfiguration.getMessageRouterSubscribeRequest()).isNotNull();
-        assertThat(cbsConfiguration.getMessageRouterUpdatePublishRequest()).isNotNull();
+            assertThat(cbsConfiguration.getAaiClientConfiguration()).isNotNull();
+            assertThat(cbsConfiguration.getMessageRouterPublisher()).isNotNull();
+            assertThat(cbsConfiguration.getMessageRouterSubscriber()).isNotNull();
+            assertThat(cbsConfiguration.getMessageRouterPublishRequest()).isNotNull();
+            assertThat(cbsConfiguration.getMessageRouterSubscribeRequest()).isNotNull();
+            assertThat(cbsConfiguration.getMessageRouterUpdatePublishRequest()).isNotNull();
+        });
+       
 
     }
 

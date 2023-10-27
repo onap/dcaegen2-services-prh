@@ -25,24 +25,35 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.jayway.jsonpath.JsonPath;
+
+import io.vavr.collection.List;
 import reactor.core.publisher.Flux;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.onap.dcaegen2.services.prh.MainApp;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.adapter.kafka.ImmutableKafkaConfiguration;
 import org.onap.dcaegen2.services.prh.adapter.kafka.KafkaConfiguration;
+import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.CbsConfigurationForAutoCommitDisabledMode;
 import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
 import org.onap.dcaegen2.services.prh.tasks.commit.KafkaConsumerTaskImpl;
 import org.onap.dcaegen2.services.prh.tasks.commit.ScheduledTasksRunnerWithCommit;
 import org.onap.dcaegen2.services.prh.tasks.commit.ScheduledTasksWithCommit;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterPublisher;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterPublishResponse;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishResponse;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -65,6 +76,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import static java.lang.ClassLoader.getSystemResource;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -91,6 +105,12 @@ class PrhWorkflowIntegrationForAutoCommitDisabledTest {
 
     @Autowired
     private DmaapConsumerJsonParser dmaapConsumerJsonParser;
+    
+    @SpyBean
+    CbsConfiguration cbsConfiguration;
+    
+    @Mock
+    MessageRouterPublisher publisher;
 
     @Configuration
     @Import(MainApp.class)
@@ -112,7 +132,12 @@ class PrhWorkflowIntegrationForAutoCommitDisabledTest {
             CbsConfigurationForAutoCommitDisabledMode cbsConfigurationForAutoCommitDisabledMode = new CbsConfigurationForAutoCommitDisabledMode();
 
             try {
-                cbsConfigurationForAutoCommitDisabledMode.parseCBSConfig(cbsConfigJson);
+                withEnvironmentVariable("JAAS_CONFIG", "jaas_config")
+                .and("BOOTSTRAP_SERVERS", "localhost:9092")
+                .execute(() -> {
+                    cbsConfigurationForAutoCommitDisabledMode.parseCBSConfig(cbsConfigJson);
+                });
+                
             } catch (Exception e) {
                //Exception is expected as environment variable for JAAS_CONFIG is not available
                 if (e.getMessage() == "kafkaJaasConfig") {
@@ -136,7 +161,8 @@ class PrhWorkflowIntegrationForAutoCommitDisabledTest {
 
     @Test
     void beforeCbsConfigurationForAutoCommitDisabledMode() throws Exception {
-        withEnvironmentVariable("JAAS_CONFIG", "jaas_config").execute(() -> {
+        withEnvironmentVariable("JAAS_CONFIG", "jaas_config")
+        .execute(() -> {
             this.whenThereAreNoEventsInDmaap_WorkflowShouldFinish();
         });
     }
@@ -153,7 +179,8 @@ class PrhWorkflowIntegrationForAutoCommitDisabledTest {
 
     @Test
     void beforeWhenThereIsAnEventsInDmaap_ShouldSendPnfReadyNotification() throws Exception {
-        withEnvironmentVariable("JAAS_CONFIG", "jaas_config").execute(() -> {
+        withEnvironmentVariable("JAAS_CONFIG", "jaas_config")
+        .execute(() -> {
             this.whenThereIsAnEventsInDmaap_ShouldSendPnfReadyNotification();
         });
     }
@@ -175,11 +202,16 @@ class PrhWorkflowIntegrationForAutoCommitDisabledTest {
         stubFor(post(urlEqualTo("/events/unauthenticated.PNF_READY")));
 
         when(kafkaConsumerTaskImpl.execute()).thenReturn(fluxList);
-
+        
+        List<String> expectedItems = List.of(event);
+        Flux<MessageRouterPublishResponse> pubresp = Flux.just(ImmutableMessageRouterPublishResponse
+                .builder()
+                .items(expectedItems.map(JsonPrimitive::new))
+                .build());
+        when(cbsConfiguration.getMessageRouterPublisher()).thenReturn(publisher);
+        when(publisher.put(any(MessageRouterPublishRequest.class),any())).thenReturn(pubresp);
         scheduledTasksWithCommit.scheduleKafkaPrhEventTask();
-
-        verify(1, postRequestedFor(urlEqualTo("/events/unauthenticated.PNF_READY"))
-                .withRequestBody(matchingJsonPath("$[0].correlationId", equalTo(pnfName))));
+        verify(publisher,times(1)).put(any(MessageRouterPublishRequest.class),any());
 
     }
 

@@ -58,7 +58,14 @@ public class CbsConfiguration implements Config {
 
         messageRouterSubscriber = DmaapClientFactory
                 .createMessageRouterSubscriber(consulConfigurationParser.getMessageRouterSubscriberConfig());
+        String prevTopicUrl = null;
+        if(messageRouterCBSSubscribeRequest != null) {
+            prevTopicUrl = messageRouterCBSSubscribeRequest.sourceDefinition().topicUrl();
+        }
         messageRouterCBSSubscribeRequest = consulConfigurationParser.getMessageRouterSubscribeRequest();
+        if(!messageRouterCBSSubscribeRequest.sourceDefinition().topicUrl().equals(prevTopicUrl)) {
+            messageRouterSubscriber.close();
+        }
      }
 
     @Override
@@ -95,5 +102,4 @@ public class CbsConfiguration implements Config {
                 .orElseThrow(() -> new RuntimeException(CBS_CONFIG_MISSING));
     }
     
-
 }

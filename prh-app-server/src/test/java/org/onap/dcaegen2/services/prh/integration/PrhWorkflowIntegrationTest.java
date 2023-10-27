@@ -24,23 +24,40 @@ package org.onap.dcaegen2.services.prh.integration;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.jayway.jsonpath.JsonPath;
+
+import io.vavr.collection.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.onap.dcaegen2.services.prh.MainApp;
 import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasksRunner;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterPublisher;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterSubscriber;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterPublishResponse;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterSubscribeResponse;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishResponse;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeRequest;
+import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.stefanbirkner.systemlambda.SystemLambda.withEnvironmentVariable;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
@@ -57,6 +74,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import static java.lang.ClassLoader.getSystemResource;
 import static java.util.Collections.singletonList;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 @SpringBootTest
@@ -66,27 +87,40 @@ class PrhWorkflowIntegrationTest {
 
     @Autowired
     private ScheduledTasks scheduledTasks;
-
+    
+    @SpyBean
+    CbsConfiguration cbsConfiguration;
+    
     @MockBean
     private ScheduledTasksRunner scheduledTasksRunner;  // just to disable scheduling - some configurability in ScheduledTaskRunner not to start tasks at app startup would be welcome
-
-
+    
+    @Mock
+    MessageRouterSubscriber subscriber;
+    
+    @Mock
+    MessageRouterPublisher publisher;
+    
     @Configuration
     @Import(MainApp.class)
     static class CbsConfigTestConfig {
 
         @Value("http://localhost:${wiremock.server.port}")
         private String wiremockServerAddress;
-
+                
         @Bean
-        public CbsConfiguration cbsConfiguration() {
+        public CbsConfiguration cbsConfiguration() throws Exception {
             JsonObject cbsConfigJson = new Gson().fromJson(getResourceContent("configurationFromCbs.json")
                             .replaceAll("https?://dmaap-mr[\\w.]*:\\d+", wiremockServerAddress)
                             .replaceAll("https?://aai[\\w.]*:\\d+", wiremockServerAddress),
                     JsonObject.class);
-
+            
             CbsConfiguration cbsConfiguration = new CbsConfiguration();
-            cbsConfiguration.parseCBSConfig(cbsConfigJson);
+            withEnvironmentVariable("JAAS_CONFIG", "jaas_config")
+            .and("BOOTSTRAP_SERVERS", "localhost:9092")
+            .execute(() -> {
+                cbsConfiguration.parseCBSConfig(cbsConfigJson);
+            });
+            
             return cbsConfiguration;
         }
         
@@ -100,7 +134,7 @@ class PrhWorkflowIntegrationTest {
 
 
     @Test
-    void whenThereAreNoEventsInDmaap_WorkflowShouldFinish() {
+    void whenThereAreNoEventsInDmaap_WorkflowShouldFinish() {    
         stubFor(get(urlEqualTo("/events/unauthenticated.VES_PNFREG_OUTPUT/OpenDCAE-c12/c12"))
                 .willReturn(aResponse().withBody("[]")));
 
@@ -115,17 +149,27 @@ class PrhWorkflowIntegrationTest {
     void whenThereIsAnEventsInDmaap_ShouldSendPnfReadyNotification() {
         String event = getResourceContent("integration/event.json");
         String pnfName = JsonPath.read(event, "$.event.commonEventHeader.sourceName");
-
-        stubFor(get(urlEqualTo("/events/unauthenticated.VES_PNFREG_OUTPUT/OpenDCAE-c12/c12"))
-                .willReturn(ok().withBody(new Gson().toJson(singletonList(event)))));
         stubFor(get(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)).willReturn(ok().withBody("{}")));
         stubFor(patch(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)));
-        stubFor(post(urlEqualTo("/events/unauthenticated.PNF_READY")));
-
+        
+        List<String> expectedItems = List.of(event);
+        Mono<MessageRouterSubscribeResponse> resp = Mono.just(ImmutableMessageRouterSubscribeResponse
+                .builder()
+                .items(expectedItems.map(JsonPrimitive::new))
+                .build());
+        Flux<MessageRouterPublishResponse> pubresp = Flux.just(ImmutableMessageRouterPublishResponse
+                .builder()
+                .items(expectedItems.map(JsonPrimitive::new))
+                .build());
+        
+        when(cbsConfiguration.getMessageRouterSubscriber()).thenReturn(subscriber);
+        when(cbsConfiguration.getMessageRouterPublisher()).thenReturn(publisher);
+        when(subscriber.get(any(MessageRouterSubscribeRequest.class))).thenReturn(resp);
+        when(publisher.put(any(MessageRouterPublishRequest.class),any())).thenReturn(pubresp);
+        
         scheduledTasks.scheduleMainPrhEventTask();
-
-        verify(1, postRequestedFor(urlEqualTo("/events/unauthenticated.PNF_READY"))
-                .withRequestBody(matchingJsonPath("$[0].correlationId", equalTo(pnfName))));
+        verify(subscriber,times(1)).get(any(MessageRouterSubscribeRequest.class));
+        verify(publisher,times(1)).put(any(MessageRouterPublishRequest.class),any());
     }
 
 

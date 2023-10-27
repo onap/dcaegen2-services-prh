@@ -65,6 +65,7 @@ public class ScheduleController {
     public Mono<ResponseEntity<String>> stopTask() {
         LOGGER.trace("Receiving stop scheduling worker request");
         return Mono.defer(() -> {
+            scheduledTasksRunner.closeKafkaPublisherSubscriber();
             scheduledTasksRunner.cancelTasks();
             return Mono.just(new ResponseEntity<>("PRH Service has been stopped!", HttpStatus.OK));
         });

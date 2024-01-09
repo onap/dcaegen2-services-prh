@@ -16,6 +16,23 @@
       "message": "I don\u0027t see anything obviously wrong. Good job.",
       "revId": "62841e53e41fd8e12b75641806f76c11878260ee",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "35c59126_e302e3c3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 8243
+      },
+      "writtenOn": "2024-01-09T07:27:45Z",
+      "side": 1,
+      "message": "stage-release",
+      "revId": "62841e53e41fd8e12b75641806f76c11878260ee",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ],
   "submitRequirementResults": [

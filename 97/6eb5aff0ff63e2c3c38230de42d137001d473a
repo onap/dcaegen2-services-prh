@@ -1,0 +1,8 @@
+Verified+1: ONAP Required GHA <releng+onap.required.gha@linuxfoundation.org>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Tony Hansen <tony@att.com>
+Submitted-by: Tony Hansen <tony@att.com>
+Submitted-at: Thu, 11 Jan 2024 17:01:39 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/dcaegen2/services/prh/+/136877
+Project: dcaegen2/services/prh
+Branch: refs/heads/master

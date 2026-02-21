@@ -60,7 +60,7 @@ public class TestAppConfiguration {
                 .aaiUserName("AAI")
                 .aaiUserPassword("AAI")
                 .aaiIgnoreSslCertificateErrors(true)
-                .aaiServiceInstancePath("/business/customers/customer/${customer}/service-subscriptions/service-subscription/${serviceType}/service-instances/service-instance/${serviceInstanceId}")
+                .aaiServiceInstancePath("/business/customers/customer/{{customer}}/service-subscriptions/service-subscription/{{serviceType}}/service-instances/service-instance/{{serviceInstanceId}}")
                 .trustStorePath("/opt/app/prh/local/org.onap.prh.trust.jks")
                 .trustStorePasswordPath("change_it")
                 .keyStorePath("/opt/app/prh/local/org.onap.prh.p12")

@@ -15,7 +15,7 @@
     "aai.aaiClientConfiguration.aaiUserName":"AAI",
     "aai.aaiClientConfiguration.aaiUserPassword":"AAI",
     "aai.aaiClientConfiguration.aaiIgnoreSslCertificateErrors":true,
-    "aai.aaiClientConfiguration.aaiServiceInstancePath":"/business/customers/customer/${customer}/service-subscriptions/service-subscription/${serviceType}/service-instances/service-instance/${serviceInstanceId}",
+    "aai.aaiClientConfiguration.aaiServiceInstancePath":"/business/customers/customer/{{customer}}/service-subscriptions/service-subscription/{{serviceType}}/service-instances/service-instance/{{serviceInstanceId}}",
     "aai.aaiClientConfiguration.aaiHeaders":{
       "X-FromAppId":"prh",
       "X-TransactionId":"9999",

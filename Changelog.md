@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [1.11.0] - 2026/01/01
 ### Added
+- [DCAEGEN2-3421] Add opentelemetry tracing via java agent
 - [DCAEGEN2-3422] End-to-end integration tests for external service communication (AAI, BBS, DMaaP)
 
 ## [1.10.1] - 2023/10/27

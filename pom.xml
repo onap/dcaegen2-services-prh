@@ -65,6 +65,7 @@
             ${project.reporting.outputDirectory}/jacoco-ut/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
         <springdoc-openapi-ui.version>1.6.9</springdoc-openapi-ui.version>
+        <opentelemetry.agent.version>2.25.0</opentelemetry.agent.version>
     </properties>
 
     <modules>

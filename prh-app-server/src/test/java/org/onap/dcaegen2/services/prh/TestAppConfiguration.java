@@ -3,6 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018-2021 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +61,7 @@ public class TestAppConfiguration {
                 .aaiUserName("AAI")
                 .aaiUserPassword("AAI")
                 .aaiIgnoreSslCertificateErrors(true)
-                .aaiServiceInstancePath("/business/customers/customer/${customer}/service-subscriptions/service-subscription/${serviceType}/service-instances/service-instance/${serviceInstanceId}")
+                .aaiServiceInstancePath("/business/customers/customer/{{customer}}/service-subscriptions/service-subscription/{{serviceType}}/service-instances/service-instance/{{serviceInstanceId}}")
                 .trustStorePath("/opt/app/prh/local/org.onap.prh.trust.jks")
                 .trustStorePasswordPath("change_it")
                 .keyStorePath("/opt/app/prh/local/org.onap.prh.p12")

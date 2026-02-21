@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.11.0] - 2026/01/01
+### Added
+- End-to-end integration tests for external service communication (AAI, BBS, DMaaP)
+
 ## [1.10.1] - 2023/10/27
 ### Changed
 - [DCAEGEN2-3402] Remove DMaaP dependency in PRH
@@ -15,7 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [1.9.0] - 2023/01/13
 ### Changed
 - [DCAEGEN2-3312] Code additions to handle (optionally) early PNF registrations. This is enabled if the deployment Helm contains an environment variable: name: SPRING_PROFILES_ACTIVE
-          value: autoCommitDisabled. 
+          value: autoCommitDisabled.
   If this is set with the value of "autoCommitDisabled", then other required environment variables are:
        - name: kafkaBoostrapServerConfig
           value: onap-strimzi-kafka-bootstrap:9092
@@ -72,4 +76,3 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [1.5.5] - 2021/02/10
 ### Changed
 - [DCAEGEN2-2537](https://jira.onap.org/browse/DCAEGEN2-2537) - Upgrade Spring Web from 5.2.12 to 5.3.3
-

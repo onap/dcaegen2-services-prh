@@ -14,6 +14,8 @@ management.endpoints.web.exposure.include: "loggers,refresh,env,health"
 
 prh:
   workflow-scheduling-interval: 10s
+  pnf-ready-topic: unauthenticated.PNF_READY
+  pnf-update-topic: unauthenticated.PNF_UPDATE
 
 ---
 spring:
@@ -29,9 +31,3 @@ management.endpoints.web.exposure.include: "*"
 spring:
   profiles:
     default: prod
-
-
-
-
-
-

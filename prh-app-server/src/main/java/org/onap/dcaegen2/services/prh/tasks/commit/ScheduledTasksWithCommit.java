@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
+ * Copyright (C) 2023-2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,20 +24,18 @@ import static org.onap.dcaegen2.services.sdk.rest.services.model.logging.MdcVari
 
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import org.onap.dcaegen2.services.prh.configuration.CbsConfigurationForAutoCommitDisabledMode;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.tasks.AaiProducerTask;
 import org.onap.dcaegen2.services.prh.tasks.AaiQueryTask;
 import org.onap.dcaegen2.services.prh.tasks.BbsActionsTask;
-import org.onap.dcaegen2.services.prh.tasks.DmaapPublisherTask;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishResponse;
 import org.onap.dcaegen2.services.sdk.rest.services.model.logging.MdcVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
@@ -56,8 +54,8 @@ public class ScheduledTasksWithCommit {
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledTasksWithCommit.class);
     private static Boolean pnfFound = true;
     private KafkaConsumerTask kafkaConsumerTask;
-    private DmaapPublisherTask dmaapReadyProducerTask;
-    private DmaapPublisherTask dmaapUpdateProducerTask;
+    private KafkaPublisherTask kafkaPublisherTask;
+    private CbsConfigurationForAutoCommitDisabledMode cbsConfig;
     public AaiQueryTask aaiQueryTask;
     private AaiProducerTask aaiProducerTask;
     private BbsActionsTask bbsActionsTask;
@@ -66,21 +64,24 @@ public class ScheduledTasksWithCommit {
     /**
      * Constructor for tasks registration in PRHWorkflow.
      *
-     * @param kafkaConsumerTask        - fist task
-     * @param dmaapReadyPublisherTask  - third task
-     * @param dmaapUpdatePublisherTask - fourth task
-     * @param aaiPublisherTask         - second task
+     * @param kafkaConsumerTask   - kafka consumer task
+     * @param kafkaPublisherTask  - kafka publisher task (direct Kafka publishing)
+     * @param cbsConfig           - CBS config providing topic names
+     * @param aaiQueryTask        - AAI query task
+     * @param aaiPublisherTask    - AAI producer task
+     * @param bbsActionsTask      - BBS actions task
+     * @param mdcContextMap       - MDC context map
      */
     @Autowired
     public ScheduledTasksWithCommit(final KafkaConsumerTask kafkaConsumerTask,
-            @Qualifier("ReadyPublisherTask") final DmaapPublisherTask dmaapReadyPublisherTask,
-            @Qualifier("UpdatePublisherTask") final DmaapPublisherTask dmaapUpdatePublisherTask,
+            final KafkaPublisherTask kafkaPublisherTask,
+            final CbsConfigurationForAutoCommitDisabledMode cbsConfig,
             final AaiQueryTask aaiQueryTask, final AaiProducerTask aaiPublisherTask,
             final BbsActionsTask bbsActionsTask, final Map<String, String> mdcContextMap)
 
     {
-        this.dmaapReadyProducerTask = dmaapReadyPublisherTask;
-        this.dmaapUpdateProducerTask = dmaapUpdatePublisherTask;
+        this.kafkaPublisherTask = kafkaPublisherTask;
+        this.cbsConfig = cbsConfig;
         this.kafkaConsumerTask = kafkaConsumerTask;
         this.aaiQueryTask = aaiQueryTask;
         this.aaiProducerTask = aaiPublisherTask;
@@ -114,12 +115,13 @@ public class ScheduledTasksWithCommit {
             )
             .flatMap(this::queryAaiForConfiguration)
             .flatMap(this::publishToAaiConfiguration)
-                    .flatMap(this::processAdditionalFields).flatMap(this::publishToDmaapConfiguration)
-                   
+                    .flatMap(this::processAdditionalFields)
+                    .doOnNext(this::publishToKafka)
+
                     .onErrorResume(e -> Mono.empty())
 
                     .doOnTerminate(mainCountDownLatch::countDown)
-                    .subscribe(this::onSuccess, this::onError, this::onCompleteKafka);
+                    .subscribe(state -> onSuccess(state), this::onError, this::onCompleteKafka);
             mainCountDownLatch.await();
         } catch (InterruptedException | JSONException e) {
             LOGGER.warn("Interruption problem on countDownLatch {}", e);
@@ -142,13 +144,11 @@ public class ScheduledTasksWithCommit {
         }
     }
 
-    private void onSuccess(MessageRouterPublishResponse response) {
-        if (response.successful()) {
-            String statusCodeOk = HttpStatus.OK.name();
-            MDC.put(RESPONSE_CODE, statusCodeOk);
-            LOGGER.info("Prh consumed tasks successfully. HTTP Response code from DMaaPProducer {}", statusCodeOk);
-            MDC.remove(RESPONSE_CODE);
-        }
+    private void onSuccess(State state) {
+        String statusCodeOk = HttpStatus.OK.name();
+        MDC.put(RESPONSE_CODE, statusCodeOk);
+        LOGGER.info("Prh consumed tasks successfully for PNF '{}'", state.dmaapModel.getCorrelationId());
+        MDC.remove(RESPONSE_CODE);
     }
 
     private void onError(Throwable throwable) {
@@ -188,16 +188,18 @@ public class ScheduledTasksWithCommit {
         return bbsActionsTask.execute(state.dmaapModel).map(x -> state);
     }
 
-    private Flux<MessageRouterPublishResponse> publishToDmaapConfiguration(final State state) {
+    private void publishToKafka(final State state) {
         try {
+            String topic;
             if (state.activationStatus) {
-                LOGGER.debug("Re-registration - Using PNF_UPDATE DMaaP topic.");
-                return dmaapUpdateProducerTask.execute(state.dmaapModel);
+                LOGGER.debug("Re-registration - Using PNF_UPDATE Kafka topic.");
+                topic = cbsConfig.getPnfUpdateTopic();
+            } else {
+                topic = cbsConfig.getPnfReadyTopic();
             }
-            return dmaapReadyProducerTask.execute(state.dmaapModel);
-        } catch (PrhTaskException e) {
-            LOGGER.warn("DMaaPProducerTask exception has been registered: ", e);
-            return Flux.error(e);
+            kafkaPublisherTask.execute(topic, state.dmaapModel);
+        } catch (Exception e) {
+            LOGGER.warn("KafkaPublisherTask exception has been registered: ", e);
         }
     }
 }

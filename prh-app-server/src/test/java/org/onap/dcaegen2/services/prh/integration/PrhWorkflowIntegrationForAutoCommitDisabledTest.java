@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
+ * Copyright (C) 2023-2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,35 +25,26 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.jayway.jsonpath.JsonPath;
 
-import io.vavr.collection.List;
 import reactor.core.publisher.Flux;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.onap.dcaegen2.services.prh.MainApp;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.adapter.kafka.ImmutableKafkaConfiguration;
 import org.onap.dcaegen2.services.prh.adapter.kafka.KafkaConfiguration;
-import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.CbsConfigurationForAutoCommitDisabledMode;
 import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
 import org.onap.dcaegen2.services.prh.tasks.commit.KafkaConsumerTaskImpl;
+import org.onap.dcaegen2.services.prh.tasks.commit.KafkaPublisherTask;
 import org.onap.dcaegen2.services.prh.tasks.commit.ScheduledTasksRunnerWithCommit;
 import org.onap.dcaegen2.services.prh.tasks.commit.ScheduledTasksWithCommit;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterPublisher;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterPublishResponse;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishResponse;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -61,22 +52,18 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.stefanbirkner.systemlambda.SystemLambda.withEnvironmentVariable;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
-import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.anyRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.github.tomakehurst.wiremock.client.WireMock.patch;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import static java.lang.ClassLoader.getSystemResource;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -95,22 +82,16 @@ class PrhWorkflowIntegrationForAutoCommitDisabledTest {
     private ScheduledTasksWithCommit scheduledTasksWithCommit;
 
     @MockBean
-    private ScheduledTasksRunnerWithCommit scheduledTasksRunnerWithCommit; // just to disable scheduling - some
-                                                                           // configurability in ScheduledTaskRunner not
-                                                                           // to start tasks at app startup would be
-                                                                           // welcome
+    private ScheduledTasksRunnerWithCommit scheduledTasksRunnerWithCommit; // disable auto-scheduling
 
     @MockBean
     private KafkaConsumerTaskImpl kafkaConsumerTaskImpl;
 
+    @MockBean
+    private KafkaPublisherTask kafkaPublisherTask;
+
     @Autowired
     private DmaapConsumerJsonParser dmaapConsumerJsonParser;
-    
-    @SpyBean
-    CbsConfiguration cbsConfiguration;
-    
-    @Mock
-    MessageRouterPublisher publisher;
 
     @Configuration
     @Import(MainApp.class)
@@ -137,7 +118,7 @@ class PrhWorkflowIntegrationForAutoCommitDisabledTest {
                 .execute(() -> {
                     cbsConfigurationForAutoCommitDisabledMode.parseCBSConfig(cbsConfigJson);
                 });
-                
+
             } catch (Exception e) {
                //Exception is expected as environment variable for JAAS_CONFIG is not available
                 if (e.getMessage() == "kafkaJaasConfig") {
@@ -170,11 +151,11 @@ class PrhWorkflowIntegrationForAutoCommitDisabledTest {
     void whenThereAreNoEventsInDmaap_WorkflowShouldFinish() throws JSONException {
 
         when(kafkaConsumerTaskImpl.execute()).thenReturn(Flux.empty());
-       
+
         scheduledTasksWithCommit.scheduleKafkaPrhEventTask();
 
-        verify(0, anyRequestedFor(urlPathMatching("/aai.*")));
-        verify(0, postRequestedFor(urlPathMatching("/events.*")));
+        // No Kafka publish should have occurred
+        verify(kafkaPublisherTask, org.mockito.Mockito.never()).execute(anyString(), any());
     }
 
     @Test
@@ -199,19 +180,13 @@ class PrhWorkflowIntegrationForAutoCommitDisabledTest {
 
         stubFor(get(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)).willReturn(ok().withBody("{}")));
         stubFor(patch(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)));
-        stubFor(post(urlEqualTo("/events/unauthenticated.PNF_READY")));
 
         when(kafkaConsumerTaskImpl.execute()).thenReturn(fluxList);
-        
-        List<String> expectedItems = List.of(event);
-        Flux<MessageRouterPublishResponse> pubresp = Flux.just(ImmutableMessageRouterPublishResponse
-                .builder()
-                .items(expectedItems.map(JsonPrimitive::new))
-                .build());
-        when(cbsConfiguration.getMessageRouterPublisher()).thenReturn(publisher);
-        when(publisher.put(any(MessageRouterPublishRequest.class),any())).thenReturn(pubresp);
+
         scheduledTasksWithCommit.scheduleKafkaPrhEventTask();
-        verify(publisher,times(1)).put(any(MessageRouterPublishRequest.class),any());
+
+        // Verify that Kafka publishing was called (first registration → PNF_READY topic)
+        verify(kafkaPublisherTask, times(1)).execute(eq("unauthenticated.PNF_READY"), any(ConsumerDmaapModel.class));
 
     }
 

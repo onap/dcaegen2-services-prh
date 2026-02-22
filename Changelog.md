@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [1.11.0] - 2026/01/01
 ### Added
 - [DCAEGEN2-3422] End-to-end integration tests for external service communication (AAI, BBS, DMaaP)
+- [DCAEGEN2-3423] Support publishing PNF ready and update events via Kafka
 
 ## [1.10.1] - 2023/10/27
 ### Changed

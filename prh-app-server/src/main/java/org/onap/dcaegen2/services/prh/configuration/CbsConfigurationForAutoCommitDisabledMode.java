@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
+ * Copyright (C) 2023-2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,9 @@ package org.onap.dcaegen2.services.prh.configuration;
 import java.util.Optional;
 import org.onap.dcaegen2.services.prh.adapter.kafka.ImmutableKafkaConfiguration;
 import org.onap.dcaegen2.services.prh.adapter.kafka.KafkaConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -34,11 +37,19 @@ import com.google.gson.JsonObject;
 @Profile("autoCommitDisabled")
 public class CbsConfigurationForAutoCommitDisabledMode extends CbsConfiguration {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CbsConfigurationForAutoCommitDisabledMode.class);
+
     protected KafkaConfiguration kafkaConfiguration;
-    
+
+    @Value("${prh.pnf-ready-topic:unauthenticated.PNF_READY}")
+    protected String pnfReadyTopic = "unauthenticated.PNF_READY";
+
+    @Value("${prh.pnf-update-topic:unauthenticated.PNF_UPDATE}")
+    protected String pnfUpdateTopic = "unauthenticated.PNF_UPDATE";
+
     @Override
     public void parseCBSConfig(JsonObject jsonObject) {
-        
+
         super.parseCBSConfig(jsonObject);
         JsonObject jsonObjectforAutoCommitDisabled = jsonObject.getAsJsonObject("config");
         JsonElement jsonObjectOfKafkaConfigurations = jsonObjectforAutoCommitDisabled.get("kafka-configurations");
@@ -53,8 +64,17 @@ public class CbsConfigurationForAutoCommitDisabledMode extends CbsConfiguration 
                         ((JsonObject) jsonObjectOfKafkaConfigurations).get("kafkaSecurityProtocol").getAsString())
                 .kafkaJaasConfig(System.getenv("JAAS_CONFIG"))
                 .build();
-        
- }
+
+        LOGGER.info("Configured Kafka publish topics - pnfReady: {}, pnfUpdate: {}", pnfReadyTopic, pnfUpdateTopic);
+    }
+
+    public String getPnfReadyTopic() {
+        return pnfReadyTopic;
+    }
+
+    public String getPnfUpdateTopic() {
+        return pnfUpdateTopic;
+    }
 
     public KafkaConfiguration getKafkaConfig() {
         return Optional.ofNullable(kafkaConfiguration).orElseThrow(() -> new RuntimeException(CBS_CONFIG_MISSING));

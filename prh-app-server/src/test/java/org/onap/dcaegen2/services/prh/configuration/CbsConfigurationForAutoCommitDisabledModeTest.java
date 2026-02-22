@@ -106,6 +106,12 @@ public class CbsConfigurationForAutoCommitDisabledModeTest {
         assertThat((cbsConfigurationForAutoCommitDisabled).getMessageRouterSubscribeRequest()).isNotNull();
         assertThat((cbsConfigurationForAutoCommitDisabled).getMessageRouterUpdatePublishRequest()).isNotNull();
 
+        // Topic names should fall back to defaults when not present in CBS config
+        assertEquals("unauthenticated.PNF_READY", cbsConfigurationForAutoCommitDisabled.getPnfReadyTopic(),
+                "Expected default pnfReady topic name");
+        assertEquals("unauthenticated.PNF_UPDATE", cbsConfigurationForAutoCommitDisabled.getPnfUpdateTopic(),
+                "Expected default pnfUpdate topic name");
+
     }
 
 }

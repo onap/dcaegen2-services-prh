@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.prh.configuration.KafkaConfig;
 import org.onap.dcaegen2.services.prh.tasks.commit.KafkaConsumerTaskImpl;
+import org.onap.dcaegen2.services.prh.tasks.commit.KafkaPublisherTask;
 import org.onap.dcaegen2.services.prh.tasks.commit.ScheduledTasksRunnerWithCommit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,6 +33,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
@@ -58,7 +61,16 @@ class ScheduleControllerForAutoCommitDisabledTest {
     
     @MockBean
     private KafkaConsumerTaskImpl kafkaConsumerTaskImpl;
-    
+
+    @MockBean
+    private KafkaPublisherTask kafkaPublisherTask;
+
+    @MockBean
+    private ProducerFactory<String, String> producerFactory;
+
+    @MockBean
+    private KafkaTemplate<String, String> kafkaTemplate;
+
     @Autowired
     private WebTestClient webTestClient;
 

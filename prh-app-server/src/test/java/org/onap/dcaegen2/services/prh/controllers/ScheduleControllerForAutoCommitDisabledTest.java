@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
+ * Copyright (C) 2023-2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.prh.configuration.KafkaConfig;
 import org.onap.dcaegen2.services.prh.tasks.commit.KafkaConsumerTaskImpl;
+import org.onap.dcaegen2.services.prh.tasks.commit.KafkaPublisherTask;
 import org.onap.dcaegen2.services.prh.tasks.commit.ScheduledTasksRunnerWithCommit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,6 +33,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
@@ -46,23 +49,32 @@ class ScheduleControllerForAutoCommitDisabledTest {
 
     @MockBean
     private ScheduledTasksRunnerWithCommit scheduledTasksRunnerWithCommit;
-    
+
     @MockBean
     private KafkaConfig kafkaConfig;
-    
+
     @MockBean
     private ConsumerFactory<String, String> consumerFactory;
-    
+
     @MockBean
     private ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory;
-    
+
     @MockBean
     private KafkaConsumerTaskImpl kafkaConsumerTaskImpl;
-    
+
+    @MockBean
+    private KafkaPublisherTask kafkaPublisherTask;
+
+    @MockBean
+    private ProducerFactory<String, String> producerFactory;
+
+    @MockBean
+    private KafkaTemplate<String, String> kafkaTemplate;
+
     @Autowired
     private WebTestClient webTestClient;
 
-    
+
    @Test
    void startEndpointShouldAllowStartingPrhTasks() {
         when(scheduledTasksRunnerWithCommit.tryToStartTaskWithCommit()).thenReturn(true);

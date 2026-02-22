@@ -28,12 +28,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.client.WireMock.patch;
 import static com.github.tomakehurst.wiremock.client.WireMock.patchRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
-import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.github.tomakehurst.wiremock.client.WireMock.anyRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static java.lang.ClassLoader.getSystemResource;
@@ -41,33 +38,25 @@ import static java.lang.ClassLoader.getSystemResource;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import io.vavr.collection.List;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.onap.dcaegen2.services.prh.MainApp;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.CbsConfigurationForAutoCommitDisabledMode;
 import org.onap.dcaegen2.services.prh.adapter.kafka.ImmutableKafkaConfiguration;
 import org.onap.dcaegen2.services.prh.adapter.kafka.KafkaConfiguration;
 import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
 import org.onap.dcaegen2.services.prh.tasks.commit.KafkaConsumerTaskImpl;
+import org.onap.dcaegen2.services.prh.tasks.commit.KafkaPublisherTask;
 import org.onap.dcaegen2.services.prh.tasks.commit.ScheduledTasksRunnerWithCommit;
 import org.onap.dcaegen2.services.prh.tasks.commit.ScheduledTasksWithCommit;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterPublisher;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterPublishResponse;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -76,6 +65,7 @@ import org.springframework.test.context.ActiveProfiles;
 import reactor.core.publisher.Flux;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -92,7 +82,7 @@ import static org.mockito.Mockito.when;
  * <ul>
  *   <li>A&AI PNF existence check (findPnfinAAI) – extra step in autoCommitDisabled mode</li>
  *   <li>A&AI query, patch, service-instance lookup</li>
- *   <li>DMaaP publish to PNF_READY or PNF_UPDATE</li>
+ *   <li>Kafka publish to PNF_READY or PNF_UPDATE</li>
  *   <li>BBS logical-link operations</li>
  *   <li>Offset commit behaviour</li>
  * </ul>
@@ -114,11 +104,8 @@ class PrhKafkaWorkflowEndToEndIntegrationTest {
     @Autowired
     private DmaapConsumerJsonParser dmaapConsumerJsonParser;
 
-    @SpyBean
-    CbsConfiguration cbsConfiguration;
-
-    @Mock
-    MessageRouterPublisher publisher;
+    @MockBean
+    private KafkaPublisherTask kafkaPublisherTask;
 
     @Configuration
     @Import(MainApp.class)
@@ -176,8 +163,7 @@ class PrhKafkaWorkflowEndToEndIntegrationTest {
 
             com.github.tomakehurst.wiremock.client.WireMock.verify(
                     0, anyRequestedFor(urlPathMatching("/aai.*")));
-            com.github.tomakehurst.wiremock.client.WireMock.verify(
-                    0, postRequestedFor(urlPathMatching("/events.*")));
+            verify(kafkaPublisherTask, times(0)).execute(any(), any(ConsumerDmaapModel.class));
         });
     }
 
@@ -203,20 +189,7 @@ class PrhKafkaWorkflowEndToEndIntegrationTest {
             stubFor(patch(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName))
                     .willReturn(ok()));
 
-            // Stub DMaaP publish
-            stubFor(post(urlEqualTo("/events/unauthenticated.PNF_READY"))
-                    .willReturn(ok().withBody("[1]")));
-
             when(kafkaConsumerTaskImpl.execute()).thenReturn(fluxList);
-
-            // Mock the DMaaP publisher since it's used via SDK
-            List<String> expectedItems = List.of(event);
-            Flux<MessageRouterPublishResponse> pubresp = Flux.just(
-                    ImmutableMessageRouterPublishResponse.builder()
-                            .items(expectedItems.map(JsonPrimitive::new))
-                            .build());
-            when(cbsConfiguration.getMessageRouterPublisher()).thenReturn(publisher);
-            when(publisher.put(any(MessageRouterPublishRequest.class), any())).thenReturn(pubresp);
 
             scheduledTasksWithCommit.scheduleKafkaPrhEventTask();
 
@@ -230,8 +203,8 @@ class PrhKafkaWorkflowEndToEndIntegrationTest {
                             .withHeader("Content-Type", equalTo("application/merge-patch+json"))
                             .withRequestBody(matchingJsonPath("$.correlationId", equalTo(pnfName))));
 
-            // Verify: DMaaP publisher was called (PNF_READY)
-            verify(publisher, times(1)).put(any(MessageRouterPublishRequest.class), any());
+            // Verify: Kafka publisher was called (PNF_READY)
+            verify(kafkaPublisherTask, times(1)).execute(eq("unauthenticated.PNF_READY"), any(ConsumerDmaapModel.class));
         });
     }
 
@@ -275,14 +248,6 @@ class PrhKafkaWorkflowEndToEndIntegrationTest {
 
             when(kafkaConsumerTaskImpl.execute()).thenReturn(fluxList);
 
-            List<String> expectedItems = List.of(event);
-            Flux<MessageRouterPublishResponse> pubresp = Flux.just(
-                    ImmutableMessageRouterPublishResponse.builder()
-                            .items(expectedItems.map(JsonPrimitive::new))
-                            .build());
-            when(cbsConfiguration.getMessageRouterPublisher()).thenReturn(publisher);
-            when(publisher.put(any(MessageRouterPublishRequest.class), any())).thenReturn(pubresp);
-
             scheduledTasksWithCommit.scheduleKafkaPrhEventTask();
 
             // Verify: service instance was queried
@@ -293,8 +258,8 @@ class PrhKafkaWorkflowEndToEndIntegrationTest {
             com.github.tomakehurst.wiremock.client.WireMock.verify(
                     1, patchRequestedFor(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)));
 
-            // Verify: DMaaP publisher was invoked
-            verify(publisher, times(1)).put(any(MessageRouterPublishRequest.class), any());
+            // Verify: Kafka publisher was invoked (PNF_UPDATE for re-registration)
+            verify(kafkaPublisherTask, times(1)).execute(eq("unauthenticated.PNF_UPDATE"), any(ConsumerDmaapModel.class));
         });
     }
 
@@ -356,14 +321,6 @@ class PrhKafkaWorkflowEndToEndIntegrationTest {
 
             when(kafkaConsumerTaskImpl.execute()).thenReturn(fluxList);
 
-            List<String> expectedItems = List.of(event);
-            Flux<MessageRouterPublishResponse> pubresp = Flux.just(
-                    ImmutableMessageRouterPublishResponse.builder()
-                            .items(expectedItems.map(JsonPrimitive::new))
-                            .build());
-            when(cbsConfiguration.getMessageRouterPublisher()).thenReturn(publisher);
-            when(publisher.put(any(MessageRouterPublishRequest.class), any())).thenReturn(pubresp);
-
             scheduledTasksWithCommit.scheduleKafkaPrhEventTask();
 
             // Verify: BBS logical-link was created
@@ -373,8 +330,8 @@ class PrhKafkaWorkflowEndToEndIntegrationTest {
                             .withRequestBody(matchingJsonPath("$.['link-name']", equalTo("olt-bbs-cpe-1")))
                             .withRequestBody(matchingJsonPath("$.['link-type']", equalTo("attachment-point"))));
 
-            // Verify: DMaaP publisher was invoked
-            verify(publisher, times(1)).put(any(MessageRouterPublishRequest.class), any());
+            // Verify: Kafka publisher was invoked (PNF_READY for first registration with attachment-point)
+            verify(kafkaPublisherTask, times(1)).execute(eq("unauthenticated.PNF_READY"), any(ConsumerDmaapModel.class));
         });
     }
 

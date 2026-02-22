@@ -231,6 +231,11 @@
                 <artifactId>tomcat-embed-core</artifactId>
                 <version>9.0.72</version>
             </dependency>
+            <dependency>
+                <groupId>io.opentelemetry.instrumentation</groupId>
+                <artifactId>opentelemetry-instrumentation-annotations</artifactId>
+                <version>${opentelemetry.agent.version}</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>

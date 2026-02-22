@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
+ * Copyright (C) 2023-2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.listener.BatchAcknowledgingMessageListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import reactor.core.publisher.Flux;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +43,8 @@ import java.util.List;
 @Profile("autoCommitDisabled")
 @Component
 public class KafkaConsumerTaskImpl implements KafkaConsumerTask, BatchAcknowledgingMessageListener<String, String> {
-   
-   
+
+
     private DmaapConsumerJsonParser dmaapConsumerJsonParser;
 
     private EpochDateTimeConversion epochDateTimeConversion;
@@ -67,8 +68,8 @@ public class KafkaConsumerTaskImpl implements KafkaConsumerTask, BatchAcknowledg
     String kafkaTopic;
 
     String groupIdConfig;
-    
-    
+
+
     public KafkaConsumerTaskImpl(CbsConfigurationForAutoCommitDisabledMode cbsConfigurationForAutoCommitDisabledMode
             ,DmaapConsumerJsonParser dmaapConsumerJsonParser,EpochDateTimeConversion epochDateTimeConversion) {
         this.cbsConfigurationForAutoCommitDisabledMode = cbsConfigurationForAutoCommitDisabledMode;
@@ -85,6 +86,7 @@ public class KafkaConsumerTaskImpl implements KafkaConsumerTask, BatchAcknowledg
     }
 
     @Override
+    @WithSpan("KafkaConsumerTask.onMessage")
     @KafkaListener(topics = "${kafkaTopic}", groupId = "${groupIdConfig}")
     public void onMessage(List<ConsumerRecord<String, String>> list, Acknowledgment acknowledgment) {
 
@@ -102,6 +104,7 @@ public class KafkaConsumerTaskImpl implements KafkaConsumerTask, BatchAcknowledg
     }
 
     @Override
+    @WithSpan("KafkaConsumerTask.execute")
     public Flux<ConsumerDmaapModel> execute() throws JSONException {
         return dmaapConsumerJsonParser.getConsumerDmaapModelFromKafkaConsumerRecord(jsonEvent);
     }
@@ -111,6 +114,7 @@ public class KafkaConsumerTaskImpl implements KafkaConsumerTask, BatchAcknowledg
     }
 
     @Override
+    @WithSpan("KafkaConsumerTask.commitOffset")
     public void commitOffset() {
         if (!jsonEvent.isEmpty()) {
             jsonEvent.clear();

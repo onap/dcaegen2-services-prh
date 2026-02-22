@@ -3,7 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
- * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
+ * Copyright (C) 2023-2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import java.util.Map;
@@ -98,7 +99,7 @@ public class ScheduledTasks {
     static class State {
         public final ConsumerDmaapModel dmaapModel;
         public final Boolean activationStatus;
-      
+
         public State(ConsumerDmaapModel dmaapModel, final Boolean activationStatus) {
             this.dmaapModel = dmaapModel;
             this.activationStatus = activationStatus;
@@ -108,6 +109,7 @@ public class ScheduledTasks {
     /**
      * Main function for scheduling prhWorkflow.
      */
+    @WithSpan("scheduleMainPrhEventTask")
     public void scheduleMainPrhEventTask() {
         MdcVariables.setMdcContextMap(mdcContextMap);
         try {

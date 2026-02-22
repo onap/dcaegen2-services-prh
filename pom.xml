@@ -55,8 +55,8 @@
 
     <properties>
         <java.version>11</java.version>
-        <spring-boot.version>2.7.2</spring-boot.version>
-        <spring-cloud.version>2021.0.3</spring-cloud.version>
+        <spring-boot.version>2.7.18</spring-boot.version>
+        <spring-cloud.version>2021.0.9</spring-cloud.version>
         <springfox.version>3.0.0</springfox.version>
         <immutables.version>2.7.5</immutables.version>
         <sdk.version>1.9.4</sdk.version>

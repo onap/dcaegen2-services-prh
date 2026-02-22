@@ -55,8 +55,8 @@
 
     <properties>
         <java.version>11</java.version>
-        <spring-boot.version>2.7.2</spring-boot.version>
-        <spring-cloud.version>2021.0.3</spring-cloud.version>
+        <spring-boot.version>2.7.18</spring-boot.version>
+        <spring-cloud.version>2021.0.9</spring-cloud.version>
         <springfox.version>3.0.0</springfox.version>
         <immutables.version>2.7.5</immutables.version>
         <sdk.version>1.9.4</sdk.version>
@@ -219,7 +219,7 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-web</artifactId>
-                <version>5.3.25</version>
+                <version>5.3.31</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -229,7 +229,7 @@
             <dependency>
                 <groupId>org.apache.tomcat.embed</groupId>
                 <artifactId>tomcat-embed-core</artifactId>
-                <version>9.0.72</version>
+                <version>9.0.83</version>
             </dependency>
 
         </dependencies>

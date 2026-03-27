@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
+ * Copyright (C) 2023-2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,23 +46,26 @@ class ScheduleControllerForAutoCommitDisabledTest {
 
     @MockBean
     private ScheduledTasksRunnerWithCommit scheduledTasksRunnerWithCommit;
-    
+
     @MockBean
     private KafkaConfig kafkaConfig;
-    
+
     @MockBean
     private ConsumerFactory<String, String> consumerFactory;
-    
+
     @MockBean
     private ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory;
-    
+
     @MockBean
     private KafkaConsumerTaskImpl kafkaConsumerTaskImpl;
-    
+
+    @MockBean
+    private org.springframework.kafka.core.KafkaTemplate<String, String> kafkaTemplate;
+
     @Autowired
     private WebTestClient webTestClient;
 
-    
+
    @Test
    void startEndpointShouldAllowStartingPrhTasks() {
         when(scheduledTasksRunnerWithCommit.tryToStartTaskWithCommit()).thenReturn(true);

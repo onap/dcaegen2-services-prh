@@ -3,7 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
- * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
+ * Copyright (C) 2023-2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,6 @@ public class ScheduleController {
     public Mono<ResponseEntity<String>> stopTask() {
         LOGGER.trace("Receiving stop scheduling worker request");
         return Mono.defer(() -> {
-            scheduledTasksRunner.closeKafkaPublisherSubscriber();
             scheduledTasksRunner.cancelTasks();
             return Mono.just(new ResponseEntity<>("PRH Service has been stopped!", HttpStatus.OK));
         });

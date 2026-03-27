@@ -100,7 +100,6 @@ public class CbsConfigurationForAutoCommitDisabledModeTest {
                 "Expected value of ConsumerGroup is not matching with actual value");
 
         assertThat((cbsConfigurationForAutoCommitDisabled).getAaiClientConfiguration()).isNotNull();
-        assertThat((cbsConfigurationForAutoCommitDisabled).getMessageRouterPublisher()).isNotNull();
         assertThat((cbsConfigurationForAutoCommitDisabled).getMessageRouterPublishRequest()).isNotNull();
         assertThat((cbsConfigurationForAutoCommitDisabled).getMessageRouterSubscribeRequest()).isNotNull();
         assertThat((cbsConfigurationForAutoCommitDisabled).getMessageRouterUpdatePublishRequest()).isNotNull();

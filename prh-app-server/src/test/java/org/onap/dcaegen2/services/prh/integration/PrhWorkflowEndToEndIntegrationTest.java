@@ -39,7 +39,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static java.lang.ClassLoader.getSystemResource;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
@@ -62,9 +61,6 @@ import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
 import org.onap.dcaegen2.services.prh.tasks.DmaapConsumerTaskImpl;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasksRunner;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterPublisher;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterPublishResponse;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -74,9 +70,10 @@ import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.test.context.ActiveProfiles;
-import reactor.core.publisher.Flux;
+import org.springframework.util.concurrent.SettableListenableFuture;
 
 /**
  * End-to-end integration tests for the PRH workflow (default/prod profile).
@@ -85,14 +82,13 @@ import reactor.core.publisher.Flux;
  * <ul>
  *   <li>A&amp;AI – query PNF (GET), update PNF (PATCH), service-instance lookup (GET)</li>
  *   <li>A&amp;AI – BBS logical-link CRUD (GET / PUT / DELETE)</li>
- *   <li>DMaaP Message Router – publish (mocked at the SDK boundary since
- *       the DMaaP SDK internally forces Kafka transport when JAAS_CONFIG is set)</li>
+ *   <li>DMaaP Message Router – publish (mocked via KafkaTemplate)</li>
  * </ul>
  *
  * <p>Events are injected directly into the {@link DmaapConsumerTaskImpl} message
  * buffer via {@code onMessage()}, bypassing the Kafka listener container
  * (which is disabled via {@code setAutoStartup(false)} in the test config).
- * The publisher is still mocked at the SDK boundary (Phase 2 will replace it).
+ * The publisher is mocked via {@code KafkaTemplate}.
  */
 @SpringBootTest(properties = {"spring.kafka.listener.auto-startup=false"})
 @AutoConfigureWireMock(port = 0)
@@ -111,9 +107,10 @@ class PrhWorkflowEndToEndIntegrationTest {
     @Autowired
     private DmaapConsumerTaskImpl dmaapConsumerTaskImpl;
 
-    private MessageRouterPublisher publisher;
+    @MockBean
+    private KafkaTemplate<String, String> kafkaTemplate;
 
-    private ArgumentCaptor<MessageRouterPublishRequest> publishRequestCaptor;
+    private ArgumentCaptor<String> topicCaptor;
 
     @Configuration
     @Import(MainApp.class)
@@ -142,11 +139,12 @@ class PrhWorkflowEndToEndIntegrationTest {
     void setup() {
         WireMock.reset();
         dmaapConsumerTaskImpl.execute();  // drain any leftover events
-        publisher = Mockito.mock(MessageRouterPublisher.class);
-        publishRequestCaptor = ArgumentCaptor.forClass(MessageRouterPublishRequest.class);
-        when(cbsConfiguration.getMessageRouterPublisher()).thenReturn(publisher);
-        when(publisher.put(any(MessageRouterPublishRequest.class), any()))
-                .thenReturn(Flux.just(ImmutableMessageRouterPublishResponse.builder().build()));
+        topicCaptor = ArgumentCaptor.forClass(String.class);
+
+        SettableListenableFuture mockFuture = new SettableListenableFuture();
+        mockFuture.set(null);
+        when(kafkaTemplate.send(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString()))
+                .thenReturn(mockFuture);
     }
 
     // ==================== Scenario 1: Empty DMaaP response ====================
@@ -162,7 +160,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         verify(0, patchRequestedFor(urlPathMatching("/aai.*")));
 
         // No DMaaP publish should occur
-        Mockito.verify(publisher, never()).put(any(), any());
+        Mockito.verify(kafkaTemplate, never()).send(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString());
     }
 
     // ==================== Scenario 2: First registration (no service-instance relation) ====================
@@ -201,8 +199,8 @@ class PrhWorkflowEndToEndIntegrationTest {
                 .withRequestBody(matchingJsonPath("$.['sw-version']", equalTo("val7"))));
 
         // Verify: published to PNF_READY (not PNF_UPDATE)
-        Mockito.verify(publisher, times(1)).put(publishRequestCaptor.capture(), any());
-        assertThat(publishRequestCaptor.getValue().sinkDefinition().topicUrl())
+        Mockito.verify(kafkaTemplate, times(1)).send(topicCaptor.capture(), org.mockito.ArgumentMatchers.anyString());
+        assertThat(topicCaptor.getValue())
                 .contains("PNF_READY");
     }
 
@@ -255,8 +253,8 @@ class PrhWorkflowEndToEndIntegrationTest {
         verify(1, patchRequestedFor(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)));
 
         // Verify: published to PNF_UPDATE (not PNF_READY) because it's a re-registration
-        Mockito.verify(publisher, times(1)).put(publishRequestCaptor.capture(), any());
-        assertThat(publishRequestCaptor.getValue().sinkDefinition().topicUrl())
+        Mockito.verify(kafkaTemplate, times(1)).send(topicCaptor.capture(), org.mockito.ArgumentMatchers.anyString());
+        assertThat(topicCaptor.getValue())
                 .contains("PNF_UPDATE");
     }
 
@@ -297,8 +295,8 @@ class PrhWorkflowEndToEndIntegrationTest {
         scheduledTasks.scheduleMainPrhEventTask();
 
         // Inactive means not a re-registration → PNF_READY
-        Mockito.verify(publisher, times(1)).put(publishRequestCaptor.capture(), any());
-        assertThat(publishRequestCaptor.getValue().sinkDefinition().topicUrl())
+        Mockito.verify(kafkaTemplate, times(1)).send(topicCaptor.capture(), org.mockito.ArgumentMatchers.anyString());
+        assertThat(topicCaptor.getValue())
                 .contains("PNF_READY");
     }
 
@@ -366,8 +364,8 @@ class PrhWorkflowEndToEndIntegrationTest {
                 .withRequestBody(matchingJsonPath("$.['link-type']", equalTo("attachment-point"))));
 
         // Verify: published to PNF_READY (first registration)
-        Mockito.verify(publisher, times(1)).put(publishRequestCaptor.capture(), any());
-        assertThat(publishRequestCaptor.getValue().sinkDefinition().topicUrl())
+        Mockito.verify(kafkaTemplate, times(1)).send(topicCaptor.capture(), org.mockito.ArgumentMatchers.anyString());
+        assertThat(topicCaptor.getValue())
                 .contains("PNF_READY");
     }
 
@@ -413,8 +411,8 @@ class PrhWorkflowEndToEndIntegrationTest {
         verify(0, deleteRequestedFor(urlPathMatching("/aai/v23/network/logical-links/.*")));
 
         // Verify: published to PNF_UPDATE
-        Mockito.verify(publisher, times(1)).put(publishRequestCaptor.capture(), any());
-        assertThat(publishRequestCaptor.getValue().sinkDefinition().topicUrl())
+        Mockito.verify(kafkaTemplate, times(1)).send(topicCaptor.capture(), org.mockito.ArgumentMatchers.anyString());
+        assertThat(topicCaptor.getValue())
                 .contains("PNF_UPDATE");
     }
 
@@ -440,8 +438,8 @@ class PrhWorkflowEndToEndIntegrationTest {
         verify(0, putRequestedFor(urlPathMatching("/aai/v23/network/logical-links/.*")));
         verify(0, deleteRequestedFor(urlPathMatching("/aai/v23/network/logical-links/.*")));
 
-        Mockito.verify(publisher, times(1)).put(publishRequestCaptor.capture(), any());
-        assertThat(publishRequestCaptor.getValue().sinkDefinition().topicUrl())
+        Mockito.verify(kafkaTemplate, times(1)).send(topicCaptor.capture(), org.mockito.ArgumentMatchers.anyString());
+        assertThat(topicCaptor.getValue())
                 .contains("PNF_READY");
     }
 
@@ -499,8 +497,8 @@ class PrhWorkflowEndToEndIntegrationTest {
         scheduledTasks.scheduleMainPrhEventTask();
 
         // Verify publisher was called with the PNF_READY topic
-        Mockito.verify(publisher, times(1)).put(publishRequestCaptor.capture(), any());
-        assertThat(publishRequestCaptor.getValue().sinkDefinition().topicUrl())
+        Mockito.verify(kafkaTemplate, times(1)).send(topicCaptor.capture(), org.mockito.ArgumentMatchers.anyString());
+        assertThat(topicCaptor.getValue())
                 .contains("PNF_READY");
     }
 
@@ -530,7 +528,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         verify(1, patchRequestedFor(urlEqualTo("/aai/v23/network/pnfs/pnf/NOK6061ZW9")));
 
         // Both should trigger DMaaP publish to PNF_READY
-        Mockito.verify(publisher, times(2)).put(any(), any());
+        Mockito.verify(kafkaTemplate, times(2)).send(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString());
     }
 
 

@@ -24,7 +24,6 @@ package org.onap.dcaegen2.services.prh.tasks;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapEmptyResponseException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishResponse;
 import org.onap.dcaegen2.services.sdk.rest.services.model.logging.MdcVariables;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
@@ -125,7 +124,7 @@ public class ScheduledTasks {
                     .flatMap(this::publishToDmaapConfiguration)
                     .onErrorResume(resumePrhPredicate(), exception -> Mono.empty())
                     .doOnTerminate(mainCountDownLatch::countDown)
-                    .subscribe(this::onSuccess, this::onError, this::onComplete);
+                    .subscribe(this::onPublishSuccess, this::onError, this::onComplete);
 
             mainCountDownLatch.await();
         } catch (InterruptedException e) {
@@ -138,13 +137,11 @@ public class ScheduledTasks {
         LOGGER.info("PRH tasks have been completed");
     }
 
-    private void onSuccess(MessageRouterPublishResponse response) {
-        if (response.successful()) {
-            String statusCodeOk = HttpStatus.OK.name();
-            MDC.put(RESPONSE_CODE, statusCodeOk);
-            LOGGER.info("Prh consumed tasks successfully. HTTP Response code from DMaaPProducer {}", statusCodeOk);
-            MDC.remove(RESPONSE_CODE);
-        }
+    private void onPublishSuccess(String topicName) {
+        String statusCodeOk = HttpStatus.OK.name();
+        MDC.put(RESPONSE_CODE, statusCodeOk);
+        LOGGER.info("Prh consumed tasks successfully. Published to {}", topicName);
+        MDC.remove(RESPONSE_CODE);
     }
 
     private void onError(Throwable throwable) {
@@ -188,7 +185,7 @@ public class ScheduledTasks {
         return bbsActionsTask.execute(state.dmaapModel).map(x -> state);
     }
 
-    private Flux<MessageRouterPublishResponse> publishToDmaapConfiguration(final State state) {
+    private Mono<String> publishToDmaapConfiguration(final State state) {
         try {
             if (state.activationStatus) {
                 LOGGER.debug("Re-registration - Using PNF_UPDATE DMaaP topic.");
@@ -197,7 +194,7 @@ public class ScheduledTasks {
             return dmaapReadyProducerTask.execute(state.dmaapModel);
         } catch (PrhTaskException e) {
             LOGGER.warn("DMaaPProducerTask exception has been registered: ", e);
-            return Flux.error(e);
+            return Mono.error(e);
         }
     }
 

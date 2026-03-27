@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.config.SaslConfigs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,9 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.core.DefaultKafkaProducerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.listener.ContainerProperties;
 
 @EnableKafka
@@ -45,29 +49,34 @@ public class KafkaConfig {
     @org.springframework.beans.factory.annotation.Value("${spring.kafka.listener.auto-startup:true}")
     private boolean autoStartup;
 
-    @Bean
-    public ConsumerFactory<String, String> consumerFactory() {
+    private Map<String, Object> commonConfig() {
         String bootstrapServers = System.getenv("BOOTSTRAP_SERVERS");
         String jaasConfig = System.getenv("JAAS_CONFIG");
 
         Map<String, Object> config = new HashMap<>();
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
                 bootstrapServers != null ? bootstrapServers : "localhost:9092");
+
+        if (jaasConfig != null) {
+            LOGGER.info("Configuring Kafka with SASL/SCRAM-SHA-512 authentication");
+            config.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, DEFAULT_SECURITY_PROTOCOL);
+            config.put(SaslConfigs.SASL_MECHANISM, DEFAULT_SASL_MECHANISM);
+            config.put(SaslConfigs.SASL_JAAS_CONFIG, jaasConfig);
+        } else {
+            LOGGER.info("Configuring Kafka without authentication");
+        }
+        return config;
+    }
+
+    @Bean
+    public ConsumerFactory<String, String> consumerFactory() {
+        Map<String, Object> config = commonConfig();
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
                 "org.apache.kafka.common.serialization.StringDeserializer");
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
                 "org.apache.kafka.common.serialization.StringDeserializer");
         config.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
         config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-
-        if (jaasConfig != null) {
-            LOGGER.info("Configuring Kafka consumer with SASL/SCRAM-SHA-512 authentication");
-            config.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, DEFAULT_SECURITY_PROTOCOL);
-            config.put(SaslConfigs.SASL_MECHANISM, DEFAULT_SASL_MECHANISM);
-            config.put(SaslConfigs.SASL_JAAS_CONFIG, jaasConfig);
-        } else {
-            LOGGER.info("Configuring Kafka consumer without authentication");
-        }
 
         return new DefaultKafkaConsumerFactory<>(config);
     }
@@ -81,6 +90,21 @@ public class KafkaConfig {
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
         factory.setAutoStartup(autoStartup);
         return factory;
+    }
+
+    @Bean
+    public ProducerFactory<String, String> producerFactory() {
+        Map<String, Object> config = commonConfig();
+        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+                "org.apache.kafka.common.serialization.StringSerializer");
+        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
+                "org.apache.kafka.common.serialization.StringSerializer");
+        return new DefaultKafkaProducerFactory<>(config);
+    }
+
+    @Bean
+    public KafkaTemplate<String, String> kafkaTemplate() {
+        return new KafkaTemplate<>(producerFactory());
     }
 
 }

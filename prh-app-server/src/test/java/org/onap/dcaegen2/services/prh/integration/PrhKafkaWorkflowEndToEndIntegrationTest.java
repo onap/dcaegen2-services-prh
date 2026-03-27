@@ -41,17 +41,17 @@ import static java.lang.ClassLoader.getSystemResource;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import io.vavr.collection.List;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
+import org.apache.kafka.common.TopicPartition;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.onap.dcaegen2.services.prh.MainApp;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.CbsConfigurationForAutoCommitDisabledMode;
 import org.onap.dcaegen2.services.prh.adapter.kafka.ImmutableKafkaConfiguration;
 import org.onap.dcaegen2.services.prh.adapter.kafka.KafkaConfiguration;
@@ -59,25 +59,22 @@ import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
 import org.onap.dcaegen2.services.prh.tasks.commit.KafkaConsumerTaskImpl;
 import org.onap.dcaegen2.services.prh.tasks.commit.ScheduledTasksRunnerWithCommit;
 import org.onap.dcaegen2.services.prh.tasks.commit.ScheduledTasksWithCommit;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterPublisher;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterPublishResponse;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.util.concurrent.SettableListenableFuture;
 import reactor.core.publisher.Flux;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -114,11 +111,8 @@ class PrhKafkaWorkflowEndToEndIntegrationTest {
     @Autowired
     private DmaapConsumerJsonParser dmaapConsumerJsonParser;
 
-    @SpyBean
-    CbsConfiguration cbsConfiguration;
-
-    @Mock
-    MessageRouterPublisher publisher;
+    @MockBean
+    KafkaTemplate<String, String> kafkaTemplate;
 
     @Configuration
     @Import(MainApp.class)
@@ -209,14 +203,11 @@ class PrhKafkaWorkflowEndToEndIntegrationTest {
 
             when(kafkaConsumerTaskImpl.execute()).thenReturn(fluxList);
 
-            // Mock the DMaaP publisher since it's used via SDK
-            List<String> expectedItems = List.of(event);
-            Flux<MessageRouterPublishResponse> pubresp = Flux.just(
-                    ImmutableMessageRouterPublishResponse.builder()
-                            .items(expectedItems.map(JsonPrimitive::new))
-                            .build());
-            when(cbsConfiguration.getMessageRouterPublisher()).thenReturn(publisher);
-            when(publisher.put(any(MessageRouterPublishRequest.class), any())).thenReturn(pubresp);
+            SettableListenableFuture<SendResult<String, String>> future = new SettableListenableFuture<>();
+            future.set(new SendResult<>(
+                    new ProducerRecord<>("unauthenticated.PNF_READY", ""),
+                    new RecordMetadata(new TopicPartition("unauthenticated.PNF_READY", 0), 0, 0, 0, 0, 0)));
+            when(kafkaTemplate.send(anyString(), anyString())).thenReturn(future);
 
             scheduledTasksWithCommit.scheduleKafkaPrhEventTask();
 
@@ -230,8 +221,8 @@ class PrhKafkaWorkflowEndToEndIntegrationTest {
                             .withHeader("Content-Type", equalTo("application/merge-patch+json"))
                             .withRequestBody(matchingJsonPath("$.correlationId", equalTo(pnfName))));
 
-            // Verify: DMaaP publisher was called (PNF_READY)
-            verify(publisher, times(1)).put(any(MessageRouterPublishRequest.class), any());
+            // Verify: KafkaTemplate publisher was called (PNF_READY)
+            Mockito.verify(kafkaTemplate, times(1)).send(anyString(), anyString());
         });
     }
 
@@ -275,13 +266,11 @@ class PrhKafkaWorkflowEndToEndIntegrationTest {
 
             when(kafkaConsumerTaskImpl.execute()).thenReturn(fluxList);
 
-            List<String> expectedItems = List.of(event);
-            Flux<MessageRouterPublishResponse> pubresp = Flux.just(
-                    ImmutableMessageRouterPublishResponse.builder()
-                            .items(expectedItems.map(JsonPrimitive::new))
-                            .build());
-            when(cbsConfiguration.getMessageRouterPublisher()).thenReturn(publisher);
-            when(publisher.put(any(MessageRouterPublishRequest.class), any())).thenReturn(pubresp);
+            SettableListenableFuture<SendResult<String, String>> future = new SettableListenableFuture<>();
+            future.set(new SendResult<>(
+                    new ProducerRecord<>("unauthenticated.PNF_UPDATE", ""),
+                    new RecordMetadata(new TopicPartition("unauthenticated.PNF_UPDATE", 0), 0, 0, 0, 0, 0)));
+            when(kafkaTemplate.send(anyString(), anyString())).thenReturn(future);
 
             scheduledTasksWithCommit.scheduleKafkaPrhEventTask();
 
@@ -293,8 +282,8 @@ class PrhKafkaWorkflowEndToEndIntegrationTest {
             com.github.tomakehurst.wiremock.client.WireMock.verify(
                     1, patchRequestedFor(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)));
 
-            // Verify: DMaaP publisher was invoked
-            verify(publisher, times(1)).put(any(MessageRouterPublishRequest.class), any());
+            // Verify: KafkaTemplate publisher was invoked
+            Mockito.verify(kafkaTemplate, times(1)).send(anyString(), anyString());
         });
     }
 
@@ -324,7 +313,7 @@ class PrhKafkaWorkflowEndToEndIntegrationTest {
                     0, patchRequestedFor(urlPathMatching("/aai.*")));
 
             // Verify: commitOffset was NOT called (offset should not be committed)
-            verify(kafkaConsumerTaskImpl, times(0)).commitOffset();
+            Mockito.verify(kafkaConsumerTaskImpl, times(0)).commitOffset();
         });
     }
 
@@ -356,13 +345,11 @@ class PrhKafkaWorkflowEndToEndIntegrationTest {
 
             when(kafkaConsumerTaskImpl.execute()).thenReturn(fluxList);
 
-            List<String> expectedItems = List.of(event);
-            Flux<MessageRouterPublishResponse> pubresp = Flux.just(
-                    ImmutableMessageRouterPublishResponse.builder()
-                            .items(expectedItems.map(JsonPrimitive::new))
-                            .build());
-            when(cbsConfiguration.getMessageRouterPublisher()).thenReturn(publisher);
-            when(publisher.put(any(MessageRouterPublishRequest.class), any())).thenReturn(pubresp);
+            SettableListenableFuture<SendResult<String, String>> future = new SettableListenableFuture<>();
+            future.set(new SendResult<>(
+                    new ProducerRecord<>("unauthenticated.PNF_READY", ""),
+                    new RecordMetadata(new TopicPartition("unauthenticated.PNF_READY", 0), 0, 0, 0, 0, 0)));
+            when(kafkaTemplate.send(anyString(), anyString())).thenReturn(future);
 
             scheduledTasksWithCommit.scheduleKafkaPrhEventTask();
 
@@ -373,8 +360,8 @@ class PrhKafkaWorkflowEndToEndIntegrationTest {
                             .withRequestBody(matchingJsonPath("$.['link-name']", equalTo("olt-bbs-cpe-1")))
                             .withRequestBody(matchingJsonPath("$.['link-type']", equalTo("attachment-point"))));
 
-            // Verify: DMaaP publisher was invoked
-            verify(publisher, times(1)).put(any(MessageRouterPublishRequest.class), any());
+            // Verify: KafkaTemplate publisher was invoked
+            Mockito.verify(kafkaTemplate, times(1)).send(anyString(), anyString());
         });
     }
 

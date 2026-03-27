@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
- * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
+ * Copyright (C) 2023-2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.Map;
-import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +40,6 @@ import org.onap.dcaegen2.services.prh.tasks.AaiProducerTask;
 import org.onap.dcaegen2.services.prh.tasks.AaiQueryTask;
 import org.onap.dcaegen2.services.prh.tasks.BbsActionsTask;
 import org.onap.dcaegen2.services.prh.tasks.DmaapPublisherTask;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishResponse;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -95,17 +93,11 @@ class ScheduledTasksWithCommitTest {
     @Test
     void testQueryAAiForPNFOnSuccess() throws JSONException, PrhTaskException {
         ScheduledTasksWithCommit.State state = new ScheduledTasksWithCommit.State(DMAAP_MODEL, false );
-        MessageRouterPublishResponse messageRouterPublishResponse = new MessageRouterPublishResponse() {
-            @Override
-            public @Nullable String failReason() {
-                    return null;
-                }
-        };
         when(kafkaConsumerTask.execute()).thenReturn(Flux.just(DMAAP_MODEL));
         when(aaiQueryTask.findPnfinAAI(DMAAP_MODEL)).thenReturn(Mono.just(DMAAP_MODEL));
         when(aaiQueryTask.execute(DMAAP_MODEL)).thenReturn(Mono.just(true));
         when(aaiProducerTask.execute(state.dmaapModel)).thenReturn(Mono.just(DMAAP_MODEL));
-        when(updatePublisher.execute(state.dmaapModel)).thenReturn(Flux.just(messageRouterPublishResponse));
+        when(updatePublisher.execute(state.dmaapModel)).thenReturn(Mono.just("unauthenticated.PNF_UPDATE"));
 
         sut.scheduleKafkaPrhEventTask();
 
@@ -116,17 +108,11 @@ class ScheduledTasksWithCommitTest {
     @Test
     void testQueryAAiForPNF() throws JSONException, PrhTaskException {
         ScheduledTasksWithCommit.State state = new ScheduledTasksWithCommit.State(DMAAP_MODEL, true);
-        MessageRouterPublishResponse messageRouterPublishResponse = new MessageRouterPublishResponse() {
-            @Override
-            public @Nullable String failReason() {
-                    return null;
-                }
-        };
         when(kafkaConsumerTask.execute()).thenReturn(Flux.just(DMAAP_MODEL));
         when(aaiQueryTask.findPnfinAAI(DMAAP_MODEL)).thenReturn(Mono.just(DMAAP_MODEL));
         when(aaiQueryTask.execute(DMAAP_MODEL)).thenReturn(Mono.just(true));
         when(aaiProducerTask.execute(state.dmaapModel)).thenReturn(Mono.just(DMAAP_MODEL));
-        when(updatePublisher.execute(state.dmaapModel)).thenReturn(Flux.just(messageRouterPublishResponse));
+        when(updatePublisher.execute(state.dmaapModel)).thenReturn(Mono.just("unauthenticated.PNF_UPDATE"));
 
         sut.scheduleKafkaPrhEventTask();
 
@@ -150,12 +136,6 @@ class ScheduledTasksWithCommitTest {
     @Test
     void testQueryAAiForPNFOnPRHException() throws JSONException, PrhTaskException {
         ScheduledTasksWithCommit.State state = new ScheduledTasksWithCommit.State(DMAAP_MODEL, false );
-        MessageRouterPublishResponse messageRouterPublishResponse = new MessageRouterPublishResponse() {
-            @Override
-            public @Nullable String failReason() {
-                return null;
-            }
-        };
         when(kafkaConsumerTask.execute()).thenReturn(Flux.just(DMAAP_MODEL));
         when(aaiQueryTask.findPnfinAAI(DMAAP_MODEL)).thenReturn(Mono.just(DMAAP_MODEL));
         when(aaiQueryTask.execute(DMAAP_MODEL)).thenReturn(Mono.just(true));
@@ -170,12 +150,6 @@ class ScheduledTasksWithCommitTest {
     @Test
     void queryAAiForPNFOnPRHExceptionTest() throws JSONException, PrhTaskException {
         ScheduledTasksWithCommit.State state = new ScheduledTasksWithCommit.State(DMAAP_MODEL, true);
-        MessageRouterPublishResponse messageRouterPublishResponse = new MessageRouterPublishResponse() {
-            @Override
-            public @Nullable String failReason() {
-                return null;
-            }
-        };
         when(kafkaConsumerTask.execute()).thenReturn(Flux.just(DMAAP_MODEL));
         when(aaiQueryTask.findPnfinAAI(DMAAP_MODEL)).thenReturn(Mono.just(DMAAP_MODEL));
         when(aaiQueryTask.execute(DMAAP_MODEL)).thenReturn(Mono.just(true));
@@ -191,12 +165,6 @@ class ScheduledTasksWithCommitTest {
     @Test
     void queryAAiForPNFOnPRHExceptionOnDmaapEmptyResponseExceptionTest() throws JSONException, PrhTaskException {
         ScheduledTasksWithCommit.State state = new ScheduledTasksWithCommit.State(DMAAP_MODEL, true);
-        MessageRouterPublishResponse messageRouterPublishResponse = new MessageRouterPublishResponse() {
-            @Override
-            public @Nullable String failReason() {
-                return null;
-            }
-        };
         when(kafkaConsumerTask.execute()).thenReturn(Flux.just(DMAAP_MODEL));
         when(aaiQueryTask.findPnfinAAI(DMAAP_MODEL)).thenReturn(Mono.just(DMAAP_MODEL));
         when(aaiQueryTask.execute(DMAAP_MODEL)).thenReturn(Mono.just(true));
@@ -212,12 +180,6 @@ class ScheduledTasksWithCommitTest {
     @Test
     void queryAAiForPNFOnPRHExceptionOnFalseTest() throws JSONException, PrhTaskException {
         ScheduledTasksWithCommit.State state = new ScheduledTasksWithCommit.State(DMAAP_MODEL, false);
-        MessageRouterPublishResponse messageRouterPublishResponse = new MessageRouterPublishResponse() {
-            @Override
-            public @Nullable String failReason() {
-                return null;
-            }
-        };
         when(kafkaConsumerTask.execute()).thenReturn(Flux.just(DMAAP_MODEL));
         when(aaiQueryTask.findPnfinAAI(DMAAP_MODEL)).thenReturn(Mono.just(DMAAP_MODEL));
         when(aaiQueryTask.execute(DMAAP_MODEL)).thenReturn(Mono.just(false));
@@ -229,13 +191,6 @@ class ScheduledTasksWithCommitTest {
 
     @Test
     void queryAAiForPNFOnPRHExceptionOnJSONExceptionTest() throws PrhTaskException, JSONException {
-        ScheduledTasksWithCommit.State state = new ScheduledTasksWithCommit.State(DMAAP_MODEL, true);
-        MessageRouterPublishResponse messageRouterPublishResponse = new MessageRouterPublishResponse() {
-            @Override
-            public @Nullable String failReason() {
-                return null;
-            }
-        };
         when(kafkaConsumerTask.execute()).thenThrow(new JSONException("json format exception"));
 
         sut.scheduleKafkaPrhEventTask();

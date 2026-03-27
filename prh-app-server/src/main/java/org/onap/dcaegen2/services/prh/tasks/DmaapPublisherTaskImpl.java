@@ -3,6 +3,7 @@
  * PROJECT
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,12 +25,10 @@ import java.util.function.Supplier;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.adapter.aai.impl.PnfReadyJsonBodyBuilder;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterPublisher;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import reactor.core.publisher.Flux;
+import org.springframework.kafka.core.KafkaTemplate;
+import reactor.core.publisher.Mono;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
@@ -38,27 +37,35 @@ public class DmaapPublisherTaskImpl implements DmaapPublisherTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DmaapPublisherTaskImpl.class);
 
-    private final Supplier<MessageRouterPublishRequest> publishRequestSupplier;
-    private final Supplier<MessageRouterPublisher> publisherSupplier;
+    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final Supplier<String> topicNameSupplier;
     private final PnfReadyJsonBodyBuilder pnfReadyJsonBodyBuilder = new PnfReadyJsonBodyBuilder();
 
-
-    public DmaapPublisherTaskImpl(Supplier<MessageRouterPublishRequest> publishRequestSupplier,
-                                  Supplier<MessageRouterPublisher> publisherSupplier) {
-        this.publishRequestSupplier = publishRequestSupplier;
-        this.publisherSupplier = publisherSupplier;
+    public DmaapPublisherTaskImpl(KafkaTemplate<String, String> kafkaTemplate,
+                                  Supplier<String> topicNameSupplier) {
+        this.kafkaTemplate = kafkaTemplate;
+        this.topicNameSupplier = topicNameSupplier;
     }
 
     @Override
-    public Flux<MessageRouterPublishResponse> execute(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException {
+    public Mono<String> execute(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException {
         if (consumerDmaapModel == null) {
             throw new DmaapNotFoundException("Invoked null object to DMaaP task");
         }
-        LOGGER.info("Method called with arg {}", consumerDmaapModel);
-        MessageRouterPublisher messageRouterPublisher = publisherSupplier.get();
-        MessageRouterPublishRequest messageRouterPublishRequest = publishRequestSupplier.get();
-        return messageRouterPublisher.put(
-                messageRouterPublishRequest,
-                Flux.just(pnfReadyJsonBodyBuilder.createJsonBody(consumerDmaapModel)));
+        String topicName = topicNameSupplier.get();
+        LOGGER.info("Publishing to topic {} with arg {}", topicName, consumerDmaapModel);
+        String jsonBody = pnfReadyJsonBodyBuilder.createJsonBody(consumerDmaapModel).toString();
+        return Mono.create(sink ->
+            kafkaTemplate.send(topicName, jsonBody).addCallback(
+                result -> {
+                    LOGGER.info("Successfully published to {}", topicName);
+                    sink.success(topicName);
+                },
+                error -> {
+                    LOGGER.error("Failed to publish to {}", topicName, error);
+                    sink.error(error);
+                }
+            )
+        );
     }
 }

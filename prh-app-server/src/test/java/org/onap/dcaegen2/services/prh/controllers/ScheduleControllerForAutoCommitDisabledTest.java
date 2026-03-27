@@ -58,6 +58,9 @@ class ScheduleControllerForAutoCommitDisabledTest {
     
     @MockBean
     private KafkaConsumerTaskImpl kafkaConsumerTaskImpl;
+
+    @MockBean
+    private org.springframework.kafka.core.KafkaTemplate<String, String> kafkaTemplate;
     
     @Autowired
     private WebTestClient webTestClient;

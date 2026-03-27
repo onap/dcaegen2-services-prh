@@ -3,6 +3,7 @@
  * PROJECT
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,25 +24,18 @@ package org.onap.dcaegen2.services.prh.tasks;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerDmaapModel;
 import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
-import org.onap.dcaegen2.services.sdk.model.streams.dmaap.ImmutableMessageRouterSink;
-import org.onap.dcaegen2.services.sdk.model.streams.dmaap.MessageRouterSink;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterPublisher;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterPublishRequest;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
-import reactor.core.publisher.Flux;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.util.concurrent.SettableListenableFuture;
 import reactor.test.StepVerifier;
 
 /**
@@ -50,38 +44,34 @@ import reactor.test.StepVerifier;
 @ExtendWith(MockitoExtension.class)
 class DmaapPublisherTaskImplTest {
 
+    private static final String TOPIC = "unauthenticated.PNF_READY";
+
     private DmaapPublisherTaskImpl dmaapPublisherTask;
 
-    private MessageRouterPublishRequest mrRequest = createMRRequest();
-
     @Mock
-    private static MessageRouterPublisher messageRouterPublisher;
-
-    @Captor
-    private ArgumentCaptor<Flux<JsonElement>> fluxCaptor;
+    private KafkaTemplate<String, String> kafkaTemplate;
 
     @Test
     void execute_whenPassedObjectDoesntFit_ThrowsPrhTaskException() {
-        //given
-        dmaapPublisherTask = new DmaapPublisherTaskImpl(() -> mrRequest, () -> messageRouterPublisher);
-        //when
+        dmaapPublisherTask = new DmaapPublisherTaskImpl(kafkaTemplate, () -> TOPIC);
         Executable executableFunction = () -> dmaapPublisherTask.execute(null);
-        //then
         assertThrows(PrhTaskException.class, executableFunction, "The specified parameter is incorrect");
     }
 
     @Test
     void execute_whenPassedObjectFits_ReturnsCorrectStatus() throws DmaapNotFoundException {
-        //given
-        dmaapPublisherTask = new DmaapPublisherTaskImpl(() -> mrRequest, () -> messageRouterPublisher);
-        //when
-        dmaapPublisherTask.execute(createConsumerDmaapModel());
-        //then
-        verify(messageRouterPublisher).put(eq(mrRequest), fluxCaptor.capture());
+        dmaapPublisherTask = new DmaapPublisherTaskImpl(kafkaTemplate, () -> TOPIC);
 
-        StepVerifier.create(fluxCaptor.getValue())
-                .expectNext(new JsonParser().parse("{\"correlationId\":\"NOKQTFCOC540002E\"}"))
+        SettableListenableFuture mockFuture = new SettableListenableFuture();
+        mockFuture.set(null);
+        when(kafkaTemplate.send(eq(TOPIC), org.mockito.ArgumentMatchers.anyString()))
+                .thenReturn(mockFuture);
+
+        StepVerifier.create(dmaapPublisherTask.execute(createConsumerDmaapModel()))
+                .expectNext(TOPIC)
                 .verifyComplete();
+
+        verify(kafkaTemplate).send(eq(TOPIC), org.mockito.ArgumentMatchers.contains("NOKQTFCOC540002E"));
     }
 
 
@@ -97,17 +87,6 @@ class DmaapPublisherTaskImplTest {
                 .nfRole("gNB")
                 .swVersion("v4.5.0.1")
                 .additionalFields(null)
-                .build();
-    }
-
-    private MessageRouterPublishRequest createMRRequest() {
-        final MessageRouterSink sinkDefinition = ImmutableMessageRouterSink.builder()
-                .name("the topic")
-                .topicUrl("http://dmaap-mr:2222/events/unauthenticated.PNF_READY")
-                .build();
-
-        return ImmutableMessageRouterPublishRequest.builder()
-                .sinkDefinition(sinkDefinition)
                 .build();
     }
 }

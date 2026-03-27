@@ -3,7 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2019 NOKIA Intellectual Property. All rights reserved.
- * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
+ * Copyright (C) 2023-2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,8 +42,6 @@ class CbsConfigurationTest {
                 .hasMessage(EXPECTED_ERROR_MESSAGE_WHEN_CBS_CONFIG_IS_NOT_INITIALIZED);
         assertThatThrownBy(() -> new CbsConfiguration().getMessageRouterPublisher())
                 .hasMessage(EXPECTED_ERROR_MESSAGE_WHEN_CBS_CONFIG_IS_NOT_INITIALIZED);
-        assertThatThrownBy(() -> new CbsConfiguration().getMessageRouterSubscriber())
-                .hasMessage(EXPECTED_ERROR_MESSAGE_WHEN_CBS_CONFIG_IS_NOT_INITIALIZED);
         assertThatThrownBy(() -> new CbsConfiguration().getMessageRouterSubscribeRequest())
                 .hasMessage(EXPECTED_ERROR_MESSAGE_WHEN_CBS_CONFIG_IS_NOT_INITIALIZED);
         assertThatThrownBy(() -> new CbsConfiguration().getMessageRouterPublishRequest())
@@ -67,7 +65,6 @@ class CbsConfigurationTest {
 
             assertThat(cbsConfiguration.getAaiClientConfiguration()).isNotNull();
             assertThat(cbsConfiguration.getMessageRouterPublisher()).isNotNull();
-            assertThat(cbsConfiguration.getMessageRouterSubscriber()).isNotNull();
             assertThat(cbsConfiguration.getMessageRouterPublishRequest()).isNotNull();
             assertThat(cbsConfiguration.getMessageRouterSubscribeRequest()).isNotNull();
             assertThat(cbsConfiguration.getMessageRouterUpdatePublishRequest()).isNotNull();

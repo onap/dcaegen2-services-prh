@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START=======================================================
- * PROJECT
+ * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * ================================================================================
@@ -18,16 +18,14 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.tasks;
-
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
-import reactor.core.publisher.Flux;
-
+package org.onap.dcaegen2.services.prh.exceptions;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
-@FunctionalInterface
-interface DmaapConsumerTask {
-    Flux<ConsumerDmaapModel> execute();
+public class KafkaNotFoundException extends PrhTaskException {
+
+    public KafkaNotFoundException(String message) {
+        super(message);
+    }
 }

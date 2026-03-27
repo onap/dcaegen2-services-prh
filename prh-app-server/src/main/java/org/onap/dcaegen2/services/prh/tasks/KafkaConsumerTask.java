@@ -1,8 +1,9 @@
 /*
  * ============LICENSE_START=======================================================
- * PNF-REGISTRATION-HANDLER
+ * PROJECT
  * ================================================================================
- * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
+ * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,18 +19,19 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.tasks.commit;
+package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
-import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
 import reactor.core.publisher.Flux;
 
+
 /**
- * @author <a href="mailto:ajinkya-patil@t-systems.com">Ajinkya Patil</a> on 3/13/23
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
+interface KafkaConsumerTask {
+    Flux<ConsumerPnfModel> execute();
 
-public interface KafkaConsumerTask {
-    Flux<ConsumerDmaapModel> execute() throws JSONException;
-
-    void commitOffset();
+    default void commitOffset() {
+        // no-op by default — overridden by implementations that support manual commit
+    }
 }

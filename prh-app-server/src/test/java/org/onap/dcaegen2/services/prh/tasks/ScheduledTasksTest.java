@@ -34,16 +34,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerPnfModel;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @ExtendWith(MockitoExtension.class)
 class ScheduledTasksTest {
-    private final static ConsumerDmaapModel DMAAP_MODEL =
-            ImmutableConsumerDmaapModel
+    private final static ConsumerPnfModel PNF_MODEL =
+            ImmutableConsumerPnfModel
                     .builder()
                     .correlationId("SomeId")
                     .ipv4("ipv4")
@@ -51,13 +51,13 @@ class ScheduledTasksTest {
                     .build();
 
     @Mock
-    private DmaapPublisherTask readyPublisher;
+    private KafkaPublisherTask readyPublisher;
 
     @Mock
-    private DmaapPublisherTask updatePublisher;
+    private KafkaPublisherTask updatePublisher;
 
     @Mock
-    private DmaapConsumerTask consumer;
+    private KafkaConsumerTask consumer;
 
     @Mock
     private BbsActionsTask bbsActions;
@@ -85,95 +85,101 @@ class ScheduledTasksTest {
     }
 
     @Test
-    void whenEmptyResultFromDMaaPConsumer_NotActionShouldBePerformed() throws SSLException, PrhTaskException {
+    void whenEmptyResultFromKafkaConsumer_NotActionShouldBePerformed() throws SSLException, PrhTaskException {
         given(consumer.execute()).willReturn(Flux.empty());
 
         sut.scheduleMainPrhEventTask();
 
         verifyThatPnfUpdateWasNotSentToAai();
         verifyIfLogicalLinkWasNotCreated();
-        verifyThatPnfModelWasNotSentDmaapPnfReadyTopic();
-        verifyThatPnfModelWasNotSentDmaapPnfUpdateTopic();
+        verifyPnfModelWasNotSentToReadyTopic();
+        verifyPnfModelWasNotSentToUpdateTopic();
     }
 
     @Test
-    void whenPnfNotFoundInAai_NotActionShouldBePerformed() throws SSLException, PrhTaskException {
-        given(consumer.execute()).willReturn(Flux.just(DMAAP_MODEL));
-        given(aaiQuery.execute(any())).willReturn(Mono.error(new PrhTaskException("404 Not Found")));
+    void whenPnfNotFoundInAai_offsetShouldNotBeCommitted() throws SSLException, PrhTaskException {
+        given(consumer.execute()).willReturn(Flux.just(PNF_MODEL));
+        given(aaiQuery.findPnfinAAI(any())).willReturn(Mono.error(new PrhTaskException("404 Not Found")));
 
         sut.scheduleMainPrhEventTask();
 
         verifyThatPnfUpdateWasNotSentToAai();
         verifyIfLogicalLinkWasNotCreated();
-        verifyThatPnfModelWasNotSentDmaapPnfReadyTopic();
-        verifyThatPnfModelWasNotSentDmaapPnfUpdateTopic();
+        verifyPnfModelWasNotSentToReadyTopic();
+        verifyPnfModelWasNotSentToUpdateTopic();
+        verify(consumer, never()).commitOffset();
     }
 
     @Test
     void whenPnfWithoutService_PatchToAaiAndPostToPnfReadyShouldBePerformed() throws SSLException, PrhTaskException {
-        Mono<ConsumerDmaapModel> consumerModel = Mono.just(DMAAP_MODEL);
+        Mono<ConsumerPnfModel> consumerModel = Mono.just(PNF_MODEL);
 
-        given(aaiProducer.execute(DMAAP_MODEL)).willReturn(consumerModel);
-        given(bbsActions.execute(DMAAP_MODEL)).willReturn(consumerModel);
+        given(aaiQuery.findPnfinAAI(any())).willReturn(Mono.just(PNF_MODEL));
+        given(aaiProducer.execute(PNF_MODEL)).willReturn(consumerModel);
+        given(bbsActions.execute(PNF_MODEL)).willReturn(consumerModel);
 
-        given(consumer.execute()).willReturn(Flux.just(DMAAP_MODEL));
+        given(consumer.execute()).willReturn(Flux.just(PNF_MODEL));
         given(aaiQuery.execute(any())).willReturn(Mono.just(false));
-        given(readyPublisher.execute(DMAAP_MODEL)).willReturn(Mono.just("unauthenticated.PNF_READY"));
+        given(readyPublisher.execute(PNF_MODEL)).willReturn(Mono.just("unauthenticated.PNF_READY"));
 
         sut.scheduleMainPrhEventTask();
 
         verifyThatPnfUpdateWasSentToAai();
         verifyIfLogicalLinkWasCreated();
-        verifyThatPnfModelWasSentDmaapPnfReadyTopic();
-        verifyThatPnfModelWasNotSentDmaapPnfUpdateTopic();
+        verifyPnfModelWasSentToReadyTopic();
+        verifyPnfModelWasNotSentToUpdateTopic();
+        verify(consumer, atLeastOnce()).commitOffset();
     }
 
     @Test
     void whenPnfHasActiveService_OnlyPostToPnfUpdateShouldBePerformed() throws SSLException, PrhTaskException {
-        Mono<ConsumerDmaapModel> consumerModel = Mono.just(DMAAP_MODEL);
+        Mono<ConsumerPnfModel> consumerModel = Mono.just(PNF_MODEL);
 
-        given(consumer.execute()).willReturn(Flux.just(DMAAP_MODEL));
+        given(aaiQuery.findPnfinAAI(any())).willReturn(Mono.just(PNF_MODEL));
+        given(consumer.execute()).willReturn(Flux.just(PNF_MODEL));
         given(aaiQuery.execute(any())).willReturn(Mono.just(true));
-        given(aaiProducer.execute(DMAAP_MODEL)).willReturn(consumerModel);
-        given(updatePublisher.execute(DMAAP_MODEL)).willReturn(Mono.just("unauthenticated.PNF_UPDATE"));
+        given(aaiProducer.execute(PNF_MODEL)).willReturn(consumerModel);
+        given(updatePublisher.execute(PNF_MODEL)).willReturn(Mono.just("unauthenticated.PNF_UPDATE"));
 
         sut.scheduleMainPrhEventTask();
 
         verifyThatPnfUpdateWasSentToAai();
         verifyIfLogicalLinkWasNotCreated();
-        verifyThatPnfModelWasNotSentDmaapPnfReadyTopic();
-        verifyThatPnfModelWasSentDmaapPnfUpdateTopic();
+        verifyPnfModelWasNotSentToReadyTopic();
+        verifyPnfModelWasSentToUpdateTopic();
+        verify(consumer, atLeastOnce()).commitOffset();
     }
 
-    private void verifyThatPnfModelWasNotSentDmaapPnfReadyTopic() throws PrhTaskException {
-        verify(readyPublisher, never()).execute(DMAAP_MODEL);
+    private void verifyPnfModelWasNotSentToReadyTopic() throws PrhTaskException {
+        verify(readyPublisher, never()).execute(PNF_MODEL);
     }
 
-    private void verifyThatPnfModelWasNotSentDmaapPnfUpdateTopic() throws PrhTaskException {
-        verify(updatePublisher, never()).execute(DMAAP_MODEL);
+    private void verifyPnfModelWasNotSentToUpdateTopic() throws PrhTaskException {
+        verify(updatePublisher, never()).execute(PNF_MODEL);
     }
 
-    private void verifyThatPnfModelWasSentDmaapPnfReadyTopic() throws PrhTaskException {
-        verify(readyPublisher, atLeastOnce()).execute(DMAAP_MODEL);
+    private void verifyPnfModelWasSentToReadyTopic() throws PrhTaskException {
+        verify(readyPublisher, atLeastOnce()).execute(PNF_MODEL);
     }
 
-    private void verifyThatPnfModelWasSentDmaapPnfUpdateTopic() throws PrhTaskException {
-        verify(updatePublisher, atLeastOnce()).execute(DMAAP_MODEL);
+    private void verifyPnfModelWasSentToUpdateTopic() throws PrhTaskException {
+        verify(updatePublisher, atLeastOnce()).execute(PNF_MODEL);
     }
 
     private void verifyThatPnfUpdateWasNotSentToAai() throws PrhTaskException, SSLException {
-        verify(aaiProducer, never()).execute(DMAAP_MODEL);
+        verify(aaiProducer, never()).execute(PNF_MODEL);
     }
 
     private void verifyThatPnfUpdateWasSentToAai() throws PrhTaskException, SSLException {
-        verify(aaiProducer, atLeastOnce()).execute(DMAAP_MODEL);
+        verify(aaiProducer, atLeastOnce()).execute(PNF_MODEL);
     }
 
-    private void verifyIfLogicalLinkWasCreated(){
-        verify(bbsActions, atLeastOnce()).execute(DMAAP_MODEL);
+    private void verifyIfLogicalLinkWasCreated() {
+        verify(bbsActions, atLeastOnce()).execute(PNF_MODEL);
     }
 
-    private void verifyIfLogicalLinkWasNotCreated(){
-        verify(bbsActions, never()).execute(DMAAP_MODEL);
+    private void verifyIfLogicalLinkWasNotCreated() {
+        verify(bbsActions, never()).execute(PNF_MODEL);
     }
 }
+

@@ -37,8 +37,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.onap.dcaegen2.services.prh.TestAppConfiguration;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerPnfModel;
 import org.onap.dcaegen2.services.prh.adapter.aai.impl.AaiHttpPatchClient;
 import org.onap.dcaegen2.services.prh.adapter.aai.main.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
@@ -52,7 +52,7 @@ import reactor.test.StepVerifier;
  */
 class AaiProducerTaskImplTest {
 
-    private ConsumerDmaapModel consumerDmaapModel;
+    private ConsumerPnfModel consumerPnfModel;
     private AaiProducerTaskImpl aaiProducerTask;
     private AaiClientConfiguration aaiClientConfiguration;
     private AaiHttpPatchClient aaiReactiveHttpPatchClient;
@@ -63,7 +63,7 @@ class AaiProducerTaskImplTest {
     void setUp() {
         clientResponse = mock(HttpResponse.class);
         aaiClientConfiguration = TestAppConfiguration.createDefaultAaiClientConfiguration();
-        consumerDmaapModel = ImmutableConsumerDmaapModel.builder()
+        consumerPnfModel = ImmutableConsumerPnfModel.builder()
                 .ipv4("10.16.123.234")
                 .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
                 .correlationId("NOKQTFCOC540002E")
@@ -95,12 +95,12 @@ class AaiProducerTaskImplTest {
     void whenPassedObjectFits_ReturnsCorrectStatus() throws PrhTaskException, SSLException {
         //given/when
         getAaiProducerTask_whenMockingResponseObject(HttpResponseStatus.OK);
-        Mono<ConsumerDmaapModel> response = aaiProducerTask.execute(consumerDmaapModel);
+        Mono<ConsumerPnfModel> response = aaiProducerTask.execute(consumerPnfModel);
 
         //then
         verify(aaiReactiveHttpPatchClient, times(1)).getAaiResponse(any());
         verifyNoMoreInteractions(aaiReactiveHttpPatchClient);
-        Assertions.assertEquals(consumerDmaapModel, response.block());
+        Assertions.assertEquals(consumerPnfModel, response.block());
 
     }
 
@@ -108,7 +108,7 @@ class AaiProducerTaskImplTest {
     void whenPassedObjectFits_butIncorrectResponseReturns() throws PrhTaskException, SSLException {
         //given/when
         getAaiProducerTask_whenMockingResponseObject(HttpResponseStatus.BAD_REQUEST);
-        StepVerifier.create(aaiProducerTask.execute(consumerDmaapModel)).expectSubscription()
+        StepVerifier.create(aaiProducerTask.execute(consumerPnfModel)).expectSubscription()
             .expectError(PrhTaskException.class).verify();
         //then
         verify(aaiReactiveHttpPatchClient, times(1)).getAaiResponse(any());

@@ -21,11 +21,11 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
 import reactor.core.publisher.Mono;
 
 
 public interface AaiQueryTask {
-    Mono<Boolean> execute(final ConsumerDmaapModel aaiModel);
-    Mono<ConsumerDmaapModel> findPnfinAAI(final ConsumerDmaapModel model);
+    Mono<Boolean> execute(final ConsumerPnfModel aaiModel);
+    Mono<ConsumerPnfModel> findPnfinAAI(final ConsumerPnfModel model);
 }

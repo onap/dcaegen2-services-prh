@@ -3,7 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
- * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
+ * Copyright (C) 2023-2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,6 @@ import static org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.stream
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import java.nio.file.Paths;
-import java.time.Duration;
 import java.util.Map;
 import org.onap.dcaegen2.services.prh.adapter.aai.main.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.adapter.aai.main.ImmutableAaiClientConfiguration;
@@ -36,22 +34,7 @@ import org.onap.dcaegen2.services.sdk.model.streams.dmaap.MessageRouterSink;
 import org.onap.dcaegen2.services.sdk.model.streams.dmaap.MessageRouterSource;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.streams.DataStreams;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.streams.StreamFromGsonParsers;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterPublishRequest;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterSubscribeRequest;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeRequest;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.config.ImmutableMessageRouterPublisherConfig;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.config.ImmutableMessageRouterSubscriberConfig;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.config.MessageRouterPublisherConfig;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.config.MessageRouterSubscriberConfig;
-import org.onap.dcaegen2.services.sdk.security.ssl.ImmutableSecurityKeys;
-import org.onap.dcaegen2.services.sdk.security.ssl.ImmutableSecurityKeysStore;
-import org.onap.dcaegen2.services.sdk.security.ssl.Passwords;
-import org.onap.dcaegen2.services.sdk.security.ssl.SecurityKeys;
 
-/**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 8/21/18
- */
 class CbsContentParser {
     private static final String SECURITY_TRUST_STORE_PATH = "security.trustStorePath";
     private static final String SECURITY_TRUST_STORE_PASS_PATH = "security.trustStorePasswordPath";
@@ -68,46 +51,18 @@ class CbsContentParser {
         this.jsonObject = jsonObject.getAsJsonObject(CONFIG);
     }
 
-    MessageRouterPublishRequest getMessageRouterPublishRequest() {
-        return getMessageRouterPublishRequest(PNF_READY);
+    String getPublishTopicUrl() {
+        return getSinkTopicUrl(PNF_READY);
     }
 
-    MessageRouterPublishRequest getMessageRouterUpdatePublishRequest() {
-        return getMessageRouterPublishRequest(PNF_UPDATE);
+    String getUpdatePublishTopicUrl() {
+        return getSinkTopicUrl(PNF_UPDATE);
     }
 
-    private MessageRouterPublishRequest getMessageRouterPublishRequest(String streamName) {
+    private String getSinkTopicUrl(String streamName) {
         RawDataStream<JsonObject> sink = DataStreams.namedSinks(jsonObject).find(streamWithName(streamName)).get();
         MessageRouterSink parsedSink = StreamFromGsonParsers.messageRouterSinkParser().unsafeParse(sink);
-
-        return ImmutableMessageRouterPublishRequest.builder()
-                .sinkDefinition(parsedSink)
-                .build();
-    }
-
-    MessageRouterPublisherConfig getMessageRouterPublisherConfig() {
-        return ImmutableMessageRouterPublisherConfig.builder()
-                .securityKeys(isDmaapCertAuthEnabled(jsonObject) ? createSecurityKeys(jsonObject) : null)
-                .build();
-    }
-
-    MessageRouterSubscriberConfig getMessageRouterSubscriberConfig() {
-        return ImmutableMessageRouterSubscriberConfig.builder()
-                .securityKeys(isDmaapCertAuthEnabled(jsonObject) ? createSecurityKeys(jsonObject) : null)
-                .build();
-    }
-
-    private SecurityKeys createSecurityKeys(JsonObject config) {
-        return ImmutableSecurityKeys.builder()
-                .keyStore(ImmutableSecurityKeysStore.of(Paths.get(config.get(SECURITY_KEY_STORE_PATH).getAsString())))
-                .keyStorePassword(Passwords.fromPath(Paths.get(config.get(SECURITY_KEY_STORE_PASS_PATH).getAsString())))
-                .trustStore(ImmutableSecurityKeysStore.of(Paths.get(config.get(SECURITY_TRUST_STORE_PATH).getAsString())))
-                .trustStorePassword(Passwords.fromPath(Paths.get(config.get(SECURITY_TRUST_STORE_PASS_PATH).getAsString())))
-                .build();
-    }
-
-    private boolean isDmaapCertAuthEnabled(JsonObject config) {
-        return config.get("security.enableDmaapCertAuth").getAsBoolean();
+        return parsedSink.topicUrl();
     }
 
     AaiClientConfiguration getAaiClientConfig() {
@@ -129,15 +84,14 @@ class CbsContentParser {
             .build();
     }
 
-    MessageRouterSubscribeRequest getMessageRouterSubscribeRequest() {
+    String getSubscribeTopicUrl() {
         RawDataStream<JsonObject> source = DataStreams.namedSources(jsonObject).find(streamWithName(VES_REG_OUTPUT)).get();
         MessageRouterSource parsedSource = StreamFromGsonParsers.messageRouterSourceParser().unsafeParse(source);
+        return parsedSource.topicUrl();
+    }
 
-        return ImmutableMessageRouterSubscribeRequest.builder()
-                .consumerGroup(jsonObject.get("dmaap.dmaapConsumerConfiguration.consumerGroup").getAsString())
-                .sourceDefinition(parsedSource)
-                .consumerId(jsonObject.get("dmaap.dmaapConsumerConfiguration.consumerId").getAsString())
-                .timeout(Duration.ofMillis(jsonObject.get("dmaap.dmaapConsumerConfiguration.timeoutMs").getAsLong()))
-                .build();
+    String getSubscribeConsumerGroup() {
+        return jsonObject.get("dmaap.dmaapConsumerConfiguration.consumerGroup").getAsString();
     }
 }
+

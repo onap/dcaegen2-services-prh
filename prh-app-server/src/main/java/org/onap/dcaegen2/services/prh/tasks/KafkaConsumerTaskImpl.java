@@ -25,12 +25,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
 import org.onap.dcaegen2.services.prh.configuration.Config;
-import org.onap.dcaegen2.services.prh.service.DmaapConsumerJsonParser;
+import org.onap.dcaegen2.services.prh.service.KafkaConsumerJsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
@@ -43,28 +42,28 @@ import javax.annotation.PostConstruct;
  * Consumes PNF registration events from Kafka topic using Spring KafkaListener.
  * Replaces the previous SDK MessageRouterSubscriber-based implementation.
  */
-@Profile("!autoCommitDisabled")
 @Component
-public class DmaapConsumerTaskImpl implements DmaapConsumerTask {
+public class KafkaConsumerTaskImpl implements KafkaConsumerTask {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DmaapConsumerTaskImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerTaskImpl.class);
     private static final String EVENTS_PATH = "/events/";
 
-    private final DmaapConsumerJsonParser dmaapConsumerJsonParser;
+    private final KafkaConsumerJsonParser kafkaConsumerJsonParser;
     private final Config config;
     private final List<String> messageBuffer = Collections.synchronizedList(new ArrayList<>());
+    private volatile Acknowledgment pendingAck;
 
-    public DmaapConsumerTaskImpl(Config config, DmaapConsumerJsonParser dmaapConsumerJsonParser) {
-        this.dmaapConsumerJsonParser = dmaapConsumerJsonParser;
+    public KafkaConsumerTaskImpl(Config config, KafkaConsumerJsonParser kafkaConsumerJsonParser) {
+        this.kafkaConsumerJsonParser = kafkaConsumerJsonParser;
         this.config = config;
     }
 
     @PostConstruct
     void configureKafkaTopic() {
         try {
-            String topicUrl = config.getMessageRouterSubscribeRequest().sourceDefinition().topicUrl();
+            String topicUrl = config.getSubscribeTopicUrl();
             String topic = extractTopicFromUrl(topicUrl);
-            String consumerGroup = config.getMessageRouterSubscribeRequest().consumerGroup();
+            String consumerGroup = config.getSubscribeConsumerGroup();
 
             System.setProperty("kafkaTopic", topic);
             System.setProperty("groupIdConfig", consumerGroup);
@@ -83,11 +82,11 @@ public class DmaapConsumerTaskImpl implements DmaapConsumerTask {
                    .map(ConsumerRecord::value)
                    .forEach(messageBuffer::add);
         }
-        acknowledgment.acknowledge();
+        pendingAck = acknowledgment;
     }
 
     @Override
-    public Flux<ConsumerDmaapModel> execute() {
+    public Flux<ConsumerPnfModel> execute() {
         if (messageBuffer.isEmpty()) {
             return Flux.empty();
         }
@@ -97,7 +96,7 @@ public class DmaapConsumerTaskImpl implements DmaapConsumerTask {
             messageBuffer.clear();
         }
         LOGGER.info("Processing batch of {} PNF registration events", batch.size());
-        return dmaapConsumerJsonParser.getConsumerDmaapModelFromKafkaConsumerRecord(batch);
+        return kafkaConsumerJsonParser.getConsumerModelFromKafkaRecords(batch);
     }
 
     static String extractTopicFromUrl(String topicUrl) {
@@ -110,6 +109,15 @@ public class DmaapConsumerTaskImpl implements DmaapConsumerTask {
             topic = topic.substring(0, topic.length() - 1);
         }
         return topic;
+    }
+
+    @Override
+    public void commitOffset() {
+        if (pendingAck != null) {
+            pendingAck.acknowledge();
+            LOGGER.info("Committed Kafka offset");
+            pendingAck = null;
+        }
     }
 
 }

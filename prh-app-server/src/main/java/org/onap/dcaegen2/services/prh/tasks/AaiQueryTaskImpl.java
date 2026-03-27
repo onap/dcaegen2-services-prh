@@ -27,7 +27,7 @@ import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpClient;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiPnfResultModel;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiServiceInstanceQueryModel;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiServiceInstanceResultModel;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableAaiServiceInstanceQueryModel;
 import org.onap.dcaegen2.services.prh.model.Relationship;
 import org.onap.dcaegen2.services.prh.model.RelationshipData;
@@ -47,12 +47,12 @@ public class AaiQueryTaskImpl implements AaiQueryTask {
     static final String SERVICE_INSTANCE_ID = "service-instance.service-instance-id";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AaiQueryTaskImpl.class);
-    private final AaiHttpClient<ConsumerDmaapModel, AaiPnfResultModel> getPnfModelClient;
+    private final AaiHttpClient<ConsumerPnfModel, AaiPnfResultModel> getPnfModelClient;
     private final AaiHttpClient<AaiServiceInstanceQueryModel, AaiServiceInstanceResultModel> getServiceClient;
 
     @Autowired
     public AaiQueryTaskImpl(
-            final AaiHttpClient<ConsumerDmaapModel, AaiPnfResultModel> getPnfModelClient,
+            final AaiHttpClient<ConsumerPnfModel, AaiPnfResultModel> getPnfModelClient,
             final AaiHttpClient<AaiServiceInstanceQueryModel, AaiServiceInstanceResultModel> getServiceClient) {
         this.getPnfModelClient = getPnfModelClient;
         this.getServiceClient = getServiceClient;
@@ -61,7 +61,7 @@ public class AaiQueryTaskImpl implements AaiQueryTask {
     
 
     @Override
-    public Mono<Boolean> execute(ConsumerDmaapModel aaiModel) {
+    public Mono<Boolean> execute(ConsumerPnfModel aaiModel) {
 
         return getPnfModelClient
                 .getAaiResponse(aaiModel)
@@ -74,7 +74,7 @@ public class AaiQueryTaskImpl implements AaiQueryTask {
 
    // Added by DTAG, March 2023
     @Override
-    public Mono<ConsumerDmaapModel> findPnfinAAI(final ConsumerDmaapModel model) {
+    public Mono<ConsumerPnfModel> findPnfinAAI(final ConsumerPnfModel model) {
 
         return getPnfModelClient
                 .getAaiResponse(model)

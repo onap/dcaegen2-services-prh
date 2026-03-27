@@ -45,8 +45,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.onap.dcaegen2.services.prh.TestAppConfiguration;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerPnfModel;
 import org.onap.dcaegen2.services.prh.adapter.aai.main.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
 import org.onap.dcaegen2.services.prh.exceptions.AaiFailureException;
@@ -80,14 +80,14 @@ class BbsActionsTaskTest {
     void whenPassedObjectDoesntHaveAdditionalFields_ReturnPayloadTransparently() {
         // given
         given(cbsConfiguration.getAaiClientConfiguration()).willReturn(aaiClientConfiguration);
-        ConsumerDmaapModel consumerDmaapModel = buildConsumerDmaapModel(null);
+        ConsumerPnfModel consumerPnfModel = buildConsumerPnfModel(null);
 
         // when
-        ConsumerDmaapModel result = new BbsActionsTaskImpl(cbsConfiguration, httpClient).execute(consumerDmaapModel).block();
+        ConsumerPnfModel result = new BbsActionsTaskImpl(cbsConfiguration, httpClient).execute(consumerPnfModel).block();
 
         // then
         verifyNoInteractions(httpClient);
-        assertThat(result).isEqualTo(consumerDmaapModel);
+        assertThat(result).isEqualTo(consumerPnfModel);
     }
 
     @Test
@@ -97,15 +97,15 @@ class BbsActionsTaskTest {
 
         JsonObject additionalFields = new JsonObject();
         additionalFields.addProperty(ATTACHMENT_POINT, "");
-        ConsumerDmaapModel consumerDmaapModel = buildConsumerDmaapModel(additionalFields);
+        ConsumerPnfModel consumerPnfModel = buildConsumerPnfModel(additionalFields);
 
         // when
-        ConsumerDmaapModel result = new BbsActionsTaskImpl(cbsConfiguration, httpClient).execute(consumerDmaapModel)
+        ConsumerPnfModel result = new BbsActionsTaskImpl(cbsConfiguration, httpClient).execute(consumerPnfModel)
             .block();
 
         // then
         verifyNoInteractions(httpClient);
-        assertThat(result).isEqualTo(consumerDmaapModel);
+        assertThat(result).isEqualTo(consumerPnfModel);
     }
 
     @Test
@@ -117,17 +117,17 @@ class BbsActionsTaskTest {
         String linkName = "some link";
         String encodedLinkName = "some%20link";
         additionalFields.addProperty(ATTACHMENT_POINT, linkName);
-        ConsumerDmaapModel consumerDmaapModel = buildConsumerDmaapModel(additionalFields);
+        ConsumerPnfModel consumerPnfModel = buildConsumerPnfModel(additionalFields);
 
         given(httpClient.call(any()))
             .willReturn(Mono.just(buildAaiResponse(OK, getBodyJson(PNF_WITHOUT_LINK_JSON))),
                 Mono.just(buildAaiResponse(OK, "")));
 
         // when
-        Mono<ConsumerDmaapModel> response = new BbsActionsTaskImpl(cbsConfiguration, httpClient).execute(consumerDmaapModel);
+        Mono<ConsumerPnfModel> response = new BbsActionsTaskImpl(cbsConfiguration, httpClient).execute(consumerPnfModel);
 
         // then
-        assertEquals(consumerDmaapModel, response.block());
+        assertEquals(consumerPnfModel, response.block());
 
         ArgumentCaptor<HttpRequest> captor = ArgumentCaptor.forClass(HttpRequest.class);
         verify(httpClient, times(2)).call(captor.capture());
@@ -153,7 +153,7 @@ class BbsActionsTaskTest {
         JsonObject additionalFields = new JsonObject();
         String linkName = "some-link";
         additionalFields.addProperty(ATTACHMENT_POINT, linkName);
-        ConsumerDmaapModel consumerDmaapModel = buildConsumerDmaapModel(additionalFields);
+        ConsumerPnfModel consumerPnfModel = buildConsumerPnfModel(additionalFields);
 
         given(httpClient.call(any()))
             .willReturn(Mono.just(buildAaiResponse(OK, getBodyJson(PNF_WITH_LINK_JSON))),
@@ -162,10 +162,10 @@ class BbsActionsTaskTest {
                 Mono.just(buildAaiResponse(OK, "")));
 
         // when
-        Mono<ConsumerDmaapModel> response = new BbsActionsTaskImpl(cbsConfiguration, httpClient).execute(consumerDmaapModel);
+        Mono<ConsumerPnfModel> response = new BbsActionsTaskImpl(cbsConfiguration, httpClient).execute(consumerPnfModel);
 
         // then
-        assertEquals(consumerDmaapModel, response.block());
+        assertEquals(consumerPnfModel, response.block());
 
         ArgumentCaptor<HttpRequest> captor = ArgumentCaptor.forClass(HttpRequest.class);
         verify(httpClient, times(4)).call(captor.capture());
@@ -197,7 +197,7 @@ class BbsActionsTaskTest {
         JsonObject additionalFields = new JsonObject();
         String linkName = "some-link";
         additionalFields.addProperty(ATTACHMENT_POINT, linkName);
-        ConsumerDmaapModel consumerDmaapModel = buildConsumerDmaapModel(additionalFields);
+        ConsumerPnfModel consumerPnfModel = buildConsumerPnfModel(additionalFields);
 
         given(httpClient.call(
                 ArgumentMatchers.argThat(argument -> argument.url().equals(AAI_URL + PNF_URL + "/Nokia123")
@@ -205,8 +205,8 @@ class BbsActionsTaskTest {
             .willReturn(Mono.just(buildAaiResponse(INTERNAL_SERVER_ERROR, "")));
 
         // when
-        Mono<ConsumerDmaapModel> response = new BbsActionsTaskImpl(cbsConfiguration, httpClient)
-            .execute(consumerDmaapModel);
+        Mono<ConsumerPnfModel> response = new BbsActionsTaskImpl(cbsConfiguration, httpClient)
+            .execute(consumerPnfModel);
 
         // then
         assertThatThrownBy(response::block).hasCauseInstanceOf(AaiFailureException.class).hasMessage(
@@ -214,8 +214,8 @@ class BbsActionsTaskTest {
                 + "Incorrect response when performing BBS-related actions: 500. Occurred in GET PNF request. Pnf name: Nokia123");
     }
 
-    private ConsumerDmaapModel buildConsumerDmaapModel(JsonObject additionalFields) {
-        return ImmutableConsumerDmaapModel.builder()
+    private ConsumerPnfModel buildConsumerPnfModel(JsonObject additionalFields) {
+        return ImmutableConsumerPnfModel.builder()
             .ipv4("10.16.123.234")
             .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
             .correlationId("Nokia123")

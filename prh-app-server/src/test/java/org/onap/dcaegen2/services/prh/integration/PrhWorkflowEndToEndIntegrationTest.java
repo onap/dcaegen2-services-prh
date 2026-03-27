@@ -58,7 +58,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.onap.dcaegen2.services.prh.MainApp;
 import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
-import org.onap.dcaegen2.services.prh.tasks.DmaapConsumerTaskImpl;
+import org.onap.dcaegen2.services.prh.tasks.KafkaConsumerTaskImpl;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasksRunner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,10 +82,10 @@ import org.springframework.util.concurrent.SettableListenableFuture;
  * <ul>
  *   <li>A&amp;AI – query PNF (GET), update PNF (PATCH), service-instance lookup (GET)</li>
  *   <li>A&amp;AI – BBS logical-link CRUD (GET / PUT / DELETE)</li>
- *   <li>DMaaP Message Router – publish (mocked via KafkaTemplate)</li>
+ *   <li>Kafka Message Router – publish (mocked via KafkaTemplate)</li>
  * </ul>
  *
- * <p>Events are injected directly into the {@link DmaapConsumerTaskImpl} message
+ * <p>Events are injected directly into the {@link KafkaConsumerTaskImpl} message
  * buffer via {@code onMessage()}, bypassing the Kafka listener container
  * (which is disabled via {@code setAutoStartup(false)} in the test config).
  * The publisher is mocked via {@code KafkaTemplate}.
@@ -105,7 +105,7 @@ class PrhWorkflowEndToEndIntegrationTest {
     private ScheduledTasksRunner scheduledTasksRunner;  // disable auto-scheduling
 
     @Autowired
-    private DmaapConsumerTaskImpl dmaapConsumerTaskImpl;
+    private KafkaConsumerTaskImpl kafkaConsumerTaskImpl;
 
     @MockBean
     private KafkaTemplate<String, String> kafkaTemplate;
@@ -138,7 +138,7 @@ class PrhWorkflowEndToEndIntegrationTest {
     @BeforeEach
     void setup() {
         WireMock.reset();
-        dmaapConsumerTaskImpl.execute();  // drain any leftover events
+        kafkaConsumerTaskImpl.execute();  // drain any leftover events
         topicCaptor = ArgumentCaptor.forClass(String.class);
 
         SettableListenableFuture mockFuture = new SettableListenableFuture();
@@ -147,10 +147,10 @@ class PrhWorkflowEndToEndIntegrationTest {
                 .thenReturn(mockFuture);
     }
 
-    // ==================== Scenario 1: Empty DMaaP response ====================
+    // ==================== Scenario 1: Empty Kafka response ====================
 
     @Test
-    void whenDmaapReturnsNoEvents_noAaiOrPublishCallsShouldBeMade() {
+    void whenKafkaReturnsNoEvents_noAaiOrPublishCallsShouldBeMade() {
         // No events injected — buffer is empty
 
         scheduledTasks.scheduleMainPrhEventTask();
@@ -159,7 +159,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         verify(0, getRequestedFor(urlPathMatching("/aai.*")));
         verify(0, patchRequestedFor(urlPathMatching("/aai.*")));
 
-        // No DMaaP publish should occur
+        // No Kafka publish should occur
         Mockito.verify(kafkaTemplate, never()).send(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString());
     }
 
@@ -183,8 +183,8 @@ class PrhWorkflowEndToEndIntegrationTest {
 
         scheduledTasks.scheduleMainPrhEventTask();
 
-        // Verify: AAI GET PNF was called
-        verify(1, getRequestedFor(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)));
+        // Verify: AAI GET PNF was called (twice: findPnfinAAI + queryAaiForConfiguration)
+        verify(2, getRequestedFor(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)));
 
         // Verify: AAI PATCH was made with the correct PNF data
         verify(1, patchRequestedFor(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName))
@@ -243,8 +243,8 @@ class PrhWorkflowEndToEndIntegrationTest {
 
         scheduledTasks.scheduleMainPrhEventTask();
 
-        // Verify: AAI GET PNF was queried
-        verify(1, getRequestedFor(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)));
+        // Verify: AAI GET PNF was queried (twice: findPnfinAAI + queryAaiForConfiguration)
+        verify(2, getRequestedFor(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)));
 
         // Verify: service-instance was queried
         verify(1, getRequestedFor(urlEqualTo(serviceInstancePath)));
@@ -474,7 +474,7 @@ class PrhWorkflowEndToEndIntegrationTest {
                 .withHeader("Authorization", equalTo("Basic QUFJOkFBSQ==")));
     }
 
-    // ==================== Scenario 9: DMaaP publish message structure ====================
+    // ==================== Scenario 9: Kafka publish message structure ====================
 
     @Test
     void pnfReadyMessageShouldContainCorrelationIdAndAdditionalFields() {
@@ -505,7 +505,7 @@ class PrhWorkflowEndToEndIntegrationTest {
     // ==================== Scenario 10: Multiple events in single batch ====================
 
     @Test
-    void whenMultipleEventsInDmaapBatch_allShouldBeProcessed() {
+    void whenMultipleEventsInKafkaBatch_allShouldBeProcessed() {
         String event1 = getResourceContent("integration/event.json");
         String event2 = event1.replace("NOK6061ZW8", "NOK6061ZW9");
 
@@ -527,7 +527,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         verify(1, patchRequestedFor(urlEqualTo("/aai/v23/network/pnfs/pnf/NOK6061ZW8")));
         verify(1, patchRequestedFor(urlEqualTo("/aai/v23/network/pnfs/pnf/NOK6061ZW9")));
 
-        // Both should trigger DMaaP publish to PNF_READY
+        // Both should trigger Kafka publish to PNF_READY
         Mockito.verify(kafkaTemplate, times(2)).send(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString());
     }
 
@@ -539,7 +539,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         for (String event : events) {
             records.add(new ConsumerRecord<>("test-topic", 0, 0, null, event));
         }
-        dmaapConsumerTaskImpl.onMessage(records, Mockito.mock(Acknowledgment.class));
+        kafkaConsumerTaskImpl.onMessage(records, Mockito.mock(Acknowledgment.class));
     }
 
     private static String getResourceContent(String resourceName) {

@@ -40,11 +40,13 @@ class CbsConfigurationTest {
     void whenConfigurationIsNotInitializedBasedOnDataReceivedFromCbs_shouldThrowExceptionWithDescriptiveMessage() {
         assertThatThrownBy(() -> new CbsConfiguration().getAaiClientConfiguration())
                 .hasMessage(EXPECTED_ERROR_MESSAGE_WHEN_CBS_CONFIG_IS_NOT_INITIALIZED);
-        assertThatThrownBy(() -> new CbsConfiguration().getMessageRouterSubscribeRequest())
+        assertThatThrownBy(() -> new CbsConfiguration().getSubscribeTopicUrl())
                 .hasMessage(EXPECTED_ERROR_MESSAGE_WHEN_CBS_CONFIG_IS_NOT_INITIALIZED);
-        assertThatThrownBy(() -> new CbsConfiguration().getMessageRouterPublishRequest())
+        assertThatThrownBy(() -> new CbsConfiguration().getPublishTopicUrl())
                 .hasMessage(EXPECTED_ERROR_MESSAGE_WHEN_CBS_CONFIG_IS_NOT_INITIALIZED);
-        assertThatThrownBy(() -> new CbsConfiguration().getMessageRouterUpdatePublishRequest())
+        assertThatThrownBy(() -> new CbsConfiguration().getUpdatePublishTopicUrl())
+                .hasMessage(EXPECTED_ERROR_MESSAGE_WHEN_CBS_CONFIG_IS_NOT_INITIALIZED);
+        assertThatThrownBy(() -> new CbsConfiguration().getSubscribeConsumerGroup())
                 .hasMessage(EXPECTED_ERROR_MESSAGE_WHEN_CBS_CONFIG_IS_NOT_INITIALIZED);
     }
 
@@ -62,9 +64,10 @@ class CbsConfigurationTest {
             cbsConfiguration.parseCBSConfig(cbsConfigJson);
 
             assertThat(cbsConfiguration.getAaiClientConfiguration()).isNotNull();
-            assertThat(cbsConfiguration.getMessageRouterPublishRequest()).isNotNull();
-            assertThat(cbsConfiguration.getMessageRouterSubscribeRequest()).isNotNull();
-            assertThat(cbsConfiguration.getMessageRouterUpdatePublishRequest()).isNotNull();
+            assertThat(cbsConfiguration.getPublishTopicUrl()).isNotNull();
+            assertThat(cbsConfiguration.getSubscribeTopicUrl()).isNotNull();
+            assertThat(cbsConfiguration.getUpdatePublishTopicUrl()).isNotNull();
+            assertThat(cbsConfiguration.getSubscribeConsumerGroup()).isNotNull();
         });
        
 

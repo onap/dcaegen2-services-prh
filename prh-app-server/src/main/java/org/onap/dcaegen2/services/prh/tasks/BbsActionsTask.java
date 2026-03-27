@@ -20,10 +20,10 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
 import reactor.core.publisher.Mono;
 
 @FunctionalInterface
 public interface BbsActionsTask {
-    Mono<ConsumerDmaapModel> execute(ConsumerDmaapModel consumerDmaapModel);
+    Mono<ConsumerPnfModel> execute(ConsumerPnfModel consumerPnfModel);
 }

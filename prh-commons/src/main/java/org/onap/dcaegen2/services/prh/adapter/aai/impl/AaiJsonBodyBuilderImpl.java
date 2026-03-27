@@ -23,33 +23,33 @@ package org.onap.dcaegen2.services.prh.adapter.aai.impl;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapterFactory;
 import java.util.ServiceLoader;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerDmaapModel.Builder;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerPnfModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerPnfModel.Builder;
 import org.springframework.util.StringUtils;
 
 
 public class AaiJsonBodyBuilderImpl {
 
-    public String createJsonBody(ConsumerDmaapModel consumerDmaapModel) {
+    public String createJsonBody(ConsumerPnfModel consumerPnfModel) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         ServiceLoader.load(TypeAdapterFactory.class).forEach(gsonBuilder::registerTypeAdapterFactory);
 
-        Builder builder = ImmutableConsumerDmaapModel.builder()
-            .correlationId(consumerDmaapModel.getCorrelationId())
-            .serialNumber(consumerDmaapModel.getSerialNumber())
-            .equipVendor(consumerDmaapModel.getEquipVendor())
-            .equipModel(consumerDmaapModel.getEquipModel())
-            .equipType(consumerDmaapModel.getEquipType())
-            .nfRole(consumerDmaapModel.getNfRole())
-            .swVersion(consumerDmaapModel.getSwVersion())
-            .additionalFields(consumerDmaapModel.getAdditionalFields());
+        Builder builder = ImmutableConsumerPnfModel.builder()
+            .correlationId(consumerPnfModel.getCorrelationId())
+            .serialNumber(consumerPnfModel.getSerialNumber())
+            .equipVendor(consumerPnfModel.getEquipVendor())
+            .equipModel(consumerPnfModel.getEquipModel())
+            .equipType(consumerPnfModel.getEquipType())
+            .nfRole(consumerPnfModel.getNfRole())
+            .swVersion(consumerPnfModel.getSwVersion())
+            .additionalFields(consumerPnfModel.getAdditionalFields());
 
-        String ipv4 = consumerDmaapModel.getIpv4();
+        String ipv4 = consumerPnfModel.getIpv4();
         if (!StringUtils.isEmpty(ipv4)) {
             builder.ipv4(ipv4);
         }
-        String ipv6 = consumerDmaapModel.getIpv6();
+        String ipv6 = consumerPnfModel.getIpv6();
         if (!StringUtils.isEmpty(ipv6)) {
             builder.ipv6(ipv6);
         }

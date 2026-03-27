@@ -3,7 +3,6 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
- * Copyright (C) 2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,16 +18,14 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.dcaegen2.services.prh.tasks;
-
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
-import reactor.core.publisher.Mono;
+package org.onap.dcaegen2.services.prh.exceptions;
 
 /**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
+ * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 6/13/18
  */
-@FunctionalInterface
-public interface DmaapPublisherTask {
-    Mono<String> execute(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException;
+public class KafkaEmptyResponseException extends PrhTaskException {
+
+    public KafkaEmptyResponseException() {
+        super();
+    }
 }

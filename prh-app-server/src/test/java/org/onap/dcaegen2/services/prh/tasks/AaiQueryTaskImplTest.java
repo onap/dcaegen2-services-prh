@@ -40,8 +40,8 @@ import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpClient;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiPnfResultModel;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiServiceInstanceQueryModel;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiServiceInstanceResultModel;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerPnfModel;
 import org.onap.dcaegen2.services.prh.model.ImmutableRelationshipData;
 import org.onap.dcaegen2.services.prh.model.Relationship;
 import org.onap.dcaegen2.services.prh.model.RelationshipData;
@@ -51,7 +51,7 @@ import reactor.core.publisher.Mono;
 @ExtendWith(MockitoExtension.class)
 class AaiQueryTaskImplTest {
     @Mock
-    private AaiHttpClient<ConsumerDmaapModel, AaiPnfResultModel> getPnfModelClient;
+    private AaiHttpClient<ConsumerPnfModel, AaiPnfResultModel> getPnfModelClient;
 
     @Mock
     private AaiHttpClient<AaiServiceInstanceQueryModel, AaiServiceInstanceResultModel> getServiceClient;
@@ -72,7 +72,7 @@ class AaiQueryTaskImplTest {
 
     private AaiQueryTask sut;
 
-    private final ConsumerDmaapModel aaiModel = mock(ConsumerDmaapModel.class);
+    private final ConsumerPnfModel aaiModel = mock(ConsumerPnfModel.class);
 
     @BeforeEach
     void setUp() {
@@ -192,15 +192,15 @@ class AaiQueryTaskImplTest {
         Assertions.assertTrue(task::block);
     }
 
-    private void configurePnfClient(final ConsumerDmaapModel aaiModel, final AaiPnfResultModel pnfResultModel) {
+    private void configurePnfClient(final ConsumerPnfModel aaiModel, final AaiPnfResultModel pnfResultModel) {
         given(getPnfModelClient.getAaiResponse(aaiModel)).willReturn(Mono.just(pnfResultModel));
     }
 
     @Test
     void testFindPnfInAAIActive(){
-        ConsumerDmaapModel model = ImmutableConsumerDmaapModel.builder().correlationId("123").build();
+        ConsumerPnfModel model = ImmutableConsumerPnfModel.builder().correlationId("123").build();
         configurePnfClient(model, pnfResultModel);
-        Mono<ConsumerDmaapModel> test = sut.findPnfinAAI(model);
+        Mono<ConsumerPnfModel> test = sut.findPnfinAAI(model);
         Assertions.assertNotNull(test);
     }
 }

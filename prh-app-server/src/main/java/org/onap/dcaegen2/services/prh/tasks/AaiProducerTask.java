@@ -21,11 +21,11 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import reactor.core.publisher.Mono;
 
 @FunctionalInterface
 public interface AaiProducerTask {
-    Mono<ConsumerDmaapModel> execute(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException;
+    Mono<ConsumerPnfModel> execute(ConsumerPnfModel consumerPnfModel) throws PrhTaskException;
 }

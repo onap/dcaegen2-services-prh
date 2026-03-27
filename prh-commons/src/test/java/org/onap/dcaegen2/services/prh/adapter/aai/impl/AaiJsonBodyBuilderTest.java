@@ -3,6 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,15 +24,15 @@ package org.onap.dcaegen2.services.prh.adapter.aai.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerPnfModel;
 
 class AaiJsonBodyBuilderTest {
 
     @Test
     void createJsonBody_shouldReturnJsonInString() {
 
-        ConsumerDmaapModel model = ImmutableConsumerDmaapModel.builder()
+        ConsumerPnfModel model = ImmutableConsumerPnfModel.builder()
                 .correlationId("NOKnhfsadhff")
                 .ipv4("256.22.33.155")
                 .ipv6("200J:0db8:85a3:0000:0000:8a2e:0370:7334")
@@ -61,7 +62,7 @@ class AaiJsonBodyBuilderTest {
     @Test
     void createJsonBodyWithoutIPs_shouldReturnJsonInString() {
 
-        ConsumerDmaapModel model = ImmutableConsumerDmaapModel.builder()
+        ConsumerPnfModel model = ImmutableConsumerPnfModel.builder()
             .correlationId("NOKnhfsadhff")
             .serialNumber("1234")
             .equipVendor("NOKIA")
@@ -87,7 +88,7 @@ class AaiJsonBodyBuilderTest {
     @Test
     void createJsonBodyWithEmptyIPs_shouldReturnJsonInString() {
 
-        ConsumerDmaapModel model = ImmutableConsumerDmaapModel.builder()
+        ConsumerPnfModel model = ImmutableConsumerPnfModel.builder()
             .correlationId("NOKnhfsadhff")
             .ipv4("")
             .ipv6("")

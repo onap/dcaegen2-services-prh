@@ -3,6 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +22,9 @@
 package org.onap.dcaegen2.services.prh.tasks;
 
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpClient;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
 import org.onap.dcaegen2.services.prh.exceptions.AaiNotFoundException;
-import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
+import org.onap.dcaegen2.services.prh.exceptions.KafkaNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.utils.HttpUtils;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
@@ -42,18 +43,18 @@ public class AaiProducerTaskImpl implements AaiProducerTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AaiProducerTaskImpl.class);
 
-    private final AaiHttpClient<ConsumerDmaapModel, HttpResponse> aaiHttpPatchClient;
+    private final AaiHttpClient<ConsumerPnfModel, HttpResponse> aaiHttpPatchClient;
 
     @Autowired
-    public AaiProducerTaskImpl(final AaiHttpClient<ConsumerDmaapModel, HttpResponse> aaiHttpPatchClient) {
+    public AaiProducerTaskImpl(final AaiHttpClient<ConsumerPnfModel, HttpResponse> aaiHttpPatchClient) {
         this.aaiHttpPatchClient = aaiHttpPatchClient;
     }
 
-    private Mono<ConsumerDmaapModel> publish(ConsumerDmaapModel consumerDmaapModel) {
-        Mono<HttpResponse> response = aaiHttpPatchClient.getAaiResponse(consumerDmaapModel);
+    private Mono<ConsumerPnfModel> publish(ConsumerPnfModel consumerPnfModel) {
+        Mono<HttpResponse> response = aaiHttpPatchClient.getAaiResponse(consumerPnfModel);
         return response.flatMap(r -> {
             if (HttpUtils.isSuccessfulResponseCode(r.statusCode())) {
-                return Mono.just(consumerDmaapModel);
+                return Mono.just(consumerPnfModel);
             }
             return Mono
                     .error(new AaiNotFoundException("Incorrect response code for continuation of tasks workflow" + r.statusCode()));
@@ -61,11 +62,11 @@ public class AaiProducerTaskImpl implements AaiProducerTask {
     }
 
     @Override
-    public Mono<ConsumerDmaapModel> execute(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException {
-        if (consumerDmaapModel == null) {
-            throw new DmaapNotFoundException("Invoked null object to DMaaP task");
+    public Mono<ConsumerPnfModel> execute(ConsumerPnfModel consumerPnfModel) throws PrhTaskException {
+        if (consumerPnfModel == null) {
+            throw new KafkaNotFoundException("Invoked null object to Kafka task");
         }
-        LOGGER.debug("Method called with arg {}", consumerDmaapModel);
-        return publish(consumerDmaapModel);
+        LOGGER.debug("Method called with arg {}", consumerPnfModel);
+        return publish(consumerPnfModel);
     }
 }

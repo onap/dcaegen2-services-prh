@@ -3,6 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +23,9 @@ package org.onap.dcaegen2.services.prh.adapter.aai.impl;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerDmaapModel.Builder;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerPnfModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerPnfModel.Builder;
 import org.onap.dcaegen2.services.prh.model.utils.PrhModelAwareGsonBuilder;
 
 
@@ -33,14 +34,14 @@ public class PnfReadyJsonBodyBuilder {
     /**
      * Method for serialization object by GSON.
      *
-     * @param consumerDmaapModel - object which will be serialized
+     * @param consumerPnfModel - object which will be serialized
      * @return string from serialization
      */
-    public JsonElement createJsonBody(ConsumerDmaapModel consumerDmaapModel) {
-        Builder builder = ImmutableConsumerDmaapModel.builder()
-            .correlationId(consumerDmaapModel.getCorrelationId());
+    public JsonElement createJsonBody(ConsumerPnfModel consumerPnfModel) {
+        Builder builder = ImmutableConsumerPnfModel.builder()
+            .correlationId(consumerPnfModel.getCorrelationId());
 
-        JsonObject additionalFields =  consumerDmaapModel.getAdditionalFields();
+        JsonObject additionalFields =  consumerPnfModel.getAdditionalFields();
         if(additionalFields != null && !additionalFields.equals(new JsonObject())) {
             builder.additionalFields(additionalFields);
         }

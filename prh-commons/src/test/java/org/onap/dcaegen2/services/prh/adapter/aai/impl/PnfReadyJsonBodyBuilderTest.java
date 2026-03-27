@@ -3,6 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.junit.jupiter.api.Test;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerPnfModel;
 
 class PnfReadyJsonBodyBuilderTest {
 
@@ -39,7 +40,7 @@ class PnfReadyJsonBodyBuilderTest {
             + "        \"svlan\": \"1005\"\n"
             + "      }");
 
-        ConsumerDmaapModel model = ImmutableConsumerDmaapModel.builder()
+        ConsumerPnfModel model = ImmutableConsumerPnfModel.builder()
             .correlationId("NOKnhfsadhff")
             .additionalFields(jsonObject)
             .build();
@@ -55,7 +56,7 @@ class PnfReadyJsonBodyBuilderTest {
     @Test
     void createJsonBodyWithNullableFieldsNotSet_shouldReturnJsonInString() {
 
-        ConsumerDmaapModel model = ImmutableConsumerDmaapModel.builder()
+        ConsumerPnfModel model = ImmutableConsumerPnfModel.builder()
             .correlationId("NOKnhfsadhff")
             .build();
 
@@ -68,7 +69,7 @@ class PnfReadyJsonBodyBuilderTest {
     void createJsonBodyWithEmptyOptionalPnfRegistrationFields_shouldReturnJsonInString() {
         JsonObject jsonObject = new JsonObject();
 
-        ConsumerDmaapModel model = ImmutableConsumerDmaapModel.builder()
+        ConsumerPnfModel model = ImmutableConsumerPnfModel.builder()
             .correlationId("NOKnhfsadhff")
             .additionalFields(jsonObject)
             .build();

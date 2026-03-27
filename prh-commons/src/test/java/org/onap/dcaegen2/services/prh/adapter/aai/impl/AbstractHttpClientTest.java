@@ -3,6 +3,7 @@
  * DCAEGEN2-SERVICES-SDK
  * ================================================================================
  * Copyright (C) 2019 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +22,14 @@ package org.onap.dcaegen2.services.prh.adapter.aai.impl;
 
 import static org.mockito.Mockito.mock;
 
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
 import org.onap.dcaegen2.services.prh.adapter.aai.main.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RxHttpClient;
 
 public class AbstractHttpClientTest {
 
-    protected final ConsumerDmaapModel aaiModel = mock(ConsumerDmaapModel.class);
+    protected final ConsumerPnfModel aaiModel = mock(ConsumerPnfModel.class);
     protected final RxHttpClient httpClient = mock(RxHttpClient.class);
     protected final AaiJsonBodyBuilderImpl bodyBuilder = mock(AaiJsonBodyBuilderImpl.class);
     protected final HttpResponse response = mock(HttpResponse.class);

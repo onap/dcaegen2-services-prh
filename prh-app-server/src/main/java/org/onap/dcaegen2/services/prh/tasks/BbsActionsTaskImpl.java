@@ -3,6 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2019 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +33,7 @@ import com.google.gson.JsonObject;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiPnfResultModel;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.exceptions.AaiFailureException;
 import org.onap.dcaegen2.services.prh.model.ImmutableRelationshipDict;
@@ -78,17 +79,17 @@ public class BbsActionsTaskImpl implements BbsActionsTask {
         this.httpClient = httpClient;
     }
 
-    public Mono<ConsumerDmaapModel> execute(ConsumerDmaapModel consumerDmaapModel) {
-        JsonObject additionalFields = consumerDmaapModel.getAdditionalFields();
+    public Mono<ConsumerPnfModel> execute(ConsumerPnfModel consumerPnfModel) {
+        JsonObject additionalFields = consumerPnfModel.getAdditionalFields();
         if (additionalFields == null || !additionalFields.has(ATTACHMENT_POINT)) {
-            return Mono.just(consumerDmaapModel);
+            return Mono.just(consumerPnfModel);
         }
         String linkName = additionalFields.get(ATTACHMENT_POINT).getAsString();
         if (linkName.isEmpty()) {
             LOGGER.warn("Attachment point is empty! Ignore related actions.");
-            return Mono.just(consumerDmaapModel);
+            return Mono.just(consumerPnfModel);
         }
-        String pnfName = consumerDmaapModel.getCorrelationId();
+        String pnfName = consumerPnfModel.getCorrelationId();
 
         return getLinksByPnf(pnfName)
             .flatMap(x -> Flux.fromIterable(x.getRelationshipData()))
@@ -98,7 +99,7 @@ public class BbsActionsTaskImpl implements BbsActionsTask {
             .filter(oldLink -> oldLink.getLinkType().equals(ATTACHMENT_POINT))
             .flatMap(oldLink -> deleteLogicalLinkInAai(oldLink.getLinkName(), oldLink.getResourceVersion()))
             .then(createLogicalLinkInAai(linkName, pnfName))
-            .flatMap(response -> handleFinalResponse(response, consumerDmaapModel));
+            .flatMap(response -> handleFinalResponse(response, consumerPnfModel));
     }
 
     private Flux<RelationshipDict> getLinksByPnf(String pnfName) {
@@ -196,10 +197,10 @@ public class BbsActionsTaskImpl implements BbsActionsTask {
             Mono.error(new AaiFailureException(ERROR_PREFIX + response.statusCode() + ". Occurred in " + msg));
     }
 
-    private Mono<? extends ConsumerDmaapModel> handleFinalResponse(
-        HttpResponse response, ConsumerDmaapModel consumerDmaapModel) {
+    private Mono<? extends ConsumerPnfModel> handleFinalResponse(
+        HttpResponse response, ConsumerPnfModel consumerPnfModel) {
         return HttpUtils.isSuccessfulResponseCode(response.statusCode())
-            ? Mono.just(consumerDmaapModel) : Mono.error(new AaiFailureException(ERROR_PREFIX + response.statusCode()));
+            ? Mono.just(consumerPnfModel) : Mono.error(new AaiFailureException(ERROR_PREFIX + response.statusCode()));
     }
 
     private String buildUri(String path) {

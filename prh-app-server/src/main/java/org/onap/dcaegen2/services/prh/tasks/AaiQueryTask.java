@@ -3,7 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
- * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
+ * Copyright (C) 2023-2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,11 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
 import reactor.core.publisher.Mono;
 
 
 public interface AaiQueryTask {
-    Mono<Boolean> execute(final ConsumerDmaapModel aaiModel);
-    Mono<ConsumerDmaapModel> findPnfinAAI(final ConsumerDmaapModel model);
+    Mono<Boolean> execute(final ConsumerPnfModel aaiModel);
+    Mono<ConsumerPnfModel> findPnfinAAI(final ConsumerPnfModel model);
 }

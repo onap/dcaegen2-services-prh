@@ -31,8 +31,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerDmaapModel;
-import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerPnfModel;
+import org.onap.dcaegen2.services.prh.exceptions.KafkaNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.util.concurrent.SettableListenableFuture;
@@ -42,32 +42,32 @@ import reactor.test.StepVerifier;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/17/18
  */
 @ExtendWith(MockitoExtension.class)
-class DmaapPublisherTaskImplTest {
+class KafkaPublisherTaskImplTest {
 
     private static final String TOPIC = "unauthenticated.PNF_READY";
 
-    private DmaapPublisherTaskImpl dmaapPublisherTask;
+    private KafkaPublisherTaskImpl kafkaPublisherTask;
 
     @Mock
     private KafkaTemplate<String, String> kafkaTemplate;
 
     @Test
     void execute_whenPassedObjectDoesntFit_ThrowsPrhTaskException() {
-        dmaapPublisherTask = new DmaapPublisherTaskImpl(kafkaTemplate, () -> TOPIC);
-        Executable executableFunction = () -> dmaapPublisherTask.execute(null);
+        kafkaPublisherTask = new KafkaPublisherTaskImpl(kafkaTemplate, () -> TOPIC);
+        Executable executableFunction = () -> kafkaPublisherTask.execute(null);
         assertThrows(PrhTaskException.class, executableFunction, "The specified parameter is incorrect");
     }
 
     @Test
-    void execute_whenPassedObjectFits_ReturnsCorrectStatus() throws DmaapNotFoundException {
-        dmaapPublisherTask = new DmaapPublisherTaskImpl(kafkaTemplate, () -> TOPIC);
+    void execute_whenPassedObjectFits_ReturnsCorrectStatus() throws KafkaNotFoundException {
+        kafkaPublisherTask = new KafkaPublisherTaskImpl(kafkaTemplate, () -> TOPIC);
 
         SettableListenableFuture mockFuture = new SettableListenableFuture();
         mockFuture.set(null);
         when(kafkaTemplate.send(eq(TOPIC), org.mockito.ArgumentMatchers.anyString()))
                 .thenReturn(mockFuture);
 
-        StepVerifier.create(dmaapPublisherTask.execute(createConsumerDmaapModel()))
+        StepVerifier.create(kafkaPublisherTask.execute(createConsumerPnfModel()))
                 .expectNext(TOPIC)
                 .verifyComplete();
 
@@ -75,8 +75,8 @@ class DmaapPublisherTaskImplTest {
     }
 
 
-    private ImmutableConsumerDmaapModel createConsumerDmaapModel() {
-        return ImmutableConsumerDmaapModel.builder()
+    private ImmutableConsumerPnfModel createConsumerPnfModel() {
+        return ImmutableConsumerPnfModel.builder()
                 .ipv4("10.16.123.234")
                 .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
                 .correlationId("NOKQTFCOC540002E")

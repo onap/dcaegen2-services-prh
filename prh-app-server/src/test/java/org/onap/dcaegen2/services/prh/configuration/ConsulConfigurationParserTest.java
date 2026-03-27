@@ -3,6 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,25 +23,15 @@ package org.onap.dcaegen2.services.prh.configuration;
 
 import static java.lang.ClassLoader.getSystemResource;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.Duration;
-import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.prh.TestAppConfiguration;
 import org.onap.dcaegen2.services.prh.adapter.aai.main.AaiClientConfiguration;
 import org.onap.dcaegen2.services.prh.adapter.aai.main.ImmutableAaiClientConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.ContentType;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeRequest;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.config.MessageRouterPublisherConfig;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.config.MessageRouterSubscriberConfig;
-import org.onap.dcaegen2.services.sdk.security.ssl.SecurityKeys;
 
 
 class ConsulConfigurationParserTest {
@@ -58,123 +49,37 @@ class ConsulConfigurationParserTest {
 
     @Test
     void shouldCreateAaiConfigurationCorrectly() {
-        // when
         AaiClientConfiguration aaiClientConfig = consulConfigurationParser.getAaiClientConfig();
 
-        // then
         assertThat(aaiClientConfig).isNotNull();
         assertThat(aaiClientConfig).isEqualToComparingFieldByField(correctAaiClientConfig);
     }
 
     @Test
-    void shouldCreateMessageRouterSubscribeRequestCorrectly() {
-        // given
-        MessageRouterSubscribeRequest messageRouterSubscribeRequest = consulConfigurationParser
-            .getMessageRouterSubscribeRequest();
+    void shouldCreateSubscribeTopicUrlCorrectly() {
+        String topicUrl = consulConfigurationParser.getSubscribeTopicUrl();
 
-        // then
-        assertThat(messageRouterSubscribeRequest.sourceDefinition().topicUrl())
-            .isEqualTo("http://dmaap-mr:2222/events/unauthenticated.VES_PNFREG_OUTPUT");
-        assertThat(messageRouterSubscribeRequest.consumerGroup()).isEqualTo("OpenDCAE-c12");
-        assertThat(messageRouterSubscribeRequest.consumerId()).isEqualTo("c12");
-        assertThat(messageRouterSubscribeRequest.timeout()).isEqualTo(Duration.ofMillis(-1));
+        assertThat(topicUrl).isEqualTo("http://dmaap-mr:2222/events/unauthenticated.VES_PNFREG_OUTPUT");
     }
 
     @Test
-    void shouldCreateMessageRouterPublishConfigurationCorrectly() {
-        // when
-        MessageRouterPublishRequest messageRouterPublishRequest = consulConfigurationParser
-            .getMessageRouterPublishRequest();
+    void shouldCreateSubscribeConsumerGroupCorrectly() {
+        String consumerGroup = consulConfigurationParser.getSubscribeConsumerGroup();
 
-        // then
-        assertThat(messageRouterPublishRequest.contentType()).isEqualTo(ContentType.APPLICATION_JSON);
-        assertThat(messageRouterPublishRequest.sinkDefinition().topicUrl())
-            .isEqualTo("http://dmaap-mr:2222/events/unauthenticated.PNF_READY");
+        assertThat(consumerGroup).isEqualTo("OpenDCAE-c12");
     }
 
     @Test
-    void shouldCreateMessageRouterUpdatePublishConfigurationCorrectly() {
-        // when
-        MessageRouterPublishRequest messageRouterPublishRequest = consulConfigurationParser
-            .getMessageRouterUpdatePublishRequest();
+    void shouldCreatePublishTopicUrlCorrectly() {
+        String topicUrl = consulConfigurationParser.getPublishTopicUrl();
 
-        // then
-        assertThat(messageRouterPublishRequest.contentType()).isEqualTo(ContentType.APPLICATION_JSON);
-        assertThat(messageRouterPublishRequest.sinkDefinition().topicUrl())
-            .isEqualTo("http://dmaap-mr:2222/events/unauthenticated.PNF_UPDATE");
+        assertThat(topicUrl).isEqualTo("http://dmaap-mr:2222/events/unauthenticated.PNF_READY");
     }
 
     @Test
-    void whenDmaapCertAuthIsDisabled_MessageRouterPublisherConfigSecurityKeysShouldBeIgnored() {
-        assumeFalse(correctConfig.getAsJsonObject("config").get("security.enableDmaapCertAuth").getAsBoolean());
+    void shouldCreateUpdatePublishTopicUrlCorrectly() {
+        String topicUrl = consulConfigurationParser.getUpdatePublishTopicUrl();
 
-        MessageRouterPublisherConfig messageRouterPublisherConfig = consulConfigurationParser
-            .getMessageRouterPublisherConfig();
-
-        assertThat(messageRouterPublisherConfig.securityKeys()).isNull();
+        assertThat(topicUrl).isEqualTo("http://dmaap-mr:2222/events/unauthenticated.PNF_UPDATE");
     }
-
-    @Test
-    void whenDmaapCertAuthIsDisabled_MessageRouterSubscriberConfigSecurityKeysShouldBeIgnored() {
-        assumeFalse(correctConfig.getAsJsonObject("config").get("security.enableDmaapCertAuth").getAsBoolean());
-
-        MessageRouterSubscriberConfig messageRouterSubscriberConfig = consulConfigurationParser
-            .getMessageRouterSubscriberConfig();
-
-        assertThat(messageRouterSubscriberConfig.securityKeys()).isNull();
-    }
-
-
-    @Test
-    void whenDmaapCertAuthIsEnabled_MessageRouterPublisherConfigSecurityKeysShouldBeLoaded() {
-        CbsContentParser consulConfigurationParser = new CbsContentParser(getConfigWithSslEnabled(correctJson));
-
-        MessageRouterPublisherConfig messageRouterPublisherConfig = consulConfigurationParser
-            .getMessageRouterPublisherConfig();
-
-        verifySecurityKeys(messageRouterPublisherConfig.securityKeys());
-    }
-
-
-    @Test
-    void whenDmaapCertAuthIsEnabled_MessageRouterSubscriberConfigSecurityKeysShouldBeLoaded() {
-        CbsContentParser consulConfigurationParser = new CbsContentParser(getConfigWithSslEnabled(correctJson));
-
-        MessageRouterSubscriberConfig messageRouterSubscriberConfig = consulConfigurationParser
-            .getMessageRouterSubscriberConfig();
-
-        verifySecurityKeys(messageRouterSubscriberConfig.securityKeys());
-    }
-
-    private static void verifySecurityKeys(@Nullable SecurityKeys securityKeys) {
-        assertThat(securityKeys).isNotNull();
-        assertThat(securityKeys.trustStore().path().endsWith("org.onap.dcae.trust.jks")).isTrue();
-        assertThat(securityKeys.keyStore().path().endsWith("org.onap.dcae.jks")).isTrue();
-        securityKeys.trustStorePassword()
-            .use(chars -> assertThat(new String(chars)).isEqualTo("*TQH?Lnszprs4LmlAj38yds("));
-        securityKeys.keyStorePassword()
-            .use(chars -> assertThat(new String(chars)).isEqualTo("mYHC98!qX}7h?W}jRv}MIXTJ"));
-    }
-
-    private static JsonObject getConfigWithSslEnabled(String configJsonString) {
-        JsonObject configJson = new Gson().fromJson(configJsonString, JsonObject.class);
-        JsonObject config = configJson.getAsJsonObject("config");
-        config.addProperty("security.enableDmaapCertAuth", true);
-        config.addProperty("security.enableAaiCertAuth", true);
-        config.addProperty("security.trustStorePath", testResourceToPath("/org.onap.dcae.trust.jks"));
-        config.addProperty("security.trustStorePasswordPath", testResourceToPath("/truststore.password"));
-        config.addProperty("security.keyStorePath", testResourceToPath("/org.onap.dcae.jks"));
-        config.addProperty("security.keyStorePasswordPath", testResourceToPath("/keystore.password"));
-        return configJson;
-    }
-
-
-    private static String testResourceToPath(String resource) {
-        try {
-            return Paths.get(ConsulConfigurationParserTest.class.getResource(resource).toURI()).toString();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Failed resolving test resource path", e);
-        }
-    }
-
 }

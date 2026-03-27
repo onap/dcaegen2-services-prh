@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.onap.dcaegen2.services.prh.MainApp;
 import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
-import org.onap.dcaegen2.services.prh.tasks.DmaapConsumerTaskImpl;
+import org.onap.dcaegen2.services.prh.tasks.KafkaConsumerTaskImpl;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasksRunner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +82,7 @@ class PrhWorkflowIntegrationTest {
     private ScheduledTasksRunner scheduledTasksRunner;  // just to disable scheduling
     
     @Autowired
-    private DmaapConsumerTaskImpl dmaapConsumerTaskImpl;
+    private KafkaConsumerTaskImpl kafkaConsumerTaskImpl;
 
     @MockBean
     private KafkaTemplate<String, String> kafkaTemplate;
@@ -116,7 +116,7 @@ class PrhWorkflowIntegrationTest {
     @BeforeEach
     void resetWireMock() {
         WireMock.reset();
-        dmaapConsumerTaskImpl.execute();  // drain any leftover events
+        kafkaConsumerTaskImpl.execute();  // drain any leftover events
 
         SettableListenableFuture mockFuture = new SettableListenableFuture();
         mockFuture.set(null);
@@ -125,7 +125,7 @@ class PrhWorkflowIntegrationTest {
 
 
     @Test
-    void whenThereAreNoEventsInDmaap_WorkflowShouldFinish() {    
+    void whenThereAreNoEvents_WorkflowShouldFinish() {    
         scheduledTasks.scheduleMainPrhEventTask();
 
         verify(0, anyRequestedFor(urlPathMatching("/aai.*")));
@@ -134,7 +134,7 @@ class PrhWorkflowIntegrationTest {
 
 
     @Test
-    void whenThereIsAnEventsInDmaap_ShouldSendPnfReadyNotification() {
+    void whenThereIsAnEvent_ShouldSendPnfReadyNotification() {
         String event = getResourceContent("integration/event.json");
         String pnfName = JsonPath.read(event, "$.event.commonEventHeader.sourceName");
         stubFor(get(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)).willReturn(ok().withBody("{}")));
@@ -142,7 +142,7 @@ class PrhWorkflowIntegrationTest {
         
         // Inject event into consumer task buffer
         ConsumerRecord<String, String> record = new ConsumerRecord<>("test-topic", 0, 0, null, event);
-        dmaapConsumerTaskImpl.onMessage(Collections.singletonList(record),
+        kafkaConsumerTaskImpl.onMessage(Collections.singletonList(record),
                 Mockito.mock(Acknowledgment.class));
         
         scheduledTasks.scheduleMainPrhEventTask();

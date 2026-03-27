@@ -22,19 +22,17 @@
 package org.onap.dcaegen2.services.prh.configuration;
 
 import org.onap.dcaegen2.services.prh.adapter.aai.main.AaiClientConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeRequest;
 
-/**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/25/18
- */
 public interface Config {
 
-    MessageRouterSubscribeRequest getMessageRouterSubscribeRequest();
+    String getSubscribeTopicUrl();
+
+    String getSubscribeConsumerGroup();
 
     AaiClientConfiguration getAaiClientConfiguration();
 
-    MessageRouterPublishRequest getMessageRouterPublishRequest();
+    String getPublishTopicUrl();
 
-    MessageRouterPublishRequest getMessageRouterUpdatePublishRequest();
+    String getUpdatePublishTopicUrl();
 }
+

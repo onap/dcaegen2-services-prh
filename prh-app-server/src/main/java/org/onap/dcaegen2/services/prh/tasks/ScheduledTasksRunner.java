@@ -28,7 +28,6 @@ import javax.annotation.PreDestroy;
 import org.onap.dcaegen2.services.prh.configuration.PrhProperties;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -37,7 +36,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 6/13/18
  */
 
-@Profile("!autoCommitDisabled")
 @Configuration
 @EnableScheduling
 public class ScheduledTasksRunner {

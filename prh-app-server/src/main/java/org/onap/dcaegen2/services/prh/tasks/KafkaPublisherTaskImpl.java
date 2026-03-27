@@ -22,9 +22,9 @@
 package org.onap.dcaegen2.services.prh.tasks;
 
 import java.util.function.Supplier;
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
 import org.onap.dcaegen2.services.prh.adapter.aai.impl.PnfReadyJsonBodyBuilder;
-import org.onap.dcaegen2.services.prh.exceptions.DmaapNotFoundException;
+import org.onap.dcaegen2.services.prh.exceptions.KafkaNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -33,28 +33,28 @@ import reactor.core.publisher.Mono;
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
-public class DmaapPublisherTaskImpl implements DmaapPublisherTask {
+public class KafkaPublisherTaskImpl implements KafkaPublisherTask {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DmaapPublisherTaskImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaPublisherTaskImpl.class);
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final Supplier<String> topicNameSupplier;
     private final PnfReadyJsonBodyBuilder pnfReadyJsonBodyBuilder = new PnfReadyJsonBodyBuilder();
 
-    public DmaapPublisherTaskImpl(KafkaTemplate<String, String> kafkaTemplate,
+    public KafkaPublisherTaskImpl(KafkaTemplate<String, String> kafkaTemplate,
                                   Supplier<String> topicNameSupplier) {
         this.kafkaTemplate = kafkaTemplate;
         this.topicNameSupplier = topicNameSupplier;
     }
 
     @Override
-    public Mono<String> execute(ConsumerDmaapModel consumerDmaapModel) throws DmaapNotFoundException {
-        if (consumerDmaapModel == null) {
-            throw new DmaapNotFoundException("Invoked null object to DMaaP task");
+    public Mono<String> execute(ConsumerPnfModel consumerPnfModel) throws KafkaNotFoundException {
+        if (consumerPnfModel == null) {
+            throw new KafkaNotFoundException("Invoked null object to Kafka task");
         }
         String topicName = topicNameSupplier.get();
-        LOGGER.info("Publishing to topic {} with arg {}", topicName, consumerDmaapModel);
-        String jsonBody = pnfReadyJsonBodyBuilder.createJsonBody(consumerDmaapModel).toString();
+        LOGGER.info("Publishing to topic {} with arg {}", topicName, consumerPnfModel);
+        String jsonBody = pnfReadyJsonBodyBuilder.createJsonBody(consumerPnfModel).toString();
         return Mono.create(sink ->
             kafkaTemplate.send(topicName, jsonBody).addCallback(
                 result -> {

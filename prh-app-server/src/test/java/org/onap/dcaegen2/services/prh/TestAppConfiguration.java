@@ -21,38 +21,10 @@
 
 package org.onap.dcaegen2.services.prh;
 
-import java.time.Duration;
 import org.onap.dcaegen2.services.prh.adapter.aai.main.ImmutableAaiClientConfiguration;
-import org.onap.dcaegen2.services.sdk.model.streams.dmaap.ImmutableMessageRouterSink;
-import org.onap.dcaegen2.services.sdk.model.streams.dmaap.ImmutableMessageRouterSource;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.ContentType;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterPublishRequest;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterSubscribeRequest;
 
 
 public class TestAppConfiguration {
-    public static ImmutableMessageRouterSubscribeRequest createDefaultMessageRouterSubscribeRequest() {
-        return ImmutableMessageRouterSubscribeRequest.builder()
-                .consumerGroup("OpenDCAE-c12")
-                .sourceDefinition(ImmutableMessageRouterSource.builder()
-                        .name("the topic")
-                        .topicUrl(String.format("http://%s:%d/events/TOPIC", "www", 1234))
-                        .build())
-                .consumerId("c12")
-                .timeout(Duration.ofMillis(1))
-                .build();
-    }
-
-    public static ImmutableMessageRouterPublishRequest createDefaultMessageRouterPublishRequest() {
-        return ImmutableMessageRouterPublishRequest.builder()
-                .contentType(ContentType.APPLICATION_JSON)
-                .sinkDefinition(ImmutableMessageRouterSink.builder()
-                        .name("the topic")
-                        .topicUrl(String.format("http://%s:%d/events/TOPIC", "www", 1234))
-                        .build())
-                .build();
-
-  }
 
     public static ImmutableAaiClientConfiguration createDefaultAaiClientConfiguration() {
         return new ImmutableAaiClientConfiguration.Builder()
@@ -75,3 +47,4 @@ public class TestAppConfiguration {
                 .build();
     }
 }
+

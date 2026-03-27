@@ -21,27 +21,27 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
-import org.onap.dcaegen2.services.prh.tasks.DmaapPublisherTask;
-import org.onap.dcaegen2.services.prh.tasks.DmaapPublisherTaskImpl;
+import org.onap.dcaegen2.services.prh.tasks.KafkaPublisherTask;
+import org.onap.dcaegen2.services.prh.tasks.KafkaPublisherTaskImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.KafkaTemplate;
 
 @Configuration
-public class DmaapPublisherTaskConfig {
+public class KafkaPublisherTaskConfig {
     @Bean(name = "ReadyPublisherTask")
     @Autowired
-    public DmaapPublisherTask getReadyPublisherTask(KafkaTemplate<String, String> kafkaTemplate, Config config) {
-        return new DmaapPublisherTaskImpl(kafkaTemplate,
-                () -> extractTopicName(config.getMessageRouterPublishRequest().sinkDefinition().topicUrl()));
+    public KafkaPublisherTask getReadyPublisherTask(KafkaTemplate<String, String> kafkaTemplate, Config config) {
+        return new KafkaPublisherTaskImpl(kafkaTemplate,
+                () -> extractTopicName(config.getPublishTopicUrl()));
     }
 
     @Bean(name = "UpdatePublisherTask")
     @Autowired
-    public DmaapPublisherTask getUpdatePublisherTask(KafkaTemplate<String, String> kafkaTemplate, Config config) {
-        return new DmaapPublisherTaskImpl(kafkaTemplate,
-                () -> extractTopicName(config.getMessageRouterUpdatePublishRequest().sinkDefinition().topicUrl()));
+    public KafkaPublisherTask getUpdatePublisherTask(KafkaTemplate<String, String> kafkaTemplate, Config config) {
+        return new KafkaPublisherTaskImpl(kafkaTemplate,
+                () -> extractTopicName(config.getUpdatePublishTopicUrl()));
     }
 
     static String extractTopicName(String topicUrl) {

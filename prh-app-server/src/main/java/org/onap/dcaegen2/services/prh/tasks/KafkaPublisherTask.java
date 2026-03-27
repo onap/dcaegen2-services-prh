@@ -21,7 +21,7 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerDmaapModel;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import reactor.core.publisher.Mono;
 
@@ -29,6 +29,6 @@ import reactor.core.publisher.Mono;
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 3/23/18
  */
 @FunctionalInterface
-public interface DmaapPublisherTask {
-    Mono<String> execute(ConsumerDmaapModel consumerDmaapModel) throws PrhTaskException;
+public interface KafkaPublisherTask {
+    Mono<String> execute(ConsumerPnfModel consumerPnfModel) throws PrhTaskException;
 }

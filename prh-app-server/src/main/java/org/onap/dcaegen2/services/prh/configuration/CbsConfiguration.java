@@ -24,43 +24,39 @@ package org.onap.dcaegen2.services.prh.configuration;
 import com.google.gson.JsonObject;
 import java.util.Optional;
 import org.onap.dcaegen2.services.prh.adapter.aai.main.AaiClientConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
 
 
-@Profile("!autoCommitDisabled")
 public class CbsConfiguration implements Config {
     private static final Logger LOGGER = LoggerFactory.getLogger(CbsConfiguration.class);
     protected static final String CBS_CONFIG_MISSING = "CBS config missing";
     protected AaiClientConfiguration aaiClientCBSConfiguration;
-    protected MessageRouterPublishRequest messageRouterCBSPublishRequest;
-    protected MessageRouterSubscribeRequest messageRouterCBSSubscribeRequest;
-    protected MessageRouterPublishRequest messageRouterCBSUpdatePublishRequest;
-    
+    protected String publishTopicUrl;
+    protected String updatePublishTopicUrl;
+    protected String subscribeTopicUrl;
+    protected String subscribeConsumerGroup;
+
     public void parseCBSConfig(JsonObject jsonObject) {
-        
         LOGGER.info("Received application configuration: {}", jsonObject);
-        CbsContentParser  consulConfigurationParser = new CbsContentParser(jsonObject);
+        CbsContentParser consulConfigurationParser = new CbsContentParser(jsonObject);
         aaiClientCBSConfiguration = consulConfigurationParser.getAaiClientConfig();
 
-        messageRouterCBSPublishRequest = consulConfigurationParser.getMessageRouterPublishRequest();
-        messageRouterCBSUpdatePublishRequest = consulConfigurationParser.getMessageRouterUpdatePublishRequest();
-
-        messageRouterCBSSubscribeRequest = consulConfigurationParser.getMessageRouterSubscribeRequest();
-     }
+        publishTopicUrl = consulConfigurationParser.getPublishTopicUrl();
+        updatePublishTopicUrl = consulConfigurationParser.getUpdatePublishTopicUrl();
+        subscribeTopicUrl = consulConfigurationParser.getSubscribeTopicUrl();
+        subscribeConsumerGroup = consulConfigurationParser.getSubscribeConsumerGroup();
+    }
 
     @Override
-    public MessageRouterPublishRequest getMessageRouterPublishRequest() {
-        return Optional.ofNullable(messageRouterCBSPublishRequest)
+    public String getPublishTopicUrl() {
+        return Optional.ofNullable(publishTopicUrl)
                 .orElseThrow(() -> new RuntimeException(CBS_CONFIG_MISSING));
     }
 
     @Override
-    public MessageRouterPublishRequest getMessageRouterUpdatePublishRequest() {
-        return Optional.ofNullable(messageRouterCBSUpdatePublishRequest)
+    public String getUpdatePublishTopicUrl() {
+        return Optional.ofNullable(updatePublishTopicUrl)
                 .orElseThrow(() -> new RuntimeException(CBS_CONFIG_MISSING));
     }
 
@@ -71,9 +67,15 @@ public class CbsConfiguration implements Config {
     }
 
     @Override
-    public MessageRouterSubscribeRequest getMessageRouterSubscribeRequest() {
-        return Optional.ofNullable(messageRouterCBSSubscribeRequest)
+    public String getSubscribeTopicUrl() {
+        return Optional.ofNullable(subscribeTopicUrl)
                 .orElseThrow(() -> new RuntimeException(CBS_CONFIG_MISSING));
     }
-    
+
+    @Override
+    public String getSubscribeConsumerGroup() {
+        return Optional.ofNullable(subscribeConsumerGroup)
+                .orElseThrow(() -> new RuntimeException(CBS_CONFIG_MISSING));
+    }
 }
+

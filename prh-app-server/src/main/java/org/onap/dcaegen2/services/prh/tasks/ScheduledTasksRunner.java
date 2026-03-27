@@ -87,10 +87,9 @@ public class ScheduledTasksRunner {
     }
     
     /**
-     * Function for cleaning resources for kafka subscriber and publisher.
+     * Function for cleaning resources for kafka publisher.
      */
     public synchronized void closeKafkaPublisherSubscriber() {
-        cbsConfiguration.getMessageRouterSubscriber().close();
         cbsConfiguration.getMessageRouterPublisher().close();
     }
 }

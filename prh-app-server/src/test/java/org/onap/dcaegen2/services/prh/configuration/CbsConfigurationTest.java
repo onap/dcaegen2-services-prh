@@ -42,8 +42,6 @@ class CbsConfigurationTest {
                 .hasMessage(EXPECTED_ERROR_MESSAGE_WHEN_CBS_CONFIG_IS_NOT_INITIALIZED);
         assertThatThrownBy(() -> new CbsConfiguration().getMessageRouterPublisher())
                 .hasMessage(EXPECTED_ERROR_MESSAGE_WHEN_CBS_CONFIG_IS_NOT_INITIALIZED);
-        assertThatThrownBy(() -> new CbsConfiguration().getMessageRouterSubscriber())
-                .hasMessage(EXPECTED_ERROR_MESSAGE_WHEN_CBS_CONFIG_IS_NOT_INITIALIZED);
         assertThatThrownBy(() -> new CbsConfiguration().getMessageRouterSubscribeRequest())
                 .hasMessage(EXPECTED_ERROR_MESSAGE_WHEN_CBS_CONFIG_IS_NOT_INITIALIZED);
         assertThatThrownBy(() -> new CbsConfiguration().getMessageRouterPublishRequest())
@@ -67,7 +65,6 @@ class CbsConfigurationTest {
 
             assertThat(cbsConfiguration.getAaiClientConfiguration()).isNotNull();
             assertThat(cbsConfiguration.getMessageRouterPublisher()).isNotNull();
-            assertThat(cbsConfiguration.getMessageRouterSubscriber()).isNotNull();
             assertThat(cbsConfiguration.getMessageRouterPublishRequest()).isNotNull();
             assertThat(cbsConfiguration.getMessageRouterSubscribeRequest()).isNotNull();
             assertThat(cbsConfiguration.getMessageRouterUpdatePublishRequest()).isNotNull();

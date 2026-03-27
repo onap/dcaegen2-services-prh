@@ -26,7 +26,6 @@ import java.util.Optional;
 import org.onap.dcaegen2.services.prh.adapter.aai.main.AaiClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.DmaapClientFactory;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterPublisher;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterSubscriber;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeRequest;
 import org.slf4j.Logger;
@@ -40,7 +39,6 @@ public class CbsConfiguration implements Config {
     protected static final String CBS_CONFIG_MISSING = "CBS config missing";
     protected AaiClientConfiguration aaiClientCBSConfiguration;
     protected MessageRouterPublisher messageRouterPublisher;
-    protected MessageRouterSubscriber messageRouterSubscriber;
     protected MessageRouterPublishRequest messageRouterCBSPublishRequest;
     protected MessageRouterSubscribeRequest messageRouterCBSSubscribeRequest;
     protected MessageRouterPublishRequest messageRouterCBSUpdatePublishRequest;
@@ -56,26 +54,12 @@ public class CbsConfiguration implements Config {
         messageRouterCBSPublishRequest = consulConfigurationParser.getMessageRouterPublishRequest();
         messageRouterCBSUpdatePublishRequest = consulConfigurationParser.getMessageRouterUpdatePublishRequest();
 
-        messageRouterSubscriber = DmaapClientFactory
-                .createMessageRouterSubscriber(consulConfigurationParser.getMessageRouterSubscriberConfig());
-        String prevTopicUrl = null;
-        if(messageRouterCBSSubscribeRequest != null) {
-            prevTopicUrl = messageRouterCBSSubscribeRequest.sourceDefinition().topicUrl();
-        }
         messageRouterCBSSubscribeRequest = consulConfigurationParser.getMessageRouterSubscribeRequest();
-        if(!messageRouterCBSSubscribeRequest.sourceDefinition().topicUrl().equals(prevTopicUrl)) {
-            messageRouterSubscriber.close();
-        }
      }
 
     @Override
     public MessageRouterPublisher getMessageRouterPublisher() {
         return Optional.ofNullable(messageRouterPublisher).orElseThrow(() -> new RuntimeException(CBS_CONFIG_MISSING));
-    }
-
-    @Override
-    public MessageRouterSubscriber getMessageRouterSubscriber() {
-        return Optional.ofNullable(messageRouterSubscriber).orElseThrow(() -> new RuntimeException(CBS_CONFIG_MISSING));
     }
 
     @Override

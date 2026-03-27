@@ -47,25 +47,24 @@ import static org.mockito.Mockito.when;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import io.vavr.collection.List;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.onap.dcaegen2.services.prh.MainApp;
 import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
+import org.onap.dcaegen2.services.prh.tasks.DmaapConsumerTaskImpl;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasksRunner;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterPublisher;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterSubscriber;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterPublishResponse;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterSubscribeResponse;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -75,9 +74,9 @@ import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.test.context.ActiveProfiles;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 /**
  * End-to-end integration tests for the PRH workflow (default/prod profile).
@@ -86,15 +85,16 @@ import reactor.core.publisher.Mono;
  * <ul>
  *   <li>A&amp;AI – query PNF (GET), update PNF (PATCH), service-instance lookup (GET)</li>
  *   <li>A&amp;AI – BBS logical-link CRUD (GET / PUT / DELETE)</li>
- *   <li>DMaaP Message Router – subscribe and publish (mocked at the SDK boundary since
+ *   <li>DMaaP Message Router – publish (mocked at the SDK boundary since
  *       the DMaaP SDK internally forces Kafka transport when JAAS_CONFIG is set)</li>
  * </ul>
  *
- * <p>The DMaaP subscriber/publisher are the only mocked components — all AAI HTTP
- * interactions flow through the real HTTP client chain to WireMock, ensuring the
- * external HTTP contract is pinned for safe refactoring.
+ * <p>Events are injected directly into the {@link DmaapConsumerTaskImpl} message
+ * buffer via {@code onMessage()}, bypassing the Kafka listener container
+ * (which is disabled via {@code setAutoStartup(false)} in the test config).
+ * The publisher is still mocked at the SDK boundary (Phase 2 will replace it).
  */
-@SpringBootTest
+@SpringBootTest(properties = {"spring.kafka.listener.auto-startup=false"})
 @AutoConfigureWireMock(port = 0)
 @ActiveProfiles(value = "prod")
 class PrhWorkflowEndToEndIntegrationTest {
@@ -108,13 +108,11 @@ class PrhWorkflowEndToEndIntegrationTest {
     @MockBean
     private ScheduledTasksRunner scheduledTasksRunner;  // disable auto-scheduling
 
-    @Mock
-    private MessageRouterSubscriber subscriber;
+    @Autowired
+    private DmaapConsumerTaskImpl dmaapConsumerTaskImpl;
 
-    @Mock
     private MessageRouterPublisher publisher;
 
-    @Captor
     private ArgumentCaptor<MessageRouterPublishRequest> publishRequestCaptor;
 
     @Configuration
@@ -143,10 +141,9 @@ class PrhWorkflowEndToEndIntegrationTest {
     @BeforeEach
     void setup() {
         WireMock.reset();
-        // Override DMaaP subscriber/publisher with mocks.
-        // The real SDK subscriber/publisher would try Kafka transport — mocks let us
-        // control event injection and verify published messages without Kafka infrastructure.
-        when(cbsConfiguration.getMessageRouterSubscriber()).thenReturn(subscriber);
+        dmaapConsumerTaskImpl.execute();  // drain any leftover events
+        publisher = Mockito.mock(MessageRouterPublisher.class);
+        publishRequestCaptor = ArgumentCaptor.forClass(MessageRouterPublishRequest.class);
         when(cbsConfiguration.getMessageRouterPublisher()).thenReturn(publisher);
         when(publisher.put(any(MessageRouterPublishRequest.class), any()))
                 .thenReturn(Flux.just(ImmutableMessageRouterPublishResponse.builder().build()));
@@ -156,7 +153,7 @@ class PrhWorkflowEndToEndIntegrationTest {
 
     @Test
     void whenDmaapReturnsNoEvents_noAaiOrPublishCallsShouldBeMade() {
-        givenSubscriberReturns(/* no events */);
+        // No events injected — buffer is empty
 
         scheduledTasks.scheduleMainPrhEventTask();
 
@@ -165,7 +162,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         verify(0, patchRequestedFor(urlPathMatching("/aai.*")));
 
         // No DMaaP publish should occur
-        org.mockito.Mockito.verify(publisher, never()).put(any(), any());
+        Mockito.verify(publisher, never()).put(any(), any());
     }
 
     // ==================== Scenario 2: First registration (no service-instance relation) ====================
@@ -175,7 +172,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         String event = getResourceContent("integration/event.json");
         String pnfName = "NOK6061ZW8";
 
-        givenSubscriberReturns(event);
+        injectEvents(event);
 
         // Stub A&AI GET PNF – return PNF without relationship-list (first registration)
         stubFor(get(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName))
@@ -204,7 +201,7 @@ class PrhWorkflowEndToEndIntegrationTest {
                 .withRequestBody(matchingJsonPath("$.['sw-version']", equalTo("val7"))));
 
         // Verify: published to PNF_READY (not PNF_UPDATE)
-        org.mockito.Mockito.verify(publisher, times(1)).put(publishRequestCaptor.capture(), any());
+        Mockito.verify(publisher, times(1)).put(publishRequestCaptor.capture(), any());
         assertThat(publishRequestCaptor.getValue().sinkDefinition().topicUrl())
                 .contains("PNF_READY");
     }
@@ -216,7 +213,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         String event = getResourceContent("integration/event.json");
         String pnfName = "NOK6061ZW8";
 
-        givenSubscriberReturns(event);
+        injectEvents(event);
 
         // Stub A&AI GET PNF – PNF with service-instance relationship
         String pnfWithServiceRelation = "{"
@@ -258,7 +255,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         verify(1, patchRequestedFor(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)));
 
         // Verify: published to PNF_UPDATE (not PNF_READY) because it's a re-registration
-        org.mockito.Mockito.verify(publisher, times(1)).put(publishRequestCaptor.capture(), any());
+        Mockito.verify(publisher, times(1)).put(publishRequestCaptor.capture(), any());
         assertThat(publishRequestCaptor.getValue().sinkDefinition().topicUrl())
                 .contains("PNF_UPDATE");
     }
@@ -270,7 +267,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         String event = getResourceContent("integration/event.json");
         String pnfName = "NOK6061ZW8";
 
-        givenSubscriberReturns(event);
+        injectEvents(event);
 
         // PNF with service-instance relationship but Inactive
         String pnfWithServiceRelation = "{"
@@ -300,7 +297,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         scheduledTasks.scheduleMainPrhEventTask();
 
         // Inactive means not a re-registration → PNF_READY
-        org.mockito.Mockito.verify(publisher, times(1)).put(publishRequestCaptor.capture(), any());
+        Mockito.verify(publisher, times(1)).put(publishRequestCaptor.capture(), any());
         assertThat(publishRequestCaptor.getValue().sinkDefinition().topicUrl())
                 .contains("PNF_READY");
     }
@@ -312,7 +309,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         String event = getResourceContent("integration/event-with-attachment-point.json");
         String pnfName = "NOK6061ZW3";
 
-        givenSubscriberReturns(event);
+        injectEvents(event);
 
         // Stub A&AI GET PNF – return PNF with an existing logical-link relationship
         // (no service-instance → first registration → BBS actions will run)
@@ -369,7 +366,7 @@ class PrhWorkflowEndToEndIntegrationTest {
                 .withRequestBody(matchingJsonPath("$.['link-type']", equalTo("attachment-point"))));
 
         // Verify: published to PNF_READY (first registration)
-        org.mockito.Mockito.verify(publisher, times(1)).put(publishRequestCaptor.capture(), any());
+        Mockito.verify(publisher, times(1)).put(publishRequestCaptor.capture(), any());
         assertThat(publishRequestCaptor.getValue().sinkDefinition().topicUrl())
                 .contains("PNF_READY");
     }
@@ -381,7 +378,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         String event = getResourceContent("integration/event-with-attachment-point.json");
         String pnfName = "NOK6061ZW3";
 
-        givenSubscriberReturns(event);
+        injectEvents(event);
 
         // PNF with both logical-link AND active service-instance (re-registration)
         String pnfBody = "{"
@@ -416,7 +413,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         verify(0, deleteRequestedFor(urlPathMatching("/aai/v23/network/logical-links/.*")));
 
         // Verify: published to PNF_UPDATE
-        org.mockito.Mockito.verify(publisher, times(1)).put(publishRequestCaptor.capture(), any());
+        Mockito.verify(publisher, times(1)).put(publishRequestCaptor.capture(), any());
         assertThat(publishRequestCaptor.getValue().sinkDefinition().topicUrl())
                 .contains("PNF_UPDATE");
     }
@@ -428,7 +425,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         String event = getResourceContent("integration/event.json");
         String pnfName = "NOK6061ZW8";
 
-        givenSubscriberReturns(event);
+        injectEvents(event);
 
         stubFor(get(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName))
                 .willReturn(ok().withHeader("Content-Type", "application/json")
@@ -443,7 +440,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         verify(0, putRequestedFor(urlPathMatching("/aai/v23/network/logical-links/.*")));
         verify(0, deleteRequestedFor(urlPathMatching("/aai/v23/network/logical-links/.*")));
 
-        org.mockito.Mockito.verify(publisher, times(1)).put(publishRequestCaptor.capture(), any());
+        Mockito.verify(publisher, times(1)).put(publishRequestCaptor.capture(), any());
         assertThat(publishRequestCaptor.getValue().sinkDefinition().topicUrl())
                 .contains("PNF_READY");
     }
@@ -455,7 +452,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         String event = getResourceContent("integration/event.json");
         String pnfName = "NOK6061ZW8";
 
-        givenSubscriberReturns(event);
+        injectEvents(event);
 
         stubFor(get(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName))
                 .willReturn(ok().withHeader("Content-Type", "application/json")
@@ -486,7 +483,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         String event = getResourceContent("integration/event-with-attachment-point.json");
         String pnfName = "NOK6061ZW3";
 
-        givenSubscriberReturns(event);
+        injectEvents(event);
 
         // PNF without logical-link relationships (no old link to delete)
         stubFor(get(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName))
@@ -502,7 +499,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         scheduledTasks.scheduleMainPrhEventTask();
 
         // Verify publisher was called with the PNF_READY topic
-        org.mockito.Mockito.verify(publisher, times(1)).put(publishRequestCaptor.capture(), any());
+        Mockito.verify(publisher, times(1)).put(publishRequestCaptor.capture(), any());
         assertThat(publishRequestCaptor.getValue().sinkDefinition().topicUrl())
                 .contains("PNF_READY");
     }
@@ -514,7 +511,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         String event1 = getResourceContent("integration/event.json");
         String event2 = event1.replace("NOK6061ZW8", "NOK6061ZW9");
 
-        givenSubscriberReturns(event1, event2);
+        injectEvents(event1, event2);
 
         stubFor(get(urlEqualTo("/aai/v23/network/pnfs/pnf/NOK6061ZW8"))
                 .willReturn(ok().withHeader("Content-Type", "application/json")
@@ -533,18 +530,18 @@ class PrhWorkflowEndToEndIntegrationTest {
         verify(1, patchRequestedFor(urlEqualTo("/aai/v23/network/pnfs/pnf/NOK6061ZW9")));
 
         // Both should trigger DMaaP publish to PNF_READY
-        org.mockito.Mockito.verify(publisher, times(2)).put(any(), any());
+        Mockito.verify(publisher, times(2)).put(any(), any());
     }
 
 
     // ==================== Helpers ====================
 
-    private void givenSubscriberReturns(String... events) {
-        List<String> items = List.of(events);
-        when(subscriber.get(any(MessageRouterSubscribeRequest.class)))
-                .thenReturn(Mono.just(ImmutableMessageRouterSubscribeResponse.builder()
-                        .items(items.map(JsonPrimitive::new))
-                        .build()));
+    private void injectEvents(String... events) {
+        List<ConsumerRecord<String, String>> records = new ArrayList<>();
+        for (String event : events) {
+            records.add(new ConsumerRecord<>("test-topic", 0, 0, null, event));
+        }
+        dmaapConsumerTaskImpl.onMessage(records, Mockito.mock(Acknowledgment.class));
     }
 
     private static String getResourceContent(String resourceName) {

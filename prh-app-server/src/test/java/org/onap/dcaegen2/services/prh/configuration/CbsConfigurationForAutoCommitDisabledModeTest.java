@@ -101,7 +101,6 @@ public class CbsConfigurationForAutoCommitDisabledModeTest {
 
         assertThat((cbsConfigurationForAutoCommitDisabled).getAaiClientConfiguration()).isNotNull();
         assertThat((cbsConfigurationForAutoCommitDisabled).getMessageRouterPublisher()).isNotNull();
-        assertThat((cbsConfigurationForAutoCommitDisabled).getMessageRouterSubscriber()).isNotNull();
         assertThat((cbsConfigurationForAutoCommitDisabled).getMessageRouterPublishRequest()).isNotNull();
         assertThat((cbsConfigurationForAutoCommitDisabled).getMessageRouterSubscribeRequest()).isNotNull();
         assertThat((cbsConfigurationForAutoCommitDisabled).getMessageRouterUpdatePublishRequest()).isNotNull();

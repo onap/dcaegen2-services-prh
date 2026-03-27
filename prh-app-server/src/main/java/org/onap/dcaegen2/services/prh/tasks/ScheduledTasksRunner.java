@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import javax.annotation.PreDestroy;
-import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
 import org.onap.dcaegen2.services.prh.configuration.PrhProperties;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.annotation.Configuration;
@@ -47,13 +46,11 @@ public class ScheduledTasksRunner {
     private final TaskScheduler taskScheduler;
     private final ScheduledTasks scheduledTask;
     private final PrhProperties prhProperties;
-    private final CbsConfiguration cbsConfiguration;
     public ScheduledTasksRunner(TaskScheduler taskScheduler, ScheduledTasks scheduledTask,
-        PrhProperties prhProperties, CbsConfiguration cbsConfiguration) {
+        PrhProperties prhProperties) {
         this.taskScheduler = taskScheduler;
         this.scheduledTask = scheduledTask;
         this.prhProperties = prhProperties;
-        this.cbsConfiguration = cbsConfiguration;
     }
     
     @EventListener
@@ -84,12 +81,5 @@ public class ScheduledTasksRunner {
         } else {
             return false;
         }
-    }
-    
-    /**
-     * Function for cleaning resources for kafka publisher.
-     */
-    public synchronized void closeKafkaPublisherSubscriber() {
-        cbsConfiguration.getMessageRouterPublisher().close();
     }
 }

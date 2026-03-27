@@ -24,11 +24,7 @@ package org.onap.dcaegen2.services.prh.integration;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.jayway.jsonpath.JsonPath;
-
-import io.vavr.collection.List;
-import reactor.core.publisher.Flux;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,10 +35,6 @@ import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
 import org.onap.dcaegen2.services.prh.tasks.DmaapConsumerTaskImpl;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
 import org.onap.dcaegen2.services.prh.tasks.ScheduledTasksRunner;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterPublisher;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.ImmutableMessageRouterPublishResponse;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,15 +44,15 @@ import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.util.concurrent.SettableListenableFuture;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.stefanbirkner.systemlambda.SystemLambda.withEnvironmentVariable;
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.anyRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
@@ -70,7 +62,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
 import static java.lang.ClassLoader.getSystemResource;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
@@ -87,12 +79,13 @@ class PrhWorkflowIntegrationTest {
     CbsConfiguration cbsConfiguration;
     
     @MockBean
-    private ScheduledTasksRunner scheduledTasksRunner;  // just to disable scheduling - some configurability in ScheduledTaskRunner not to start tasks at app startup would be welcome
+    private ScheduledTasksRunner scheduledTasksRunner;  // just to disable scheduling
     
     @Autowired
     private DmaapConsumerTaskImpl dmaapConsumerTaskImpl;
 
-    private MessageRouterPublisher publisher;
+    @MockBean
+    private KafkaTemplate<String, String> kafkaTemplate;
     
     @Configuration
     @Import(MainApp.class)
@@ -124,7 +117,10 @@ class PrhWorkflowIntegrationTest {
     void resetWireMock() {
         WireMock.reset();
         dmaapConsumerTaskImpl.execute();  // drain any leftover events
-        publisher = Mockito.mock(MessageRouterPublisher.class);
+
+        SettableListenableFuture mockFuture = new SettableListenableFuture();
+        mockFuture.set(null);
+        when(kafkaTemplate.send(anyString(), anyString())).thenReturn(mockFuture);
     }
 
 
@@ -133,7 +129,7 @@ class PrhWorkflowIntegrationTest {
         scheduledTasks.scheduleMainPrhEventTask();
 
         verify(0, anyRequestedFor(urlPathMatching("/aai.*")));
-        verify(0, postRequestedFor(urlPathMatching("/events.*")));
+        Mockito.verify(kafkaTemplate, Mockito.never()).send(anyString(), anyString());
     }
 
 
@@ -148,19 +144,9 @@ class PrhWorkflowIntegrationTest {
         ConsumerRecord<String, String> record = new ConsumerRecord<>("test-topic", 0, 0, null, event);
         dmaapConsumerTaskImpl.onMessage(Collections.singletonList(record),
                 Mockito.mock(Acknowledgment.class));
-
-        // Mock publisher (still SDK-based, Phase 2 will replace)
-        List<String> expectedItems = List.of(event);
-        Flux<MessageRouterPublishResponse> pubresp = Flux.just(ImmutableMessageRouterPublishResponse
-                .builder()
-                .items(expectedItems.map(JsonPrimitive::new))
-                .build());
-        
-        when(cbsConfiguration.getMessageRouterPublisher()).thenReturn(publisher);
-        when(publisher.put(any(MessageRouterPublishRequest.class),any())).thenReturn(pubresp);
         
         scheduledTasks.scheduleMainPrhEventTask();
-        Mockito.verify(publisher,times(1)).put(any(MessageRouterPublishRequest.class),any());
+        Mockito.verify(kafkaTemplate, times(1)).send(anyString(), anyString());
     }
 
 

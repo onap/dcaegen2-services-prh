@@ -3,6 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2019 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,13 +86,10 @@ class ScheduledTasksTest {
 
     @Test
     void whenEmptyResultFromDMaaPConsumer_NotActionShouldBePerformed() throws SSLException, PrhTaskException {
-        //given
         given(consumer.execute()).willReturn(Flux.empty());
 
-        //when
         sut.scheduleMainPrhEventTask();
 
-        //then
         verifyThatPnfUpdateWasNotSentToAai();
         verifyIfLogicalLinkWasNotCreated();
         verifyThatPnfModelWasNotSentDmaapPnfReadyTopic();
@@ -100,11 +98,9 @@ class ScheduledTasksTest {
 
     @Test
     void whenPnfNotFoundInAai_NotActionShouldBePerformed() throws SSLException, PrhTaskException {
-        //given
         given(consumer.execute()).willReturn(Flux.just(DMAAP_MODEL));
         given(aaiQuery.execute(any())).willReturn(Mono.error(new PrhTaskException("404 Not Found")));
 
-        //when
         sut.scheduleMainPrhEventTask();
 
         verifyThatPnfUpdateWasNotSentToAai();
@@ -115,20 +111,17 @@ class ScheduledTasksTest {
 
     @Test
     void whenPnfWithoutService_PatchToAaiAndPostToPnfReadyShouldBePerformed() throws SSLException, PrhTaskException {
-        //given
         Mono<ConsumerDmaapModel> consumerModel = Mono.just(DMAAP_MODEL);
 
         given(aaiProducer.execute(DMAAP_MODEL)).willReturn(consumerModel);
         given(bbsActions.execute(DMAAP_MODEL)).willReturn(consumerModel);
 
-
         given(consumer.execute()).willReturn(Flux.just(DMAAP_MODEL));
         given(aaiQuery.execute(any())).willReturn(Mono.just(false));
+        given(readyPublisher.execute(DMAAP_MODEL)).willReturn(Mono.just("unauthenticated.PNF_READY"));
 
-        //when
         sut.scheduleMainPrhEventTask();
 
-        //then
         verifyThatPnfUpdateWasSentToAai();
         verifyIfLogicalLinkWasCreated();
         verifyThatPnfModelWasSentDmaapPnfReadyTopic();
@@ -137,17 +130,15 @@ class ScheduledTasksTest {
 
     @Test
     void whenPnfHasActiveService_OnlyPostToPnfUpdateShouldBePerformed() throws SSLException, PrhTaskException {
-        //given
         Mono<ConsumerDmaapModel> consumerModel = Mono.just(DMAAP_MODEL);
 
         given(consumer.execute()).willReturn(Flux.just(DMAAP_MODEL));
         given(aaiQuery.execute(any())).willReturn(Mono.just(true));
         given(aaiProducer.execute(DMAAP_MODEL)).willReturn(consumerModel);
+        given(updatePublisher.execute(DMAAP_MODEL)).willReturn(Mono.just("unauthenticated.PNF_UPDATE"));
 
-        //when
         sut.scheduleMainPrhEventTask();
 
-        //then
         verifyThatPnfUpdateWasSentToAai();
         verifyIfLogicalLinkWasNotCreated();
         verifyThatPnfModelWasNotSentDmaapPnfReadyTopic();

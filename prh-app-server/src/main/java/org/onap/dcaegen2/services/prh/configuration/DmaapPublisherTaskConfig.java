@@ -3,6 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018-2019 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,20 +26,25 @@ import org.onap.dcaegen2.services.prh.tasks.DmaapPublisherTaskImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.core.KafkaTemplate;
 
 @Configuration
 public class DmaapPublisherTaskConfig {
     @Bean(name = "ReadyPublisherTask")
     @Autowired
-    public DmaapPublisherTask getReadyPublisherTask(Config config) {
-        return new DmaapPublisherTaskImpl(
-                config::getMessageRouterPublishRequest, config::getMessageRouterPublisher);
+    public DmaapPublisherTask getReadyPublisherTask(KafkaTemplate<String, String> kafkaTemplate, Config config) {
+        return new DmaapPublisherTaskImpl(kafkaTemplate,
+                () -> extractTopicName(config.getMessageRouterPublishRequest().sinkDefinition().topicUrl()));
     }
 
     @Bean(name = "UpdatePublisherTask")
     @Autowired
-    public DmaapPublisherTask getUpdatePublisherTask(Config config) {
-        return new DmaapPublisherTaskImpl(
-                config::getMessageRouterUpdatePublishRequest, config::getMessageRouterPublisher);
+    public DmaapPublisherTask getUpdatePublisherTask(KafkaTemplate<String, String> kafkaTemplate, Config config) {
+        return new DmaapPublisherTaskImpl(kafkaTemplate,
+                () -> extractTopicName(config.getMessageRouterUpdatePublishRequest().sinkDefinition().topicUrl()));
+    }
+
+    static String extractTopicName(String topicUrl) {
+        return topicUrl.substring(topicUrl.lastIndexOf('/') + 1);
     }
 }

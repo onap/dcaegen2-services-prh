@@ -24,8 +24,6 @@ package org.onap.dcaegen2.services.prh.configuration;
 import com.google.gson.JsonObject;
 import java.util.Optional;
 import org.onap.dcaegen2.services.prh.adapter.aai.main.AaiClientConfiguration;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.DmaapClientFactory;
-import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.api.MessageRouterPublisher;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterPublishRequest;
 import org.onap.dcaegen2.services.sdk.rest.services.dmaap.client.model.MessageRouterSubscribeRequest;
 import org.slf4j.Logger;
@@ -38,7 +36,6 @@ public class CbsConfiguration implements Config {
     private static final Logger LOGGER = LoggerFactory.getLogger(CbsConfiguration.class);
     protected static final String CBS_CONFIG_MISSING = "CBS config missing";
     protected AaiClientConfiguration aaiClientCBSConfiguration;
-    protected MessageRouterPublisher messageRouterPublisher;
     protected MessageRouterPublishRequest messageRouterCBSPublishRequest;
     protected MessageRouterSubscribeRequest messageRouterCBSSubscribeRequest;
     protected MessageRouterPublishRequest messageRouterCBSUpdatePublishRequest;
@@ -49,18 +46,11 @@ public class CbsConfiguration implements Config {
         CbsContentParser  consulConfigurationParser = new CbsContentParser(jsonObject);
         aaiClientCBSConfiguration = consulConfigurationParser.getAaiClientConfig();
 
-        messageRouterPublisher = DmaapClientFactory
-                .createMessageRouterPublisher(consulConfigurationParser.getMessageRouterPublisherConfig());
         messageRouterCBSPublishRequest = consulConfigurationParser.getMessageRouterPublishRequest();
         messageRouterCBSUpdatePublishRequest = consulConfigurationParser.getMessageRouterUpdatePublishRequest();
 
         messageRouterCBSSubscribeRequest = consulConfigurationParser.getMessageRouterSubscribeRequest();
      }
-
-    @Override
-    public MessageRouterPublisher getMessageRouterPublisher() {
-        return Optional.ofNullable(messageRouterPublisher).orElseThrow(() -> new RuntimeException(CBS_CONFIG_MISSING));
-    }
 
     @Override
     public MessageRouterPublishRequest getMessageRouterPublishRequest() {

@@ -3,6 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2019 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,12 +28,20 @@ import java.util.ServiceLoader;
 
 public final class PrhModelAwareGsonBuilder {
 
-    private static final Iterable<TypeAdapterFactory> TYPE_ADAPTER_FACTORIES =
-            ServiceLoader.load(TypeAdapterFactory.class);
+    // Build and cache a single Gson instance with all TypeAdapterFactories.
+    // Uses this class's own classloader for ServiceLoader discovery, instead of
+    // Thread.contextClassLoader, because Netty reactor-http-epoll threads may
+    // have a null/bootstrap context classloader that cannot find SPI files.
+    private static final Gson GSON = buildGson();
+
+    private static Gson buildGson() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        ServiceLoader.load(TypeAdapterFactory.class, PrhModelAwareGsonBuilder.class.getClassLoader())
+                .forEach(gsonBuilder::registerTypeAdapterFactory);
+        return gsonBuilder.create();
+    }
 
     public static Gson createGson() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        TYPE_ADAPTER_FACTORIES.forEach(gsonBuilder::registerTypeAdapterFactory);
-        return gsonBuilder.create();
+        return GSON;
     }
 }

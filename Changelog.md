@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - [DCAEGEN2-3427] Added auto.offset.reset=earliest to prevent missing events due to race condition
 - [DCAEGEN2-3428] Refactored PNF event publishing to use Spring KafkaTemplate instead of dmaap sdk's MessageRouterPublisher
 - [DCAEGEN2-3429] Unified dual-mode consumer, removed dmaap-client SDK dependency, and renamed all DMaaP terminology to Kafka
+- [DCAEGEN2-3430] fix regression
 
 ## [1.11.0] - 2026/01/01
 

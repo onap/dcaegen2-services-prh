@@ -3,6 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2019 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +21,7 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.context.environment.EnvironmentChangeEvent;
 import org.springframework.cloud.context.refresh.ContextRefresher;
 import org.springframework.context.event.EventListener;
@@ -36,10 +36,10 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.time.Duration;
 
+@Slf4j
 @Component
 public class CbsConfigRefreshScheduler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CbsConfigRefreshScheduler.class);
     private static final String CBS_UPDATES_INTERVAL_PROPERTY = "cbs.updates-interval";
     private static final Duration NO_UPDATES = Duration.ZERO;
 
@@ -62,13 +62,13 @@ public class CbsConfigRefreshScheduler {
 
     private void startPollingForCbsUpdates(Duration updatesInterval) {
         if (!updatesInterval.equals(NO_UPDATES)) {
-            LOGGER.info("Configuring pulling for CBS updates in every {}", updatesInterval);
+            log.info("Configuring pulling for CBS updates in every {}", updatesInterval);
             refreshEventsStreamHandle = Flux.interval(updatesInterval, scheduler)
                     .doOnNext(i -> {
-                        LOGGER.debug("Requesting context refresh");
+                        log.debug("Requesting context refresh");
                         contextRefresher.refresh();
                     })
-                    .onErrorContinue((e, o) -> LOGGER.error("Failed fetching config updates from CBS", e))
+                    .onErrorContinue((e, o) -> log.error("Failed fetching config updates from CBS", e))
                     .subscribe();
         }
     }
@@ -76,7 +76,7 @@ public class CbsConfigRefreshScheduler {
     @EventListener
     public void onEnvironmentChanged(EnvironmentChangeEvent event) {
         if (event.getKeys().contains(CBS_UPDATES_INTERVAL_PROPERTY)) {
-            LOGGER.info("CBS config polling interval changed to {}", environment.getProperty(CBS_UPDATES_INTERVAL_PROPERTY));
+            log.info("CBS config polling interval changed to {}", environment.getProperty(CBS_UPDATES_INTERVAL_PROPERTY));
             stopPollingForCbsUpdates();
             startPollingForCbsUpdates(getCbsUpdatesInterval());
         }
@@ -89,7 +89,7 @@ public class CbsConfigRefreshScheduler {
     @PreDestroy
     private void stopPollingForCbsUpdates() {
         if(refreshEventsStreamHandle != null) {
-            LOGGER.debug("Stopping pulling for CBS updates");
+            log.debug("Stopping pulling for CBS updates");
             refreshEventsStreamHandle.dispose();
         }
     }

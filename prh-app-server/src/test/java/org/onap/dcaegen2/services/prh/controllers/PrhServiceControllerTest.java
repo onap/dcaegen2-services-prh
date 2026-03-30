@@ -21,43 +21,56 @@
 
 package org.onap.dcaegen2.services.prh.controllers;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.onap.dcaegen2.services.prh.tasks.ScheduledTasksRunner;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
+import org.springframework.kafka.listener.MessageListenerContainer;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = {"spring.kafka.listener.auto-startup=false"})
 @DirtiesContext
 @ActiveProfiles("prod")
-class ScheduleControllerTest {
+class PrhServiceControllerTest {
 
     @MockBean
-    private ScheduledTasksRunner scheduledTasksRunner;
+    private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
 
     @Autowired
     private WebTestClient webTestClient;
 
-   @Test
+    private MessageListenerContainer mockContainer;
+
+    @BeforeEach
+    void setUp() {
+        mockContainer = Mockito.mock(MessageListenerContainer.class);
+        when(kafkaListenerEndpointRegistry.getListenerContainer(PrhServiceController.LISTENER_ID))
+                .thenReturn(mockContainer);
+    }
+
+    @Test
     void startEndpointShouldAllowStartingPrhTasks() {
-        when(scheduledTasksRunner.tryToStartTask()).thenReturn(true);
+        when(mockContainer.isRunning()).thenReturn(false);
         webTestClient
                 .get().uri("/start")
                 .exchange()
                 .expectStatus().isCreated()
                 .expectBody(String.class).isEqualTo("PRH Service has been started!");
+        verify(mockContainer).start();
     }
 
     @Test
     void whenPrhTasksAreAlreadyStarted_shouldRespondThatRequestWasNotAccepted() {
-        when(scheduledTasksRunner.tryToStartTask()).thenReturn(false);
+        when(mockContainer.isRunning()).thenReturn(true);
         webTestClient
                 .get().uri("/start")
                 .exchange()
@@ -67,12 +80,13 @@ class ScheduleControllerTest {
 
     @Test
     void stopEndpointShouldAllowStoppingPrhTasks() {
+        when(mockContainer.isRunning()).thenReturn(true);
         webTestClient
                 .get().uri("/stopPrh")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(String.class).isEqualTo("PRH Service has been stopped!");
 
-        verify(scheduledTasksRunner).cancelTasks();
+        verify(mockContainer).stop();
     }
 }

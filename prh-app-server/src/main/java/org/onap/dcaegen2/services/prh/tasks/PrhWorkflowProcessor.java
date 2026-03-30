@@ -27,12 +27,11 @@ import static org.onap.dcaegen2.services.sdk.rest.services.model.logging.MdcVari
 import io.opentelemetry.instrumentation.annotations.WithSpan;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.sdk.rest.services.model.logging.MdcVariables;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -41,12 +40,9 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Component
-public class ScheduledTasks {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledTasks.class);
-    private volatile boolean pnfFound = true;
-    private final KafkaConsumerTask kafkaConsumerTask;
+public class PrhWorkflowProcessor {
     private final KafkaPublisherTask kafkaReadyProducerTask;
     private final KafkaPublisherTask kafkaUpdateProducerTask;
     private final AaiQueryTask aaiQueryTask;
@@ -55,15 +51,13 @@ public class ScheduledTasks {
     private final Map<String, String> mdcContextMap;
 
     @Autowired
-    public ScheduledTasks(
-            final KafkaConsumerTask kafkaConsumerTask,
+    public PrhWorkflowProcessor(
             @Qualifier("ReadyPublisherTask") final KafkaPublisherTask kafkaReadyPublisherTask,
             @Qualifier("UpdatePublisherTask") final KafkaPublisherTask kafkaUpdatePublisherTask,
             final AaiQueryTask aaiQueryTask,
             final AaiProducerTask aaiPublisherTask,
             final BbsActionsTask bbsActionsTask,
             final Map<String, String> mdcContextMap) {
-        this.kafkaConsumerTask = kafkaConsumerTask;
         this.kafkaReadyProducerTask = kafkaReadyPublisherTask;
         this.kafkaUpdateProducerTask = kafkaUpdatePublisherTask;
         this.aaiQueryTask = aaiQueryTask;
@@ -82,75 +76,61 @@ public class ScheduledTasks {
         }
     }
 
-    @WithSpan("scheduleMainPrhEventTask")
-    public void scheduleMainPrhEventTask() {
+    /**
+     * Processes a flux of PNF registration models through the PRH workflow pipeline.
+     *
+     * @param models the PNF models to process
+     * @return true if all PNFs were found in AAI and offsets should be committed, false otherwise
+     */
+    @WithSpan("processMessages")
+    public boolean processMessages(Flux<ConsumerPnfModel> models) {
         MdcVariables.setMdcContextMap(mdcContextMap);
-        try {
-            LOGGER.trace("Execution of tasks was registered");
-            CountDownLatch mainCountDownLatch = new CountDownLatch(1);
-            consumeFromKafkaMessage()
-                    .flatMap(model -> queryAaiForPnf(model)
-                            .doOnError(e -> {
-                                LOGGER.warn("PNF not found in AAI for {}: {}", model.getCorrelationId(), e.getMessage());
-                                pnfFound = false;
-                            })
-                            .onErrorResume(e -> Mono.empty()))
-                    .flatMap(this::queryAaiForConfiguration)
-                    .flatMap(this::publishToAaiConfiguration)
-                    .flatMap(this::processAdditionalFields)
-                    .flatMap(this::publishToKafka)
-                    .onErrorResume(exception -> {
-                        if (!(exception instanceof PrhTaskException)) {
-                            LOGGER.warn("Chain of tasks aborted due to errors in PRH workflow", exception);
-                        }
-                        return Mono.empty();
-                    })
-                    .doOnTerminate(mainCountDownLatch::countDown)
-                    .subscribe(this::onPublishSuccess, this::onError, this::onComplete);
+        MDC.put(INSTANCE_UUID, UUID.randomUUID().toString());
+        log.trace("Execution of tasks was registered");
 
-            mainCountDownLatch.await();
-        } catch (InterruptedException e) {
-            LOGGER.warn("Interruption problem on countDownLatch ", e);
-            Thread.currentThread().interrupt();
-        }
-    }
+        AtomicBoolean allPnfsFound = new AtomicBoolean(true);
 
-    private void onComplete() {
-        LOGGER.info("PRH tasks have been completed");
-        if (pnfFound) {
-            kafkaConsumerTask.commitOffset();
-        } else {
-            LOGGER.info("Offset not committed — PNF was not found in AAI");
-            pnfFound = true;
+        models
+                .flatMap(model -> queryAaiForPnf(model)
+                        .doOnError(e -> {
+                            log.warn("PNF not found in AAI for {}: {}", model.getCorrelationId(), e.getMessage());
+                            allPnfsFound.set(false);
+                        })
+                        .onErrorResume(e -> Mono.empty()))
+                .flatMap(this::queryAaiForConfiguration)
+                .flatMap(this::publishToAaiConfiguration)
+                .flatMap(this::processAdditionalFields)
+                .flatMap(this::publishToKafka)
+                .onErrorResume(exception -> {
+                    if (!(exception instanceof PrhTaskException)) {
+                        log.warn("Chain of tasks aborted due to errors in PRH workflow", exception);
+                    }
+                    return Mono.empty();
+                })
+                .doOnNext(this::onPublishSuccess)
+                .blockLast();
+
+        log.info("PRH tasks have been completed");
+        if (!allPnfsFound.get()) {
+            log.info("Offset not committed — PNF was not found in AAI");
         }
+        return allPnfsFound.get();
     }
 
     private void onPublishSuccess(String topicName) {
         String statusCodeOk = HttpStatus.OK.name();
         MDC.put(RESPONSE_CODE, statusCodeOk);
-        LOGGER.info("Prh consumed tasks successfully. Published to {}", topicName);
+        log.info("Prh consumed tasks successfully. Published to {}", topicName);
         MDC.remove(RESPONSE_CODE);
     }
 
-    private void onError(Throwable throwable) {
-        LOGGER.warn("Chain of tasks have been aborted due to errors in PRH workflow", throwable);
-    }
-
-    private Flux<ConsumerPnfModel> consumeFromKafkaMessage() {
-        return Flux.defer(() -> {
-            MdcVariables.setMdcContextMap(mdcContextMap);
-            MDC.put(INSTANCE_UUID, UUID.randomUUID().toString());
-            return kafkaConsumerTask.execute();
-        });
-    }
-
     private Mono<ConsumerPnfModel> queryAaiForPnf(final ConsumerPnfModel model) {
-        LOGGER.info("Find PNF in AAI --> {}", model.getCorrelationId());
+        log.info("Find PNF in AAI --> {}", model.getCorrelationId());
         return aaiQueryTask.findPnfinAAI(model);
     }
 
     private Mono<State> queryAaiForConfiguration(final ConsumerPnfModel monoKafkaModel) {
-        LOGGER.info("Find AAI Info --> {}", monoKafkaModel.getCorrelationId());
+        log.info("Find AAI Info --> {}", monoKafkaModel.getCorrelationId());
         return aaiQueryTask
                 .execute(monoKafkaModel)
                 .map(x -> new State(monoKafkaModel, x));
@@ -162,14 +142,14 @@ public class ScheduledTasks {
                     .execute(state.pnfModel)
                     .map(x -> state);
         } catch (PrhTaskException e) {
-            LOGGER.warn("AAIProducerTask exception has been registered: ", e);
+            log.warn("AAIProducerTask exception has been registered: ", e);
             return Mono.error(e);
         }
     }
 
     private Mono<State> processAdditionalFields(final State state) {
         if (state.activationStatus) {
-            LOGGER.debug("Re-registration - Logical links won't be updated.");
+            log.debug("Re-registration - Logical links won't be updated.");
             return Mono.just(state);
         }
         return bbsActionsTask.execute(state.pnfModel).map(x -> state);
@@ -178,14 +158,13 @@ public class ScheduledTasks {
     private Mono<String> publishToKafka(final State state) {
         try {
             if (state.activationStatus) {
-                LOGGER.debug("Re-registration - Using PNF_UPDATE Kafka topic.");
+                log.debug("Re-registration - Using PNF_UPDATE Kafka topic.");
                 return kafkaUpdateProducerTask.execute(state.pnfModel);
             }
             return kafkaReadyProducerTask.execute(state.pnfModel);
         } catch (PrhTaskException e) {
-            LOGGER.warn("KafkaProducerTask exception has been registered: ", e);
+            log.warn("KafkaProducerTask exception has been registered: ", e);
             return Mono.error(e);
         }
     }
 }
-

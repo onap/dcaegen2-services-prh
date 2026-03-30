@@ -21,15 +21,14 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
 import org.onap.dcaegen2.services.prh.configuration.Config;
 import org.onap.dcaegen2.services.prh.service.KafkaConsumerJsonParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
@@ -39,24 +38,18 @@ import javax.annotation.PostConstruct;
 
 
 /**
- * Consumes PNF registration events from Kafka topic using Spring KafkaListener.
- * Replaces the previous SDK MessageRouterSubscriber-based implementation.
+ * Consumes PNF registration events from Kafka and processes them through the
+ * PRH workflow pipeline directly. Offsets are committed only after successful processing.
  */
+@Slf4j
+@RequiredArgsConstructor
 @Component
-public class KafkaConsumerTaskImpl implements KafkaConsumerTask {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerTaskImpl.class);
+public class KafkaConsumerTaskImpl {
     private static final String EVENTS_PATH = "/events/";
 
     private final KafkaConsumerJsonParser kafkaConsumerJsonParser;
     private final Config config;
-    private final List<String> messageBuffer = Collections.synchronizedList(new ArrayList<>());
-    private volatile Acknowledgment pendingAck;
-
-    public KafkaConsumerTaskImpl(Config config, KafkaConsumerJsonParser kafkaConsumerJsonParser) {
-        this.kafkaConsumerJsonParser = kafkaConsumerJsonParser;
-        this.config = config;
-    }
+    private final PrhWorkflowProcessor scheduledTasks;
 
     @PostConstruct
     void configureKafkaTopic() {
@@ -67,36 +60,34 @@ public class KafkaConsumerTaskImpl implements KafkaConsumerTask {
 
             System.setProperty("kafkaTopic", topic);
             System.setProperty("groupIdConfig", consumerGroup);
-            LOGGER.info("Configured Kafka consumer for topic: {}, consumerGroup: {}", topic, consumerGroup);
+            log.info("Configured Kafka consumer for topic: {}, consumerGroup: {}", topic, consumerGroup);
         } catch (RuntimeException e) {
-            LOGGER.warn("CBS config not yet available, Kafka topic will be configured later: {}", e.getMessage());
+            log.warn("CBS config not yet available, Kafka topic will be configured later: {}", e.getMessage());
         }
     }
 
-    @KafkaListener(topics = "${kafkaTopic:unset}", groupId = "${groupIdConfig:unset}",
+    @KafkaListener(id = "prhKafkaListener", topics = "${kafkaTopic:unset}", groupId = "${groupIdConfig:unset}",
                    containerFactory = "kafkaListenerContainerFactory")
     public void onMessage(List<ConsumerRecord<String, String>> records, Acknowledgment acknowledgment) {
-        if (records != null && !records.isEmpty()) {
-            LOGGER.info("Received {} records from Kafka", records.size());
-            records.stream()
-                   .map(ConsumerRecord::value)
-                   .forEach(messageBuffer::add);
+        if (records == null || records.isEmpty()) {
+            acknowledgment.acknowledge();
+            return;
         }
-        pendingAck = acknowledgment;
-    }
 
-    @Override
-    public Flux<ConsumerPnfModel> execute() {
-        if (messageBuffer.isEmpty()) {
-            return Flux.empty();
+        log.info("Received {} records from Kafka", records.size());
+        List<String> values = records.stream()
+                .map(ConsumerRecord::value)
+                .collect(Collectors.toList());
+
+        Flux<ConsumerPnfModel> models = kafkaConsumerJsonParser.getConsumerModelFromKafkaRecords(values);
+        boolean shouldCommit = scheduledTasks.processMessages(models);
+
+        if (shouldCommit) {
+            acknowledgment.acknowledge();
+            log.info("Committed Kafka offset");
+        } else {
+            log.info("Offset not committed — will retry on next poll");
         }
-        List<String> batch;
-        synchronized (messageBuffer) {
-            batch = new ArrayList<>(messageBuffer);
-            messageBuffer.clear();
-        }
-        LOGGER.info("Processing batch of {} PNF registration events", batch.size());
-        return kafkaConsumerJsonParser.getConsumerModelFromKafkaRecords(batch);
     }
 
     static String extractTopicFromUrl(String topicUrl) {
@@ -110,14 +101,4 @@ public class KafkaConsumerTaskImpl implements KafkaConsumerTask {
         }
         return topic;
     }
-
-    @Override
-    public void commitOffset() {
-        if (pendingAck != null) {
-            pendingAck.acknowledge();
-            LOGGER.info("Committed Kafka offset");
-            pendingAck = null;
-        }
-    }
-
 }

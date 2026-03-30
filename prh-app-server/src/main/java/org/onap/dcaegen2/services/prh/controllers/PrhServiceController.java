@@ -23,53 +23,57 @@ package org.onap.dcaegen2.services.prh.controllers;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.onap.dcaegen2.services.prh.tasks.ScheduledTasksRunner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
+import org.springframework.kafka.listener.MessageListenerContainer;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
-/**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on
- *         4/5/18
- */
+@Slf4j
+@RequiredArgsConstructor
 @RestController
-@Api(value = "ScheduleController")
-public class ScheduleController {
+@Api(value = "PrhServiceController")
+public class PrhServiceController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleController.class);
-    private ScheduledTasksRunner scheduledTasksRunner;
-
-
-    @Autowired(required = false)
-    public ScheduleController(ScheduledTasksRunner scheduledTasksRunner) {
-        this.scheduledTasksRunner = scheduledTasksRunner;
-    }
+    static final String LISTENER_ID = "prhKafkaListener";
+    private final KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
 
     @RequestMapping(value = "start", method = RequestMethod.GET)
     @ApiOperation(value = "Start scheduling worker request")
     public Mono<ResponseEntity<String>> startTasks() {
-        LOGGER.trace("Receiving start scheduling worker request with Comit SchedulerController");
-        return Mono.fromSupplier(scheduledTasksRunner::tryToStartTask).map(this::createStartTaskResponse);
+        log.trace("Receiving start request");
+        return Mono.fromSupplier(this::tryToStart).map(this::createStartTaskResponse);
     }
 
     @RequestMapping(value = "stopPrh", method = RequestMethod.GET)
     @ApiOperation(value = "Receiving stop scheduling worker request")
     public Mono<ResponseEntity<String>> stopTask() {
-        LOGGER.trace("Receiving stop scheduling worker request");
+        log.trace("Receiving stop request");
         return Mono.defer(() -> {
-            scheduledTasksRunner.cancelTasks();
+            MessageListenerContainer container = kafkaListenerEndpointRegistry.getListenerContainer(LISTENER_ID);
+            if (container != null && container.isRunning()) {
+                container.stop();
+            }
             return Mono.just(new ResponseEntity<>("PRH Service has been stopped!", HttpStatus.OK));
         });
     }
 
-    private ResponseEntity<String> createStartTaskResponse(boolean wasScheduled) {
-        if (wasScheduled) {
+    private boolean tryToStart() {
+        MessageListenerContainer container = kafkaListenerEndpointRegistry.getListenerContainer(LISTENER_ID);
+        if (container != null && !container.isRunning()) {
+            container.start();
+            return true;
+        }
+        return false;
+    }
+
+    private ResponseEntity<String> createStartTaskResponse(boolean wasStarted) {
+        if (wasStarted) {
             return new ResponseEntity<>("PRH Service has been started!", HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>("PRH Service is already running!", HttpStatus.NOT_ACCEPTABLE);

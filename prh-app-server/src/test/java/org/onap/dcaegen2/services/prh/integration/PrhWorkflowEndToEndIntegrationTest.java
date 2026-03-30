@@ -48,19 +48,17 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
+import java.util.Arrays;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
+import org.onap.dcaegen2.services.prh.service.KafkaConsumerJsonParser;
+import reactor.core.publisher.Flux;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.onap.dcaegen2.services.prh.MainApp;
 import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
-import org.onap.dcaegen2.services.prh.tasks.KafkaConsumerTaskImpl;
-import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
-import org.onap.dcaegen2.services.prh.tasks.ScheduledTasksRunner;
+import org.onap.dcaegen2.services.prh.tasks.PrhWorkflowProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -71,7 +69,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.concurrent.SettableListenableFuture;
 
@@ -96,16 +93,13 @@ import org.springframework.util.concurrent.SettableListenableFuture;
 class PrhWorkflowEndToEndIntegrationTest {
 
     @Autowired
-    private ScheduledTasks scheduledTasks;
+    private PrhWorkflowProcessor scheduledTasks;
 
     @SpyBean
     private CbsConfiguration cbsConfiguration;
 
-    @MockBean
-    private ScheduledTasksRunner scheduledTasksRunner;  // disable auto-scheduling
-
     @Autowired
-    private KafkaConsumerTaskImpl kafkaConsumerTaskImpl;
+    private KafkaConsumerJsonParser kafkaConsumerJsonParser;
 
     @MockBean
     private KafkaTemplate<String, String> kafkaTemplate;
@@ -138,7 +132,6 @@ class PrhWorkflowEndToEndIntegrationTest {
     @BeforeEach
     void setup() {
         WireMock.reset();
-        kafkaConsumerTaskImpl.execute();  // drain any leftover events
         topicCaptor = ArgumentCaptor.forClass(String.class);
 
         SettableListenableFuture mockFuture = new SettableListenableFuture();
@@ -151,9 +144,7 @@ class PrhWorkflowEndToEndIntegrationTest {
 
     @Test
     void whenKafkaReturnsNoEvents_noAaiOrPublishCallsShouldBeMade() {
-        // No events injected — buffer is empty
-
-        scheduledTasks.scheduleMainPrhEventTask();
+        scheduledTasks.processMessages(Flux.empty());
 
         // No AAI calls should be made
         verify(0, getRequestedFor(urlPathMatching("/aai.*")));
@@ -170,8 +161,6 @@ class PrhWorkflowEndToEndIntegrationTest {
         String event = getResourceContent("integration/event.json");
         String pnfName = "NOK6061ZW8";
 
-        injectEvents(event);
-
         // Stub A&AI GET PNF – return PNF without relationship-list (first registration)
         stubFor(get(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName))
                 .willReturn(ok().withHeader("Content-Type", "application/json")
@@ -181,7 +170,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         stubFor(patch(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName))
                 .willReturn(ok()));
 
-        scheduledTasks.scheduleMainPrhEventTask();
+        processEvents(event);
 
         // Verify: AAI GET PNF was called (twice: findPnfinAAI + queryAaiForConfiguration)
         verify(2, getRequestedFor(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)));
@@ -211,8 +200,6 @@ class PrhWorkflowEndToEndIntegrationTest {
         String event = getResourceContent("integration/event.json");
         String pnfName = "NOK6061ZW8";
 
-        injectEvents(event);
-
         // Stub A&AI GET PNF – PNF with service-instance relationship
         String pnfWithServiceRelation = "{"
                 + "\"pnf-name\":\"" + pnfName + "\","
@@ -241,7 +228,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         stubFor(patch(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName))
                 .willReturn(ok()));
 
-        scheduledTasks.scheduleMainPrhEventTask();
+        processEvents(event);
 
         // Verify: AAI GET PNF was queried (twice: findPnfinAAI + queryAaiForConfiguration)
         verify(2, getRequestedFor(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)));
@@ -264,8 +251,6 @@ class PrhWorkflowEndToEndIntegrationTest {
     void whenPnfHasInactiveServiceInstance_shouldPublishToPnfReady() {
         String event = getResourceContent("integration/event.json");
         String pnfName = "NOK6061ZW8";
-
-        injectEvents(event);
 
         // PNF with service-instance relationship but Inactive
         String pnfWithServiceRelation = "{"
@@ -292,7 +277,7 @@ class PrhWorkflowEndToEndIntegrationTest {
 
         stubFor(patch(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)).willReturn(ok()));
 
-        scheduledTasks.scheduleMainPrhEventTask();
+        processEvents(event);
 
         // Inactive means not a re-registration → PNF_READY
         Mockito.verify(kafkaTemplate, times(1)).send(topicCaptor.capture(), org.mockito.ArgumentMatchers.anyString());
@@ -306,8 +291,6 @@ class PrhWorkflowEndToEndIntegrationTest {
     void whenEventHasAttachmentPoint_shouldDeleteOldAndCreateNewLogicalLink() {
         String event = getResourceContent("integration/event-with-attachment-point.json");
         String pnfName = "NOK6061ZW3";
-
-        injectEvents(event);
 
         // Stub A&AI GET PNF – return PNF with an existing logical-link relationship
         // (no service-instance → first registration → BBS actions will run)
@@ -346,7 +329,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         stubFor(put(urlEqualTo("/aai/v23/network/logical-links/logical-link/olt-bbs-cpe-1"))
                 .willReturn(aResponse().withStatus(201)));
 
-        scheduledTasks.scheduleMainPrhEventTask();
+        processEvents(event);
 
         // Verify: AAI PATCH PNF was called
         verify(1, patchRequestedFor(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)));
@@ -376,8 +359,6 @@ class PrhWorkflowEndToEndIntegrationTest {
         String event = getResourceContent("integration/event-with-attachment-point.json");
         String pnfName = "NOK6061ZW3";
 
-        injectEvents(event);
-
         // PNF with both logical-link AND active service-instance (re-registration)
         String pnfBody = "{"
                 + "\"pnf-name\":\"" + pnfName + "\","
@@ -403,7 +384,7 @@ class PrhWorkflowEndToEndIntegrationTest {
 
         stubFor(patch(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)).willReturn(ok()));
 
-        scheduledTasks.scheduleMainPrhEventTask();
+        processEvents(event);
 
         // Verify: no logical-link operations occurred (BBS skipped for re-registration)
         verify(0, getRequestedFor(urlPathMatching("/aai/v23/network/logical-links/.*")));
@@ -423,15 +404,13 @@ class PrhWorkflowEndToEndIntegrationTest {
         String event = getResourceContent("integration/event.json");
         String pnfName = "NOK6061ZW8";
 
-        injectEvents(event);
-
         stubFor(get(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName))
                 .willReturn(ok().withHeader("Content-Type", "application/json")
                         .withBody("{\"pnf-name\":\"" + pnfName + "\"}")));
 
         stubFor(patch(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)).willReturn(ok()));
 
-        scheduledTasks.scheduleMainPrhEventTask();
+        processEvents(event);
 
         // No logical-link operations when there's no attachment-point
         verify(0, getRequestedFor(urlPathMatching("/aai/v23/network/logical-links/.*")));
@@ -450,15 +429,13 @@ class PrhWorkflowEndToEndIntegrationTest {
         String event = getResourceContent("integration/event.json");
         String pnfName = "NOK6061ZW8";
 
-        injectEvents(event);
-
         stubFor(get(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName))
                 .willReturn(ok().withHeader("Content-Type", "application/json")
                         .withBody("{\"pnf-name\":\"" + pnfName + "\"}")));
 
         stubFor(patch(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)).willReturn(ok()));
 
-        scheduledTasks.scheduleMainPrhEventTask();
+        processEvents(event);
 
         // Verify: AAI GET contains required headers
         verify(getRequestedFor(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName))
@@ -481,8 +458,6 @@ class PrhWorkflowEndToEndIntegrationTest {
         String event = getResourceContent("integration/event-with-attachment-point.json");
         String pnfName = "NOK6061ZW3";
 
-        injectEvents(event);
-
         // PNF without logical-link relationships (no old link to delete)
         stubFor(get(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName))
                 .willReturn(ok().withHeader("Content-Type", "application/json")
@@ -494,7 +469,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         stubFor(put(urlEqualTo("/aai/v23/network/logical-links/logical-link/olt-bbs-cpe-1"))
                 .willReturn(aResponse().withStatus(201)));
 
-        scheduledTasks.scheduleMainPrhEventTask();
+        processEvents(event);
 
         // Verify publisher was called with the PNF_READY topic
         Mockito.verify(kafkaTemplate, times(1)).send(topicCaptor.capture(), org.mockito.ArgumentMatchers.anyString());
@@ -509,8 +484,6 @@ class PrhWorkflowEndToEndIntegrationTest {
         String event1 = getResourceContent("integration/event.json");
         String event2 = event1.replace("NOK6061ZW8", "NOK6061ZW9");
 
-        injectEvents(event1, event2);
-
         stubFor(get(urlEqualTo("/aai/v23/network/pnfs/pnf/NOK6061ZW8"))
                 .willReturn(ok().withHeader("Content-Type", "application/json")
                         .withBody("{\"pnf-name\":\"NOK6061ZW8\"}")));
@@ -521,7 +494,7 @@ class PrhWorkflowEndToEndIntegrationTest {
         stubFor(patch(urlEqualTo("/aai/v23/network/pnfs/pnf/NOK6061ZW8")).willReturn(ok()));
         stubFor(patch(urlEqualTo("/aai/v23/network/pnfs/pnf/NOK6061ZW9")).willReturn(ok()));
 
-        scheduledTasks.scheduleMainPrhEventTask();
+        processEvents(event1, event2);
 
         // Both PNFs should be patched in AAI
         verify(1, patchRequestedFor(urlEqualTo("/aai/v23/network/pnfs/pnf/NOK6061ZW8")));
@@ -534,12 +507,10 @@ class PrhWorkflowEndToEndIntegrationTest {
 
     // ==================== Helpers ====================
 
-    private void injectEvents(String... events) {
-        List<ConsumerRecord<String, String>> records = new ArrayList<>();
-        for (String event : events) {
-            records.add(new ConsumerRecord<>("test-topic", 0, 0, null, event));
-        }
-        kafkaConsumerTaskImpl.onMessage(records, Mockito.mock(Acknowledgment.class));
+    private void processEvents(String... events) {
+        Flux<ConsumerPnfModel> models = kafkaConsumerJsonParser.getConsumerModelFromKafkaRecords(
+                Arrays.asList(events));
+        scheduledTasks.processMessages(models);
     }
 
     private static String getResourceContent(String resourceName) {

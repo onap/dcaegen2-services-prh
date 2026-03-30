@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START=======================================================
- * PROJECT
+ * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
  * Copyright (C) 2026 Deutsche Telekom Intellectual Property. All rights reserved.
@@ -22,30 +22,24 @@
 package org.onap.dcaegen2.services.prh.tasks;
 
 import java.util.function.Supplier;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
 import org.onap.dcaegen2.services.prh.adapter.aai.impl.PnfReadyJsonBodyBuilder;
 import org.onap.dcaegen2.services.prh.exceptions.KafkaNotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import reactor.core.publisher.Mono;
 
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
+@Slf4j
+@RequiredArgsConstructor
 public class KafkaPublisherTaskImpl implements KafkaPublisherTask {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaPublisherTaskImpl.class);
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final Supplier<String> topicNameSupplier;
     private final PnfReadyJsonBodyBuilder pnfReadyJsonBodyBuilder = new PnfReadyJsonBodyBuilder();
-
-    public KafkaPublisherTaskImpl(KafkaTemplate<String, String> kafkaTemplate,
-                                  Supplier<String> topicNameSupplier) {
-        this.kafkaTemplate = kafkaTemplate;
-        this.topicNameSupplier = topicNameSupplier;
-    }
 
     @Override
     public Mono<String> execute(ConsumerPnfModel consumerPnfModel) throws KafkaNotFoundException {
@@ -53,16 +47,16 @@ public class KafkaPublisherTaskImpl implements KafkaPublisherTask {
             throw new KafkaNotFoundException("Invoked null object to Kafka task");
         }
         String topicName = topicNameSupplier.get();
-        LOGGER.info("Publishing to topic {} with arg {}", topicName, consumerPnfModel);
+        log.info("Publishing to topic {} with arg {}", topicName, consumerPnfModel);
         String jsonBody = pnfReadyJsonBodyBuilder.createJsonBody(consumerPnfModel).toString();
         return Mono.create(sink ->
             kafkaTemplate.send(topicName, jsonBody).addCallback(
                 result -> {
-                    LOGGER.info("Successfully published to {}", topicName);
+                    log.info("Successfully published to {}", topicName);
                     sink.success(topicName);
                 },
                 error -> {
-                    LOGGER.error("Failed to publish to {}", topicName, error);
+                    log.error("Failed to publish to {}", topicName, error);
                     sink.error(error);
                 }
             )

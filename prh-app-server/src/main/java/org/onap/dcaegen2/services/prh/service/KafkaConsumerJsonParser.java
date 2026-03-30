@@ -23,10 +23,9 @@ package org.onap.dcaegen2.services.prh.service;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import lombok.extern.slf4j.Slf4j;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerPnfModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
@@ -62,10 +61,9 @@ import static org.onap.dcaegen2.services.prh.service.PnfRegistrationFields.COMMO
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 5/8/18
  */
+@Slf4j
 @Component
 public class KafkaConsumerJsonParser {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerJsonParser.class);
 
     private String pnfSourceName;
     private String pnfOamIpv4Address;
@@ -97,9 +95,9 @@ public class KafkaConsumerJsonParser {
 
     public Flux<ConsumerPnfModel> getConsumerModelFromKafkaRecords(java.util.List<String> items)
     {
-        LOGGER.info("KafkaConsumerJsonParser input for parsing: {} with commit", items);
+        log.info("KafkaConsumerJsonParser input for parsing: {} with commit", items);
         if (items.size() == 0) {
-            LOGGER.info("Nothing to consume from Kafka");
+            log.info("Nothing to consume from Kafka");
             return Flux.empty();
         }
        return create(
@@ -171,7 +169,7 @@ public class KafkaConsumerJsonParser {
         try {
             return jsonObject.has(EVENT) && jsonObject.getAsJsonObject(EVENT).has(PNF_REGISTRATION_FIELDS);
         }catch(Exception e){
-            LOGGER.info("Fetching an error in containsHeader method {}",e.getMessage());
+            log.info("Fetching an error in containsHeader method {}",e.getMessage());
         }
         return false;
     }
@@ -196,7 +194,7 @@ public class KafkaConsumerJsonParser {
     }
 
     private <T> Mono<T> logErrorAndReturnMonoEmpty(String messageForLogger) {
-        LOGGER.info(messageForLogger);
+        log.info(messageForLogger);
         return Mono.empty();
     }
 

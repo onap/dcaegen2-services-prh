@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.13.0] - Unreleased
+
+### Changed
+
+- [DCAEGEN2-3432] Remove scheduled task, process Kafka events directly in KafkaListener, and use Lombok to reduce boilerplate
+
 ## [1.12.0] - Unreleased
 
 ### Changed

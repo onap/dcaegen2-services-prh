@@ -25,8 +25,9 @@ import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.config.SaslConfigs;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -38,15 +39,15 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.listener.ContainerProperties;
 
+@Slf4j
 @EnableKafka
 @Configuration
 public class KafkaConfig {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConfig.class);
     private static final String DEFAULT_SECURITY_PROTOCOL = "SASL_PLAINTEXT";
     private static final String DEFAULT_SASL_MECHANISM = "SCRAM-SHA-512";
 
-    @org.springframework.beans.factory.annotation.Value("${spring.kafka.listener.auto-startup:true}")
+    @Value("${spring.kafka.listener.auto-startup:true}")
     private boolean autoStartup;
 
     private Map<String, Object> commonConfig() {
@@ -58,12 +59,12 @@ public class KafkaConfig {
                 bootstrapServers != null ? bootstrapServers : "localhost:9092");
 
         if (jaasConfig != null) {
-            LOGGER.info("Configuring Kafka with SASL/SCRAM-SHA-512 authentication");
+            log.info("Configuring Kafka with SASL/SCRAM-SHA-512 authentication");
             config.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, DEFAULT_SECURITY_PROTOCOL);
             config.put(SaslConfigs.SASL_MECHANISM, DEFAULT_SASL_MECHANISM);
             config.put(SaslConfigs.SASL_JAAS_CONFIG, jaasConfig);
         } else {
-            LOGGER.info("Configuring Kafka without authentication");
+            log.info("Configuring Kafka without authentication");
         }
         return config;
     }

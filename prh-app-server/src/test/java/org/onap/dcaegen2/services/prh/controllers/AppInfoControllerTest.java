@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.onap.dcaegen2.services.prh.configuration.KafkaConfig;
 import org.onap.dcaegen2.services.prh.configuration.PrhAppConfig;
 import org.onap.dcaegen2.services.prh.tasks.KafkaConsumerTaskImpl;
-import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
+import org.onap.dcaegen2.services.prh.tasks.PrhWorkflowProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -53,7 +53,7 @@ class AppInfoControllerTest {
     private WebTestClient webTestClient;
 
     @MockBean
-    private ScheduledTasks scheduledTasks;
+    private PrhWorkflowProcessor scheduledTasks;
 
     @Test
     void shouldProvideHeartbeatResponse() {

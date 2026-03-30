@@ -3,7 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018 NOKIA Intellectual Property. All rights reserved.
- * Copyright (C) 2023 Deutsche Telekom Intellectual Property. All rights reserved.
+ * Copyright (C) 2023-2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,36 +29,20 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.scheduling.TaskScheduler;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import static org.onap.dcaegen2.services.sdk.rest.services.model.logging.MdcVariables.INVOCATION_ID;
 
-/**
- * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on
- *         3/23/18
- */
 @SpringBootApplication(exclude = { JacksonAutoConfiguration.class })
-@EnableScheduling
 @EnableConfigurationProperties
 public class MainApp {
 
-    
     public static void main(String[] args) {
-       
         SpringApplication.run(MainApp.class, args);
-
     }
 
     @Bean
     Map<String, String> mdcContextMap() {
         MDC.put(INVOCATION_ID, UUID.randomUUID().toString());
         return MDC.getCopyOfContextMap();
-    }
-
-    @Bean
-    TaskScheduler concurrentTaskScheduler() {
-        return new ConcurrentTaskScheduler();
     }
 
 }

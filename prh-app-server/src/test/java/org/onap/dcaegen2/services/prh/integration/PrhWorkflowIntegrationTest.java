@@ -26,15 +26,15 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.jayway.jsonpath.JsonPath;
 
-import org.apache.kafka.clients.consumer.ConsumerRecord;
+import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.onap.dcaegen2.services.prh.MainApp;
 import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
-import org.onap.dcaegen2.services.prh.tasks.KafkaConsumerTaskImpl;
-import org.onap.dcaegen2.services.prh.tasks.ScheduledTasks;
-import org.onap.dcaegen2.services.prh.tasks.ScheduledTasksRunner;
+import org.onap.dcaegen2.services.prh.service.KafkaConsumerJsonParser;
+import org.onap.dcaegen2.services.prh.tasks.PrhWorkflowProcessor;
+import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -45,9 +45,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.concurrent.SettableListenableFuture;
+import reactor.core.publisher.Flux;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.stefanbirkner.systemlambda.SystemLambda.withEnvironmentVariable;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
@@ -60,7 +60,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.github.tomakehurst.wiremock.client.WireMock.patch;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collections;
 import static java.lang.ClassLoader.getSystemResource;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
@@ -73,41 +72,38 @@ import static org.mockito.Mockito.when;
 class PrhWorkflowIntegrationTest {
 
     @Autowired
-    private ScheduledTasks scheduledTasks;
-    
+    private PrhWorkflowProcessor scheduledTasks;
+
     @SpyBean
     CbsConfiguration cbsConfiguration;
-    
-    @MockBean
-    private ScheduledTasksRunner scheduledTasksRunner;  // just to disable scheduling
-    
+
     @Autowired
-    private KafkaConsumerTaskImpl kafkaConsumerTaskImpl;
+    private KafkaConsumerJsonParser kafkaConsumerJsonParser;
 
     @MockBean
     private KafkaTemplate<String, String> kafkaTemplate;
-    
+
     @Configuration
     @Import(MainApp.class)
     static class CbsConfigTestConfig {
 
         @Value("http://localhost:${wiremock.server.port}")
         private String wiremockServerAddress;
-                
+
         @Bean
         public CbsConfiguration cbsConfiguration() throws Exception {
             JsonObject cbsConfigJson = new Gson().fromJson(getResourceContent("configurationFromCbs.json")
                             .replaceAll("https?://dmaap-mr[\\w.]*:\\d+", wiremockServerAddress)
                             .replaceAll("https?://aai[\\w.]*:\\d+", wiremockServerAddress),
                     JsonObject.class);
-            
+
             CbsConfiguration cbsConfiguration = new CbsConfiguration();
             withEnvironmentVariable("JAAS_CONFIG", "jaas_config")
             .and("BOOTSTRAP_SERVERS", "localhost:9092")
             .execute(() -> {
                 cbsConfiguration.parseCBSConfig(cbsConfigJson);
             });
-            
+
             return cbsConfiguration;
         }
 
@@ -116,7 +112,6 @@ class PrhWorkflowIntegrationTest {
     @BeforeEach
     void resetWireMock() {
         WireMock.reset();
-        kafkaConsumerTaskImpl.execute();  // drain any leftover events
 
         SettableListenableFuture mockFuture = new SettableListenableFuture();
         mockFuture.set(null);
@@ -125,8 +120,8 @@ class PrhWorkflowIntegrationTest {
 
 
     @Test
-    void whenThereAreNoEvents_WorkflowShouldFinish() {    
-        scheduledTasks.scheduleMainPrhEventTask();
+    void whenThereAreNoEvents_WorkflowShouldFinish() {
+        scheduledTasks.processMessages(Flux.empty());
 
         verify(0, anyRequestedFor(urlPathMatching("/aai.*")));
         Mockito.verify(kafkaTemplate, Mockito.never()).send(anyString(), anyString());
@@ -139,14 +134,15 @@ class PrhWorkflowIntegrationTest {
         String pnfName = JsonPath.read(event, "$.event.commonEventHeader.sourceName");
         stubFor(get(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)).willReturn(ok().withBody("{}")));
         stubFor(patch(urlEqualTo("/aai/v23/network/pnfs/pnf/" + pnfName)));
-        
-        // Inject event into consumer task buffer
-        ConsumerRecord<String, String> record = new ConsumerRecord<>("test-topic", 0, 0, null, event);
-        kafkaConsumerTaskImpl.onMessage(Collections.singletonList(record),
-                Mockito.mock(Acknowledgment.class));
-        
-        scheduledTasks.scheduleMainPrhEventTask();
+
+        processEvents(event);
         Mockito.verify(kafkaTemplate, times(1)).send(anyString(), anyString());
+    }
+
+    private void processEvents(String... events) {
+        Flux<ConsumerPnfModel> models = kafkaConsumerJsonParser.getConsumerModelFromKafkaRecords(
+                Arrays.asList(events));
+        scheduledTasks.processMessages(models);
     }
 
 

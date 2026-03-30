@@ -23,6 +23,8 @@ package org.onap.dcaegen2.services.prh.tasks;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpClient;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiPnfResultModel;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiServiceInstanceQueryModel;
@@ -32,12 +34,11 @@ import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableAaiServiceInstanc
 import org.onap.dcaegen2.services.prh.model.Relationship;
 import org.onap.dcaegen2.services.prh.model.RelationshipData;
 import org.onap.dcaegen2.services.prh.model.RelationshipDict;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@Slf4j
+@RequiredArgsConstructor
 @Component
 public class AaiQueryTaskImpl implements AaiQueryTask {
     static final String ACTIVE_STATUS = "Active";
@@ -46,19 +47,10 @@ public class AaiQueryTaskImpl implements AaiQueryTask {
     static final String SERVICE_TYPE = "service-subscription.service-type";
     static final String SERVICE_INSTANCE_ID = "service-instance.service-instance-id";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AaiQueryTaskImpl.class);
     private final AaiHttpClient<ConsumerPnfModel, AaiPnfResultModel> getPnfModelClient;
     private final AaiHttpClient<AaiServiceInstanceQueryModel, AaiServiceInstanceResultModel> getServiceClient;
 
-    @Autowired
-    public AaiQueryTaskImpl(
-            final AaiHttpClient<ConsumerPnfModel, AaiPnfResultModel> getPnfModelClient,
-            final AaiHttpClient<AaiServiceInstanceQueryModel, AaiServiceInstanceResultModel> getServiceClient) {
-        this.getPnfModelClient = getPnfModelClient;
-        this.getServiceClient = getServiceClient;
-    }
 
-    
 
     @Override
     public Mono<Boolean> execute(ConsumerPnfModel aaiModel) {
@@ -80,7 +72,7 @@ public class AaiQueryTaskImpl implements AaiQueryTask {
                 .getAaiResponse(model)
                 .flatMap(aaiModel -> Mono.just(model));
     }
-     
+
 
 
     private Mono<AaiServiceInstanceQueryModel> checkIfPnfHasRelationToService(final AaiPnfResultModel model) {
@@ -129,5 +121,5 @@ public class AaiQueryTaskImpl implements AaiQueryTask {
                 .findFirst()
                 .map(RelationshipData::getRelationshipValue);
     }
-  
+
 }

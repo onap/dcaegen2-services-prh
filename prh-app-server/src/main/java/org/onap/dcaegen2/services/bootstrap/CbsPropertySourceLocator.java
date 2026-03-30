@@ -22,12 +22,12 @@
 package org.onap.dcaegen2.services.bootstrap;
 
 import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.CbsRequests;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.model.CbsClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.model.logging.RequestDiagnosticContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.cloud.bootstrap.config.PropertySourceLocator;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MapPropertySource;
@@ -36,34 +36,23 @@ import reactor.util.retry.Retry;
 
 import java.util.Map;
 
+@Slf4j
+@RequiredArgsConstructor
 public class CbsPropertySourceLocator implements PropertySourceLocator {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CbsPropertySourceLocator.class);
 
     private final CbsProperties cbsProperties;
     private final CbsJsonToPropertyMapConverter cbsJsonToPropertyMapConverter;
     private final CbsClientConfigurationResolver cbsClientConfigurationResolver;
     private final CbsClientFactoryFacade cbsClientFactoryFacade;
     private final CbsConfiguration cbsConfiguration;
-    
-    public CbsPropertySourceLocator(CbsProperties cbsProperties,
-            CbsJsonToPropertyMapConverter cbsJsonToPropertyMapConverter,
-            CbsClientConfigurationResolver cbsClientConfigurationResolver,
-            CbsClientFactoryFacade cbsClientFactoryFacade, CbsConfiguration cbsConfiguration) {
-        
-                this.cbsProperties = cbsProperties;
-                this.cbsJsonToPropertyMapConverter = cbsJsonToPropertyMapConverter;
-                this.cbsClientConfigurationResolver = cbsClientConfigurationResolver;
-                this.cbsClientFactoryFacade = cbsClientFactoryFacade;
-                this.cbsConfiguration = cbsConfiguration;
-    }
 
     @Override
     public PropertySource<?> locate(Environment environment) {
-        
+
         CbsClientConfiguration cbsClientConfiguration = cbsClientConfigurationResolver.resolveCbsClientConfiguration();
         Map<String, Object> properties = cbsClientFactoryFacade.createCbsClient(cbsClientConfiguration)
                 .flatMap(cbsClient -> cbsClient.get(CbsRequests.getAll(RequestDiagnosticContext.create())))
-                .doOnError(e -> LOGGER.warn("Failed loading configuration - retrying...", e))
+                .doOnError(e -> log.warn("Failed loading configuration - retrying...", e))
                 .retryWhen(Retry
                         .backoff(cbsProperties.getFetchRetries().getMaxAttempts(),
                                 cbsProperties.getFetchRetries().getFirstBackoff())
@@ -75,11 +64,11 @@ public class CbsPropertySourceLocator implements PropertySourceLocator {
 
     private void updateCbsConfig(JsonObject jsonObject) {
         try {
-            LOGGER.info("Updating CBS configuration");
+            log.info("Updating CBS configuration");
             cbsConfiguration.parseCBSConfig(jsonObject);
 
         } catch (Exception e) {
-            LOGGER.error("Failed parsing configuration", e);
+            log.error("Failed parsing configuration", e);
             throw e;
         }
     }

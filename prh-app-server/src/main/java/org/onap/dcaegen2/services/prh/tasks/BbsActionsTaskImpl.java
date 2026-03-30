@@ -32,6 +32,7 @@ import static org.springframework.web.util.UriUtils.encodeFragment;
 import com.google.gson.JsonObject;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiPnfResultModel;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
 import org.onap.dcaegen2.services.prh.configuration.Config;
@@ -48,17 +49,15 @@ import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.ImmutableHttpR
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RequestBody;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RxHttpClient;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.RxHttpClientFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Component
 public class BbsActionsTaskImpl implements BbsActionsTask {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BbsActionsTaskImpl.class);
     private static final String ATTACHMENT_POINT = "attachment-point";
     private static final String LOGICAL_LINK_URI = "/network/logical-links/logical-link";
     private static final String PNF_URI = "/network/pnfs/pnf";
@@ -86,7 +85,7 @@ public class BbsActionsTaskImpl implements BbsActionsTask {
         }
         String linkName = additionalFields.get(ATTACHMENT_POINT).getAsString();
         if (linkName.isEmpty()) {
-            LOGGER.warn("Attachment point is empty! Ignore related actions.");
+            log.warn("Attachment point is empty! Ignore related actions.");
             return Mono.just(consumerPnfModel);
         }
         String pnfName = consumerPnfModel.getCorrelationId();
@@ -121,14 +120,14 @@ public class BbsActionsTaskImpl implements BbsActionsTask {
 
     private Mono<HttpResponse> createLogicalLinkInAai(String linkName, String pnfName) {
         ImmutableHttpRequest request = buildLogicalLinkPutRequest(linkName, pnfName);
-        LOGGER.debug("Creating logical link in AAI {} ", request);
+        log.debug("Creating logical link in AAI {} ", request);
         return httpClient.call(request)
             .flatMap(response -> handleResponse(response, "PUT LogicalLink request. Link name: " + linkName));
     }
 
     private Mono<HttpResponse> deleteLogicalLinkInAai(String linkName, String resourceVersion) {
         ImmutableHttpRequest request = buildLogicalLinkDeleteRequest(linkName, resourceVersion);
-        LOGGER.debug("Deleting logical link in AAI {} ", request);
+        log.debug("Deleting logical link in AAI {} ", request);
         return httpClient.call(request)
             .flatMap(response -> handleResponse(response, "DELETE LogicalLink request. Link name:  " + linkName));
     }
@@ -207,4 +206,3 @@ public class BbsActionsTaskImpl implements BbsActionsTask {
         return config.getAaiClientConfiguration().pnfUrl().replace(PNF_URI, encodeFragment(path, UTF_8));
     }
 }
-

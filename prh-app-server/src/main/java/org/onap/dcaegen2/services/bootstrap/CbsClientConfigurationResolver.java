@@ -3,6 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2019 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,26 +21,23 @@
 
 package org.onap.dcaegen2.services.bootstrap;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.model.CbsClientConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@Slf4j
+@RequiredArgsConstructor
 class CbsClientConfigurationResolver {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CbsClientConfigurationResolver.class);
     private final CbsProperties cbsProperties;
-
-    CbsClientConfigurationResolver(CbsProperties cbsProperties) {
-        this.cbsProperties = cbsProperties;
-    }
 
     CbsClientConfiguration resolveCbsClientConfiguration() {
         try {
             return CbsClientConfiguration.fromEnvironment();
         } catch (Exception e) {
-            LOGGER.warn("Failed resolving CBS client configuration from system environments: " + e);
+            log.warn("Failed resolving CBS client configuration from system environments: " + e);
         }
-        LOGGER.info("Falling back to use default CBS client configuration properties");
+        log.info("Falling back to use default CBS client configuration properties");
         return cbsProperties.toCbsClientConfiguration();
     }
 

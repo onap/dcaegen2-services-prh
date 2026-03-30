@@ -21,6 +21,8 @@
 
 package org.onap.dcaegen2.services.prh.tasks;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.AaiHttpClient;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
 import org.onap.dcaegen2.services.prh.exceptions.AaiNotFoundException;
@@ -28,9 +30,6 @@ import org.onap.dcaegen2.services.prh.exceptions.KafkaNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.onap.dcaegen2.services.prh.model.utils.HttpUtils;
 import org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -38,17 +37,12 @@ import reactor.core.publisher.Mono;
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/13/18
  */
+@Slf4j
+@RequiredArgsConstructor
 @Component
 public class AaiProducerTaskImpl implements AaiProducerTask {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AaiProducerTaskImpl.class);
-
     private final AaiHttpClient<ConsumerPnfModel, HttpResponse> aaiHttpPatchClient;
-
-    @Autowired
-    public AaiProducerTaskImpl(final AaiHttpClient<ConsumerPnfModel, HttpResponse> aaiHttpPatchClient) {
-        this.aaiHttpPatchClient = aaiHttpPatchClient;
-    }
 
     private Mono<ConsumerPnfModel> publish(ConsumerPnfModel consumerPnfModel) {
         Mono<HttpResponse> response = aaiHttpPatchClient.getAaiResponse(consumerPnfModel);
@@ -66,7 +60,7 @@ public class AaiProducerTaskImpl implements AaiProducerTask {
         if (consumerPnfModel == null) {
             throw new KafkaNotFoundException("Invoked null object to Kafka task");
         }
-        LOGGER.debug("Method called with arg {}", consumerPnfModel);
+        log.debug("Method called with arg {}", consumerPnfModel);
         return publish(consumerPnfModel);
     }
 }

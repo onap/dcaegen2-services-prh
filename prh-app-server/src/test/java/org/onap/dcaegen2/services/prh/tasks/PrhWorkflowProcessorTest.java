@@ -20,6 +20,7 @@
  */
 package org.onap.dcaegen2.services.prh.tasks;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.atLeastOnce;
@@ -41,7 +42,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @ExtendWith(MockitoExtension.class)
-class ScheduledTasksTest {
+class PrhWorkflowProcessorTest {
     private final static ConsumerPnfModel PNF_MODEL =
             ImmutableConsumerPnfModel
                     .builder()
@@ -57,9 +58,6 @@ class ScheduledTasksTest {
     private KafkaPublisherTask updatePublisher;
 
     @Mock
-    private KafkaConsumerTask consumer;
-
-    @Mock
     private BbsActionsTask bbsActions;
 
     @Mock
@@ -70,12 +68,11 @@ class ScheduledTasksTest {
 
     private final Map<String, String> context = Collections.emptyMap();
 
-    private ScheduledTasks sut;
+    private PrhWorkflowProcessor sut;
 
     @BeforeEach
     void setUp() {
-        sut = new ScheduledTasks(
-                consumer,
+        sut = new PrhWorkflowProcessor(
                 readyPublisher,
                 updatePublisher,
                 aaiQuery,
@@ -85,11 +82,10 @@ class ScheduledTasksTest {
     }
 
     @Test
-    void whenEmptyResultFromKafkaConsumer_NotActionShouldBePerformed() throws SSLException, PrhTaskException {
-        given(consumer.execute()).willReturn(Flux.empty());
+    void whenEmptyFlux_NoActionShouldBePerformed() throws SSLException, PrhTaskException {
+        boolean result = sut.processMessages(Flux.empty());
 
-        sut.scheduleMainPrhEventTask();
-
+        assertThat(result).isTrue();
         verifyThatPnfUpdateWasNotSentToAai();
         verifyIfLogicalLinkWasNotCreated();
         verifyPnfModelWasNotSentToReadyTopic();
@@ -97,17 +93,16 @@ class ScheduledTasksTest {
     }
 
     @Test
-    void whenPnfNotFoundInAai_offsetShouldNotBeCommitted() throws SSLException, PrhTaskException {
-        given(consumer.execute()).willReturn(Flux.just(PNF_MODEL));
+    void whenPnfNotFoundInAai_shouldReturnFalse() throws SSLException, PrhTaskException {
         given(aaiQuery.findPnfinAAI(any())).willReturn(Mono.error(new PrhTaskException("404 Not Found")));
 
-        sut.scheduleMainPrhEventTask();
+        boolean result = sut.processMessages(Flux.just(PNF_MODEL));
 
+        assertThat(result).isFalse();
         verifyThatPnfUpdateWasNotSentToAai();
         verifyIfLogicalLinkWasNotCreated();
         verifyPnfModelWasNotSentToReadyTopic();
         verifyPnfModelWasNotSentToUpdateTopic();
-        verify(consumer, never()).commitOffset();
     }
 
     @Test
@@ -117,18 +112,16 @@ class ScheduledTasksTest {
         given(aaiQuery.findPnfinAAI(any())).willReturn(Mono.just(PNF_MODEL));
         given(aaiProducer.execute(PNF_MODEL)).willReturn(consumerModel);
         given(bbsActions.execute(PNF_MODEL)).willReturn(consumerModel);
-
-        given(consumer.execute()).willReturn(Flux.just(PNF_MODEL));
         given(aaiQuery.execute(any())).willReturn(Mono.just(false));
         given(readyPublisher.execute(PNF_MODEL)).willReturn(Mono.just("unauthenticated.PNF_READY"));
 
-        sut.scheduleMainPrhEventTask();
+        boolean result = sut.processMessages(Flux.just(PNF_MODEL));
 
+        assertThat(result).isTrue();
         verifyThatPnfUpdateWasSentToAai();
         verifyIfLogicalLinkWasCreated();
         verifyPnfModelWasSentToReadyTopic();
         verifyPnfModelWasNotSentToUpdateTopic();
-        verify(consumer, atLeastOnce()).commitOffset();
     }
 
     @Test
@@ -136,18 +129,17 @@ class ScheduledTasksTest {
         Mono<ConsumerPnfModel> consumerModel = Mono.just(PNF_MODEL);
 
         given(aaiQuery.findPnfinAAI(any())).willReturn(Mono.just(PNF_MODEL));
-        given(consumer.execute()).willReturn(Flux.just(PNF_MODEL));
         given(aaiQuery.execute(any())).willReturn(Mono.just(true));
         given(aaiProducer.execute(PNF_MODEL)).willReturn(consumerModel);
         given(updatePublisher.execute(PNF_MODEL)).willReturn(Mono.just("unauthenticated.PNF_UPDATE"));
 
-        sut.scheduleMainPrhEventTask();
+        boolean result = sut.processMessages(Flux.just(PNF_MODEL));
 
+        assertThat(result).isTrue();
         verifyThatPnfUpdateWasSentToAai();
         verifyIfLogicalLinkWasNotCreated();
         verifyPnfModelWasNotSentToReadyTopic();
         verifyPnfModelWasSentToUpdateTopic();
-        verify(consumer, atLeastOnce()).commitOffset();
     }
 
     private void verifyPnfModelWasNotSentToReadyTopic() throws PrhTaskException {
@@ -182,4 +174,3 @@ class ScheduledTasksTest {
         verify(bbsActions, never()).execute(PNF_MODEL);
     }
 }
-

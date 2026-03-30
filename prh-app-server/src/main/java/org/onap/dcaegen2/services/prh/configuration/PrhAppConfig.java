@@ -3,6 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2018-2019 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +21,7 @@
 
 package org.onap.dcaegen2.services.prh.configuration;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.event.EventListener;
@@ -35,9 +35,9 @@ import java.nio.charset.Charset;
 /**
  * @author <a href="mailto:przemyslaw.wasala@nokia.com">Przemysław Wąsala</a> on 4/9/18
  */
+@Slf4j
 @Component
 public class PrhAppConfig {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PrhAppConfig.class);
 
     @Value("classpath:git_info.json")
     private Resource gitInfo;
@@ -45,8 +45,8 @@ public class PrhAppConfig {
 
     @EventListener(ApplicationStartedEvent.class)
     public void onApplicationStarted() throws IOException {
-        if(LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Git info={}", StreamUtils.copyToString(gitInfo.getInputStream(), Charset.defaultCharset()));
+        if(log.isDebugEnabled()) {
+            log.debug("Git info={}", StreamUtils.copyToString(gitInfo.getInputStream(), Charset.defaultCharset()));
         }
     }
 

@@ -22,14 +22,13 @@
 package org.onap.dcaegen2.services.prh.configuration;
 
 import com.google.gson.JsonObject;
+import lombok.extern.slf4j.Slf4j;
 import java.util.Optional;
 import org.onap.dcaegen2.services.prh.adapter.aai.main.AaiClientConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
+@Slf4j
 public class CbsConfiguration implements Config {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CbsConfiguration.class);
     protected static final String CBS_CONFIG_MISSING = "CBS config missing";
     protected AaiClientConfiguration aaiClientCBSConfiguration;
     protected String publishTopicUrl;
@@ -38,7 +37,7 @@ public class CbsConfiguration implements Config {
     protected String subscribeConsumerGroup;
 
     public void parseCBSConfig(JsonObject jsonObject) {
-        LOGGER.info("Received application configuration: {}", jsonObject);
+        log.info("Received application configuration: {}", jsonObject);
         CbsContentParser consulConfigurationParser = new CbsContentParser(jsonObject);
         aaiClientCBSConfiguration = consulConfigurationParser.getAaiClientConfig();
 
@@ -78,4 +77,3 @@ public class CbsConfiguration implements Config {
                 .orElseThrow(() -> new RuntimeException(CBS_CONFIG_MISSING));
     }
 }
-

@@ -67,7 +67,7 @@ on:
         description: "Java runtime to setup/run for Nexus CLI tool"
         required: false
         type: string
-        default: "11"
+        default: "17"
       iq_cli_version:
         description: "Specific version of Nexus CLI to setup/run"
         required: false

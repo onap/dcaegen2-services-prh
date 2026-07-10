@@ -54,11 +54,13 @@
     </profiles>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
+        <!-- oparent 2.0.0 pins jacoco 0.8.2, which cannot read Java 17 bytecode
+             (class file major version 61); override to a Java 17-capable release -->
+        <jacoco.version>0.8.11</jacoco.version>
         <spring-boot.version>2.7.18</spring-boot.version>
         <spring-cloud.version>2021.0.9</spring-cloud.version>
-        <springfox.version>3.0.0</springfox.version>
-        <immutables.version>2.7.5</immutables.version>
+        <immutables.version>2.9.0</immutables.version>
         <sdk.version>1.9.4</sdk.version>
         <guava.version>29.0-jre</guava.version>
         <sonar.coverage.jacoco.xmlReportPaths>
@@ -87,7 +89,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.0</version>
+                    <version>3.11.0</version>
                     <configuration>
                         <source>${java.version}</source>
                         <target>${java.version}</target>
@@ -99,19 +101,17 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.19.1</version>
+                    <version>3.1.2</version>
                     <configuration>
                         <systemPropertyVariables>
                             <JAAS_CONFIG>some_jaas</JAAS_CONFIG>
                         </systemPropertyVariables>
+                        <!-- system-lambda/system-stubs mutate the process environment
+                             by reflecting into java.util.Collections$UnmodifiableMap,
+                             which Java 17 strong encapsulation blocks. @{argLine}
+                             preserves the JaCoCo agent injected via surefireArgLine. -->
+                        <argLine>@{surefireArgLine} --add-opens java.base/java.util=ALL-UNNAMED</argLine>
                     </configuration>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.junit.platform</groupId>
-                            <artifactId>junit-platform-surefire-provider</artifactId>
-                            <version>1.1.0</version>
-                        </dependency>
-                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>pl.project13.maven</groupId>

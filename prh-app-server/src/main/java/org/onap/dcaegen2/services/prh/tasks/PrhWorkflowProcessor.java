@@ -105,6 +105,10 @@ public class PrhWorkflowProcessor {
                     if (!(exception instanceof PrhTaskException)) {
                         log.warn("Chain of tasks aborted due to errors in PRH workflow", exception);
                     }
+                    // A failure after the AAI lookup (PATCH, BBS, or publish) must not
+                    // commit the offset, otherwise the event is lost. Leave the batch
+                    // uncommitted so it is retried on the next poll.
+                    allPnfsFound.set(false);
                     return Mono.empty();
                 })
                 .doOnNext(this::onPublishSuccess)
@@ -112,7 +116,7 @@ public class PrhWorkflowProcessor {
 
         log.info("PRH tasks have been completed");
         if (!allPnfsFound.get()) {
-            log.info("Offset not committed — PNF was not found in AAI");
+            log.info("Offset not committed — a PNF was not found in AAI or its processing failed; batch will be retried");
         }
         return allPnfsFound.get();
     }

@@ -410,4 +410,50 @@ class KafkaConsumerJsonParserTest {
         StepVerifier.create(kafkaConsumerJsonParser.getConsumerModelFromKafkaRecords(Arrays.asList(message, message)))
             .expectSubscription().expectNext(expectedObject).expectNext(expectedObject).verifyComplete();
     }
+
+    @Test
+    void whenBatchContainsMalformedRecord_onlyValidRecordsAreEmittedAndFluxCompletes() {
+        //given
+        String validMessage = "{\"event\": {"
+            + "\"commonEventHeader\": { "
+            + " \"sourceName\":\"NOKQTFCOC540002E\","
+            + " \"nfNamingCode\":\"gNB\" "
+            + "},"
+            + "\"pnfRegistrationFields\": {"
+            + " \"vendorName\": \"nokia\","
+            + " \"serialNumber\": \"QTFCOC540002E\","
+            + " \"pnfRegistrationFieldsVersion\": \"2.0\","
+            + " \"modelNumber\": \"3310\","
+            + " \"unitType\": \"type\",\n"
+            + " \"unitFamily\": \"BBU\","
+            + " \"oamV4IpAddress\": \"10.16.123.234\","
+            + " \"oamV6IpAddress\": \"0:0:0:0:0:FFFF:0A10:7BEA\","
+            + " \"softwareVersion\": \"v4.5.0.1\""
+            + "}}}";
+        String notJson = "this is not json";
+        String jsonArray = "[1, 2, 3]";
+
+        ConsumerPnfModel expectedObject = ImmutableConsumerPnfModel.builder()
+            .correlationId("NOKQTFCOC540002E")
+            .serialNumber("QTFCOC540002E")
+            .ipv4("10.16.123.234")
+            .ipv6("0:0:0:0:0:FFFF:0A10:7BEA")
+            .equipVendor("nokia")
+            .equipModel("3310")
+            .equipType("type")
+            .nfRole("gNB")
+            .swVersion("v4.5.0.1")
+            .build();
+
+        //when
+        KafkaConsumerJsonParser kafkaConsumerJsonParser = new KafkaConsumerJsonParser();
+
+        //then — the malformed records are skipped, both valid records are emitted, and the Flux completes
+        StepVerifier.create(kafkaConsumerJsonParser
+                .getConsumerModelFromKafkaRecords(Arrays.asList(validMessage, notJson, jsonArray, validMessage)))
+            .expectSubscription()
+            .expectNext(expectedObject)
+            .expectNext(expectedObject)
+            .verifyComplete();
+    }
 }

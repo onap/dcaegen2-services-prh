@@ -21,21 +21,16 @@
 
 package org.onap.dcaegen2.services.prh.adapter.aai.impl;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapterFactory;
-import java.util.ServiceLoader;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.ConsumerPnfModel;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerPnfModel;
 import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerPnfModel.Builder;
+import org.onap.dcaegen2.services.prh.model.utils.PrhModelAwareGsonBuilder;
 import org.springframework.util.StringUtils;
 
 
 public class AaiJsonBodyBuilderImpl {
 
     public String createJsonBody(ConsumerPnfModel consumerPnfModel) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        ServiceLoader.load(TypeAdapterFactory.class).forEach(gsonBuilder::registerTypeAdapterFactory);
-
         Builder builder = ImmutableConsumerPnfModel.builder()
             .correlationId(consumerPnfModel.getCorrelationId())
             .serialNumber(consumerPnfModel.getSerialNumber())
@@ -55,6 +50,6 @@ public class AaiJsonBodyBuilderImpl {
             builder.ipv6(ipv6);
         }
 
-        return gsonBuilder.create().toJson(builder.build());
+        return PrhModelAwareGsonBuilder.createGson().toJson(builder.build());
     }
 }

@@ -142,6 +142,34 @@ class PrhWorkflowProcessorTest {
         verifyPnfModelWasSentToUpdateTopic();
     }
 
+    @Test
+    void whenPatchToAaiFails_shouldReturnFalseSoOffsetIsNotCommitted() throws SSLException, PrhTaskException {
+        given(aaiQuery.findPnfinAAI(any())).willReturn(Mono.just(PNF_MODEL));
+        given(aaiQuery.execute(any())).willReturn(Mono.just(false));
+        given(aaiProducer.execute(PNF_MODEL))
+                .willReturn(Mono.error(new PrhTaskException("AAI PATCH failed")));
+
+        boolean result = sut.processMessages(Flux.just(PNF_MODEL));
+
+        assertThat(result).isFalse();
+        verifyPnfModelWasNotSentToReadyTopic();
+        verifyPnfModelWasNotSentToUpdateTopic();
+    }
+
+    @Test
+    void whenPublishToKafkaFails_shouldReturnFalseSoOffsetIsNotCommitted() throws SSLException, PrhTaskException {
+        given(aaiQuery.findPnfinAAI(any())).willReturn(Mono.just(PNF_MODEL));
+        given(aaiQuery.execute(any())).willReturn(Mono.just(false));
+        given(aaiProducer.execute(PNF_MODEL)).willReturn(Mono.just(PNF_MODEL));
+        given(bbsActions.execute(PNF_MODEL)).willReturn(Mono.just(PNF_MODEL));
+        given(readyPublisher.execute(PNF_MODEL))
+                .willReturn(Mono.error(new PrhTaskException("Kafka publish failed")));
+
+        boolean result = sut.processMessages(Flux.just(PNF_MODEL));
+
+        assertThat(result).isFalse();
+    }
+
     private void verifyPnfModelWasNotSentToReadyTopic() throws PrhTaskException {
         verify(readyPublisher, never()).execute(PNF_MODEL);
     }

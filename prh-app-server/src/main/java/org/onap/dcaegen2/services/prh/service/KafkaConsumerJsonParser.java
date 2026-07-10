@@ -107,7 +107,14 @@ public class KafkaConsumerJsonParser {
     }
 
     Optional<JsonObject> getJsonObjectFromString(String element) {
-        return Optional.ofNullable(JsonParser.parseString(element).getAsJsonObject());
+        try {
+            return Optional.ofNullable(JsonParser.parseString(element).getAsJsonObject());
+        } catch (RuntimeException e) {
+            // Malformed or non-object JSON. Skip this single record instead of
+            // erroring the whole Flux, which would drop every event in the batch.
+            log.warn("Skipping unparseable Kafka record: {}", e.getMessage());
+            return Optional.empty();
+        }
     }
 
     public String getSourceName() {

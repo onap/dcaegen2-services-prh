@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [1.13.0] - Unreleased
 
+### Added
+
+- [DCAEGEN2-3432] Unit tests for KafkaConsumerTaskImpl covering the offset-commit contract (commit only when all PNFs are found), empty/null batch handling, @PostConstruct topic configuration with CBS-not-ready fallback, and topic extraction from the subscribe URL
+
 ### Changed
 
 - [DCAEGEN2-3432] Remove scheduled task, process Kafka events directly in KafkaListener, and use Lombok to reduce boilerplate

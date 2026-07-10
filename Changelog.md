@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- [DCAEGEN2-3453] Upgrade to Java 17 (staying on Spring Boot 2.7): bump build/runtime to JDK 17, override JaCoCo to 0.8.11, maven-compiler-plugin to 3.11.0, maven-surefire-plugin to 3.1.2 (with --add-opens java.base/java.util for env-var test stubs), immutables to 2.9.0, base Docker image to eclipse-temurin:17-jre-alpine, and CI to openjdk17
 - [DCAEGEN2-3432] Remove scheduled task, process Kafka events directly in KafkaListener, and use Lombok to reduce boilerplate
 
 ## [1.12.0] - Unreleased

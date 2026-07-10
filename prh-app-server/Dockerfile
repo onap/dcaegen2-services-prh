@@ -1,4 +1,4 @@
-FROM eclipse-temurin:11-jre-alpine
+FROM eclipse-temurin:17-jre-alpine
 
 LABEL copyright="Copyright (C) 2018-2020 NOKIA, Copyright (C) 2026 Deutsche Telekom Intellectual Property. All rights reserved." \
       license.name="The Apache Software License, Version 2.0" \

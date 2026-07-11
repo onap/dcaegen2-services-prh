@@ -23,7 +23,6 @@ package org.onap.dcaegen2.services.prh.configuration;
 
 import org.onap.dcaegen2.services.prh.tasks.KafkaPublisherTask;
 import org.onap.dcaegen2.services.prh.tasks.KafkaPublisherTaskImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -31,14 +30,12 @@ import org.springframework.kafka.core.KafkaTemplate;
 @Configuration
 public class KafkaPublisherTaskConfig {
     @Bean(name = "ReadyPublisherTask")
-    @Autowired
     public KafkaPublisherTask getReadyPublisherTask(KafkaTemplate<String, String> kafkaTemplate, Config config) {
         return new KafkaPublisherTaskImpl(kafkaTemplate,
                 () -> extractTopicName(config.getPublishTopicUrl()));
     }
 
     @Bean(name = "UpdatePublisherTask")
-    @Autowired
     public KafkaPublisherTask getUpdatePublisherTask(KafkaTemplate<String, String> kafkaTemplate, Config config) {
         return new KafkaPublisherTaskImpl(kafkaTemplate,
                 () -> extractTopicName(config.getUpdatePublishTopicUrl()));

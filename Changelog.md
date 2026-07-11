@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- [DCAEGEN2-3454] Upgrade to Spring Boot 3.5 (from 2.7) and Spring Cloud 2025.0.0 (from 2021.0.9): migrate javax.annotation to jakarta.annotation, spring.profiles to spring.config.activate.on-profile, springdoc-openapi-ui 1.x to springdoc-openapi-starter-webmvc-ui 2.x with Swagger v3 annotations, spring-kafka send().addCallback() to CompletableFuture.whenComplete(), reactor Schedulers.newElastic to newBoundedElastic, and org.apache.http.HttpHeaders to org.springframework.http.HttpHeaders; remove @Autowired from @Bean methods (rejected by Boot 3), and drop now-BOM-managed version pins (spring-web, tomcat-embed-core, spring-kafka)
 - [DCAEGEN2-3453] Upgrade to Java 17 (staying on Spring Boot 2.7): bump build/runtime to JDK 17, override JaCoCo to 0.8.11, maven-compiler-plugin to 3.11.0, maven-surefire-plugin to 3.1.2 (with --add-opens java.base/java.util for env-var test stubs), immutables to 2.9.0, base Docker image to eclipse-temurin:17-jre-alpine, and CI to openjdk17
 - [DCAEGEN2-3432] Remove scheduled task, process Kafka events directly in KafkaListener, and use Lombok to reduce boilerplate
 

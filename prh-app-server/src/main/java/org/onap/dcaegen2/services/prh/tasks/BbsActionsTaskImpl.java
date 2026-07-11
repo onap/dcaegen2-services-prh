@@ -23,7 +23,7 @@ package org.onap.dcaegen2.services.prh.tasks;
 
 import static io.netty.handler.codec.http.HttpHeaders.Values.APPLICATION_JSON;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.apache.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMethod.DELETE;
 import static org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMethod.GET;
 import static org.onap.dcaegen2.services.sdk.rest.services.adapters.http.HttpMethod.PUT;

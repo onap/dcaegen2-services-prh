@@ -70,7 +70,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.util.concurrent.SettableListenableFuture;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * End-to-end integration tests for the PRH workflow (default/prod profile).
@@ -134,8 +134,8 @@ class PrhWorkflowEndToEndIntegrationTest {
         WireMock.reset();
         topicCaptor = ArgumentCaptor.forClass(String.class);
 
-        SettableListenableFuture mockFuture = new SettableListenableFuture();
-        mockFuture.set(null);
+        CompletableFuture<org.springframework.kafka.support.SendResult<String, String>> mockFuture =
+                CompletableFuture.completedFuture(null);
         when(kafkaTemplate.send(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString()))
                 .thenReturn(mockFuture);
     }

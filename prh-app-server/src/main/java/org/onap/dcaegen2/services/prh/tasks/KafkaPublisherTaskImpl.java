@@ -50,16 +50,15 @@ public class KafkaPublisherTaskImpl implements KafkaPublisherTask {
         log.info("Publishing to topic {} with arg {}", topicName, consumerPnfModel);
         String jsonBody = pnfReadyJsonBodyBuilder.createJsonBody(consumerPnfModel).toString();
         return Mono.create(sink ->
-            kafkaTemplate.send(topicName, jsonBody).addCallback(
-                result -> {
+            kafkaTemplate.send(topicName, jsonBody).whenComplete((result, error) -> {
+                if (error == null) {
                     log.info("Successfully published to {}", topicName);
                     sink.success(topicName);
-                },
-                error -> {
+                } else {
                     log.error("Failed to publish to {}", topicName, error);
                     sink.error(error);
                 }
-            )
+            })
         );
     }
 }

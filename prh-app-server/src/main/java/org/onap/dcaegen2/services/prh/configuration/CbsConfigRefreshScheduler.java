@@ -32,8 +32,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import java.time.Duration;
 
 @Slf4j
@@ -52,7 +52,10 @@ public class CbsConfigRefreshScheduler {
     public CbsConfigRefreshScheduler(ContextRefresher contextRefresher, Environment environment) {
         this.contextRefresher = contextRefresher;
         this.environment = environment;
-        this.scheduler = Schedulers.newElastic("conf-updates");
+        this.scheduler = Schedulers.newBoundedElastic(
+                Schedulers.DEFAULT_BOUNDED_ELASTIC_SIZE,
+                Schedulers.DEFAULT_BOUNDED_ELASTIC_QUEUESIZE,
+                "conf-updates");
     }
 
     @PostConstruct

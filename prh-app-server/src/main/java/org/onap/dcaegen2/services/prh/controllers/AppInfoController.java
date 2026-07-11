@@ -21,10 +21,10 @@
 
 package org.onap.dcaegen2.services.prh.controllers;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.onap.dcaegen2.services.prh.configuration.PrhAppConfig;
@@ -42,14 +42,14 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@Api(value = "AppInfoController", description = "Provides basic information about application")
+@Tag(name = "AppInfoController", description = "Provides basic information about application")
 public class AppInfoController {
 
     private final PrhAppConfig config;
 
     @GetMapping(value = "heartbeat", produces = MediaType.TEXT_PLAIN_VALUE)
-    @ApiOperation("Returns liveness of PRH service")
-    @ApiResponses(@ApiResponse(code = 200, message = "Service is alive"))
+    @Operation(summary = "Returns liveness of PRH service")
+    @ApiResponses(@ApiResponse(responseCode = "200", description = "Service is alive"))
     public Mono<ResponseEntity<String>> heartbeat() {
         log.trace("Heartbeat request received");
         return Mono.defer(() -> Mono.just(new ResponseEntity<>("alive", HttpStatus.OK))
@@ -57,7 +57,7 @@ public class AppInfoController {
     }
 
     @GetMapping(value = "version", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation("Returns version information")
+    @Operation(summary = "Returns version information")
     public Mono<Resource> version() {
         return Mono.defer(() -> Mono.just(config.getGitInfo()));
     }

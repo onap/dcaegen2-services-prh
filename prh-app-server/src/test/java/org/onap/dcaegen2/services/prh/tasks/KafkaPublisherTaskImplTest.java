@@ -35,7 +35,7 @@ import org.onap.dcaegen2.services.prh.adapter.aai.api.ImmutableConsumerPnfModel;
 import org.onap.dcaegen2.services.prh.exceptions.KafkaNotFoundException;
 import org.onap.dcaegen2.services.prh.exceptions.PrhTaskException;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.util.concurrent.SettableListenableFuture;
+import java.util.concurrent.CompletableFuture;
 import reactor.test.StepVerifier;
 
 /**
@@ -62,8 +62,8 @@ class KafkaPublisherTaskImplTest {
     void execute_whenPassedObjectFits_ReturnsCorrectStatus() throws KafkaNotFoundException {
         kafkaPublisherTask = new KafkaPublisherTaskImpl(kafkaTemplate, () -> TOPIC);
 
-        SettableListenableFuture mockFuture = new SettableListenableFuture();
-        mockFuture.set(null);
+        CompletableFuture<org.springframework.kafka.support.SendResult<String, String>> mockFuture =
+                CompletableFuture.completedFuture(null);
         when(kafkaTemplate.send(eq(TOPIC), org.mockito.ArgumentMatchers.anyString()))
                 .thenReturn(mockFuture);
 

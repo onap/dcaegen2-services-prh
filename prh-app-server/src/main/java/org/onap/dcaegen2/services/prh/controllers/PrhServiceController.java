@@ -21,8 +21,8 @@
 
 package org.onap.dcaegen2.services.prh.controllers;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -37,21 +37,21 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@Api(value = "PrhServiceController")
+@Tag(name = "PrhServiceController")
 public class PrhServiceController {
 
     static final String LISTENER_ID = "prhKafkaListener";
     private final KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
 
     @RequestMapping(value = "start", method = RequestMethod.GET)
-    @ApiOperation(value = "Start scheduling worker request")
+    @Operation(summary = "Start scheduling worker request")
     public Mono<ResponseEntity<String>> startTasks() {
         log.trace("Receiving start request");
         return Mono.fromSupplier(this::tryToStart).map(this::createStartTaskResponse);
     }
 
     @RequestMapping(value = "stopPrh", method = RequestMethod.GET)
-    @ApiOperation(value = "Receiving stop scheduling worker request")
+    @Operation(summary = "Receiving stop scheduling worker request")
     public Mono<ResponseEntity<String>> stopTask() {
         log.trace("Receiving stop request");
         return Mono.defer(() -> {

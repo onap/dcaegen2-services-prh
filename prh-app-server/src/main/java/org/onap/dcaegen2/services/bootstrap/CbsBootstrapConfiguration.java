@@ -34,11 +34,6 @@ public class CbsBootstrapConfiguration {
     private static final CbsConfiguration CBS_CONFIGURATION = new CbsConfiguration();
 
     @Bean
-    public CbsProperties cbsProperties() {
-        return new CbsProperties();
-    }
-
-    @Bean
     @ConditionalOnProperty(value = "cbs.enabled", matchIfMissing = true)
     public CbsPropertySourceLocator cbsPropertySourceLocator(
             CbsProperties cbsProperties,

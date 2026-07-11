@@ -16,7 +16,9 @@
 # limitations under the License.
 # ============LICENSE_END=========================================================
 spring:
-  profiles: prod
+  config:
+    activate:
+      on-profile: prod
 
 server:
   port: 8433
@@ -31,7 +33,9 @@ management.endpoints.web.exposure.include: "loggers,refresh,env,health"
 
 ---
 spring:
-  profiles: dev
+  config:
+    activate:
+      on-profile: dev
 logging:
   level:
     org.onap.dcaegen2.services.prh: debug

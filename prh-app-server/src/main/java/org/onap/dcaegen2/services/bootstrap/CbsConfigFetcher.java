@@ -28,45 +28,48 @@ import org.onap.dcaegen2.services.prh.configuration.CbsConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.api.CbsRequests;
 import org.onap.dcaegen2.services.sdk.rest.services.cbs.client.model.CbsClientConfiguration;
 import org.onap.dcaegen2.services.sdk.rest.services.model.logging.RequestDiagnosticContext;
-import org.springframework.cloud.bootstrap.config.PropertySourceLocator;
-import org.springframework.core.env.Environment;
-import org.springframework.core.env.MapPropertySource;
-import org.springframework.core.env.PropertySource;
 import reactor.util.retry.Retry;
 
-import java.util.Map;
-
+/**
+ * Fetches the application configuration from the DCAE Config Binding Service (CBS)
+ * and parses it into the shared {@link CbsConfiguration} singleton.
+ *
+ * <p>This replaces the former Spring Cloud bootstrap {@code PropertySourceLocator}: PRH
+ * consumes CBS configuration exclusively through the {@link CbsConfiguration} accessor
+ * (not through the Spring {@code Environment}), so the fetch is performed directly here —
+ * once at startup (blocking, with retries) and again on each scheduled refresh.
+ */
 @Slf4j
 @RequiredArgsConstructor
-public class CbsPropertySourceLocator implements PropertySourceLocator {
+public class CbsConfigFetcher {
 
     private final CbsProperties cbsProperties;
-    private final CbsJsonToPropertyMapConverter cbsJsonToPropertyMapConverter;
     private final CbsClientConfigurationResolver cbsClientConfigurationResolver;
     private final CbsClientFactoryFacade cbsClientFactoryFacade;
     private final CbsConfiguration cbsConfiguration;
 
-    @Override
-    public PropertySource<?> locate(Environment environment) {
-
-        CbsClientConfiguration cbsClientConfiguration = cbsClientConfigurationResolver.resolveCbsClientConfiguration();
-        Map<String, Object> properties = cbsClientFactoryFacade.createCbsClient(cbsClientConfiguration)
+    /**
+     * Fetches the configuration from CBS and updates the {@link CbsConfiguration}
+     * singleton. Blocks until CBS responds, retrying per {@code cbs.fetch-retries}.
+     */
+    public void fetchAndParse() {
+        CbsClientConfiguration cbsClientConfiguration =
+                cbsClientConfigurationResolver.resolveCbsClientConfiguration();
+        cbsClientFactoryFacade.createCbsClient(cbsClientConfiguration)
                 .flatMap(cbsClient -> cbsClient.get(CbsRequests.getAll(RequestDiagnosticContext.create())))
                 .doOnError(e -> log.warn("Failed loading configuration - retrying...", e))
                 .retryWhen(Retry
                         .backoff(cbsProperties.getFetchRetries().getMaxAttempts(),
                                 cbsProperties.getFetchRetries().getFirstBackoff())
                         .maxBackoff(cbsProperties.getFetchRetries().getMaxBackoff()))
-                .doOnNext(this::updateCbsConfig).map(cbsJsonToPropertyMapConverter::convertToMap).block();
-
-        return new MapPropertySource("cbs", properties);
+                .doOnNext(this::updateCbsConfig)
+                .block();
     }
 
     private void updateCbsConfig(JsonObject jsonObject) {
         try {
             log.info("Updating CBS configuration");
             cbsConfiguration.parseCBSConfig(jsonObject);
-
         } catch (Exception e) {
             log.error("Failed parsing configuration", e);
             throw e;

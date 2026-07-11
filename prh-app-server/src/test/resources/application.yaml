@@ -2,7 +2,11 @@ spring:
   profiles:
     active: prod
 
-
+# Disable the startup CBS fetch in tests. Integration tests supply a pre-parsed
+# CbsConfiguration bean; controller tests rely on the empty singleton. Neither
+# should contact a real CBS. (Formerly provided by the test bootstrap.yaml.)
+cbs:
+  enabled: false
 
 logging:
   level:

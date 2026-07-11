@@ -16,6 +16,26 @@
 # limitations under the License.
 # ============LICENSE_END=========================================================
 spring:
+  application:
+    name: dcae-prh
+
+logging:
+  level:
+    org.springframework.boot.SpringApplication: warn
+    org.springframework.context.support.PostProcessorRegistrationDelegate: warn
+
+# CBS bootstrap configuration (formerly in bootstrap.yaml, read by the Spring Cloud
+# bootstrap context). PRH now fetches CBS config directly at startup, so these live here.
+cbs:
+  app-name: dcae-prh
+  updates-interval: 5m
+  fetch-retries:
+    max-attempts: 10
+    first-backoff: 3s
+    max-backoff: 15s
+
+---
+spring:
   config:
     activate:
       on-profile: prod

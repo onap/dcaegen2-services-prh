@@ -59,7 +59,10 @@
              (class file major version 61); override to a Java 17-capable release -->
         <jacoco.version>0.8.11</jacoco.version>
         <spring-boot.version>3.5.8</spring-boot.version>
-        <spring-cloud.version>2025.0.0</spring-cloud.version>
+        <!-- Spring Cloud is no longer used at runtime (CBS config is fetched directly).
+             Only the test-scoped spring-cloud-contract-wiremock remains; pin it to the
+             release aligned with the Spring Cloud 2025.0.0 train (Boot 3.5). -->
+        <spring-cloud-contract.version>4.3.0</spring-cloud-contract.version>
         <immutables.version>2.9.0</immutables.version>
         <sdk.version>1.9.4</sdk.version>
         <guava.version>29.0-jre</guava.version>
@@ -172,19 +175,17 @@
             </dependency>
 
             <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-contract-wiremock</artifactId>
+                <version>${spring-cloud-contract.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.springdoc</groupId>

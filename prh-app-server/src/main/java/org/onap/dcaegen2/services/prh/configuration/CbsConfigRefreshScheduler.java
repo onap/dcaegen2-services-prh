@@ -22,10 +22,8 @@
 package org.onap.dcaegen2.services.prh.configuration;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cloud.context.environment.EnvironmentChangeEvent;
-import org.springframework.cloud.context.refresh.ContextRefresher;
-import org.springframework.context.event.EventListener;
-import org.springframework.core.env.Environment;
+import org.onap.dcaegen2.services.bootstrap.CbsConfigFetcher;
+import org.onap.dcaegen2.services.bootstrap.CbsProperties;
 import org.springframework.stereotype.Component;
 import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
@@ -40,18 +38,17 @@ import java.time.Duration;
 @Component
 public class CbsConfigRefreshScheduler {
 
-    private static final String CBS_UPDATES_INTERVAL_PROPERTY = "cbs.updates-interval";
     private static final Duration NO_UPDATES = Duration.ZERO;
 
-    private final ContextRefresher contextRefresher;
-    private final Environment environment;
+    private final CbsConfigFetcher cbsConfigFetcher;
+    private final CbsProperties cbsProperties;
     private final Scheduler scheduler;
     private volatile Disposable refreshEventsStreamHandle;
 
 
-    public CbsConfigRefreshScheduler(ContextRefresher contextRefresher, Environment environment) {
-        this.contextRefresher = contextRefresher;
-        this.environment = environment;
+    public CbsConfigRefreshScheduler(CbsConfigFetcher cbsConfigFetcher, CbsProperties cbsProperties) {
+        this.cbsConfigFetcher = cbsConfigFetcher;
+        this.cbsProperties = cbsProperties;
         this.scheduler = Schedulers.newBoundedElastic(
                 Schedulers.DEFAULT_BOUNDED_ELASTIC_SIZE,
                 Schedulers.DEFAULT_BOUNDED_ELASTIC_QUEUESIZE,
@@ -63,35 +60,27 @@ public class CbsConfigRefreshScheduler {
         startPollingForCbsUpdates(getCbsUpdatesInterval());
     }
 
-    private void startPollingForCbsUpdates(Duration updatesInterval) {
+    void startPollingForCbsUpdates(Duration updatesInterval) {
         if (!updatesInterval.equals(NO_UPDATES)) {
             log.info("Configuring pulling for CBS updates in every {}", updatesInterval);
             refreshEventsStreamHandle = Flux.interval(updatesInterval, scheduler)
                     .doOnNext(i -> {
-                        log.debug("Requesting context refresh");
-                        contextRefresher.refresh();
+                        log.debug("Requesting CBS configuration refresh");
+                        cbsConfigFetcher.fetchAndParse();
                     })
                     .onErrorContinue((e, o) -> log.error("Failed fetching config updates from CBS", e))
                     .subscribe();
         }
     }
 
-    @EventListener
-    public void onEnvironmentChanged(EnvironmentChangeEvent event) {
-        if (event.getKeys().contains(CBS_UPDATES_INTERVAL_PROPERTY)) {
-            log.info("CBS config polling interval changed to {}", environment.getProperty(CBS_UPDATES_INTERVAL_PROPERTY));
-            stopPollingForCbsUpdates();
-            startPollingForCbsUpdates(getCbsUpdatesInterval());
-        }
-    }
-
     private Duration getCbsUpdatesInterval() {
-        return environment.getProperty(CBS_UPDATES_INTERVAL_PROPERTY, Duration.class, NO_UPDATES);
+        Duration interval = cbsProperties.getUpdatesInterval();
+        return interval != null ? interval : NO_UPDATES;
     }
 
     @PreDestroy
-    private void stopPollingForCbsUpdates() {
-        if(refreshEventsStreamHandle != null) {
+    void stopPollingForCbsUpdates() {
+        if (refreshEventsStreamHandle != null) {
             log.debug("Stopping pulling for CBS updates");
             refreshEventsStreamHandle.dispose();
         }

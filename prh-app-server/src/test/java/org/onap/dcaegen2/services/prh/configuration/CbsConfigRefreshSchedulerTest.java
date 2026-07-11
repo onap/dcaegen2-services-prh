@@ -3,6 +3,7 @@
  * PNF-REGISTRATION-HANDLER
  * ================================================================================
  * Copyright (C) 2019-2022 NOKIA Intellectual Property. All rights reserved.
+ * Copyright (C) 2026 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,27 +27,28 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.cloud.context.environment.EnvironmentChangeEvent;
-import org.springframework.cloud.context.refresh.ContextRefresher;
-import org.springframework.core.env.Environment;
+import org.onap.dcaegen2.services.bootstrap.CbsConfigFetcher;
+import org.onap.dcaegen2.services.bootstrap.CbsProperties;
 import reactor.test.scheduler.VirtualTimeScheduler;
 
 import java.time.Duration;
-import java.util.Collections;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
 class CbsConfigRefreshSchedulerTest {
 
     private static final Duration SOME_UPDATES_INTERVAL = Duration.ofMinutes(5);
-    private static final String CBS_UPDATES_INTERVAL_PROPERTY = "cbs.updates-interval";
 
     @Mock
-    private ContextRefresher contextRefresher;
+    private CbsConfigFetcher cbsConfigFetcher;
     @Mock
-    private Environment environment;
+    private CbsProperties cbsProperties;
 
     private VirtualTimeScheduler virtualTimeScheduler;
 
@@ -56,10 +58,7 @@ class CbsConfigRefreshSchedulerTest {
     @BeforeEach
     void setUp() {
         virtualTimeScheduler = VirtualTimeScheduler.getOrSet();
-        when(environment.getProperty(CBS_UPDATES_INTERVAL_PROPERTY, Duration.class, Duration.ZERO))
-                .thenReturn(SOME_UPDATES_INTERVAL);
-
-        cbsConfigRefreshScheduler = new CbsConfigRefreshScheduler(contextRefresher, environment);
+        cbsConfigRefreshScheduler = new CbsConfigRefreshScheduler(cbsConfigFetcher, cbsProperties);
     }
 
     @AfterEach
@@ -69,70 +68,55 @@ class CbsConfigRefreshSchedulerTest {
 
     @Test
     void configRefreshUpdatesShouldBeFiredAccordingToConfiguredInterval() {
-        cbsConfigRefreshScheduler.startPollingForCbsUpdates();
+        cbsConfigRefreshScheduler.startPollingForCbsUpdates(SOME_UPDATES_INTERVAL);
 
-        verify(contextRefresher, times(0)).refresh();
-
-        virtualTimeScheduler.advanceTimeBy(SOME_UPDATES_INTERVAL);
-        verify(contextRefresher, times(1)).refresh();
+        verify(cbsConfigFetcher, times(0)).fetchAndParse();
 
         virtualTimeScheduler.advanceTimeBy(SOME_UPDATES_INTERVAL);
-        verify(contextRefresher, times(2)).refresh();
+        verify(cbsConfigFetcher, times(1)).fetchAndParse();
+
+        virtualTimeScheduler.advanceTimeBy(SOME_UPDATES_INTERVAL);
+        verify(cbsConfigFetcher, times(2)).fetchAndParse();
     }
 
     @Test
     void whenConfigUpdateIntervalIsSetToZero_UpdatesShouldNotBeExecuted() {
-        when(environment.getProperty(CBS_UPDATES_INTERVAL_PROPERTY, Duration.class, Duration.ZERO))
-                .thenReturn(Duration.ZERO);
-
-        cbsConfigRefreshScheduler.startPollingForCbsUpdates();
+        cbsConfigRefreshScheduler.startPollingForCbsUpdates(Duration.ZERO);
 
         virtualTimeScheduler.advanceTimeBy(Duration.ofHours(10));
 
-        verifyNoInteractions(contextRefresher);
+        verifyNoInteractions(cbsConfigFetcher);
     }
 
     @Test
     void whenUpdateFails_shouldContinueWithUpdateRequestsAccordingToConfiguredSchedule() {
-        when(contextRefresher.refresh())
-                .thenThrow(new RuntimeException("kaboom!"))
-                .thenReturn(Collections.emptySet());
+        doThrow(new RuntimeException("kaboom!"))
+                .doNothing()
+                .when(cbsConfigFetcher).fetchAndParse();
 
-        cbsConfigRefreshScheduler.startPollingForCbsUpdates();
+        cbsConfigRefreshScheduler.startPollingForCbsUpdates(SOME_UPDATES_INTERVAL);
 
         virtualTimeScheduler.advanceTimeBy(SOME_UPDATES_INTERVAL.plus(SOME_UPDATES_INTERVAL));
-        verify(contextRefresher, times(2)).refresh();
+        verify(cbsConfigFetcher, times(2)).fetchAndParse();
     }
 
-
     @Test
-    void whenUpdatesIntervalIsChangedInEnvironment_UpdatesShouldBeRescheduled() {
-        when(environment.getProperty(CBS_UPDATES_INTERVAL_PROPERTY, Duration.class, Duration.ZERO))
-                .thenReturn(Duration.ofMinutes(30))
-                .thenReturn(Duration.ofSeconds(10));
+    void whenUpdatesIntervalIsZeroFromProperties_PostConstructShouldNotSchedule() {
+        when(cbsProperties.getUpdatesInterval()).thenReturn(Duration.ZERO);
 
         cbsConfigRefreshScheduler.startPollingForCbsUpdates();
 
-        cbsConfigRefreshScheduler.onEnvironmentChanged(
-                new EnvironmentChangeEvent(Collections.singleton(CBS_UPDATES_INTERVAL_PROPERTY)));
-
-        virtualTimeScheduler.advanceTimeBy(Duration.ofMinutes(1));
-
-        verify(contextRefresher, times(6)).refresh();
+        virtualTimeScheduler.advanceTimeBy(Duration.ofHours(10));
+        verifyNoInteractions(cbsConfigFetcher);
     }
 
-
     @Test
-    void whenEnvironmentChangeDoesNotAffectUpdatesInterval_UpdatesScheduleShouldNotBeImpacted() {
+    void whenUpdatesIntervalIsNullFromProperties_PostConstructShouldNotSchedule() {
+        when(cbsProperties.getUpdatesInterval()).thenReturn(null);
+
         cbsConfigRefreshScheduler.startPollingForCbsUpdates();
 
-        Duration envChangeDelay = Duration.ofMinutes(1);
-        virtualTimeScheduler.advanceTimeBy(envChangeDelay);
-
-        cbsConfigRefreshScheduler.onEnvironmentChanged(new EnvironmentChangeEvent(Collections.emptySet()));
-
-        virtualTimeScheduler.advanceTimeBy(SOME_UPDATES_INTERVAL.minus(envChangeDelay));
-
-        verify(contextRefresher).refresh();
+        virtualTimeScheduler.advanceTimeBy(Duration.ofHours(10));
+        verifyNoInteractions(cbsConfigFetcher);
     }
 }

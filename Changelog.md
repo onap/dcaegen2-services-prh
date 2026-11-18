@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [1.14.0] - Unreleased
 
 - [DCAEGEN2-3455] Bump development version to 1.14.0-SNAPSHOT.
+- [DCAEGEN2-3212] Update to Spring Boot 3.5.16 and OpenTelemetry Java agent 2.33.1, align Tomcat, Netty, and Jackson on security patch releases, limit WebFlux to controller tests, and refresh the floating Java 17 Alpine base on each image build.
 
 ## [1.13.0] - Unreleased
 
